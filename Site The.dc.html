@@ -6,7 +6,7 @@
 <script src="./support.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="favicon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Maison du Thé">
@@ -33,6 +33,9 @@
   @media (max-width: 720px) {
     header.nav { padding: 12px 16px !important; gap: 8px !important; }
     header.nav .nav-brand { font-size: 19px !important; }
+    header.nav .nav-brand img { width: 36px !important; height: 36px !important; }
+    header.nav .nav-quick { order: 6; width: 100%; }
+    header.nav .nav-quick .btn { flex: 1 1 0; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
     header.nav .nav-carte { order: 5; width: 100%; justify-content: flex-start; padding-left: 0 !important; font-size: 14px !important; }
     header .umenu { position: fixed !important; left: 16px !important; right: 16px !important; top: 64px !important; min-width: 0 !important; }
     main.page { padding: 8px 16px 64px !important; }
@@ -52,17 +55,24 @@
 <div style="min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); display: flex; flex-direction: column;">
 
   <header class="nav" style="padding: 22px 40px; gap: 10px; flex-wrap: wrap;">
-    <button class="nav-brand" onClick="{{ goHome }}" style="font-size: 21px; white-space: nowrap; cursor: pointer; border: none; background: transparent; padding: 0; color: var(--color-text);" style-hover="color: var(--color-accent-700);">Maison du Thé</button>
+    <button class="nav-brand" onClick="{{ goHome }}" style="font-size: 21px; white-space: nowrap; cursor: pointer; border: none; background: transparent; padding: 0; color: var(--color-text);" style-hover="color: var(--color-accent-700);"><span style="display: inline-flex; align-items: center; gap: 10px;"><img src="logo-mark.png" alt="" width="44" height="44" style="width: 44px; height: 44px; display: block; flex: none;">Maison du Thé</span></button>
     <sc-if value="{{ navOn }}" hint-placeholder-val="{{ true }}">
     <button class="btn btn-ghost" onClick="{{ openMine }}" style="white-space: nowrap;">Mes thés</button>
     <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">Nouvelle dégustation</button>
     <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Ajouter</button>
     </sc-if>
+    <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
+    <div class="nav-quick" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+      <button class="btn btn-ghost" onClick="{{ menuFriends }}" style="white-space: nowrap;">👥 Amis<sc-if value="{{ friendBadge }}" hint-placeholder-val="{{ false }}"><span style="margin-left: 6px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); font-size: 12px; display: inline-flex; align-items: center; justify-content: center;">{{ friendCount }}</span></sc-if></button>
+      <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">☕ Dégustation</button>
+      <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Thé</button>
+    </div>
+    </sc-if>
     <a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
         <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
-          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}
+          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}<sc-if value="{{ meSalon }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ meSalon }}</span></sc-if>
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -722,10 +732,48 @@
           <sc-if value="{{ fr.noFriends }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore d’ami ajouté.</p></sc-if>
           <sc-for list="{{ fr.friends }}" as="f" hint-placeholder-count="1">
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-              <button onClick="{{ f.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 19px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ f.tag }} →</button>
+              <button onClick="{{ f.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 19px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ f.tag }}<sc-if value="{{ f.salon }}" hint-placeholder-val="{{ false }}"> <span style="font-family: var(--font-body); font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ f.salon }}</span></sc-if> →</button>
               <button class="btn btn-ghost" onClick="{{ f.remove }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Retirer</button>
             </div>
           </sc-for>
+        </section>
+        <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 24px; margin: 0;">Salon</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Un salon réunit quelques amis, comme un clan. On ne peut être que dans un seul salon ; celui qui le crée en est le chef 👑. Son nom s’affiche à côté du pseudo.</p></div>
+          <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><span style="font-family: var(--font-heading); font-size: 28px;">{{ sl.name }}</span><span style="font-size: 14px; opacity: .7;">{{ sl.count }}</span></div>
+            <sc-for list="{{ sl.members }}" as="mb" hint-placeholder-count="2">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0;">
+                <button onClick="{{ mb.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 17px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ mb.label }}</button>
+                <sc-if value="{{ mb.canManage }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ mb.makeChief }}" style="white-space: nowrap; font-size: 13px;">Nommer chef</button><button class="btn btn-ghost" onClick="{{ mb.kick }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Exclure</button></sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Inviter un ami</span>
+                <sc-if value="{{ sl.noInvitable }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">Aucun ami disponible : il faut être amis et que la personne ne soit pas déjà dans un salon.</span></sc-if>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ sl.invitable }}" as="iv" hint-placeholder-count="1"><button class="btn btn-secondary" onClick="{{ iv.invite }}" style="white-space: nowrap;">＋ {{ iv.name }}</button></sc-for></div>
+                <sc-if value="{{ sl.hasPending }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .75;">Invitations en attente : {{ sl.pending }}</span></sc-if>
+              </div>
+            </sc-if>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; padding-top: 4px;">
+              <button class="btn btn-ghost" onClick="{{ sl.leave }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Quitter le salon</button>
+              <sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sl.rename }}" style="white-space: nowrap;">Renommer</button><button class="btn btn-ghost" onClick="{{ sl.dissolve }}" style="white-space: nowrap; color: var(--color-accent-800);">Dissoudre</button></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sl.none }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ sl.invites }}" as="iv" hint-placeholder-count="0">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
+                <span style="font-size: 16px; margin-right: auto;"><b>{{ iv.chief }}</b> vous invite dans le salon <b>{{ iv.name }}</b></span>
+                <button class="btn btn-primary" onClick="{{ iv.accept }}" style="white-space: nowrap;">Rejoindre</button>
+                <button class="btn btn-ghost" onClick="{{ iv.refuse }}" style="white-space: nowrap;">Refuser</button>
+              </div>
+            </sc-for>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <input class="input" value="{{ sl.q }}" onInput="{{ sl.setQ }}" placeholder="Nom du salon" aria-label="Nom du salon" style="flex: 1 1 200px; min-width: 0;">
+              <button class="btn btn-primary" onClick="{{ sl.create }}" style="white-space: nowrap;">Créer un salon</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sl.msg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px;">{{ sl.msg }}</p></sc-if>
         </section>
         <sc-if value="{{ fr.hasOut }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
@@ -747,7 +795,7 @@
         <sc-if value="{{ pf.ok }}" hint-placeholder-val="{{ true }}">
           <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
             <span style="width: 76px; height: 76px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 32px;">{{ pf.initial }}</span>
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="font-size: 46px; margin: 0;">{{ pf.name }}</h1><span style="font-family: ui-monospace, Menlo, monospace; font-size: 15px; opacity: .65;">#{{ pf.id }} · {{ pf.nFriends }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="font-size: 46px; margin: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">{{ pf.name }}<sc-if value="{{ pf.salon }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ pf.salon }}</span></sc-if></h1><span style="font-family: ui-monospace, Menlo, monospace; font-size: 15px; opacity: .65;">#{{ pf.id }} · {{ pf.nFriends }}</span></div>
           </div>
           <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
             <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Description</span>
@@ -2873,6 +2921,52 @@ class Component extends DCLogic {
 
   setFriends(list) { this.setOpt('friends', list); }
 
+  salons() { return ((this.getAdds().options || {}).salons) || []; }
+  salonOf(u) { return this.salons().find(x => (x.members || []).indexOf(u) >= 0) || null; }
+  salonInvitesFor(u) { return this.salonOf(u) ? [] : this.salons().filter(x => (x.invites || []).indexOf(u) >= 0); }
+  setSalons(list) { this.setOpt('salons', list.filter(x => (x.members || []).length)); }
+
+  salonView(me) {
+    const all = this.salons();
+    const mine = this.salonOf(me);
+    const upd = (fn) => this.setSalons(this.salons().map(x => mine && x.id === mine.id ? fn(Object.assign({}, x)) : x));
+    const base = { q: this.state.slQ || '', setQ: e => this.setState({ slQ: e.target.value, slMsg: '' }), msg: this.state.slMsg || '' };
+    if (!mine) {
+      const inv = this.salonInvitesFor(me);
+      return Object.assign(base, { has: false, none: true,
+        invites: inv.map(x => ({ name: x.name, chief: x.chief,
+          accept: () => { this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { members: y.members.concat([me]), invites: (y.invites || []).filter(i => i !== me) }) : Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) }))); this.setState({ slMsg: 'Bienvenue dans le salon ' + x.name + ' !' }); },
+          refuse: () => this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) }) : y)) })),
+        create: () => {
+          const n = String(this.state.slQ || '').trim();
+          if (!n) return this.setState({ slMsg: 'Donnez un nom au salon.' });
+          if (all.some(x => this.norm(x.name) === this.norm(n))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' });
+          this.setSalons(all.map(y => Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) })).concat([{ id: 'sal' + Date.now().toString(36), name: n, chief: me, members: [me], invites: [], ts: new Date().toISOString() }]));
+          this.setState({ slQ: '', slMsg: 'Salon « ' + n + ' » créé : vous en êtes le chef 👑.' });
+        } });
+    }
+    const isChief = mine.chief === me;
+    const friends = this.friendsOf(me);
+    const invitable = friends.filter(u => !this.salonOf(u) && (mine.invites || []).indexOf(u) < 0);
+    const n = mine.members.length;
+    return Object.assign(base, { has: true, none: false, name: mine.name, isChief: isChief, count: n + (n > 1 ? ' membres' : ' membre'),
+      members: mine.members.slice().sort((x, y) => (y === mine.chief) - (x === mine.chief)).map(u => ({ label: (u === mine.chief ? '👑 ' : '') + this.userTag(u) + (u === me ? ' (vous)' : ''),
+        open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
+        canManage: isChief && u !== me,
+        makeChief: () => { if (window.confirm('Nommer ' + u + ' chef du salon ?')) upd(x => Object.assign(x, { chief: u })); },
+        kick: () => { if (window.confirm('Exclure ' + u + ' du salon ?')) upd(x => Object.assign(x, { members: x.members.filter(m => m !== u) })); } })),
+      invitable: invitable.map(u => ({ name: u, invite: () => { upd(x => Object.assign(x, { invites: (x.invites || []).concat([u]) })); this.setState({ slMsg: 'Invitation envoyée à ' + u + '.' }); } })),
+      noInvitable: !invitable.length, hasPending: (mine.invites || []).length > 0, pending: (mine.invites || []).join(', '),
+      leave: () => {
+        const rest = mine.members.filter(m => m !== me);
+        if (!window.confirm(rest.length ? (isChief ? 'Quitter le salon ? ' + rest[0] + ' deviendra chef.' : 'Quitter le salon ?') : 'Vous êtes seul : quitter supprimera le salon. Continuer ?')) return;
+        upd(x => Object.assign(x, { members: rest, chief: isChief ? (rest[0] || '') : x.chief }));
+        this.setState({ slMsg: '' });
+      },
+      rename: () => { const nn = window.prompt('Nouveau nom du salon', mine.name); if (nn && nn.trim()) { if (all.some(x => x.id !== mine.id && this.norm(x.name) === this.norm(nn.trim()))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' }); upd(x => Object.assign(x, { name: nn.trim() })); } },
+      dissolve: () => { if (window.confirm('Dissoudre le salon « ' + mine.name + ' » ? Tous les membres en sortiront.')) this.setSalons(this.salons().filter(x => x.id !== mine.id)); } });
+  }
+
   friendsView(me) {
     const all = (this.getAdds().options || {}).friends || [];
     const others = (x) => all.filter(f => f !== x);
@@ -2902,7 +2996,7 @@ class Component extends DCLogic {
       incoming: incoming.map(f => ({ tag: this.userTag(f.from), accept: () => this.setFriends(all.map(x => x === f ? Object.assign({}, x, { status: 'ok' }) : x)), refuse: () => this.setFriends(others(f)) })),
       outgoing: outgoing.map(f => ({ tag: this.userTag(f.to), cancel: () => this.setFriends(others(f)) })),
       noFriends: !fs.length,
-      friends: fs.map(u => ({ tag: this.userTag(u), open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
+      friends: fs.map(u => ({ tag: this.userTag(u), salon: (this.salonOf(u) || {}).name || '', open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
         remove: () => { if (window.confirm('Retirer ' + u + ' de vos amis ?')) this.setFriends(all.filter(f => !(f.status === 'ok' && ((f.from === u && f.to === me) || (f.from === me && f.to === u))))); } })) };
   }
 
@@ -2942,7 +3036,8 @@ class Component extends DCLogic {
       { label: 'Dernière dégustation', open: lastP ? () => this.openProd(lastP.id) : null, value: lastP ? nm(lastP) : '—', sub: last ? this.fmtDate(last.date) : '' },
       { label: 'Thés goûtés', value: String(arr.length), sub: 'thés différents dégustés' }
     ];
-    return { ok: true, locked: false, isMe: isMe, name: u, id: this.userIds()[u] || '????', initial: (u || '?').slice(0, 1).toUpperCase(),
+    const sal = this.salonOf(u);
+    return { ok: true, locked: false, isMe: isMe, name: u, salon: sal ? (sal.chief === u ? '👑 ' : '') + sal.name : '', id: this.userIds()[u] || '????', initial: (u || '?').slice(0, 1).toUpperCase(),
       nFriends: nf + (nf > 1 ? ' amis' : ' ami'),
       desc: prof.desc || (isMe ? 'Pas encore de description.' : 'Pas de description.'),
       editing: isMe && !!this.state.profEdit, notEditing: !(isMe && this.state.profEdit),
@@ -2987,6 +3082,16 @@ class Component extends DCLogic {
     if (nD > pD && !(addP.length > 5)) (next.decl || []).slice(pD).forEach(d => ev.push({ type: 'cat', icon: '📖', text: 'a ajouté la variante « ' + d.nom + ' » de ' + d.the }));
     const po = (prev.options || {}).friends || [], no = (next.options || {}).friends || [];
     no.filter(f => f.status === 'ok' && !po.some(x => x.from === f.from && x.to === f.to && x.status === 'ok')).forEach(f => ev.push({ type: 'friend', icon: '🤝', text: 'et ' + (f.from === who ? f.to : f.from) + ' sont maintenant amis' }));
+    const pSal = (prev.options || {}).salons || [], nSal = (next.options || {}).salons || [];
+    nSal.forEach(x => { const o = pSal.find(y => y.id === x.id);
+      if (!o) ev.push({ type: 'salon', icon: '🏮', text: 'a créé le salon « ' + x.name + ' »' });
+      else {
+        x.members.filter(m => o.members.indexOf(m) < 0).forEach(m => ev.push({ type: 'salon', icon: '🏮', text: (m === who ? 'a rejoint' : 'a fait entrer ' + m + ' dans') + ' le salon « ' + x.name + ' »' }));
+        o.members.filter(m => x.members.indexOf(m) < 0).forEach(m => ev.push({ type: 'salon', icon: '🏮', text: (m === who ? 'a quitté le salon « ' : 'a exclu ' + m + ' du salon « ') + x.name + ' »' }));
+        if (o.chief !== x.chief && x.chief) ev.push({ type: 'salon', icon: '👑', text: x.chief + ' est le nouveau chef du salon « ' + x.name + ' »' });
+        if (o.name !== x.name) ev.push({ type: 'salon', icon: '🏮', text: 'a renommé le salon « ' + o.name + ' » en « ' + x.name + ' »' });
+      } });
+    pSal.filter(o => !nSal.some(x => x.id === o.id)).forEach(o => ev.push({ type: 'salon', icon: '🏮', text: 'a dissous le salon « ' + o.name + ' »' }));
     return ev.map((e, i) => Object.assign({ id: 'e' + Date.now().toString(36) + i, ts: ts, who: who }, e));
   }
 
@@ -3958,9 +4063,12 @@ class Component extends DCLogic {
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
       isStats: v === 'stats',
       menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frMsg: '' }),
-      friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; return n ? ' (' + n + ')' : ''; })(),
+      friendCount: ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length + this.salonInvitesFor(me).length,
+      meSalon: (this.salonOf(me) || {}).name || '',
+      friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n + this.salonInvitesFor(me).length; return m ? ' (' + m + ')' : ''; })(),
       isFriends: v === 'friends',
       fr: v === 'friends' ? this.friendsView(me) : {},
+      sl: v === 'friends' ? this.salonView(me) : {},
       isProfile: v === 'profile',
       pf: v === 'profile' ? this.profileView(me) : {},
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
