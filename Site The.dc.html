@@ -1135,6 +1135,20 @@
         </sc-if>
 
         <sc-if value="{{ tabManOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Importer un fichier</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Choisissez le fichier d’import préparé par Claude (.json). Un aperçu s’affiche avant que rien ne soit ajouté.</p></div>
+            <label class="btn btn-secondary" style="align-self: flex-start; white-space: nowrap; cursor: pointer; position: relative;">📂 Choisir le fichier<input type="file" accept=".json,application/json" onChange="{{ impPick }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label>
+            <sc-if value="{{ impMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px;">{{ impMsg }}</p></sc-if>
+            <sc-if value="{{ impReady }}" hint-placeholder-val="{{ false }}">
+              <div style="background: var(--color-bg); border-radius: 20px; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px;">
+                <sc-for list="{{ impLines }}" as="il" hint-placeholder-count="4"><span>• {{ il }}</span></sc-for>
+              </div>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onClick="{{ impRun }}" style="white-space: nowrap;">Lancer l’import</button>
+                <button class="btn btn-ghost" onClick="{{ impCancel }}" style="white-space: nowrap;">Annuler</button>
+              </div>
+            </sc-if>
+          </section>
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <h2 style="font-size: 26px; margin: 0;">Gérer les thés et les sachets</h2>
@@ -1285,6 +1299,7 @@
                   <option value="noir">Noir (rouge)</option>
                   <option value="sombre">Sombre</option>
                   <option value="aromatise">Aromatisé</option>
+                  <option value="tisane">Tisane</option>
                 </select>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
@@ -2404,7 +2419,8 @@ class Component extends DCLogic {
       { name: 'Jasmin (Mo Li Hua Cha)', origin: 'Fuzhou, Fujian, Chine' },
       { name: 'Earl Grey', origin: 'Royaume-Uni' },
       { name: 'Masala chai', origin: 'Inde' }
-    ] }
+    ] },
+    tisane: { name: 'Tisane', profil: "Plantes, fleurs, épices, sans théier", color: '#b98a3e', desc: "Infusions de plantes sans feuille de théier : verveine, camomille, rooibos, mélanges digestifs.", teas: [] }
   };
 
   // Contenu éditable dans un tableur : contenu.xlsx (feuilles « Thes » et « Possedes »),
@@ -2652,6 +2668,7 @@ class Component extends DCLogic {
         oolong: [tw ? 'Gaiwan ou Yixing' : 'Yixing ou Chaozhou', 'Tasse à sentir', 'Ustensiles chinois', 'Gongfu cha', '90–95 °C'],
         noir:   ['Yixing ou porcelaine', 'Tasse de dégustation', 'Ustensiles chinois', 'Gongfu cha', '90–95 °C'],
         sombre: ['Yixing ou Jianshui', 'Bol Jianzhan', 'Ustensiles chinois', 'Gongfu cha', '95–100 °C'],
+        tisane: ['Théière en porcelaine', 'Tasse ou mug', 'Infusion simple', '—', '90–100 °C'],
         aromatise: ['Gaiwan ou théière en porcelaine', 'Tasse de dégustation', 'Ustensiles chinois', 'Gongfu cha', '80–90 °C']
       })[k] || ['—', '—', '—', '—', '—'];
     }
@@ -3124,6 +3141,60 @@ class Component extends DCLogic {
       iOwn: mineS.length > 0, iDontOwn: !mineS.length,
       addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
       sachets: sacs.map(o => this.sachetView(o, me)), logs: ls.map(l => this.logCard(l, coll, me)), noLogs: !ls.length };
+  }
+
+  importPreview(data) {
+    const a = this.getAdds();
+    const users = this.opts().users;
+    const owners = Array.from(new Set(data.teas.map(t => t.owner)));
+    const missingUsers = owners.filter(o => users.indexOf(o) < 0);
+    const newTeas = (data.newTeas || []).filter(t => !this.famOf(t.nom));
+    const dup = data.teas.filter(t => a.prods.some(p => this.norm(p.nom) === this.norm(t.name) && String(p.ref || '') === String(t.ref || '')));
+    const lines = [
+      data.teas.length + ' thés du commerce et sachets (' + owners.map(o => o + ' : ' + data.teas.filter(t => t.owner === o).length).join(', ') + ')',
+      data.teas.reduce((n, t) => n + t.logs.length, 0) + ' dégustations',
+      newTeas.length + ' thés ajoutés au catalogue, ' + (data.newDecl || []).length + ' variantes'
+    ];
+    if (dup.length) lines.push(dup.length + ' déjà présents (même nom et même réf.) : ils seront ignorés');
+    if (missingUsers.length) lines.push('Attention : ' + missingUsers.join(', ') + ' ne s’est encore jamais connecté ; les sachets lui seront quand même attribués');
+    if ((a.options || {}).importDone) lines.push('Un import a déjà été fait le ' + this.fmtDate(a.options.importDone.date) + ' : vérifiez avant de relancer');
+    return lines;
+  }
+
+  runImport(data) {
+    let a = this.getAdds();
+    const teas = a.teas.slice(), decl = (a.decl || []).slice();
+    (data.newTeas || []).forEach(t => { if (!this.famOf(t.nom) && !teas.some(x => this.norm(x.nom) === this.norm(t.nom))) teas.push({ famille: t.famille, nom: t.nom, traduction: '', origine: t.origine || '', pays: t.pays || '', province: '', gout: '', recolte: '' }); });
+    a = Object.assign({}, a, { teas: teas });
+    this._adds = a;
+    const declAll = this.declAll();
+    (data.newDecl || []).forEach(v => { if (!(declAll[v.the] || []).some(d => this.norm(d.name) === this.norm(v.nom))) decl.push({ the: v.the, nom: v.nom, traduction: '', profil: v.profil || '', description: '' }); });
+    const prods = a.prods.slice(), sachets = a.sachets.slice(), logs = a.logs.slice();
+    let skipped = 0, nLogs = 0, k = 0;
+    const rnd = () => String(Math.floor(1000 + Math.random() * 9000));
+    data.teas.forEach(t => {
+      if (prods.some(p => this.norm(p.nom) === this.norm(t.name) && String(p.ref || '') === String(t.ref || ''))) { skipped++; return; }
+      const fk = this.famOf(t.the);
+      const canon = fk ? (this.listFor(fk, true).find(x => this.norm(x.name) === this.norm(t.the)) || {}).name || t.the : t.the;
+      let code = this.prodCodeFor(t.name, canon, t.ref), n2 = 2; const base = code;
+      while (prods.some(p => p.code === code)) code = base + '-' + n2++;
+      const pid = 'p' + (Date.now() + k++).toString(36);
+      prods.push({ id: pid, code: code, the: canon, variante: t.variante || '', nom: t.name, marque: t.marque || '', ref: t.ref || '', boutique: '', tags: [], commentaire: t.comment || '' });
+      const ini = (t.owner || '?').slice(0, 1).toUpperCase();
+      let scode = code + '-' + ini + '1-' + rnd();
+      while (sachets.some(x => x.code === scode)) scode = code + '-' + ini + '1-' + rnd();
+      const sid = 's' + (Date.now() + k++).toString(36);
+      sachets.push({ id: sid, prodId: pid, owner: t.owner, code: scode, achat: '', prodDate: t.year || '', lot: '', prixMode: 'poids', prixPaye: t.prix100 != null ? String(t.prix100).replace('.', ',') : '', quantite: t.quantite || '100', freq: t.freq || '', commentaire: '', photo: '', photoThe: '' });
+      t.logs.forEach((l, i) => {
+        const ts = (Date.parse((l.date || '') + 'T12:00:00') || Date.now()) + (k++);
+        logs.push({ id: 'l' + ts.toString(36), lotId: sid, author: t.owner, with: [], date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' });
+        nLogs++;
+      });
+    });
+    this._adds = null;
+    const cur = this.getAdds();
+    this.setAdds(Object.assign({}, cur, { teas: teas, decl: decl, prods: prods, sachets: sachets, logs: logs, options: Object.assign({}, cur.options, { importDone: { date: new Date().toISOString().slice(0, 10), source: data.source || '' } }) }));
+    return { prods: data.teas.length - skipped, logs: nLogs, skipped: skipped };
   }
 
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
@@ -3661,6 +3732,15 @@ class Component extends DCLogic {
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
       tabOptOn: this.state.addTab === 'opt', tabOptOff: this.state.addTab !== 'opt',
       tabMan: () => this.setState({ addTab: 'man', addMsg: '' }),
+      impPick: e => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = () => { try { const d = JSON.parse(String(r.result)); if (d.format !== 'maison-du-the-import' || !Array.isArray(d.teas)) throw new Error('format'); this._impData = d; this.setState({ impReady: true, impLines: this.importPreview(d), impMsg: '' }); } catch (err) { this._impData = null; this.setState({ impReady: false, impMsg: 'Ce fichier n’est pas un fichier d’import de la Maison du Thé.' }); } };
+        r.readAsText(f); e.target.value = '';
+      },
+      impReady: !!this.state.impReady, impLines: this.state.impLines || [], impMsg: this.state.impMsg || '',
+      impCancel: () => { this._impData = null; this.setState({ impReady: false, impMsg: '' }); },
+      impRun: () => { if (!this._impData) return; const r = this.runImport(this._impData); this._impData = null; this.setState({ impReady: false, impMsg: 'Import terminé : ' + r.prods + ' thés et ' + r.logs + ' dégustations ajoutés' + (r.skipped ? ', ' + r.skipped + ' déjà présents ignorés' : '') + '.' }); },
       tabTag: () => this.setState({ addTab: 'tag', addMsg: '' }),
       tabTagOn: this.state.addTab === 'tag', tabTagOff: this.state.addTab !== 'tag',
       newTagKey2: e => { if (e.key === 'Enter') { e.preventDefault(); this.addTag2(); } },
