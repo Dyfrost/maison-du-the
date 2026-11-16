@@ -42,6 +42,9 @@
         <button onClick="{{ logout }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 6px 10px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
       </div>
     </sc-if>
+    <sc-if value="{{ cloudGuest }}" hint-placeholder-val="{{ false }}">
+      <button class="btn btn-secondary" onClick="{{ openLogin }}" style="white-space: nowrap;">Se connecter</button>
+    </sc-if>
     <sc-if value="{{ localMode }}" hint-placeholder-val="{{ true }}">
     <div title="Compte actif" style="display: flex; align-items: center; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;">
       <sc-for list="{{ userChips }}" as="u" hint-placeholder-count="2">
@@ -59,7 +62,7 @@
         <div style="width: 100%; max-width: 440px; background: var(--color-surface); border-radius: 36px; padding: 34px 32px; display: flex; flex-direction: column; gap: 18px; box-shadow: var(--shadow-md);">
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <h1 style="font-size: 38px; margin: 0;">{{ authTitle }}</h1>
-            <p style="margin: 0; font-size: 15px; opacity: .72; text-wrap: pretty;">Un compte par personne : chacun ses thés, ses notes, et tout le monde voit la collection de la maison.</p>
+            <p style="margin: 0; font-size: 15px; opacity: .72; text-wrap: pretty;">Le site se visite librement. Un compte sert à noter vos thés, vos dégustations et à enrichir la collection de la maison.</p>
           </div>
           <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
             <label style="display: flex; flex-direction: column; gap: 6px;">
@@ -1775,19 +1778,19 @@ class Component extends DCLogic {
     this.sb = window.supabase.createClient(url, key);
     const { data } = await this.sb.auth.getSession();
     this.setState({ cloud: true, cloudReady: true, session: data.session || null });
-    if (data.session) this.pullCloud(true);
+    this.pullCloud(!!data.session);
     this.sb.auth.onAuthStateChange((ev, session) => {
       this.setState({ session: session || null });
       if (session && ev === 'SIGNED_IN') this.pullCloud(true);
     });
-    this._onFocus = () => { if (this.state.session) this.pullCloud(false); };
+    this._onFocus = () => this.pullCloud(false);
     window.addEventListener('focus', this._onFocus);
   }
 
   async pullCloud(first) {
     if (!this.sb) return;
     const { data, error } = await this.sb.from('the_data').select('payload, updated_at').eq('id', 'maison').maybeSingle();
-    if (error) { this.setState({ syncErr: error.message }); return; }
+    if (error) { if (this.state.session) this.setState({ syncErr: error.message }); return; }
     const remote = (data && data.payload) || {};
     const empty = !remote.owned && !remote.logs && !remote.teas;
     const local = this.getAdds();
@@ -1837,7 +1840,7 @@ class Component extends DCLogic {
     } else {
       const { error } = await this.sb.auth.signInWithPassword({ email: af.email.trim(), password: af.pass });
       if (error) this.setState({ authMsg: this.authErr(error) });
-      else this.setState({ af: {}, view: 'home' });
+      else this.setState(s => ({ af: {}, view: s.view === 'login' ? 'home' : s.view }));
     }
   }
 
@@ -1980,8 +1983,9 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0 });
 
   renderVals() {
-    const needLogin = !!this.state.cloud && !this.state.session;
-    const v = needLogin ? 'login' : (this.state.view || 'home');
+    const guest = !!this.state.cloud && !this.state.session;
+    const wanted = this.state.view || 'home';
+    const v = (guest && ['mine', 'log', 'add'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -2060,7 +2064,7 @@ class Component extends DCLogic {
       isTuto: v === 'tuto',
       openCeremonies: () => this.go('ceremonies'),
       openTuto: () => this.go('tuto'),
-      notHome: v !== 'home' && v !== 'login',
+      notHome: v !== 'home',
       openTea: () => this.go('types', null, 0),
       openTools: () => this.go('tools'),
       goHome: () => this.go('home'),
@@ -2128,6 +2132,8 @@ class Component extends DCLogic {
       isLogin: v === 'login',
       navOn: v !== 'login',
       cloudUser: !!this.state.session,
+      cloudGuest: guest,
+      openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
       localMode: !this.state.cloud,
       meInitial: (this.me() || '?').slice(0, 1).toUpperCase(),
       logout: async () => { if (this.sb) await this.sb.auth.signOut(); this.setState({ session: null, view: 'home' }); },

@@ -20,3 +20,8 @@ create policy "membres ajoutent"  on public.the_data for insert to authenticated
 create policy "membres modifient" on public.the_data for update to authenticated using (true) with check (true);
 
 insert into public.the_data (id, payload) values ('maison', '{}'::jsonb) on conflict (id) do nothing;
+
+-- Visiteurs sans compte : lecture seule de la collection
+grant select on public.the_data to anon;
+drop policy if exists "visiteurs lisent" on public.the_data;
+create policy "visiteurs lisent" on public.the_data for select to anon using (true);
