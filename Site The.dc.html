@@ -1846,11 +1846,11 @@
       <div style="display: flex; flex-direction: column; gap: 30px;">
         <div style="max-width: 620px; animation: fadeUp .45s ease both;">
           <h1 style="font-size: 46px; margin: 0 0 12px;">Les cérémonies</h1>
-          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Une même boisson, des manières de la servir qui racontent chacune un pays. À compléter avec vos textes.</p>
+          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Une même boisson, des manières de la servir qui racontent chacune un pays. Cliquez sur une cérémonie pour son histoire, son déroulé et ses variantes.</p>
         </div>
         <div style="display: flex; flex-direction: column; gap: 16px;">
 
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .05s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: var(--shadow-sm);">
+          <button onClick="{{ cerOpen0 }}" aria-label="Ouvrir : Gongfu cha" style="text-align: left; width: 100%; border: none; cursor: pointer; font-family: inherit; color: inherit; animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .05s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; transition: transform .2s ease, box-shadow .2s ease; box-shadow: var(--shadow-sm);">
             <span class="washed" style="flex: none; width: min(230px, 100%); height: 168px; border-radius: 26px; overflow: hidden; display: block;">
               <image-slot id="cer-gongfu" shape="rounded" radius="26" placeholder="Gongfu cha"></image-slot>
             </span>
@@ -1859,9 +1859,9 @@
               <span style="font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">Chine, Taïwan</span>
               <p style="margin: 0; font-size: 15px; opacity: .78; text-wrap: pretty;">Petites théières, forte densité de feuilles, infusions très courtes que l'on répète — on suit le thé qui change de tasse en tasse.</p>
             </span>
-          </div>
+          </button>
 
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .12s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: var(--shadow-sm);">
+          <button onClick="{{ cerOpen1 }}" aria-label="Ouvrir : Chanoyu" style="text-align: left; width: 100%; border: none; cursor: pointer; font-family: inherit; color: inherit; animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .12s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; transition: transform .2s ease, box-shadow .2s ease; box-shadow: var(--shadow-sm);">
             <span class="washed" style="flex: none; width: min(230px, 100%); height: 168px; border-radius: 26px; overflow: hidden; display: block;">
               <image-slot id="cer-chanoyu" shape="rounded" radius="26" placeholder="Chanoyu"></image-slot>
             </span>
@@ -1870,9 +1870,9 @@
               <span style="font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">Japon</span>
               <p style="margin: 0; font-size: 15px; opacity: .78; text-wrap: pretty;">Le matcha fouetté au chasen, dans une chorégraphie codifiée où le geste compte autant que la tasse.</p>
             </span>
-          </div>
+          </button>
 
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .19s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: var(--shadow-sm);">
+          <button onClick="{{ cerOpen2 }}" aria-label="Ouvrir : Le thé à la menthe" style="text-align: left; width: 100%; border: none; cursor: pointer; font-family: inherit; color: inherit; animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .19s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; transition: transform .2s ease, box-shadow .2s ease; box-shadow: var(--shadow-sm);">
             <span class="washed" style="flex: none; width: min(230px, 100%); height: 168px; border-radius: 26px; overflow: hidden; display: block;">
               <image-slot id="cer-menthe" shape="rounded" radius="26" placeholder="Menthe"></image-slot>
             </span>
@@ -1881,9 +1881,9 @@
               <span style="font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">Maghreb</span>
               <p style="margin: 0; font-size: 15px; opacity: .78; text-wrap: pretty;">Vert de Chine, menthe fraîche et sucre, versé de haut pour mousser — un service d'hospitalité, répété trois fois.</p>
             </span>
-          </div>
+          </button>
 
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .26s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: var(--shadow-sm);">
+          <button onClick="{{ cerOpen3 }}" aria-label="Ouvrir : Afternoon tea" style="text-align: left; width: 100%; border: none; cursor: pointer; font-family: inherit; color: inherit; animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .26s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; transition: transform .2s ease, box-shadow .2s ease; box-shadow: var(--shadow-sm);">
             <span class="washed" style="flex: none; width: min(230px, 100%); height: 168px; border-radius: 26px; overflow: hidden; display: block;">
               <image-slot id="cer-afternoon" shape="rounded" radius="26" placeholder="Afternoon tea"></image-slot>
             </span>
@@ -1892,10 +1892,44 @@
               <span style="font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">Royaume-Uni</span>
               <p style="margin: 0; font-size: 15px; opacity: .78; text-wrap: pretty;">Thés noirs en grande théière, lait, et une table dressée : le rituel le plus social des quatre.</p>
             </span>
-          </div>
+          </button>
 
         </div>
       </div>
+    </sc-if>
+
+    <sc-if value="{{ isCer }}" hint-placeholder-val="{{ false }}">
+      <article style="display: flex; flex-direction: column; gap: 26px; animation: fadeUp .45s ease both; max-width: 860px;">
+        <div>
+          <span class="tag tag-accent" style="white-space: nowrap;">{{ cer.place }}</span>
+          <h1 style="font-size: 52px; margin: 14px 0 0;">{{ cer.name }}</h1>
+        </div>
+        <span class="washed" style="display: block; width: 100%; height: 320px; border-radius: 34px; overflow: hidden;"><image-slot id="{{ cer.slot }}" shape="rounded" radius="34" placeholder="{{ cer.name }}"></image-slot></span>
+        <section style="display: flex; flex-direction: column; gap: 10px;">
+          <h2 style="font-size: 30px; margin: 0;">Histoire</h2>
+          <p style="font-size: 17px; line-height: 1.75; opacity: .88; margin: 0; text-wrap: pretty;">{{ cer.history }}</p>
+        </section>
+        <section style="background: var(--color-surface); border-radius: 30px; padding: 24px 26px; display: flex; flex-direction: column; gap: 14px;">
+          <h2 style="font-size: 30px; margin: 0;">Le déroulé</h2>
+          <p style="font-size: 17px; line-height: 1.75; opacity: .88; margin: 0; text-wrap: pretty;">{{ cer.steps }}</p>
+          <ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 15px;"><sc-for list="{{ cer.stepsList }}" as="stp" hint-placeholder-count="4"><li>{{ stp }}</li></sc-for></ol>
+          <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-top: 6px;">Matériel</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;"><sc-for list="{{ cer.tools }}" as="tl" hint-placeholder-count="4"><sc-if value="{{ tl.link }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ tl.open }}" style="white-space: nowrap; background: var(--color-bg);">{{ tl.name }} →</button></sc-if><sc-if value="{{ tl.plain }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="font-size: 14px; padding: 8px 14px;">{{ tl.name }}</span></sc-if></sc-for></div>
+          <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-top: 6px;">Le thé préparé</span>
+          <p style="font-size: 16px; line-height: 1.7; margin: 0; text-wrap: pretty;">{{ cer.teas }}</p>
+        </section>
+        <section style="display: flex; flex-direction: column; gap: 14px;">
+          <h2 style="font-size: 30px; margin: 0;">Les variantes</h2>
+          <sc-for list="{{ cer.variants }}" as="va" hint-placeholder-count="3">
+            <div style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h3 style="font-size: 23px; margin: 0;">{{ va.name }}</h3><span style="font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">{{ va.place }}</span></div>
+              <p style="font-size: 16px; line-height: 1.7; opacity: .88; margin: 0; text-wrap: pretty;">{{ va.text }}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;"><sc-for list="{{ va.tools }}" as="vt" hint-placeholder-count="4"><sc-if value="{{ vt.link }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ vt.open }}" style="white-space: nowrap; background: var(--color-bg);">{{ vt.name }} →</button></sc-if><sc-if value="{{ vt.plain }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="font-size: 14px; padding: 8px 14px;">{{ vt.name }}</span></sc-if></sc-for></div>
+            </div>
+          </sc-for>
+        </section>
+        <p style="font-size: 13px; opacity: .6; margin: 0;">Les ustensiles avec une flèche ouvrent leur fiche dans « Les ustensiles ».</p>
+      </article>
     </sc-if>
 
     <sc-if value="{{ isTuto }}" hint-placeholder-val="{{ false }}">
@@ -2863,6 +2897,74 @@ class Component extends DCLogic {
 
   keywords = ['Floral', 'Fruité', 'Miel', 'Végétal', 'Iodé', 'Noisette', 'Torréfié', 'Boisé', 'Malté', 'Cacao', 'Fumé', 'Épicé', 'Terreux', 'Camphre', 'Doux'];
 
+  ceremonyData = [
+    {
+      name: 'Gongfu cha', place: 'Chine, Taïwan', slot: 'cer-gongfu',
+      history: "Le gongfu cha (功夫茶, « le thé fait avec art et patience ») naît au XVIIIᵉ siècle dans le sud-est de la Chine, entre le Fujian et la région de Chaozhou, au moment où les oolongs se répandent. Les lettrés y cherchent à tirer d'une même feuille une succession d'infusions courtes, chacune révélant une facette du thé. Codifiée sous les Qing, la pratique a traversé le détroit avec les migrants du Minnan et s'est réinventée à Taïwan au XXᵉ siècle, où l'art du thé (chayi) lui a donné sa forme moderne, plus contemplative.",
+      steps: "On chauffe d'abord toute la vaisselle à l'eau bouillante, puis on remplit la théière ou le gaiwan au tiers, voire à moitié, de feuilles. Une première eau très brève « réveille » les feuilles et se jette. Viennent ensuite des infusions de quelques secondes, rallongées à chaque tour : le thé est vidé entièrement dans le pichet d'équité pour que chacun reçoive la même force, puis réparti dans de petites tasses. On sent, on goûte, et l'on recommence tant que la feuille donne.",
+      stepsList: ['Chauffer la vaisselle', 'Doser généreusement (5 à 8 g pour 100 ml)', 'Rincer et réveiller les feuilles', 'Infuser 5 à 20 s, en rallongeant', 'Vider dans le pichet puis servir', 'Recommencer 6 à 10 fois'],
+      tools: ['Gaiwan', 'Théière Yixing', "Pichet d'équité", 'Tasse de dégustation', 'Tasse à sentir', 'Bateau à thé', 'Les six gentilshommes', 'Bouilloire & réchaud'],
+      teas: 'Surtout les oolongs (Tie Guan Yin, Da Hong Pao, Dan Cong, oolongs de Taïwan), mais aussi les pu’er et les thés rouges chinois qui supportent les infusions répétées.',
+      variants: [
+        { name: 'Chaozhou gongfu cha', place: 'Chaozhou, Guangdong', text: "La version d'origine, la plus codifiée. On y utilise les « quatre trésors » : un petit réchaud à charbon d'olive, une bouilloire en terre, une minuscule théière en terre rouge et trois tasses très fines, toujours trois, quel que soit le nombre d'invités. On remplit la théière presque entièrement de Dan Cong, on verse en passant d'une tasse à l'autre (« Guan Gong patrouille la ville ») et on termine goutte à goutte (« Han Xin compte ses soldats »). Pas de pichet d'équité : l'égalité vient du geste.", tools: ['Théière Chaozhou', 'Bouilloire & réchaud', 'Tasse de dégustation'] },
+        { name: 'Chayi taïwanais', place: 'Taïwan', text: "Né dans les maisons de thé des années 1970-1980, il privilégie l'esthétique et la lenteur : nappe et plateau soignés, pichet d'équité systématique et tasse à sentir haute, que l'on retourne dans la tasse à boire pour respirer les arômes restés au fond. Il met en valeur les oolongs de haute montagne et les Dong Ding torréfiés.", tools: ['Tasse à sentir', "Pichet d'équité", 'Gaiwan', 'Bateau à thé'] },
+        { name: 'Gongfu du Fujian (Minnan)', place: 'Anxi et monts Wuyi, Fujian', text: "Au quotidien, on boit le Tie Guan Yin ou les « thés de rocher » des monts Wuyi dans un simple gaiwan posé sur un bateau à thé, avec des infusions très rapides et des tasses vidées d'un trait. C'est la version la plus simple et la plus répandue, celle des marchands et des familles.", tools: ['Gaiwan', 'Bateau à thé', 'Tasse de dégustation'] }
+      ]
+    },
+    {
+      name: 'Chanoyu', place: 'Japon', slot: 'cer-chanoyu',
+      history: "Le thé en poudre arrive au Japon à la fin du XIIᵉ siècle avec le moine Eisai, qui le rapporte des monastères chan de la dynastie Song. D'abord boisson de moines et de guerriers, il devient au XVIᵉ siècle, avec Murata Jukō puis Sen no Rikyū, une voie (chadō) fondée sur quatre principes : harmonie, respect, pureté et sérénité. Rikyū impose l'esthétique wabi, faite d'objets simples, rustiques et imparfaits. Ses descendants ont fondé les grandes écoles qui transmettent encore la cérémonie : Urasenke, Omotesenke et Mushakōjisenke.",
+      steps: "L'hôte prépare la pièce, l'alcôve (une calligraphie, une fleur) et le feu. Devant les invités, il purifie un à un les ustensiles avec un carré de soie, rince le bol à l'eau chaude puisée avec une louche en bambou, dépose le matcha à l'aide d'une spatule, verse l'eau, puis fouette au fouet en bambou jusqu'à obtenir une mousse fine. Le bol est présenté face décorée vers l'invité, qui le tourne avant de boire, puis l'admire. Une cérémonie complète (chaji) dure jusqu'à quatre heures, avec un repas kaiseki et deux thés : le koicha épais puis l'usucha léger.",
+      stepsList: ['Purifier les ustensiles (fukusa)', "Réchauffer et rincer le bol", 'Déposer 2 chashaku de matcha', 'Verser l’eau (≈ 80 °C)', 'Fouetter en « M » jusqu’à la mousse', 'Présenter le bol, le tourner, boire'],
+      tools: ['Chawan', 'Chasen', 'Chashaku', 'Natsume', 'Fukusa', 'Hishaku', 'Kensui', 'Tetsubin'],
+      teas: "Le matcha, thé vert d'ombre moulu à la meule de pierre, surtout d'Uji (Kyoto). Les feuilles d'origine (tencha) ne sont ni roulées ni infusées : on boit la feuille entière.",
+      variants: [
+        { name: 'Koicha et usucha', place: 'Toutes écoles', text: "Le koicha, « thé épais », se prépare avec trois fois plus de matcha, simplement malaxé et non fouetté ; il est partagé dans un même bol par tous les invités. L'usucha, « thé léger », est fouetté et servi dans un bol par personne. Les matchas les plus fins, issus de vieux théiers, sont réservés au koicha.", tools: ['Chawan', 'Chasen', 'Chashaku'] },
+        { name: 'Ryūrei', place: 'Urasenke, depuis 1872', text: "Version sur table et chaises, créée pour recevoir les visiteurs étrangers lors de l'exposition de Kyoto. Le déroulé reste le même, mais l'hôte et les invités sont assis, ce qui la rend plus accessible.", tools: ['Chawan', 'Chasen', 'Natsume'] },
+        { name: 'Senchadō', place: 'Japon, XVIIIᵉ siècle', text: "La « voie du sencha » est l'héritière lettrée et plus libre du chanoyu, inspirée des usages chinois des Ming : on infuse des feuilles (sencha, gyokuro) dans une petite théière plutôt que de fouetter de la poudre. L'eau est refroidie au préalable, surtout pour le gyokuro, servi à 50-60 °C en quelques gouttes très concentrées.", tools: ['Kyusu', 'Houhin', 'Yuzamashi', 'Senchawan', 'Chataku'] }
+      ]
+    },
+    {
+      name: 'Le thé à la menthe', place: 'Maghreb, Sahel', slot: 'cer-menthe',
+      history: "Le thé vert arrive massivement au Maroc au XIXᵉ siècle, quand les marchands britanniques, privés de leurs débouchés en mer Baltique pendant la guerre de Crimée, écoulent leur gunpowder chinois à Mogador et Tanger. Mêlé à la menthe nanah et au sucre en pain, il devient en quelques décennies la boisson de l'hospitalité dans tout le Maghreb puis le long des routes caravanières du Sahara. Le servir, c'est accueillir : on ne refuse pas le thé.",
+      steps: "On rince d'abord les feuilles de gunpowder avec un peu d'eau bouillante, que l'on garde parfois (« l'esprit du thé ») et dont on jette le reste pour ôter l'amertume. On ajoute la menthe fraîche et le sucre, puis l'eau bouillante, et l'on porte un instant sur le feu. Le thé est versé de haut dans un verre puis remis dans la théière plusieurs fois pour le mélanger et l'aérer, avant d'être servi en filet, de très haut, pour former une mousse (la « rezza », le turban).",
+      stepsList: ['Rincer le gunpowder', 'Ajouter menthe et sucre', 'Infuser quelques minutes sur le feu', 'Mélanger en transvasant', 'Servir de haut pour la mousse'],
+      tools: ['Théière berrad en métal', 'Verres à thé décorés', 'Plateau en métal ciselé', 'Boîte à sucre et à thé', 'Bouilloire'],
+      teas: 'Un thé vert de Chine roulé en perles, le gunpowder (Zhu Cha), parfois le chun mee ; avec de la menthe nanah, et en hiver de l’absinthe (chiba) ou de la sauge.',
+      variants: [
+        { name: 'Atay mauritanien et touareg', place: 'Mauritanie, Sahel', text: "Trois verres, servis à la suite, que l'on résume par un dicton : « le premier est amer comme la vie, le deuxième doux comme l'amour, le troisième suave comme la mort ». Le thé, très concentré, se prépare sur un petit brasero, et la séance, longue, est un moment de conversation. La mousse épaisse est un signe d'adresse.", tools: ['Théière berrad en métal', 'Verres à thé décorés', 'Bouilloire'] },
+        { name: 'Thé aux pignons', place: 'Tunisie', text: "On sert un thé vert à la menthe, ou un thé noir très infusé, avec des pignons de pin ou des amandes grillées flottant à la surface. C'est la version des cafés de Tunis et de Sidi Bou Saïd.", tools: ['Verres à thé décorés'] },
+        { name: 'Thé du Sud algérien', place: 'Sahara algérien', text: "Préparé sur les braises dans le désert, longuement bouilli, très sucré et servi en petits verres à plusieurs reprises : une boisson de veillée et de bivouac, proche de l'atay touareg.", tools: ['Théière berrad en métal', 'Bouilloire'] }
+      ]
+    },
+    {
+      name: 'Afternoon tea', place: 'Royaume-Uni', slot: 'cer-afternoon',
+      history: "Le thé arrive en Angleterre au XVIIᵉ siècle et devient à la mode grâce à Catherine de Bragance, épouse portugaise de Charles II. L'afternoon tea, lui, est attribué à Anna, duchesse de Bedford, vers 1840 : le dîner étant servi de plus en plus tard, elle se fait apporter vers 16 heures du thé et quelques bouchées, puis invite ses amies. La reine Victoria adopte l'usage, qui devient un rituel mondain, avec ses salons, sa vaisselle et ses règles de tenue.",
+      steps: "On ébouillante la théière, puis on y met une cuillère de feuilles par personne « et une pour la théière ». L'eau à ébullition est versée dessus, et l'on laisse infuser trois à cinq minutes sous un couvre-théière. On sert à travers une passoire, avec du lait (versé avant ou après le thé, débat éternel) ou du citron. Le thé accompagne un présentoir à trois étages : sandwichs fins en bas, scones avec clotted cream et confiture au milieu, petites pâtisseries en haut.",
+      stepsList: ['Ébouillanter la théière', 'Une cuillère par personne + une', 'Infuser 3 à 5 min sous un couvre-théière', 'Servir à la passoire, lait ou citron', 'Sandwichs, scones, puis pâtisseries'],
+      tools: ['Théière en porcelaine', 'Tasses et soucoupes', 'Passoire à thé', 'Pot à lait', 'Couvre-théière', 'Présentoir à trois étages'],
+      teas: 'Des thés noirs : Darjeeling, Assam, Ceylan, Earl Grey ou des mélanges « afternoon blend » ; parfois un Lapsang Souchong fumé.',
+      variants: [
+        { name: 'Cream tea', place: 'Devon et Cornouailles', text: "Version réduite à l'essentiel : thé, scones, clotted cream et confiture de fraises. Les deux comtés se disputent l'ordre : crème d'abord puis confiture dans le Devon, l'inverse en Cornouailles.", tools: ['Théière en porcelaine', 'Tasses et soucoupes'] },
+        { name: 'High tea', place: 'Angleterre ouvrière, XIXᵉ siècle', text: "Malgré son nom, c'est le plus modeste : un vrai repas pris vers 18 heures à la grande table (« high table ») après le travail, avec un thé noir fort, du pain, de la viande froide et des tourtes.", tools: ['Théière en porcelaine', 'Pot à lait'] },
+        { name: 'Builder’s tea', place: 'Partout au Royaume-Uni', text: "Le thé du quotidien : un sachet de thé noir fort infusé directement dans un mug, avec beaucoup de lait et souvent du sucre. Rien de cérémonieux, mais c'est le thé que boivent la plupart des Britanniques.", tools: ['Pot à lait'] }
+      ]
+    }
+  ];
+
+  findToolExact(name) {
+    const n = this.norm(name);
+    for (const g of ['cn', 'jp']) {
+      const cats = this.toolGroups[g].cats;
+      for (let ci = 0; ci < cats.length; ci++) for (let ii = 0; ii < cats[ci].items.length; ii++) if (this.norm(cats[ci].items[ii].name) === n) return { group: g, ci: ci, ii: ii };
+    }
+    return null;
+  }
+
+  toolChips(names) {
+    return (names || []).map(nm => { const hit = this.findToolExact(nm); return { name: nm, link: !!hit, plain: !hit, open: () => { if (hit) this.setState({ view: 'tool', group: hit.group, ci: hit.ci, ii: hit.ii }); } }; });
+  }
+
   findTool(text) {
     const s = String(text || '').toLowerCase();
     for (const g of ['cn', 'jp']) {
@@ -2964,6 +3066,9 @@ class Component extends DCLogic {
         items: c.items.map((it, ii) => Object.assign({ photo: photos[it.name], slot: 'ust-' + this.state.group + '-' + ci + '-' + ii, open: () => this.setState({ view: 'tool', ci: ci, ii: ii }) }, it))
       })),
       isCeremonies: v === 'ceremonies',
+      isCer: v === 'cer',
+      ...[0, 1, 2, 3].reduce((o, i) => { o['cerOpen' + i] = () => this.setState({ view: 'cer', cerIdx: i }); return o; }, {}),
+      cer: (() => { const c = this.ceremonyData[this.state.cerIdx || 0]; return Object.assign({}, c, { tools: this.toolChips(c.tools), variants: c.variants.map(x => Object.assign({}, x, { tools: this.toolChips(x.tools) })) }); })(),
       isTuto: v === 'tuto',
       openCeremonies: () => this.go('ceremonies'),
       openTuto: () => this.go('tuto'),
@@ -2971,7 +3076,7 @@ class Component extends DCLogic {
       openTea: () => this.go('types', null, 0),
       openTools: () => this.go('tools'),
       goHome: () => this.go('home'),
-      goBack: () => v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
+      goBack: () => v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
       pick: pick,
       currentName: fam.name,
       currentDesc: fam.desc,
