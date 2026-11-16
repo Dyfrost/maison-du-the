@@ -324,7 +324,7 @@
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
                       <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
-                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette « Donné par »" title="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if>
                       <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
                         <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
                       </span>
@@ -384,7 +384,7 @@
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
                       <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
-                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette « Donné par »" title="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if>
                       <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
                         <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
                       </span>
@@ -479,7 +479,7 @@
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
                       <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
-                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette « Donné par »" title="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if>
                       <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
                         <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
                       </span>
@@ -563,7 +563,7 @@
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
                       <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
-                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette « Donné par »" title="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if>
                       <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
                         <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
                       </span>
@@ -634,7 +634,7 @@
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
                       <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
-                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette « Donné par »" title="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if>
                       <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
                         <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
                       </span>
@@ -2972,7 +2972,9 @@ class Component extends DCLogic {
         this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { owner: u, history: (x.history || []).concat([{ from: o.owner, to: u, date: new Date().toISOString().slice(0, 10) }]) }) : x) }));
         this.setState({ giveId: null });
       } })),
-      fromTxt: (o.history || []).length ? 'Donné par ' + o.history[o.history.length - 1].from + ' le ' + this.fmtDate(o.history[o.history.length - 1].date) : ''
+      fromTxt: (() => { const h = (o.history || [])[(o.history || []).length - 1]; return h && !h.hidden ? 'Donné par ' + h.from + ' le ' + this.fmtDate(h.date) : ''; })(),
+      canUntag: (() => { const h = (o.history || [])[(o.history || []).length - 1]; return !!h && !h.hidden && h.from === me; })(),
+      untag: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { history: (x.history || []).map((h, i, arr) => i === arr.length - 1 ? Object.assign({}, h, { hidden: true }) : h) }) : x) })); }
     };
     const adjOpen = this.state.adjId === o.id;
     const adjustCtl = {
