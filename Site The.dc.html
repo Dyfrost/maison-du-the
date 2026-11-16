@@ -794,11 +794,11 @@
       <div style="display: flex; flex-direction: column; gap: 26px; animation: fadeUp .45s ease both; max-width: 860px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <h1 style="font-size: 46px; margin: 0;">Ajouter un thé</h1>
-          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Ajoutez un sachet que vous avez acheté. Si le thé n'existe pas encore, sa référence est créée en même temps. Le catalogue des familles ne change pas.</p>
+          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Ajoutez un sachet que vous avez acheté. Si le thé n'existe pas encore, sa référence est créée en même temps. Les familles, thés et variantes du catalogue s'ajoutent dans l'onglet « Catalogue ».</p>
         </div>
         <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px; flex-wrap: wrap;">
-          <sc-if value="{{ never }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un thé au catalogue</button></sc-if><sc-if value="{{ never }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un thé au catalogue</button></sc-if>
           <sc-if value="{{ tabLotOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un sachet</button></sc-if><sc-if value="{{ tabLotOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un sachet</button></sc-if>
+          <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Catalogue</button></sc-if><sc-if value="{{ tabTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Catalogue</button></sc-if>
           <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Options</button></sc-if><sc-if value="{{ tabOptOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Options</button></sc-if>
           <sc-if value="{{ tabManOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Gérer</button></sc-if><sc-if value="{{ tabManOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Gérer</button></sc-if>
           <sc-if value="{{ tabTagOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Tags</button></sc-if><sc-if value="{{ tabTagOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Tags</button></sc-if>
@@ -2398,7 +2398,7 @@ class Component extends DCLogic {
 
   declAll() {
     const base = this.state.decl || {};
-    const ad = []; // familles et variantes fixes : seules les données du catalogue comptent
+    const ad = this.getAdds().decl || [];
     if (!ad.length) return base;
     const out = Object.assign({}, base);
     ad.forEach(d => { out[d.the] = (out[d.the] || []).concat([{ name: d.nom, fr: d.traduction || undefined, profil: d.profil || '', desc: d.description || '', avis: '' }]); });
@@ -2631,7 +2631,7 @@ class Component extends DCLogic {
     const sheet = this.state.sheet || {};
     const base = (sheet[k] && sheet[k].length) ? sheet[k] : ((this.families[k] || {}).teas || []);
     const adds = this.getAdds();
-    const extra = [].filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.traduction || undefined, gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
+    const extra = adds.teas.filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.traduction || undefined, gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
     return base.concat(extra).map(t => {
       if (raw) return t;
       const me = this.me();
@@ -3036,8 +3036,8 @@ class Component extends DCLogic {
       tabTea: () => this.setState({ addTab: 'tea', addMsg: '' }),
       tabLot: () => this.setState({ addTab: 'lot', addMsg: '' }),
       never: false,
-      tabTeaOn: false, tabTeaOff: true,
-      tabLotOn: (this.state.addTab || 'lot') === 'lot' || this.state.addTab === 'tea', tabLotOff: !((this.state.addTab || 'lot') === 'lot' || this.state.addTab === 'tea'),
+      tabTeaOn: this.state.addTab === 'tea', tabTeaOff: this.state.addTab !== 'tea',
+      tabLotOn: (this.state.addTab || 'lot') === 'lot', tabLotOff: (this.state.addTab || 'lot') !== 'lot',
       form: Object.assign({ famille: 'blanc', nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '', the: '', lot: '', boutique: '', annee: '', format: '', commentaire: '', ref: '', code: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', vParent: '', vNom: '', vTrad: '', vProfil: '', vDesc: '' }, this.state.form),
       setF: ['prodComment', 'achat', 'prodDate', 'variante', 'nomFour', 'marque', 'famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }, k === 'the' && val !== (s.form || {}).the ? { variante: '' } : {}) })); }; return o; }, {}),
       addMsg: this.state.addMsg || '',
@@ -3046,8 +3046,8 @@ class Component extends DCLogic {
       modeVar: () => this.setState({ addMode: 'var', addMsg: '' }),
       modeNewOn: (this.state.addMode || 'new') === 'new', modeNewOff: (this.state.addMode || 'new') !== 'new',
       modeVarOn: this.state.addMode === 'var', modeVarOff: this.state.addMode !== 'var',
-      showTeaForm: false,
-      showVarForm: false,
+      showTeaForm: this.state.addTab === 'tea' && (this.state.addMode || 'new') === 'new',
+      showVarForm: this.state.addTab === 'tea' && this.state.addMode === 'var',
       ...(() => {
         const fm = this.state.form || {}; const a = this.getAdds();
         const pr = fm.prodId ? a.prods.find(x => x.id === fm.prodId) : null;
@@ -3062,15 +3062,20 @@ class Component extends DCLogic {
       saveVar: () => {
         const fm = this.state.form || {};
         if (!String(fm.vParent || '').trim() || !String(fm.vNom || '').trim()) { this.setState({ addMsg: 'Indiquez le thé de base et le nom de la variante.' }); return; }
+        const fk = this.famOf(fm.vParent.trim());
+        if (!fk) { this.setState({ addMsg: 'Choisissez un thé du catalogue comme thé de base.' }); return; }
+        const parent = this.listFor(fk, true).find(t => this.norm(t.name) === this.norm(fm.vParent.trim())).name;
+        if ((this.declAll()[parent] || []).some(d => this.norm(d.name) === this.norm(fm.vNom.trim()))) { this.setState({ addMsg: 'Cette variante existe déjà.' }); return; }
         const a = this.getAdds();
-        this.setAdds(Object.assign({}, a, { decl: (a.decl || []).concat([{ the: fm.vParent.trim(), nom: fm.vNom.trim(), traduction: fm.vTrad, profil: fm.vProfil, description: fm.vDesc }]) }));
+        this.setAdds(Object.assign({}, a, { decl: (a.decl || []).concat([{ the: parent, nom: fm.vNom.trim(), traduction: fm.vTrad, profil: fm.vProfil, description: fm.vDesc }]) }));
         this.setState(s => ({ addMsg: 'Variante « ' + fm.vNom.trim() + ' » ajoutée à ' + fm.vParent.trim() + '.', form: Object.assign({}, s.form, { vNom: '', vTrad: '', vProfil: '', vDesc: '' }) }));
       },
       saveTea: () => {
         const fm = Object.assign({ famille: 'blanc' }, this.state.form);
         if (!String(fm.nom || '').trim()) { this.setState({ addMsg: 'Indiquez au moins un nom.' }); return; }
         const a = this.getAdds();
-        this.setAdds({ decl: a.decl || [], teas: a.teas.concat([{ famille: fm.famille, nom: fm.nom.trim(), traduction: fm.traduction, origine: fm.origine, pays: fm.pays, province: fm.province, gout: fm.gout, recolte: fm.recolte }]), owned: a.owned });
+        if (this.famOf(fm.nom.trim())) { this.setState({ addMsg: 'Ce thé existe déjà dans le catalogue.' }); return; }
+        this.setAdds(Object.assign({}, a, { teas: a.teas.concat([{ famille: fm.famille, nom: fm.nom.trim(), traduction: fm.traduction, origine: fm.origine, pays: fm.pays, province: fm.province, gout: fm.gout, recolte: fm.recolte }]) }));
         this.setState(s => ({ addMsg: '« ' + fm.nom.trim() + ' » ajouté à la famille ' + this.families[fm.famille].name + '.', form: Object.assign({}, s.form, { nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '' }) }));
       },
       saveLot: () => {
