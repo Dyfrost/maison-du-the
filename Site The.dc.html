@@ -1789,9 +1789,10 @@ class Component extends DCLogic {
   }
 
   async pullCloud(first) {
-    if (!this.sb) return;
+    if (!this.sb || this._dirty) return;
     const { data, error } = await this.sb.from('the_data').select('payload, updated_at').eq('id', 'maison').maybeSingle();
     if (error) { if (this.state.session) this.setState({ syncErr: error.message }); return; }
+    if (this._dirty) return;
     const remote = (data && data.payload) || {};
     const empty = !remote.owned && !remote.logs && !remote.teas;
     const local = this.getAdds();
@@ -1806,9 +1807,12 @@ class Component extends DCLogic {
   }
 
   pushCloud() {
+    this._dirty = true;
     clearTimeout(this._pushT);
+    const seq = this._seq = (this._seq || 0) + 1;
     this._pushT = setTimeout(async () => {
       const { error } = await this.sb.from('the_data').upsert({ id: 'maison', payload: this.getAdds(), updated_at: new Date().toISOString() });
+      if (seq === this._seq) this._dirty = false;
       this.setState({ syncAt: error ? this.state.syncAt : new Date(), syncErr: error ? error.message : '' });
     }, 500);
   }
