@@ -70,6 +70,7 @@
             <button role="menuitem" onClick="{{ menuLogs }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Mes dégustations</button>
             <button role="menuitem" onClick="{{ menuLog }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Nouvelle dégustation</button>
             <button role="menuitem" onClick="{{ menuAdd }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">＋ Ajouter un thé</button>
+            <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -609,6 +610,160 @@
                   </div>
           </sc-for>
         </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStats }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 22px; animation: fadeUp .45s ease both;">
+        <div style="display: flex; flex-direction: column; gap: 8px; max-width: 760px;">
+          <h1 style="font-size: 46px; margin: 0;">Stats pour les nerds</h1>
+          <p style="font-size: 17px; opacity: .72; margin: 0;">{{ st.tagline }}</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
+          <sc-for list="{{ st.kpis }}" as="k" hint-placeholder-count="8">
+            <div style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ k.label }}</span>
+              <span style="font-family: var(--font-heading); font-size: 28px; line-height: 1.1;">{{ k.value }}</span>
+              <sc-if value="{{ k.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .65;">{{ k.sub }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 14px;">
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Le podium</h2><span style="font-size: 13px; opacity: .65;">Thés les mieux notés (moyenne de toutes les dégustations)</span></div>
+            <sc-if value="{{ st.topEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.top }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Membres</h2><span style="font-size: 13px; opacity: .65;">Dégustations par personne · moyenne donnée</span></div>
+            <sc-if value="{{ st.membersEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.members }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Familles</h2><span style="font-size: 13px; opacity: .65;">Sachets par famille de thé</span></div>
+            <sc-if value="{{ st.famsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.fams }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Tags</h2><span style="font-size: 13px; opacity: .65;">Les profils qui reviennent le plus</span></div>
+            <sc-if value="{{ st.tagsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.tags }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Jours de la semaine</h2><span style="font-size: 13px; opacity: .65;">Quand est-ce qu’on boit ?</span></div>
+            <sc-if value="{{ st.logsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.days }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Heures</h2><span style="font-size: 13px; opacity: .65;">Dégustations par tranche horaire</span></div>
+            <sc-if value="{{ st.hoursEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.hours }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Rapport qualité/prix</h2><span style="font-size: 13px; opacity: .65;">Points sur 20 par euro payé pour 100 g</span></div>
+            <sc-if value="{{ st.valueEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.value }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Bientôt vides</h2><span style="font-size: 13px; opacity: .65;">Sachets avec le moins de thé restant</span></div>
+            <sc-if value="{{ st.lowEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.low }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Rituels</h2><span style="font-size: 13px; opacity: .65;">Types d’infusion et techniques les plus utilisés</span></div>
+            <sc-if value="{{ st.ritualsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.rituals }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Le monde dans la tasse</h2><span style="font-size: 13px; opacity: .65;">Pays d’origine des sachets</span></div>
+            <sc-if value="{{ st.countriesEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.countries }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </div>
+        <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+          <h2 style="font-size: 22px; margin: 0;">Le saviez-vous ?</h2>
+          <sc-for list="{{ st.facts }}" as="f" hint-placeholder-count="3"><p style="margin: 0; font-size: 15px; line-height: 1.6;">• {{ f }}</p></sc-for>
+        </section>
       </div>
     </sc-if>
 
@@ -2464,6 +2619,72 @@ class Component extends DCLogic {
 
   logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
+  computeStats(coll, me) {
+    const a = this.getAdds();
+    const logs = a.logs.filter(l => coll.some(o => o.id === l.lotId));
+    const f1 = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
+    const eur = x => x.toFixed(2).replace('.', ',') + ' €';
+    const noteOf = l => this.num(String(l.note || ''));
+    const notes = logs.map(noteOf).filter(n => n != null);
+    const avg = arr => arr.length ? arr.reduce((t, n) => t + n, 0) / arr.length : null;
+    const bars = (pairs, fmt) => { const m = Math.max(1, ...pairs.map(p => p[1])); return pairs.map(p => ({ label: p[0], pct: Math.max(2, Math.round(p[1] / m * 100)), txt: fmt ? fmt(p) : String(p[1]) })); };
+    const count = arr => { const c = {}; arr.forEach(x => { if (x) c[x] = (c[x] || 0) + 1; }); return Object.entries(c).sort((x, y) => y[1] - x[1]); };
+    const sacOf = l => coll.find(x => x.id === l.lotId);
+    const grams = coll.filter(o => o.prixMode !== 'unite').map(o => this.num(o.quantite) || 0).reduce((t, n) => t + n, 0);
+    const usedG = logs.filter(l => { const o = sacOf(l); return o && o.prixMode !== 'unite'; }).map(l => this.qtyNum(l.qty) || 0).reduce((t, n) => t + n, 0);
+    const spent = coll.map(o => this.num(o.prixPaye) || 0).reduce((t, n) => t + n, 0);
+    const per100 = coll.filter(o => o.prixMode !== 'unite' && this.num(o.prixPaye) && this.num(o.quantite)).map(o => this.num(o.prixPaye) / this.num(o.quantite) * 100);
+    const costs = logs.map(l => { const o = sacOf(l); const p = this.num(o.prixPaye), q = this.num(o.quantite), u = this.qtyNum(l.qty); return p && q && u ? p / q * u : null; }).filter(x => x != null);
+    const users = this.opts().users.filter(Boolean);
+    const days = Array.from(new Set(logs.map(l => l.date).filter(Boolean))).sort();
+    let best = 0, cur = 0, prev = null;
+    days.forEach(d => { const t = new Date(d + 'T00:00:00').getTime(); cur = prev != null && Math.round((t - prev) / 86400000) === 1 ? cur + 1 : 1; best = Math.max(best, cur); prev = t; });
+    const kpis = [
+      { label: 'Thés du commerce', value: String(a.prods.length), sub: coll.length + ' sachet' + (coll.length > 1 ? 's' : '') },
+      { label: 'Dégustations', value: String(logs.length), sub: days.length + ' jour' + (days.length > 1 ? 's' : '') + ' différent' + (days.length > 1 ? 's' : '') },
+      { label: 'Note moyenne', value: notes.length ? f1(avg(notes)) + '/20' : '—', sub: notes.length ? 'min ' + f1(Math.min(...notes)) + ' · max ' + f1(Math.max(...notes)) : '' },
+      { label: 'Thé acheté', value: grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g', sub: Math.round(usedG) + ' g déjà infusés' },
+      { label: 'Dépensé', value: eur(spent), sub: per100.length ? 'en moyenne ' + eur(avg(per100)) + ' / 100 g' : '' },
+      { label: 'Coût par séance', value: costs.length ? eur(avg(costs)) : '—', sub: costs.length ? 'sur ' + costs.length + ' dégustation' + (costs.length > 1 ? 's' : '') + ' chiffrée' + (costs.length > 1 ? 's' : '') : 'renseignez prix et quantité' },
+      { label: 'Plus longue série', value: best + ' j', sub: 'jours d’affilée avec au moins un thé' },
+      { label: 'Membres', value: String(users.length), sub: users.join(', ') }
+    ];
+    const byProd = a.prods.map(pr => { const ids = coll.filter(o => o.prodId === pr.id).map(o => o.id); const ns = logs.filter(l => ids.indexOf(l.lotId) >= 0).map(noteOf).filter(n => n != null); return [pr.nom || pr.the, avg(ns), ns.length]; }).filter(x => x[1] != null).sort((x, y) => y[1] - x[1]).slice(0, 6);
+    const top = byProd.map(x => ({ label: x[0], pct: Math.max(2, Math.round(x[1] / 20 * 100)), txt: f1(x[1]) + '/20 (' + x[2] + ')' }));
+    const mem = users.map(u => { const ls = logs.filter(l => this.inLog(l, u)); const ns = ls.map(noteOf).filter(n => n != null); return [u, ls.length, avg(ns)]; }).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]);
+    const members = bars(mem, p => p[1] + ' · ' + (p[2] != null ? f1(p[2]) + '/20' : '—'));
+    const fams = bars(count(coll.map(o => { const k = this.famOf(o.the); return k ? this.families[k].name : 'Autre'; })));
+    const tags = bars(count([].concat(...a.prods.map(p => p.tags || []))).slice(0, 10));
+    const dnames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    const dc = [0, 0, 0, 0, 0, 0, 0]; logs.forEach(l => { if (l.date) { const d = new Date(l.date + 'T12:00:00').getDay(); dc[(d + 6) % 7]++; } });
+    const daysB = bars(dnames.map((n, i) => [n, dc[i]]));
+    const slots = [['Matin (5h–11h)', 5, 11], ['Midi (11h–14h)', 11, 14], ['Après-midi (14h–18h)', 14, 18], ['Soir (18h–22h)', 18, 22], ['Nuit (22h–5h)', 22, 29]];
+    const hc = slots.map(sl => [sl[0], logs.filter(l => { const m = /^(\d{1,2})/.exec(String(l.heure || '')); if (!m) return false; let h = +m[1]; if (h < 5) h += 24; return h >= sl[1] && h < sl[2]; }).length]);
+    const hoursB = hc.some(x => x[1]) ? bars(hc) : [];
+    const val = a.prods.map(pr => { const all = coll.filter(o => o.prodId === pr.id); const sacs = all.filter(o => o.prixMode !== 'unite' && this.num(o.prixPaye) && this.num(o.quantite)); const ids = all.map(o => o.id); const n = avg(logs.filter(l => ids.indexOf(l.lotId) >= 0).map(noteOf).filter(x => x != null)); const pr100 = avg(sacs.map(o => this.num(o.prixPaye) / this.num(o.quantite) * 100)); return n != null && pr100 ? [pr.nom || pr.the, n / pr100, n, pr100] : null; }).filter(Boolean).sort((x, y) => y[1] - x[1]).slice(0, 6);
+    const value = bars(val.map(x => [x[0] + ' · ' + f1(x[2]) + '/20 · ' + eur(x[3]), x[1]]), p => f1(p[1]) + ' pt/€');
+    const low = coll.map(o => [o, this.remainFor(o)]).filter(x => x[1]).sort((x, y) => x[1].pct - y[1].pct).slice(0, 6).map(x => ({ label: (x[0].nom || x[0].the) + ' (' + x[0].owner + ')', pct: Math.max(2, x[1].pct), txt: x[1].pct + ' % · ' + f1(x[1].left) + ' ' + x[1].unit }));
+    const rituals = bars(count(logs.map(l => l.infusion).concat([].concat(...logs.map(l => String(l.technique || '').split('+').map(t => t.trim()))))).slice(0, 8));
+    const countries = bars(count(coll.map(o => { const k = this.famOf(o.the); const t = k ? this.listFor(k, true).find(x => this.norm(x.name) === this.norm(o.the)) : null; return t ? (t.pays || String(t.origin || '').split(',').pop().trim()) : ''; })));
+    const facts = [];
+    const mine = mem.find(x => x[0] === me);
+    if (mine) facts.push('Vous avez participé à ' + mine[1] + ' dégustation' + (mine[1] > 1 ? 's' : '') + (mine[2] != null ? ', avec une note moyenne de ' + f1(mine[2]) + '/20.' : '.'));
+    if (usedG) facts.push('Avec ' + Math.round(usedG) + ' g de feuilles et environ 150 ml d’eau par gramme en gongfu, la maison a servi à peu près ' + f1(usedG * 0.15) + ' litres de thé.');
+    const mostTasted = count(logs.map(l => { const o = sacOf(l); return o ? (o.nom || o.the) : ''; }))[0];
+    if (mostTasted) facts.push('Le thé le plus infusé : ' + mostTasted[0] + ' (' + mostTasted[1] + ' fois).');
+    const temps = logs.map(l => this.qtyNum(l.temperature)).filter(x => x && x > 30 && x <= 100);
+    if (temps.length) facts.push('Température moyenne de l’eau : ' + f1(avg(temps)) + ' °C.');
+    const rated = mem.filter(x => x[2] != null);
+    if (rated.length > 1) { const harsh = rated.slice().sort((x, y) => x[2] - y[2])[0]; facts.push('Le palais le plus exigeant : ' + harsh[0] + ' (' + f1(harsh[2]) + '/20 en moyenne).'); }
+    const dated = coll.filter(o => /\d{4}/.test(o.prodDate || ''));
+    if (dated.length) { const oldest = dated.slice().sort((x, y) => +/\d{4}/.exec(x.prodDate)[0] - +/\d{4}/.exec(y.prodDate)[0])[0]; facts.push('Le plus vieux sachet de la maison : ' + (oldest.nom || oldest.the) + ', année de production ' + oldest.prodDate + '.'); }
+    if (!facts.length) facts.push('Ajoutez des sachets et des dégustations : les anecdotes apparaîtront ici.');
+    return { tagline: logs.length ? logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' passée' + (logs.length > 1 ? 's' : '') + ' au crible. Aucune n’a été maltraitée.' : 'Des chiffres sur tout et n’importe quoi, dès que la maison commencera à boire.',
+      kpis: kpis, top: top, topEmpty: !top.length, members: members, membersEmpty: !members.length, fams: fams, famsEmpty: !fams.length, tags: tags, tagsEmpty: !tags.length,
+      days: logs.length ? daysB : [], logsEmpty: !logs.length, hours: hoursB, hoursEmpty: !hoursB.length, value: value, valueEmpty: !value.length, low: low, lowEmpty: !low.length,
+      rituals: rituals, ritualsEmpty: !rituals.length, countries: countries, countriesEmpty: !countries.length, facts: facts };
+  }
+
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
 
   statsMany(ids) {
@@ -2750,7 +2971,7 @@ class Component extends DCLogic {
       openTea: () => this.go('types', null, 0),
       openTools: () => this.go('tools'),
       goHome: () => this.go('home'),
-      goBack: () => v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs') ? 'home' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
+      goBack: () => v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
       pick: pick,
       currentName: fam.name,
       currentDesc: fam.desc,
@@ -2851,6 +3072,9 @@ class Component extends DCLogic {
       menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
       menuPacks: () => this.setState({ menuOpen: false, view: 'packs' }),
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
+      menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
+      isStats: v === 'stats',
+      st: v === 'stats' ? this.computeStats(coll, me) : {},
       isLogs: v === 'logs',
       dsMeOn: (this.state.ds || 'me') === 'me', dsMeOff: (this.state.ds || 'me') !== 'me', dsAllOn: this.state.ds === 'all', dsAllOff: this.state.ds !== 'all',
       dsMe: () => this.setState({ ds: 'me' }), dsAll: () => this.setState({ ds: 'all' }),
