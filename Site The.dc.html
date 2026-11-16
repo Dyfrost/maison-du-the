@@ -28,6 +28,7 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
   @keyframes riseIn { 0% { opacity: 0; transform: translateY(40px) scale(.94); } 100% { opacity: 1; transform: none; } }
   .exp-wrap > :not(.exp-btn) { padding-right: 54px !important; }
+  @media (max-width: 720px) { .sort-lbl { display: none; } }
   .thumb { display: block; object-fit: cover; border-radius: 18px; background: var(--color-neutral-200); flex: none; }
   @media (max-width: 720px) {
     header.nav { padding: 12px 16px !important; gap: 8px !important; }
@@ -283,7 +284,10 @@
           <sc-if value="{{ scopeMeOn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Les thés de {{ me }}</button></sc-if><sc-if value="{{ scopeMeOff }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Les thés de {{ me }}</button></sc-if>
           <sc-if value="{{ scopeAllOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Toute la maison</button></sc-if><sc-if value="{{ scopeAllOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Toute la maison</button></sc-if>
         </div>
-        <input class="input" type="search" placeholder="Filtrer par nom, code, boutique…" value="{{ mq }}" onChange="{{ onMq }}" style="width: 100%; max-width: 520px; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
+        <div style="display: flex; gap: 10px; align-items: center; width: 100%; max-width: 640px;">
+          <input class="input" type="search" placeholder="Filtrer par nom, code, boutique…" value="{{ mq }}" onChange="{{ onMq }}" style="flex: 1 1 200px; min-width: 0; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
+          <div style="position: relative; flex: none;"><button class="btn btn-secondary" onClick="{{ tSortUi.toggle }}" aria-haspopup="true" aria-expanded="{{ tSortUi.open }}" aria-label="Trier : {{ tSortUi.label }}" title="Trier" style="position: relative; z-index: 32; white-space: nowrap; height: 48px; display: inline-flex; align-items: center; gap: 8px; background: var(--color-surface);"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg><span class="sort-lbl">{{ tSortUi.label }}</span></button><sc-if value="{{ tSortUi.open }}" hint-placeholder-val="{{ false }}"><button aria-label="Fermer le tri" onClick="{{ tSortUi.close }}" style="position: fixed; inset: 0; background: transparent; border: none; z-index: 30; cursor: default;"></button><div role="menu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 31; width: 260px; max-width: calc(100vw - 32px); background: var(--color-bg); border-radius: 22px; padding: 8px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55; padding: 6px 12px 4px;">Trier par</span><sc-for list="{{ tSortUi.opts }}" as="so" hint-placeholder-count="5"><sc-if value="{{ so.on }}" hint-placeholder-val="{{ false }}"><button role="menuitemradio" aria-checked="true" onClick="{{ so.pick }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-accent-100); color: var(--color-accent-800); font-family: var(--font-body); font-size: 15px; padding: 9px 12px; border-radius: 14px;">✓ {{ so.name }}</button></sc-if><sc-if value="{{ so.off }}" hint-placeholder-val="{{ true }}"><button role="menuitemradio" aria-checked="false" onClick="{{ so.pick }}" style="cursor: pointer; text-align: left; border: none; background: transparent; color: var(--color-text); font-family: var(--font-body); font-size: 15px; padding: 9px 12px 9px 28px; border-radius: 14px;" style-hover="background: var(--color-accent-100);">{{ so.name }}</button></sc-if></sc-for><hr class="hr" style="margin: 4px 8px;"><button onClick="{{ tSortUi.flip }}" style="cursor: pointer; text-align: left; border: none; background: transparent; color: var(--color-accent-700); font-family: var(--font-body); font-size: 14px; padding: 9px 12px; border-radius: 14px;" style-hover="background: var(--color-accent-100);">{{ tSortUi.dirTxt }}</button></div></sc-if></div>
+        </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Trier par</span>
           <div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;">
@@ -853,7 +857,10 @@
             <sc-if value="{{ dvSmallOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dvSmall }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Liste</button></sc-if><sc-if value="{{ dvSmallOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dvSmall }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Liste</button></sc-if>
           </div>
         </div>
-        <input class="input" type="search" aria-label="Filtrer les dégustations" placeholder="Filtrer par thé, code, personne, avis…" value="{{ dq }}" onChange="{{ onDq }}" style="width: 100%; max-width: 520px; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
+        <div style="display: flex; gap: 10px; align-items: center; width: 100%; max-width: 640px;">
+          <input class="input" type="search" aria-label="Filtrer les dégustations" placeholder="Filtrer par thé, code, personne, avis…" value="{{ dq }}" onChange="{{ onDq }}" style="flex: 1 1 200px; min-width: 0; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
+          <div style="position: relative; flex: none;"><button class="btn btn-secondary" onClick="{{ dSortUi.toggle }}" aria-haspopup="true" aria-expanded="{{ dSortUi.open }}" aria-label="Trier : {{ dSortUi.label }}" title="Trier" style="position: relative; z-index: 32; white-space: nowrap; height: 48px; display: inline-flex; align-items: center; gap: 8px; background: var(--color-surface);"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg><span class="sort-lbl">{{ dSortUi.label }}</span></button><sc-if value="{{ dSortUi.open }}" hint-placeholder-val="{{ false }}"><button aria-label="Fermer le tri" onClick="{{ dSortUi.close }}" style="position: fixed; inset: 0; background: transparent; border: none; z-index: 30; cursor: default;"></button><div role="menu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 31; width: 260px; max-width: calc(100vw - 32px); background: var(--color-bg); border-radius: 22px; padding: 8px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55; padding: 6px 12px 4px;">Trier par</span><sc-for list="{{ dSortUi.opts }}" as="so" hint-placeholder-count="5"><sc-if value="{{ so.on }}" hint-placeholder-val="{{ false }}"><button role="menuitemradio" aria-checked="true" onClick="{{ so.pick }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-accent-100); color: var(--color-accent-800); font-family: var(--font-body); font-size: 15px; padding: 9px 12px; border-radius: 14px;">✓ {{ so.name }}</button></sc-if><sc-if value="{{ so.off }}" hint-placeholder-val="{{ true }}"><button role="menuitemradio" aria-checked="false" onClick="{{ so.pick }}" style="cursor: pointer; text-align: left; border: none; background: transparent; color: var(--color-text); font-family: var(--font-body); font-size: 15px; padding: 9px 12px 9px 28px; border-radius: 14px;" style-hover="background: var(--color-accent-100);">{{ so.name }}</button></sc-if></sc-for><hr class="hr" style="margin: 4px 8px;"><button onClick="{{ dSortUi.flip }}" style="cursor: pointer; text-align: left; border: none; background: transparent; color: var(--color-accent-700); font-family: var(--font-body); font-size: 14px; padding: 9px 12px; border-radius: 14px;" style-hover="background: var(--color-accent-100);">{{ dSortUi.dirTxt }}</button></div></sc-if></div>
+        </div>
         <sc-if value="{{ dlogsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune dégustation pour l'instant.</p></sc-if>
         <sc-if value="{{ dvSmallOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -2948,6 +2955,36 @@ class Component extends DCLogic {
     };
   }
 
+  sortList(arr, keyFn, which) {
+    const st = this.state[which] || {};
+    const key = st.key || (which === 'dSort' ? 'last' : 'alpha');
+    const dir = st.dir || (key === 'alpha' ? 'asc' : 'desc');
+    const ks = arr.map(x => ({ x: x, k: keyFn(x)[key] }));
+    ks.sort((a, b) => {
+      const A = a.k, B = b.k;
+      const na = A == null || A === '', nb = B == null || B === '';
+      if (na && nb) return 0; if (na) return 1; if (nb) return -1;
+      const c = typeof A === 'string' ? A.localeCompare(B, 'fr', { sensitivity: 'base' }) : A - B;
+      return dir === 'asc' ? c : -c;
+    });
+    return ks.map(e => e.x);
+  }
+
+  sortUi(which) {
+    const st = this.state[which] || {};
+    const key = st.key || (which === 'dSort' ? 'last' : 'alpha');
+    const dir = st.dir || (key === 'alpha' ? 'asc' : 'desc');
+    const open = this.state.sortOpen === which;
+    const labels = { price: 'Prix', last: 'Dernière dégustation', count: 'Nombre de dégustations', alpha: 'Ordre alphabétique', note: 'Note' };
+    const dirLabel = k => k === 'alpha' ? (dir === 'asc' ? 'A → Z' : 'Z → A') : k === 'last' ? (dir === 'asc' ? 'plus ancienne d’abord' : 'plus récente d’abord') : (dir === 'asc' ? 'croissant' : 'décroissant');
+    return { open: open, closed: !open, label: labels[key] + ' · ' + dirLabel(key),
+      toggle: () => this.setState(s => ({ sortOpen: s.sortOpen === which ? null : which })),
+      close: () => this.setState({ sortOpen: null }),
+      flip: () => this.setState({ [which]: { key: key, dir: dir === 'asc' ? 'desc' : 'asc' } }),
+      dirTxt: '⇅ Inverser l’ordre (' + (dir === 'asc' ? 'croissant' : 'décroissant') + ' actuellement)',
+      opts: ['price', 'last', 'count', 'alpha', 'note'].map(k => ({ name: labels[k], on: k === key, off: k !== key, pick: () => this.setState({ sortOpen: null, [which]: { key: k, dir: k === 'alpha' ? 'asc' : 'desc' } }) })) };
+  }
+
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
 
   statsMany(ids) {
@@ -2994,7 +3031,9 @@ class Component extends DCLogic {
       adjClear: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { adjust: null }) : x) })); this.setState({ adjId: null }); },
       hasAdjust: !!o.adjust
     };
-    return { ...give, ...adjustCtl, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? rm.txt : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
+    const sk = (() => { const ls = this.logsFor(o.id); const st2 = this.statsFor(o.id); const p = this.num(o.prixPaye), q = this.num(o.quantite);
+      return { alpha: o.nom || o.the, price: p && q ? (o.prixMode === 'unite' ? p / q : p / q * 100) : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st2.avg }; })();
+    return { _k: sk, ...give, ...adjustCtl, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? rm.txt : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
       name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: o.prixPaye ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
@@ -3433,6 +3472,7 @@ class Component extends DCLogic {
       isStats: v === 'stats',
       st: v === 'stats' ? this.computeStats(coll, me) : {},
       isLogs: v === 'logs',
+      tSortUi: this.sortUi('tSort'), dSortUi: this.sortUi('dSort'),
       dsMeOn: (this.state.ds || 'me') === 'me', dsMeOff: (this.state.ds || 'me') !== 'me', dsAllOn: this.state.ds === 'all', dsAllOff: this.state.ds !== 'all',
       dsMe: () => this.setState({ ds: 'me' }), dsAll: () => this.setState({ ds: 'all' }),
       dvBigOn: (this.state.dvmode || 'big') === 'big', dvBigOff: (this.state.dvmode || 'big') !== 'big', dvSmallOn: this.state.dvmode === 'small', dvSmallOff: this.state.dvmode !== 'small',
@@ -3446,7 +3486,8 @@ class Component extends DCLogic {
         const list = all.filter(l => !mineOnly || this.inLog(l, me)).filter(l => { if (!q) return true; const o = coll.find(x => x.id === l.lotId) || {}; return this.norm([o.nom, o.the, o.variante, o.code, l.author, (l.with || []).join(' '), l.avis, l.note].join(' ')).indexOf(q) >= 0; })
           .sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')));
         const ns = list.map(l => this.num(String(l.note || ''))).filter(n => n != null);
-        return { dlogs: list.map(l => this.logCard(l, coll, me)), dlogsEmpty: !list.length,
+        const lk = l => { const o = coll.find(x => x.id === l.lotId) || {}; const p = this.num(o.prixPaye), q = this.num(o.quantite); return { alpha: o.nom || o.the || '', price: p && q ? (o.prixMode === 'unite' ? p / q : p / q * 100) : null, last: String(l.date || '') + String(l.heure || ''), count: this.logsFor(l.lotId).length, note: this.num(String(l.note || '')) }; };
+        return { dlogs: this.sortList(list, lk, 'dSort').map(l => this.logCard(l, coll, me)), dlogsEmpty: !list.length,
           dlogsCount: list.length + (list.length > 1 ? ' dégustations' : ' dégustation') + (ns.length ? ' · moyenne ' + (ns.reduce((t, n) => t + n, 0) / ns.length).toFixed(1).replace('.', ',') + '/20' : '') + '.' };
       })(),
       menuAdd: () => this.setState({ menuOpen: false, view: 'add', addMsg: '' }),
@@ -3547,7 +3588,7 @@ class Component extends DCLogic {
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
       mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » pour voir ceux des autres.'; })(),
-      mineProds: (() => {
+      mineProds: this.sortList((() => {
         const q = this.norm(this.state.mq);
         const list = myColl.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.boutique, o.prodDate, o.owner].join(' ')).indexOf(q) >= 0);
         const ids = []; list.forEach(o => { if (ids.indexOf(o.prodId) < 0) ids.push(o.prodId); });
@@ -3562,16 +3603,18 @@ class Component extends DCLogic {
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
             openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(o.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i) }); } },
-            sachets: sacs.map(x => this.sachetView(x, me)) };
+            sachets: sacs.map(x => this.sachetView(x, me)),
+            _k: (() => { const ids = allSacs.map(x => x.id); const ls = this.getAdds().logs.filter(l => ids.indexOf(l.lotId) >= 0); const pr = allSacs.filter(x => x.prixMode !== 'unite' && this.num(x.prixPaye) && this.num(x.quantite)).map(x => this.num(x.prixPaye) / this.num(x.quantite) * 100);
+              return { alpha: o.nom || o.the, price: pr.length ? pr.reduce((t, n) => t + n, 0) / pr.length : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st.avg }; })() };
         });
-      })(),
+      })(), x => x._k, 'tSort'),
       openPacks: () => this.setState({ view: 'packs' }),
       grpTheOn: (this.state.grp || 'the') === 'the', grpTheOff: (this.state.grp || 'the') !== 'the', grpSacOn: this.state.grp === 'sac', grpSacOff: this.state.grp !== 'sac',
       grpThe: () => this.setState({ grp: 'the' }), grpSac: () => this.setState({ grp: 'sac' }),
       vBigOn: (this.state.vmode || 'big') === 'big', vBigOff: (this.state.vmode || 'big') !== 'big', vSmallOn: this.state.vmode === 'small', vSmallOff: this.state.vmode !== 'small',
       vBig: () => { this.setState({ vmode: 'big' }); try { localStorage.setItem('the-vmode', 'big'); } catch (e) {} },
       vSmall: () => { this.setState({ vmode: 'small' }); try { localStorage.setItem('the-vmode', 'small'); } catch (e) {} },
-      mineSachets: (() => { const q = this.norm(this.state.mq); return myColl.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(y.achat || '').localeCompare(String(x.achat || '')) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(),
+      mineSachets: this.sortList((() => { const q = this.norm(this.state.mq); return myColl.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(y.achat || '').localeCompare(String(x.achat || '')) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(), x => x._k, 'tSort'),
       isPacks: v === 'packs',
       pq: this.state.pq || '', onPq: e => this.setState({ pq: e.target.value }),
       allPacks: (() => { const q = this.norm(this.state.pq); return coll.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.boutique, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the)) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(),
