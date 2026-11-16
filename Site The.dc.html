@@ -690,27 +690,23 @@
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Année</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 2024" value="{{ form.annee }}" onChange="{{ setF.annee }}">
               </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Format</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 50 g en vrac" value="{{ form.format }}" onChange="{{ setF.format }}">
-              </label>
               <div style="display: flex; flex-direction: column; gap: 10px; grid-column: 1 / -1; background: var(--color-bg); border-radius: 24px; padding: 16px 18px;">
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                  <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix</span>
+                  <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Format</span>
                   <div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;">
-                    <sc-if value="{{ pmPoidsOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pmPoids }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Au poids</button></sc-if><sc-if value="{{ pmPoidsOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pmPoids }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Au poids</button></sc-if>
+                    <sc-if value="{{ pmPoidsOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pmPoids }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">En grammes</button></sc-if><sc-if value="{{ pmPoidsOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pmPoids }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">En grammes</button></sc-if>
                     <sc-if value="{{ pmUniteOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pmUnite }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">À l'unité</button></sc-if><sc-if value="{{ pmUniteOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pmUnite }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">À l'unité</button></sc-if>
                   </div>
                   <span style="margin-left: auto; font-family: var(--font-heading); font-size: 18px;">{{ prixCalc }}</span>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix payé (€)</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 12,50" value="{{ form.prixPaye }}" onChange="{{ setF.prixPaye }}" inputMode="decimal">
-              </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ qtyLabel }}</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ qtyPh }}" value="{{ form.quantite }}" onChange="{{ setF.quantite }}" inputMode="decimal">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix payé (€)</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 12,50" value="{{ form.prixPaye }}" onChange="{{ setF.prixPaye }}" inputMode="decimal">
               </label>
                 </div>
               </div>
@@ -1973,11 +1969,17 @@ class Component extends DCLogic {
 
   num(v) { const n = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isNaN(n) ? null : n; }
 
+  formatTxt(o) {
+    const q = this.num(o.quantite);
+    if (q != null) return String(o.quantite).trim() + (o.prixMode === 'unite' ? ' u' : ' g');
+    return o.format || '';
+  }
+
   prixTxt(o) {
     const p = this.num(o.prixPaye), q = this.num(o.quantite);
     if (p == null) return '';
     const fmt = x => x.toFixed(2).replace('.', ',') + ' €';
-    if (o.prixMode === 'unite') return q ? fmt(p / q) + ' / unité' : fmt(p);
+    if (o.prixMode === 'unite') return q ? fmt(p / q) + ' / u' : fmt(p);
     return q ? fmt(p / q * 100) + ' / 100 g' : fmt(p);
   }
 
@@ -2199,7 +2201,7 @@ class Component extends DCLogic {
         const taste = id => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
         const card = o => {
           const st = this.statsFor(o.id, me); const own = o.owners.indexOf(me) >= 0;
-          return { label: o.nom || o.lot || o.the, sub: [o.marque, o.lot && o.nom ? o.lot : ''].filter(Boolean).join(' · '), tags: o.tags || [], year: o.annee || '', format: o.format || '', code: o.code || '', prixTxt: this.prixTxt(o), avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '',
+          return { label: o.nom || o.lot || o.the, sub: [o.marque, o.lot && o.nom ? o.lot : ''].filter(Boolean).join(' · '), tags: o.tags || [], year: o.annee || '', format: this.formatTxt(o), code: o.code || '', prixTxt: this.prixTxt(o), avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '',
             ownersTxt: o.owners.length ? 'Possédé par ' + o.owners.join(' & ') : 'Personne ne le possède pour l\'instant',
             shop: o.boutique || '', shopOn: !!o.boutique, note: o.commentaire || '', iOwn: own, iDontOwn: !own,
             toggle: () => { const a = this.getAdds(); const nw = own ? o.owners.filter(x => x !== me) : o.owners.concat([me]); this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: nw }) }) })); },
@@ -2313,7 +2315,7 @@ class Component extends DCLogic {
           iOwn: !!me && o.owners.indexOf(me) >= 0, iDontOwn: !!me && o.owners.indexOf(me) < 0,
           toggleOwn: () => { if (!me) return; const a = this.getAdds(); const cur = o.owners; const nw = cur.indexOf(me) >= 0 ? cur.filter(x => x !== me) : cur.concat([me]); this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: nw }) }) })); },
           the: o.the, code: o.code, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
-          meta: [o.nom, o.marque, o.lot, o.boutique, o.annee, o.format, this.prixTxt(o)].filter(Boolean).join(' · ') || '—', tags: o.tags || [],
+          meta: [o.nom, o.marque, o.lot, o.boutique, o.annee, this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · ') || '—', tags: o.tags || [],
           avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '—',
           statsTxt: st.n ? 'Vous · ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') + ' · dernière le ' + this.fmtDate(st.last) : 'Vous ne l\'avez pas encore dégusté',
           hasLogs: this.logsFor(o.id).length > 0, open: open, rot: open ? 90 : 0,
@@ -2332,7 +2334,7 @@ class Component extends DCLogic {
       pmPoids: () => this.setState(s => ({ form: Object.assign({}, s.form, { prixMode: 'poids' }) })),
       pmUnite: () => this.setState(s => ({ form: Object.assign({}, s.form, { prixMode: 'unite' }) })),
       pmPoidsOn: pm !== 'unite', pmPoidsOff: pm === 'unite', pmUniteOn: pm === 'unite', pmUniteOff: pm !== 'unite',
-      qtyLabel: pm === 'unite' ? "Nombre d'unités" : 'Poids (g)',
+      qtyLabel: pm === 'unite' ? "Nombre d'unités" : 'Grammes',
       qtyPh: pm === 'unite' ? 'ex : 10 (dragon balls, mini tuocha…)' : 'ex : 100',
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
