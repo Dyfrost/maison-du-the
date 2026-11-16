@@ -144,7 +144,7 @@
             <span style="position: absolute; top: -56px; right: -40px; width: 210px; height: 210px; border-radius: 50%; background: var(--color-accent-2-300);"></span>
             <span style="position: absolute; top: 34px; right: 60px; width: 92px; height: 92px; border-radius: 50%; background: var(--color-accent-2-500);"></span>
             <h2 style="font-size: 38px; margin: 0; position: relative;">Le thé</h2>
-            <p style="margin: 0; font-size: 15px; opacity: .75; position: relative;">Six familles, de la feuille blanche au thé sombre.</p>
+            <p style="margin: 0; font-size: 15px; opacity: .75; position: relative;">Sept familles, de la feuille blanche aux thés aromatisés.</p>
           </button>
           <button onClick="{{ openTools }}" style="position: relative; overflow: hidden; text-align: left; cursor: pointer; border: none; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); border-radius: 40px; padding: 32px; min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; box-shadow: var(--shadow-sm); transition: transform .3s ease, box-shadow .3s ease;" style-hover="transform: translateY(-6px); box-shadow: var(--shadow-lg);">
             <span style="position: absolute; top: -56px; right: -40px; width: 210px; height: 210px; border-radius: 50%; background: var(--color-accent-300);"></span>
@@ -172,10 +172,10 @@
       <div style="display: flex; flex-direction: column; gap: 32px;">
         <div style="max-width: 620px; animation: fadeUp .45s ease both;">
           <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 12px;">
-            <h1 style="font-size: 46px; margin: 0;">Les six familles</h1>
+            <h1 style="font-size: 46px; margin: 0;">Les familles</h1>
             <button class="btn btn-secondary" onClick="{{ openLore }}" style="white-space: nowrap;">Comprendre les familles →</button>
           </div>
-          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Une même feuille, six degrés d'oxydation. Choisissez une couleur pour voir les thés qui s'y rattachent.</p>
+          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Une même feuille, six degrés d'oxydation, plus les thés aromatisés. Choisissez une couleur pour voir les thés qui s'y rattachent.</p>
         </div>
         <div style="display: flex; flex-direction: column; gap: 12px; max-width: 760px;">
           <div style="background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: 28px; padding: 6px 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
@@ -247,103 +247,23 @@
 
         <sc-if value="{{ noQuery }}" hint-placeholder-val="{{ true }}">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px;">
-
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .05s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
+          <sc-for list="{{ famCards }}" as="fc" hint-placeholder-count="6">
+          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
             <span class="washed" style="flex: none; width: 100%; height: 176px; border-radius: 26px; overflow: hidden; display: block;">
-              <image-slot id="fam-blanc" shape="rounded" radius="26" placeholder="Blanc"></image-slot>
+              <image-slot id="{{ fc.slot }}" shape="rounded" radius="26" placeholder="{{ fc.name }}"></image-slot>
             </span>
-            <button onClick="{{ pick.blanc }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
+            <button onClick="{{ fc.pick }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
               <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
                 <span style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--color-neutral-100); border: 1px solid var(--color-divider);"></span>
-                  <h3 style="margin: 0; font-size: 26px;">Blanc</h3>
+                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: {{ fc.color }}; border: 1px solid var(--color-divider);"></span>
+                  <h3 style="margin: 0; font-size: 26px;">{{ fc.name }}</h3>
                 </span>
-                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">À peine flétri, à peine séché. Le geste le plus léger, une tasse florale et duveteuse.</p>
+                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">{{ fc.desc }}</p>
               </span>
               <span style="flex: none; font-size: 22px; color: var(--color-accent-700);">→</span>
             </button>
           </div>
-
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .12s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
-            <span class="washed" style="flex: none; width: 100%; height: 176px; border-radius: 26px; overflow: hidden; display: block;">
-              <image-slot id="fam-vert" shape="rounded" radius="26" placeholder="Vert"></image-slot>
-            </span>
-            <button onClick="{{ pick.vert }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
-              <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
-                <span style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--color-accent-2-400);"></span>
-                  <h3 style="margin: 0; font-size: 26px;">Vert</h3>
-                </span>
-                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">Chauffé aussitôt cueilli pour arrêter l'oxydation. Végétal, vif, parfois iodé.</p>
-              </span>
-              <span style="flex: none; font-size: 22px; color: var(--color-accent-700);">→</span>
-            </button>
-          </div>
-
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .19s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
-            <span class="washed" style="flex: none; width: 100%; height: 176px; border-radius: 26px; overflow: hidden; display: block;">
-              <image-slot id="fam-jaune" shape="rounded" radius="26" placeholder="Jaune"></image-slot>
-            </span>
-            <button onClick="{{ pick.jaune }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
-              <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
-                <span style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--color-accent-300);"></span>
-                  <h3 style="margin: 0; font-size: 26px;">Jaune</h3>
-                </span>
-                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">Le plus rare. Un étouffage lent adoucit le vert et lui donne un goût de noisette.</p>
-              </span>
-              <span style="flex: none; font-size: 22px; color: var(--color-accent-700);">→</span>
-            </button>
-          </div>
-
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .26s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
-            <span class="washed" style="flex: none; width: 100%; height: 176px; border-radius: 26px; overflow: hidden; display: block;">
-              <image-slot id="fam-oolong" shape="rounded" radius="26" placeholder="Oolong"></image-slot>
-            </span>
-            <button onClick="{{ pick.oolong }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
-              <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
-                <span style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: #5f7f99;"></span>
-                  <h3 style="margin: 0; font-size: 26px;">Oolong (bleu)</h3>
-                </span>
-                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">Le wulong, semi-oxydé. Toute une palette entre le floral et le boisé torréfié.</p>
-              </span>
-              <span style="flex: none; font-size: 22px; color: var(--color-accent-700);">→</span>
-            </button>
-          </div>
-
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .33s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
-            <span class="washed" style="flex: none; width: 100%; height: 176px; border-radius: 26px; overflow: hidden; display: block;">
-              <image-slot id="fam-noir" shape="rounded" radius="26" placeholder="Noir"></image-slot>
-            </span>
-            <button onClick="{{ pick.noir }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
-              <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
-                <span style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: #9e3b2e;"></span>
-                  <h3 style="margin: 0; font-size: 26px;">Noir (rouge)</h3>
-                </span>
-                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">Entièrement oxydé — le «&nbsp;thé rouge&nbsp;» des Chinois. Malté, fruité, robuste.</p>
-              </span>
-              <span style="flex: none; font-size: 22px; color: var(--color-accent-700);">→</span>
-            </button>
-          </div>
-
-          <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .40s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; box-shadow: var(--shadow-sm);">
-            <span class="washed" style="flex: none; width: 100%; height: 176px; border-radius: 26px; overflow: hidden; display: block;">
-              <image-slot id="fam-sombre" shape="rounded" radius="26" placeholder="Sombre"></image-slot>
-            </span>
-            <button onClick="{{ pick.sombre }}" style="width: 100%; text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; align-items: flex-end; gap: 14px; padding: 0 8px 8px 8px; border-radius: 26px; transition: transform .25s ease;" style-hover="transform: translateX(5px);">
-              <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
-                <span style="display: flex; align-items: center; gap: 10px;">
-                  <span style="width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--color-accent-800);"></span>
-                  <h3 style="margin: 0; font-size: 26px;">Sombre</h3>
-                </span>
-                <p style="margin: 0; font-size: 15px; opacity: .75; text-wrap: pretty;">Fermenté puis vieilli, le pu'er en tête. Terre humide, sous-bois, cave fraîche.</p>
-              </span>
-              <span style="flex: none; font-size: 22px; color: var(--color-accent-700);">→</span>
-            </button>
-          </div>
-
+          </sc-for>
         </div>
         </sc-if>
       </div>
@@ -380,13 +300,72 @@
         <sc-if value="{{ vSmallOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <sc-for list="{{ mineSachets }}" as="sa" hint-placeholder-count="3">
-            <div style="display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
+            <sc-if value="{{ sa.col }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ sa.toggleExp }}" aria-expanded="false" style="width: 100%; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <button onClick="{{ sa.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
+                <span style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</span>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sa.marque }} · {{ sa.code }} · {{ sa.owner }}<sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"> · {{ sa.remainShort }}</sc-if></span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ sa.avg }}</span>
+              <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            </sc-if>
+            <sc-if value="{{ sa.exp }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button class="btn btn-ghost" onClick="{{ sa.toggleExp }}" aria-expanded="true" style="align-self: flex-start; white-space: nowrap; padding-left: 4px;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="m18 15-6-6-6 6"/></svg>Réduire</button>
+                  <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                        <button onClick="{{ sa.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 20px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
+                        <span style="font-size: 13px; opacity: .7;">{{ sa.the }}</span>
+                      </div>
+                    <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px;"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ ph }}" alt="" style="width: 72px; height: 72px; border-radius: 14px;"></a></sc-for></div></sc-if>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
+                      <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
+                      <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
+                        <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
+                      </span>
+                    </div>
+                    <sc-if value="{{ sa.giving }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
+                        <span style="font-size: 14px;">Donner ce sachet à :</span>
+                        <sc-for list="{{ sa.giveTo }}" as="gt" hint-placeholder-count="2"><button class="btn btn-secondary" onClick="{{ gt.give }}" style="white-space: nowrap; background: var(--color-bg);">{{ gt.name }}</button></sc-for>
+                        <sc-if value="{{ sa.noGive }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">Aucun autre membre pour l'instant.</span></sc-if>
+                        <button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap; margin-left: auto;">Annuler</button>
+                      </div>
+                    </sc-if>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Propriétaire</span><span style="font-size: 14px;">{{ sa.owner }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque</span><span style="font-size: 14px;">{{ sa.marque }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Date d'achat</span><span style="font-size: 14px;">{{ sa.achat }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Année de production</span><span style="font-size: 14px;">{{ sa.prodDate }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Lot</span><span style="font-size: 14px;">{{ sa.lot }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Format</span><span style="font-size: 14px;">{{ sa.format }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix payé</span><span style="font-size: 14px;">{{ sa.paye }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix</span><span style="font-size: 14px;">{{ sa.prix }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
+                    </div>
+                    <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
+                    <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
+                    <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
+                    <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
+                        <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
+                          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
+                            <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
             </div>
+            </sc-if>
           </sc-for>
         </div>
         </sc-if>
@@ -452,14 +431,97 @@
         <sc-if value="{{ vSmallOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <sc-for list="{{ mineProds }}" as="m" hint-placeholder-count="3">
-            <div style="display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
+            <sc-if value="{{ m.col }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ m.toggleExp }}" aria-expanded="false" style="width: 100%; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <span style="width: 12px; height: 12px; flex: none; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span>
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
+                <span style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" style-hover="color: var(--color-accent-700);">{{ m.name }}</span>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ m.marque }} · {{ m.the }} · {{ m.nSac }}</span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ m.avg }}</span>
+              <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            </sc-if>
+            <sc-if value="{{ m.exp }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button class="btn btn-ghost" onClick="{{ m.toggleExp }}" aria-expanded="true" style="align-self: flex-start; white-space: nowrap; padding-left: 4px;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="m18 15-6-6-6 6"/></svg>Réduire</button>
+            <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);">
+              <div class="row-wrap" style="display: flex; align-items: flex-start; gap: 16px;">
+                <sc-if value="{{ m.photo }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ m.photo }}" alt="" style="width: 72px; height: 72px;"></sc-if>
+                <sc-if value="{{ m.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 16px; height: 16px; flex: none; margin-top: 8px; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span></sc-if>
+                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+                  <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
+                    <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ m.code }}</span>
+                  </div>
+                  <span style="font-size: 13px; opacity: .7;">{{ m.the }}</span>
+                  <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px;">
+                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque :</span> {{ m.marque }}</span>
+                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix moyen :</span> {{ m.prix }}</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
+                </div>
+                <div class="side" style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
+                  <span style="font-family: var(--font-heading); font-size: 22px;">{{ m.avg }}</span>
+                  <span style="font-size: 12px; opacity: .65; white-space: nowrap;">{{ m.avgSub }}</span>
+                </div>
+              </div>
+              <button onClick="{{ m.toggle }}" aria-expanded="{{ m.open }}" style="align-self: flex-start; cursor: pointer; border: 1px solid var(--color-divider); background: var(--color-bg); border-radius: 999px; font-family: var(--font-body); font-size: 14px; color: var(--color-text); padding: 7px 14px; display: flex; align-items: center; gap: 8px;" style-hover="background: var(--color-accent-100);">{{ m.nSac }} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ m.rot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg></button>
+              <sc-if value="{{ m.open }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <sc-for list="{{ m.sachets }}" as="sa" hint-placeholder-count="1">
+                  <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                    <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px;"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ ph }}" alt="" style="width: 72px; height: 72px; border-radius: 14px;"></a></sc-for></div></sc-if>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
+                      <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
+                      <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ sa.fromTxt }}</span></sc-if>
+                      <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
+                        <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
+                      </span>
+                    </div>
+                    <sc-if value="{{ sa.giving }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
+                        <span style="font-size: 14px;">Donner ce sachet à :</span>
+                        <sc-for list="{{ sa.giveTo }}" as="gt" hint-placeholder-count="2"><button class="btn btn-secondary" onClick="{{ gt.give }}" style="white-space: nowrap; background: var(--color-bg);">{{ gt.name }}</button></sc-for>
+                        <sc-if value="{{ sa.noGive }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">Aucun autre membre pour l'instant.</span></sc-if>
+                        <button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap; margin-left: auto;">Annuler</button>
+                      </div>
+                    </sc-if>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Propriétaire</span><span style="font-size: 14px;">{{ sa.owner }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Date d'achat</span><span style="font-size: 14px;">{{ sa.achat }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Année de production</span><span style="font-size: 14px;">{{ sa.prodDate }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Lot</span><span style="font-size: 14px;">{{ sa.lot }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Format</span><span style="font-size: 14px;">{{ sa.format }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix payé</span><span style="font-size: 14px;">{{ sa.paye }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix</span><span style="font-size: 14px;">{{ sa.prix }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
+                    </div>
+                    <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
+                    <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
+                    <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
+                    <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
+                        <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
+                          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
+                            <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                  </sc-for>
+                </div>
+              </sc-if>
             </div>
+            </div>
+            </sc-if>
           </sc-for>
         </div>
         </sc-if>
@@ -790,13 +852,43 @@
         <sc-if value="{{ dvSmallOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="3">
-            <div style="display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 8px 14px;">
+            <sc-if value="{{ l.col }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ l.toggleExp }}" aria-expanded="false" style="width: 100%; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 8px 14px;">
               <span style="flex: none; min-width: 42px; text-align: center; font-family: var(--font-heading); font-size: 17px; color: var(--color-accent-700);">{{ l.note }}</span>
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
                 <span style="font-family: var(--font-heading); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.name }}</span>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.marque }} · {{ l.when }} · {{ l.author }} · {{ l.code }}</span>
               </div>
+              <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            </sc-if>
+            <sc-if value="{{ l.exp }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button class="btn btn-ghost" onClick="{{ l.toggleExp }}" aria-expanded="true" style="align-self: flex-start; white-space: nowrap; padding-left: 4px;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="m18 15-6-6-6 6"/></svg>Réduire</button>
+              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                  <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
+                  <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
+                </div>
+                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
+                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
+                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
+                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                  </div>
+                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ l.remove }}" style="align-self: flex-start; white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></sc-if>
+                  <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
+                </div>
+              </article>
             </div>
+            </sc-if>
           </sc-for>
         </div>
         </sc-if>
@@ -968,6 +1060,42 @@
             <sc-if value="{{ modeNewOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Nouveau thé</button></sc-if><sc-if value="{{ modeNewOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Nouveau thé</button></sc-if>
             <sc-if value="{{ modeVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variante d'un thé existant</button></sc-if><sc-if value="{{ modeVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variante d'un thé existant</button></sc-if>
           </div>
+        </sc-if>
+
+        <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Modifier le catalogue</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Modifiez un champ puis validez avec Entrée ou en quittant le champ. Renommer un thé ou une variante met à jour les sachets qui y sont rattachés.</p></div>
+            <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-if value="{{ ceFamOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceFam }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Familles</button></sc-if><sc-if value="{{ ceFamOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceFam }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Familles</button></sc-if><sc-if value="{{ ceTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceTea }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Thés</button></sc-if><sc-if value="{{ ceTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceTea }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Thés</button></sc-if><sc-if value="{{ ceVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceVar }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variantes</button></sc-if><sc-if value="{{ ceVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceVar }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variantes</button></sc-if></div>
+            <sc-if value="{{ ceFamOn }}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ ceFams }}" as="cf" hint-placeholder-count="3"><div style="background: var(--color-bg); border-radius: 20px; padding: 12px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: none;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Couleur</span><input type="color" value="{{ cf.color }}" onChange="{{ cf.setColor }}" aria-label="Couleur de la famille" style="width: 46px; height: 42px; border: none; background: transparent; padding: 0; cursor: pointer;"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Nom" value="{{ cf.name.val }}" onChange="{{ cf.name.edit }}" onBlur="{{ cf.name.save }}" onKeyDown="{{ cf.name.key }}"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Profil" value="{{ cf.profil.val }}" onChange="{{ cf.profil.edit }}" onBlur="{{ cf.profil.save }}" onKeyDown="{{ cf.profil.key }}"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 100%;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Description</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" value="{{ cf.desc.val }}" onChange="{{ cf.desc.edit }}" onBlur="{{ cf.desc.save }}" onKeyDown="{{ cf.desc.key }}"></label>
+                <button class="btn btn-ghost" onClick="{{ cf.reset }}" style="white-space: nowrap;">Réinitialiser</button>
+              </div></sc-for>
+            </div></sc-if>
+            <sc-if value="{{ ceTeaOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 10px;">
+              <label style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Famille</span><select class="input" style="max-width: 360px; font-size: 15px; padding: 10px 16px; min-height: 46px;" value="{{ ceFamSel }}" onChange="{{ ceFamPick }}"><sc-for list="{{ ceFamOptions }}" as="fo" hint-placeholder-count="0"><option value="{{ fo.key }}">{{ fo.name }}</option></sc-for></select></label>
+              <sc-for list="{{ ceTeas }}" as="ct" hint-placeholder-count="3"><div style="background: var(--color-bg); border-radius: 20px; padding: 12px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Nom" value="{{ ct.name.val }}" onChange="{{ ct.name.edit }}" onBlur="{{ ct.name.save }}" onKeyDown="{{ ct.name.key }}"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Origine</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Origine" value="{{ ct.origin.val }}" onChange="{{ ct.origin.edit }}" onBlur="{{ ct.origin.save }}" onKeyDown="{{ ct.origin.key }}"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Profil" value="{{ ct.gout.val }}" onChange="{{ ct.gout.edit }}" onBlur="{{ ct.gout.save }}" onKeyDown="{{ ct.gout.key }}"></label>
+                <button class="btn btn-ghost" onClick="{{ ct.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer</button>
+              </div></sc-for>
+              <sc-if value="{{ ceHasHiddenTeas }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thés retirés</span><sc-for list="{{ ceHiddenTeas }}" as="ht" hint-placeholder-count="0"><button class="btn btn-secondary" onClick="{{ ht.restore }}" style="white-space: nowrap;">↺ {{ ht.name }}</button></sc-for></div></sc-if>
+            </div></sc-if>
+            <sc-if value="{{ ceVarOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 10px;">
+              <label style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé</span><select class="input" style="max-width: 360px; font-size: 15px; padding: 10px 16px; min-height: 46px;" value="{{ ceTeaSel }}" onChange="{{ ceTeaPick }}"><sc-for list="{{ ceTeaOptions }}" as="to" hint-placeholder-count="0"><option value="{{ to }}">{{ to }}</option></sc-for></select></label>
+              <sc-if value="{{ ceNoVars }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">Ce thé n’a pas de variante. Ajoutez-en une avec le formulaire « Variante d’un thé existant » ci-dessus.</p></sc-if>
+              <sc-for list="{{ ceVars }}" as="cv" hint-placeholder-count="2"><div style="background: var(--color-bg); border-radius: 20px; padding: 12px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Nom" value="{{ cv.name.val }}" onChange="{{ cv.name.edit }}" onBlur="{{ cv.name.save }}" onKeyDown="{{ cv.name.key }}"></label>
+                <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Profil" value="{{ cv.profil.val }}" onChange="{{ cv.profil.edit }}" onBlur="{{ cv.profil.save }}" onKeyDown="{{ cv.profil.key }}"></label>
+                <button class="btn btn-ghost" onClick="{{ cv.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer</button>
+              </div></sc-for>
+              <sc-if value="{{ ceHasHiddenVars }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Variantes retirées</span><sc-for list="{{ ceHiddenVars }}" as="hv" hint-placeholder-count="0"><button class="btn btn-secondary" onClick="{{ hv.restore }}" style="white-space: nowrap;">↺ {{ hv.name }}</button></sc-for></div></sc-if>
+            </div></sc-if>
+          </section>
         </sc-if>
 
         <sc-if value="{{ tabTagOn }}" hint-placeholder-val="{{ false }}">
@@ -1143,6 +1271,7 @@
                   <option value="oolong">Oolong (bleu)</option>
                   <option value="noir">Noir (rouge)</option>
                   <option value="sombre">Sombre</option>
+                  <option value="aromatise">Aromatisé</option>
                 </select>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
@@ -2141,6 +2270,11 @@ class Component extends DCLogic {
       { name: "Pu'er shou", origin: 'Yunnan, Chine' },
       { name: 'Liu Bao', origin: 'Wuzhou, Guangxi, Chine' },
       { name: 'Fu Zhuan', origin: 'Anhua, Hunan, Chine' }
+    ] },
+    aromatise: { name: 'Aromatisé', profil: "Fleurs, agrumes, épices, fruits", color: '#8b6aa7', desc: "Une base de thé parfumée par des fleurs, des écorces, des épices ou des fruits : jasmin, bergamote, osmanthus, chai.", teas: [
+      { name: 'Jasmin (Mo Li Hua Cha)', origin: 'Fuzhou, Fujian, Chine' },
+      { name: 'Earl Grey', origin: 'Royaume-Uni' },
+      { name: 'Masala chai', origin: 'Inde' }
     ] }
   };
 
@@ -2388,7 +2522,8 @@ class Component extends DCLogic {
         jaune:  ['Gaiwan', 'Tasse de dégustation', 'Ustensiles chinois', 'Gongfu cha', '75–80 °C'],
         oolong: [tw ? 'Gaiwan ou Yixing' : 'Yixing ou Chaozhou', 'Tasse à sentir', 'Ustensiles chinois', 'Gongfu cha', '90–95 °C'],
         noir:   ['Yixing ou porcelaine', 'Tasse de dégustation', 'Ustensiles chinois', 'Gongfu cha', '90–95 °C'],
-        sombre: ['Yixing ou Jianshui', 'Bol Jianzhan', 'Ustensiles chinois', 'Gongfu cha', '95–100 °C']
+        sombre: ['Yixing ou Jianshui', 'Bol Jianzhan', 'Ustensiles chinois', 'Gongfu cha', '95–100 °C'],
+        aromatise: ['Gaiwan ou théière en porcelaine', 'Tasse de dégustation', 'Ustensiles chinois', 'Gongfu cha', '80–90 °C']
       })[k] || ['—', '—', '—', '—', '—'];
     }
     if (k === 'sombre' && /shou|shu/.test(n)) d = ['Yixing argile foncée (zini, heini)'].concat(d.slice(1));
@@ -2588,10 +2723,11 @@ class Component extends DCLogic {
   declAll() {
     const base = this.state.decl || {};
     const ad = this.getAdds().decl || [];
-    if (!ad.length) return base;
     const out = Object.assign({}, base);
     ad.forEach(d => { out[d.the] = (out[d.the] || []).concat([{ name: d.nom, fr: d.traduction || undefined, profil: d.profil || '', desc: d.description || '', avis: '' }]); });
-    return out;
+    const tov = this.catOv().tea, dov = this.catOv().decl, res = {};
+    Object.keys(out).forEach(pk => { const pn = (tov[pk] && tov[pk].name) || pk; res[pn] = (res[pn] || []).concat(out[pk].map(d => Object.assign({}, d, { orig: d.name }, dov[pk + '|' + d.name] || {})).filter(d => !d.hidden)); });
+    return res;
   }
 
   camel(s) {
@@ -2651,7 +2787,7 @@ class Component extends DCLogic {
 
   inLog(l, u) { return (l.author || '') === u || (l.with || []).indexOf(u) >= 0; }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -2719,6 +2855,80 @@ class Component extends DCLogic {
       rituals: rituals, ritualsEmpty: !rituals.length, countries: countries, countriesEmpty: !countries.length, facts: facts };
   }
 
+  expFlags(key) {
+    const on = this.state.lexp === key;
+    return { exp: on, col: !on, toggleExp: () => this.setState(s => ({ lexp: s.lexp === key ? null : key })) };
+  }
+
+  catOv() {
+    const c = (this.getAdds().options || {}).catalog || {};
+    return { fam: c.fam || {}, tea: c.tea || {}, decl: c.decl || {} };
+  }
+
+  setCatOv(kind, key, patch, extra) {
+    const a = this.getAdds();
+    const c = this.catOv();
+    const next = Object.assign({}, c, { [kind]: Object.assign({}, c[kind], { [key]: Object.assign({}, c[kind][key], patch) }) });
+    const b = Object.assign({}, a, { options: Object.assign({}, a.options, { catalog: next }) }, extra ? extra(a) : {});
+    this.setAdds(b);
+  }
+
+  applyFamOv() {
+    if (!this._famBase) this._famBase = JSON.parse(JSON.stringify(Object.keys(this.families).reduce((o, k) => { const f = this.families[k]; o[k] = { name: f.name, profil: f.profil, color: f.color, desc: f.desc }; return o; }, {})));
+    const ov = this.catOv().fam;
+    Object.keys(this._famBase).forEach(k => { Object.assign(this.families[k], this._famBase[k], ov[k] || {}); });
+  }
+
+  draftField(id, current, commit) {
+    const d = this.state.catDraft || {};
+    return {
+      val: d[id] != null ? d[id] : (current || ''),
+      edit: e => { const v = e.target.value; this.setState(s => ({ catDraft: Object.assign({}, s.catDraft, { [id]: v }) })); },
+      save: e => { const v = String(e.target.value); this.setState(s => { const n = Object.assign({}, s.catDraft); delete n[id]; return { catDraft: n }; }); if (v !== String(current || '')) commit(v.trim()); },
+      key: e => { if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') e.target.blur(); }
+    };
+  }
+
+  catEditVals() {
+    const tab = this.state.catEdit || 'fam';
+    const famKeys = Object.keys(this.families);
+    const hexOf = c => /^#[0-9a-f]{6}$/i.test(String(c)) ? c : (() => { try { const v = String(c).match(/var\((--[^)]+)\)/); const x = v ? getComputedStyle(document.documentElement).getPropertyValue(v[1]).trim() : ''; return /^#[0-9a-f]{6}$/i.test(x) ? x : '#cccccc'; } catch (e) { return '#cccccc'; } })();
+    const fams = famKeys.map(k => { const f = this.families[k]; return { key: k, color: hexOf(f.color),
+      setColor: e => this.setCatOv('fam', k, { color: e.target.value }),
+      name: this.draftField('fam-n-' + k, f.name, v => v && this.setCatOv('fam', k, { name: v })),
+      profil: this.draftField('fam-p-' + k, f.profil, v => this.setCatOv('fam', k, { profil: v })),
+      desc: this.draftField('fam-d-' + k, f.desc, v => this.setCatOv('fam', k, { desc: v })),
+      reset: () => { if (!window.confirm('Remettre la famille « ' + f.name + ' » comme à l’origine ?')) return; const a = this.getAdds(); const c = this.catOv(); const fam = Object.assign({}, c.fam); delete fam[k]; this.setAdds(Object.assign({}, a, { options: Object.assign({}, a.options, { catalog: Object.assign({}, c, { fam: fam }) }) })); } }; });
+    const fk = this.state.catFam && this.families[this.state.catFam] ? this.state.catFam : famKeys[0];
+    const teas = this.listFor(fk, true).map(t => {
+      const orig = t.orig || t.name;
+      return { orig: orig,
+        name: this.draftField('tea-n-' + orig, t.name, v => { if (!v) return; if (famKeys.some(k2 => this.listFor(k2, true).some(x => x !== t && this.norm(x.name) === this.norm(v)))) { window.alert('Un thé porte déjà ce nom.'); return; } const old = t.name; this.setCatOv('tea', orig, { name: v }, a => ({ prods: a.prods.map(p => this.norm(p.the) === this.norm(old) ? Object.assign({}, p, { the: v }) : p) })); }),
+        origin: this.draftField('tea-o-' + orig, t.origin, v => this.setCatOv('tea', orig, { origin: v })),
+        gout: this.draftField('tea-g-' + orig, t.gout, v => this.setCatOv('tea', orig, { gout: v })),
+        remove: () => { const used = this.getAdds().prods.filter(p => this.norm(p.the) === this.norm(t.name)).length; if (!window.confirm('Retirer « ' + t.name + ' » du catalogue ?' + (used ? ' ' + used + ' thé(s) du commerce y sont rattachés : ils restent enregistrés.' : ''))) return; this.setCatOv('tea', orig, { hidden: true }); } };
+    });
+    const hiddenTeas = Object.keys(this.catOv().tea).filter(k => this.catOv().tea[k].hidden).map(k => ({ name: this.catOv().tea[k].name || k, restore: () => this.setCatOv('tea', k, { hidden: false }) }));
+    const allTeas = [].concat(...famKeys.map(k => this.listFor(k, true).map(t => t.name)));
+    const tn = this.state.catTea && allTeas.indexOf(this.state.catTea) >= 0 ? this.state.catTea : allTeas[0];
+    const tObj = [].concat(...famKeys.map(k => this.listFor(k, true))).find(t => t.name === tn) || {};
+    const parentKey = tObj.orig || tn;
+    const vars = (this.declAll()[tn] || []).map(d => { const orig = d.orig || d.name; const id = parentKey + '|' + orig; return {
+      name: this.draftField('dec-n-' + id, d.name, v => { if (!v) return; const old = d.name; this.setCatOv('decl', id, { name: v }, a => ({ prods: a.prods.map(p => this.norm(p.the) === this.norm(tn) && p.variante === old ? Object.assign({}, p, { variante: v }) : p) })); }),
+      profil: this.draftField('dec-p-' + id, d.profil, v => this.setCatOv('decl', id, { profil: v })),
+      remove: () => { if (!window.confirm('Retirer la variante « ' + d.name + ' » ?')) return; this.setCatOv('decl', id, { hidden: true }); } }; });
+    const hiddenVars = Object.keys(this.catOv().decl).filter(k => this.catOv().decl[k].hidden).map(k => ({ name: (this.catOv().decl[k].name || k.split('|')[1]) + ' (' + k.split('|')[0] + ')', restore: () => this.setCatOv('decl', k, { hidden: false }) }));
+    return {
+      ceFamOn: tab === 'fam', ceFamOff: tab !== 'fam', ceTeaOn: tab === 'tea', ceTeaOff: tab !== 'tea', ceVarOn: tab === 'var', ceVarOff: tab !== 'var',
+      ceFam: () => this.setState({ catEdit: 'fam' }), ceTea: () => this.setState({ catEdit: 'tea' }), ceVar: () => this.setState({ catEdit: 'var' }),
+      ceFams: fams,
+      ceFamOptions: famKeys.map(k => ({ key: k, name: this.families[k].name })), ceFamSel: fk, ceFamPick: e => this.setState({ catFam: e.target.value }),
+      ceTeas: teas, ceHiddenTeas: hiddenTeas, ceHasHiddenTeas: hiddenTeas.length > 0,
+      ceTeaOptions: allTeas, ceTeaSel: tn, ceTeaPick: e => this.setState({ catTea: e.target.value }),
+      ceVars: vars, ceNoVars: !vars.length, ceHiddenVars: hiddenVars, ceHasHiddenVars: hiddenVars.length > 0
+    };
+  }
+
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
 
   statsMany(ids) {
@@ -2745,7 +2955,7 @@ class Component extends DCLogic {
       } })),
       fromTxt: (o.history || []).length ? 'Donné par ' + o.history[o.history.length - 1].from + ' le ' + this.fmtDate(o.history[o.history.length - 1].date) : ''
     };
-    return { ...give, remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? rm.txt : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
+    return { ...give, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? rm.txt : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
       name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: o.prixPaye ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
@@ -2887,7 +3097,8 @@ class Component extends DCLogic {
     const base = (sheet[k] && sheet[k].length) ? sheet[k] : ((this.families[k] || {}).teas || []);
     const adds = this.getAdds();
     const extra = adds.teas.filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.traduction || undefined, gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
-    return base.concat(extra).map(t => {
+    const tov = this.catOv().tea;
+    return base.concat(extra).map(t => Object.assign({}, t, { orig: t.name }, tov[t.name] || {})).filter(t => !t.hidden).map(t => {
       if (raw) return t;
       const me = this.me();
       const mine = this.collection().filter(o => this.norm(o.the) === this.norm(t.name) && o.owners.indexOf(me) >= 0).map(o => { const st = this.statsFor(o.id, me); return { label: o.lot || 'Lot', shop: o.boutique || '—', year: o.annee || '', format: o.format || '', note: o.commentaire || '', code: o.code, ownersTxt: o.owners.length > 1 ? 'Partagé · ' + o.owners.join(' & ') : '', prixTxt: this.prixTxt(o), avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '' }; });
@@ -2988,6 +3199,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0 });
 
   renderVals() {
+    this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
     const v = (guest && ['mine', 'log', 'add'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
@@ -3045,6 +3257,7 @@ class Component extends DCLogic {
     const pick = {};
     Object.keys(this.families).forEach(k => { pick[k] = () => this.go('list', k, 0); });
     return {
+      famCards: Object.keys(this.families).map(k => ({ slot: 'fam-' + k, name: this.families[k].name, color: this.families[k].color, desc: this.families[k].desc, pick: pick[k] })),
       isHome: v === 'home',
       isTypes: v === 'types',
       isList: v === 'list',
@@ -3304,7 +3517,7 @@ class Component extends DCLogic {
           const allSacs = coll.filter(x => x.prodId === pid);
           const st = this.statsMany(allSacs.map(x => x.id)); const open = !!(this.state.openProds || {})[pid];
           const ph = (allSacs.find(x => x.prodPhoto) || {}).prodPhoto || '';
-          return { photo: ph, noPhoto: !ph, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
+          return { ...this.expFlags('p:' + pid), photo: ph, noPhoto: !ph, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
             marque: o.marque || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
             avg: this.avgTxt(st) || '—', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
@@ -3366,6 +3579,7 @@ class Component extends DCLogic {
       tabLot: () => this.setState({ addTab: 'lot', addMsg: '' }),
       never: false,
       tabTeaOn: this.state.addTab === 'tea', tabTeaOff: this.state.addTab !== 'tea',
+      ...this.catEditVals(),
       tabLotOn: (this.state.addTab || 'lot') === 'lot', tabLotOff: (this.state.addTab || 'lot') !== 'lot',
       form: Object.assign({ famille: 'blanc', nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '', the: '', lot: '', boutique: '', annee: '', format: '', commentaire: '', ref: '', code: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', vParent: '', vNom: '', vTrad: '', vProfil: '', vDesc: '' }, this.state.form),
       setF: ['prodComment', 'achat', 'prodDate', 'variante', 'nomFour', 'marque', 'famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }, k === 'the' && val !== (s.form || {}).the ? { variante: '' } : {}) })); }; return o; }, {}),
