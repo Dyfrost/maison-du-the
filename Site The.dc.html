@@ -885,7 +885,7 @@
                 </div>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
@@ -915,7 +915,7 @@
                 </div>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
@@ -1030,7 +1030,7 @@
                 </div>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
@@ -1765,7 +1765,7 @@
                 </div>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
@@ -2928,7 +2928,7 @@ class Component extends DCLogic {
 
   inLog(l, u) { return (l.author || '') === u || (l.with || []).indexOf(u) >= 0; }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
