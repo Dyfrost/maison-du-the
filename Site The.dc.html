@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Maison du Thé">
+<meta name="theme-color" content="#f5ead8">
 </head>
 <body>
 <x-dc>
@@ -52,7 +59,7 @@
     <a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
-        <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
+        <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
           <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
@@ -61,7 +68,6 @@
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuMine }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Mes thés</button>
             <button role="menuitem" onClick="{{ menuLog }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Je bois un thé</button>
-            <button role="menuitem" onClick="{{ menuPacks }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Tous les sachets</button>
             <button role="menuitem" onClick="{{ menuAdd }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">＋ Ajouter un thé</button>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
@@ -355,7 +361,62 @@
           <sc-if value="{{ scopeAllOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Toute la maison</button></sc-if><sc-if value="{{ scopeAllOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Toute la maison</button></sc-if>
         </div>
         <input class="input" type="search" placeholder="Filtrer par nom, code, boutique…" value="{{ mq }}" onChange="{{ onMq }}" style="width: 100%; max-width: 520px; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
-        <button class="btn btn-secondary" onClick="{{ openPacks }}" style="align-self: flex-start; white-space: nowrap;">Tous les sachets de la maison →</button>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Trier par</span>
+          <div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;">
+            <sc-if value="{{ grpTheOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ grpThe }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Thé</button></sc-if><sc-if value="{{ grpTheOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ grpThe }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Thé</button></sc-if>
+            <sc-if value="{{ grpSacOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ grpSac }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Sachet</button></sc-if><sc-if value="{{ grpSacOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ grpSac }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Sachet</button></sc-if>
+          </div>
+        </div>
+        <sc-if value="{{ grpSacOn }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <sc-for list="{{ mineSachets }}" as="sa" hint-placeholder-count="2">
+                  <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                        <button onClick="{{ sa.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 20px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
+                        <span style="font-size: 13px; opacity: .7;">{{ sa.the }}</span>
+                      </div>
+                    <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px;"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ ph }}" alt="" style="width: 72px; height: 72px; border-radius: 14px;"></a></sc-for></div></sc-if>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
+                      <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
+                      <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
+                      <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
+                        <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
+                      </span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Propriétaire</span><span style="font-size: 14px;">{{ sa.owner }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque</span><span style="font-size: 14px;">{{ sa.marque }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Date d'achat</span><span style="font-size: 14px;">{{ sa.achat }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Année de production</span><span style="font-size: 14px;">{{ sa.prodDate }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Lot</span><span style="font-size: 14px;">{{ sa.lot }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Format</span><span style="font-size: 14px;">{{ sa.format }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix payé</span><span style="font-size: 14px;">{{ sa.paye }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix</span><span style="font-size: 14px;">{{ sa.prix }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
+                    </div>
+                    <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
+                    <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
+                    <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
+                    <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
+                        <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
+                          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
+                            <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ grpTheOn }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <sc-for list="{{ mineProds }}" as="m" hint-placeholder-count="2">
             <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);">
@@ -403,6 +464,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix</span><span style="font-size: 14px;">{{ sa.prix }}</span></div>
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
+                    <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -425,6 +487,7 @@
             </div>
           </sc-for>
         </div>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -462,6 +525,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix</span><span style="font-size: 14px;">{{ sa.prix }}</span></div>
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
+                    <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -528,9 +592,21 @@
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 90 · f (à froid)" value="{{ lf.temperature }}" onChange="{{ setL.temperature }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 4 (g) · 1u" value="{{ lf.qty }}" onChange="{{ setL.qty }}">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité utilisée ({{ qtyUnit }})</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 4" inputMode="decimal" value="{{ lf.qty }}" onChange="{{ setL.qty }}">
+                <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; padding-left: 6px;">{{ logRemain }}</span></sc-if>
               </label>
+              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Dégusté avec</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <sc-for list="{{ withChips }}" as="w" hint-placeholder-count="2">
+                    <sc-if value="{{ w.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent-2-600); background: var(--color-accent-2-600); color: var(--color-bg);">✓ {{ w.name }}</button></sc-if>
+                    <sc-if value="{{ w.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ w.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-2-100);">{{ w.name }}</button></sc-if>
+                  </sc-for>
+                  <sc-if value="{{ noOthers }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">Les autres membres apparaîtront ici dès leur première connexion.</span></sc-if>
+                </div>
+                <span style="font-size: 12px; opacity: .6; padding-left: 4px;">La dégustation apparaîtra aussi chez eux, même si ce n'est pas leur thé.</span>
+              </div>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Repas / goûter</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : RAV · palet breton" value="{{ lf.repas }}" onChange="{{ setL.repas }}">
@@ -818,15 +894,6 @@
                   </span>
                 </div>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Photo du thé</span>
-                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
-                  <sc-if value="{{ form.prodPhoto }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ form.prodPhoto }}" alt="Photo du thé" style="width: 96px; height: 96px;"></sc-if>
-                  <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer;">📷 {{ prodPhotoBtn }}<input type="file" accept="image/*" onChange="{{ onProdPhoto }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label>
-                  <sc-if value="{{ form.prodPhoto }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ onProdPhotoClear }}" style="white-space: nowrap;">Retirer</button></sc-if>
-                  <sc-if value="{{ prodPhotoMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">{{ prodPhotoMsg }}</span></sc-if>
-                </div>
-              </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le thé</span>
                 <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="Ce qui caractérise ce thé…" value="{{ form.prodComment }}" onChange="{{ setF.prodComment }}"></textarea>
@@ -884,7 +951,16 @@
                   <sc-for list="{{ freqOptions }}" as="q" hint-placeholder-count="0"><option value="{{ q.code }}">{{ q.code }} · {{ q.label }}</option></sc-for>
                 </select>
               </label>
-              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
+              <div style="display: flex; flex-direction: column; gap: 8px; ">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Photo du thé</span>
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                  <sc-if value="{{ form.prodPhoto }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ form.prodPhoto }}" alt="Photo du thé" style="width: 96px; height: 96px;"></sc-if>
+                  <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer;">📷 {{ prodPhotoBtn }}<input type="file" accept="image/*" onChange="{{ onProdPhoto }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label>
+                  <sc-if value="{{ form.prodPhoto }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ onProdPhotoClear }}" style="white-space: nowrap;">Retirer</button></sc-if>
+                  <sc-if value="{{ prodPhotoMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">{{ prodPhotoMsg }}</span></sc-if>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px; ">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Photo du sachet</span>
                 <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
                   <sc-if value="{{ form.sachetPhoto }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ form.sachetPhoto }}" alt="Photo du sachet" style="width: 96px; height: 96px;"></sc-if>
@@ -1243,6 +1319,7 @@
                         <sc-if value="{{ sa.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 17px;">{{ sa.avg }}</span></sc-if>
                       </div>
                       <span style="font-size: 13px; opacity: .75;">{{ sa.meta }}</span>
+                      <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
                       <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     </div>
                     <div class="acts" style="flex: none; display: flex; gap: 4px;">
@@ -2149,7 +2226,7 @@ class Component extends DCLogic {
       const pr = a.prods.find(x => x.id === sa.prodId);
       if (!pr) return null;
       return { id: sa.id, prodId: pr.id, owner: sa.owner, owners: [sa.owner],
-        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: pr.photo || '', photo: sa.photo || '',
+        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: sa.photoThe || '', photo: sa.photo || '',
         code: sa.code || '', achat: sa.achat || '', prodDate: sa.prodDate || '', annee: sa.prodDate || '', lot: sa.lot || '', prixMode: sa.prixMode || 'poids', prixPaye: sa.prixPaye || '', quantite: sa.quantite || '', freq: sa.freq || '', commentaire: sa.commentaire || '' };
     }).filter(Boolean);
   }
@@ -2181,6 +2258,20 @@ class Component extends DCLogic {
     }
   }
 
+  qtyNum(v) { const m = String(v == null ? '' : v).replace(',', '.').match(/\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; }
+
+  remainFor(o) {
+    const init = this.num(o.quantite);
+    if (init == null || !init) return null;
+    const used = this.logsFor(o.id).reduce((t, l) => t + (this.qtyNum(l.qty) || 0), 0);
+    const unit = o.prixMode === 'unite' ? ' u' : ' g';
+    const left = Math.max(0, init - used);
+    const fmt = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
+    return { left: left, init: init, used: used, pct: Math.round(left / init * 100), txt: 'Reste ≈ ' + fmt(left) + unit + ' sur ' + fmt(init) + unit, unit: unit.trim() };
+  }
+
+  inLog(l, u) { return (l.author || '') === u || (l.with || []).indexOf(u) >= 0; }
+
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
 
   statsMany(ids) {
@@ -2193,15 +2284,16 @@ class Component extends DCLogic {
     const st = this.statsFor(o.id); const open = !!(this.state.openLogs || {})[o.id];
     const fk = this.famOf(o.the);
     const photos = [o.photo, o.prodPhoto].filter(Boolean);
-    return { photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
-      name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque, boutique: o.boutique, prodCode: o.prodCode, tags: o.tags || [],
+    const rm = this.remainFor(o);
+    return { hasRemain: !!rm, remainTxt: rm ? rm.txt : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
+      name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: o.prixPaye ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
       meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'année de production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '),
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ author: l.author || '', note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: (l.author || '') === me,
+      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: (l.author || '') === me,
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(o.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i) }); } },
       taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
@@ -2255,7 +2347,7 @@ class Component extends DCLogic {
   logsFor(id) { return this.getAdds().logs.filter(l => l.lotId === id).sort((x, y) => String(y.date).localeCompare(String(x.date))); }
 
   statsFor(id, user) {
-    const ls = this.logsFor(id).filter(l => !user || (l.author || this.opts().users[0]) === user);
+    const ls = this.logsFor(id).filter(l => !user || this.inLog(l, user));
     const ns = ls.map(l => this.num(String(l.note).replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, ''))).filter(n => n != null);
     const avg = ns.length ? ns.reduce((s, n) => s + n, 0) / ns.length : null;
     return { n: ls.length, avg: avg, last: ls[0] ? ls[0].date : '' };
@@ -2470,28 +2562,28 @@ class Component extends DCLogic {
         const prods = a.prods.filter(x => tea.name && this.norm(x.the) === this.norm(tea.name));
         const coll = this.collection();
         const prodIds = prods.map(x => x.id);
-        const myLogs = a.logs.filter(l => (l.author || this.opts().users[0]) === me && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
+        const myLogs = a.logs.filter(l => this.inLog(l, me) && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
         const taste = id => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
-        const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '', prodPhoto: pr.photo || '' });
-        const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }, fill(pr)) }));
+        const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
+        const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, fill(pr)) }));
         const card = pr => {
           const sacs = coll.filter(o => o.prodId === pr.id);
           const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i);
           const mineS = sacs.filter(o => o.owner === me);
           const pst = this.statsMany(sacs.map(o => o.id));
-          return { photo: pr.photo || '', label: pr.nom || pr.the, sub: pr.variante || '', marque: pr.marque || '—', tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '', avg: this.avgTxt(pst), avgSub: pst.n ? '(' + pst.n + ')' : '',
+          return { photo: (sacs.find(o => o.prodPhoto) || {}).prodPhoto || '', label: pr.nom || pr.the, sub: pr.variante || '', marque: pr.marque || '—', tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '', avg: this.avgTxt(pst), avgSub: pst.n ? '(' + pst.n + ')' : '',
             shop: pr.boutique || '', shopOn: !!pr.boutique, note: pr.commentaire || '',
             ownersTxt: owners.length ? 'Possédé par ' + owners.join(' & ') : "Personne ne l'a pour l'instant",
             iOwn: mineS.length > 0, iDontOwn: !mineS.length, own: () => addSachet(pr),
-            sachets: mineS.map(o => { const st = this.statsFor(o.id); return { photo: o.photo || '', code: o.code, meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'année de production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '), note: o.commentaire || '', avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '', taste: () => taste(o.id),
-              edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, fill(pr), { sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }) }; }) };
+            sachets: mineS.map(o => { const st = this.statsFor(o.id); const rm = this.remainFor(o); return { hasRemain: !!rm, remainTxt: rm ? rm.txt : '', remainPct: rm ? rm.pct : 0, photo: o.photo || o.prodPhoto || '', code: o.code, meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'année de production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '), note: o.commentaire || '', avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '', taste: () => taste(o.id),
+              edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, fill(pr), { sachetPhoto: o.photo, prodPhoto: o.prodPhoto, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }) }; }) };
         };
         const mine = prods.filter(pr => coll.some(o => o.prodId === pr.id && o.owner === me)), others = prods.filter(pr => mine.indexOf(pr) < 0);
         return {
           teaMine: mine.map(card), teaOthers: others.map(card), teaNoMine: !mine.length, teaNoOthers: !others.length,
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
-          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
+          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
         };
       })(),
       teaTags: tTags,
@@ -2600,7 +2692,7 @@ class Component extends DCLogic {
       isLog: v === 'log',
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf) }),
-      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
+      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
       mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » et cochez « Je possède ».'; })(),
@@ -2612,7 +2704,8 @@ class Component extends DCLogic {
           const sacs = list.filter(o => o.prodId === pid); const o = sacs[0]; const fk = this.famOf(o.the);
           const allSacs = coll.filter(x => x.prodId === pid);
           const st = this.statsMany(allSacs.map(x => x.id)); const open = !!(this.state.openProds || {})[pid];
-          return { photo: o.prodPhoto || '', noPhoto: !o.prodPhoto, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
+          const ph = (allSacs.find(x => x.prodPhoto) || {}).prodPhoto || '';
+          return { photo: ph, noPhoto: !ph, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
             marque: o.marque || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
             avg: this.avgTxt(st) || '—', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
@@ -2622,6 +2715,9 @@ class Component extends DCLogic {
         });
       })(),
       openPacks: () => this.setState({ view: 'packs' }),
+      grpTheOn: (this.state.grp || 'the') === 'the', grpTheOff: (this.state.grp || 'the') !== 'the', grpSacOn: this.state.grp === 'sac', grpSacOff: this.state.grp !== 'sac',
+      grpThe: () => this.setState({ grp: 'the' }), grpSac: () => this.setState({ grp: 'sac' }),
+      mineSachets: (() => { const q = this.norm(this.state.mq); return myColl.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(y.achat || '').localeCompare(String(x.achat || '')) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(),
       isPacks: v === 'packs',
       pq: this.state.pq || '', onPq: e => this.setState({ pq: e.target.value }),
       allPacks: (() => { const q = this.norm(this.state.pq); return coll.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.boutique, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the)) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(),
@@ -2637,7 +2733,16 @@ class Component extends DCLogic {
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
       setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
-      lotOptions: coll.filter(o => o.owner === me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code })),
+      lotOptions: coll.filter(o => o.owner === me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code })).concat(coll.filter(o => o.owner !== me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code + ' (sachet de ' + o.owner + ')' }))),
+      ...(() => {
+        const o = coll.find(x => x.id === (this.state.lf || {}).lotId);
+        const r = o ? this.remainFor(o) : null;
+        const others = this.opts().users.filter(u => u && u !== me);
+        const cur = (this.state.lf || {}).with || [];
+        return { qtyUnit: o && o.prixMode === 'unite' ? 'unités' : 'g', logRemain: r ? r.txt + ' avant cette dégustation' : (o ? 'Quantité du sachet non renseignée : pas d\'estimation du reste.' : ''),
+          noOthers: !others.length,
+          withChips: others.map(u => { const on = cur.indexOf(u) >= 0; return { name: u, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.lf || {}).with || []; return { lf: Object.assign({}, s.lf, { with: on ? c.filter(x => x !== u) : c.concat([u]) }) }; }) }; }) };
+      })(),
       vessels: this.opts().vessels,
       vesselHint: (() => { const c = String((this.state.lf || {}).infusion || '').replace(/\*$/, '').trim().toUpperCase(); const v = this.opts().vessels.find(x => String(x.code).toUpperCase() === c); return v ? v.label + (/\*$/.test((this.state.lf || {}).infusion || '') ? ' · avec préchauffe' : '') : 'PGW, GGW, KYU, VM, TMR, XSI, CHR… ou votre propre code'; })(),
       techChips: this.opts().techs.filter(t => t.code).map(t => ({ code: t.code, label: t.label, add: () => this.setState(s => { const cur = String((s.lf || {}).technique || '').trim(); return { lf: Object.assign({}, s.lf, { technique: cur ? cur + '+' + t.code : t.code }) }; }) })),
@@ -2647,13 +2752,13 @@ class Component extends DCLogic {
         const l = this.state.lf || {};
         if (!l.lotId) { this.setState({ logMsg: 'Choisissez le thé dégusté.' }); return; }
         const a = this.getAdds();
-        const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { date: l.date || new Date().toISOString().slice(0, 10) });
+        const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || new Date().toISOString().slice(0, 10) });
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
         const o = coll.find(x => x.id === l.lotId);
-        this.setState({ logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
+        this.setState({ logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
       },
       hasRecent: this.getAdds().logs.length > 0,
-      recentLogs: this.getAdds().logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { author: l.author || this.opts().users[0], note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }),
+      recentLogs: this.getAdds().logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }),
       tabTea: () => this.setState({ addTab: 'tea', addMsg: '' }),
       tabLot: () => this.setState({ addTab: 'lot', addMsg: '' }),
       never: false,
@@ -2677,7 +2782,7 @@ class Component extends DCLogic {
         const n = a.sachets.filter(x => x.owner === me && pr && x.prodId === pr.id && x.id !== this.state.editId).length + 1;
         return { genCode: gen, codeSuggest: (this.state.editId && fm.code) ? fm.code : gen + '-' + ini + n + '-XXXX',
           prodOptions: a.prods.slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the))).map(x => ({ id: x.id, label: [x.nom || x.the, x.the !== x.nom ? x.the : '', x.marque, x.code].filter(Boolean).join(' — ') })),
-          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '', prodPhoto: x.photo || '' } : { prodId: '', prodPhoto: '' }) })); } };
+          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } };
       })(),
       noteHint: (() => { const n = parseFloat(String((this.state.form || {}).note20 || '').replace(',', '.')); if (isNaN(n)) return '0–4 à jeter · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel'; return n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? "Correct, sans plus" : n <= 18 ? 'Vraiment bon' : 'Exceptionnel'; })(),
       saveVar: () => {
@@ -2699,7 +2804,7 @@ class Component extends DCLogic {
         if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez la famille de thé.' }); return; }
         if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
         const a = this.getAdds();
-        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], commentaire: fm.prodComment || '', photo: fm.prodPhoto || '' };
+        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], commentaire: fm.prodComment || '' };
         let prods = a.prods.slice(), prodId = fm.prodId;
         if (prodId && prods.some(x => x.id === prodId)) {
           prods = prods.map(x => x.id === prodId ? Object.assign({}, x, prodFields) : x);
@@ -2716,8 +2821,8 @@ class Component extends DCLogic {
         const rnd = () => String(Math.floor(1000 + Math.random() * 9000));
         let code = old && old.prodId === prodId && old.code ? old.code : pr.code + '-' + ini + n + '-' + rnd();
         while (a.sachets.some(x => x.code === code && (!old || x.id !== old.id))) code = pr.code + '-' + ini + n + '-' + rnd();
-        const sac = { prodId: prodId, owner: me, code: code, achat: fm.achat || '', prodDate: fm.prodDate || '', lot: fm.lot || '', prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye || '', quantite: fm.quantite || '', freq: fm.freq || '', commentaire: fm.commentaire || '', photo: fm.sachetPhoto || '' };
-        const clear = { prodPhoto: '', sachetPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' };
+        const sac = { prodId: prodId, owner: me, code: code, achat: fm.achat || '', prodDate: fm.prodDate || '', lot: fm.lot || '', prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye || '', quantite: fm.quantite || '', freq: fm.freq || '', commentaire: fm.commentaire || '', photo: fm.sachetPhoto || '', photoThe: fm.prodPhoto || '' };
+        const clear = { prodPhoto: '', sachetPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' };
         if (this.state.editId) {
           this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.map(x => x.id === this.state.editId ? Object.assign({}, x, sac, { owner: x.owner }) : x) }));
           this.setState(s => ({ view: 'mine', editId: null, form: Object.assign({}, s.form, clear) }));
