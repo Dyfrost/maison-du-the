@@ -671,6 +671,7 @@
           <sc-if value="{{ never }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un thé au catalogue</button></sc-if><sc-if value="{{ never }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un thé au catalogue</button></sc-if>
           <sc-if value="{{ tabLotOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un sachet</button></sc-if><sc-if value="{{ tabLotOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un sachet</button></sc-if>
           <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Options</button></sc-if><sc-if value="{{ tabOptOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Options</button></sc-if>
+          <sc-if value="{{ tabManOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Gérer</button></sc-if><sc-if value="{{ tabManOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Gérer</button></sc-if>
         </div>
 
         <datalist id="liste-thes">
@@ -682,6 +683,40 @@
             <sc-if value="{{ modeNewOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Nouveau thé</button></sc-if><sc-if value="{{ modeNewOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Nouveau thé</button></sc-if>
             <sc-if value="{{ modeVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variante d'un thé existant</button></sc-if><sc-if value="{{ modeVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variante d'un thé existant</button></sc-if>
           </div>
+        </sc-if>
+
+        <sc-if value="{{ tabManOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h2 style="font-size: 26px; margin: 0;">Gérer les thés et les sachets</h2>
+              <p style="margin: 0; font-size: 14px; opacity: .7;">Supprimer un thé supprime aussi tous ses sachets et leurs dégustations, pour tout le monde. C'est définitif.</p>
+            </div>
+            <input class="input" type="search" aria-label="Filtrer" placeholder="Filtrer par nom, code, propriétaire…" value="{{ manQ }}" onChange="{{ onManQ }}" style="width: 100%; max-width: 520px; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
+            <sc-if value="{{ manEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun thé enregistré.</p></sc-if>
+            <sc-for list="{{ manList }}" as="g" hint-placeholder-count="2">
+              <div style="background: var(--color-bg); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                <div class="row-wrap" style="display: flex; align-items: center; gap: 12px;">
+                  <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                    <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                      <span style="font-family: var(--font-heading); font-size: 19px;">{{ g.name }}</span>
+                      <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ g.code }}</span>
+                    </div>
+                    <span style="font-size: 13px; opacity: .7;">{{ g.meta }}</span>
+                  </div>
+                  <div class="acts" style="flex: none; display: flex;"><button class="btn btn-secondary" onClick="{{ g.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer le thé</button></div>
+                </div>
+                <sc-for list="{{ g.sachets }}" as="sa" hint-placeholder-count="1">
+                  <div class="row-wrap" style="display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--color-divider); padding-top: 8px;">
+                    <div style="flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
+                      <span style="font-size: 13px; opacity: .75;">{{ sa.meta }}</span>
+                    </div>
+                    <div class="acts" style="flex: none; display: flex;"><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer le sachet</button></div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </section>
         </sc-if>
 
         <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}">
@@ -2654,6 +2689,22 @@ class Component extends DCLogic {
       scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
       tabOptOn: this.state.addTab === 'opt', tabOptOff: this.state.addTab !== 'opt',
+      tabMan: () => this.setState({ addTab: 'man', addMsg: '' }),
+      tabManOn: this.state.addTab === 'man', tabManOff: this.state.addTab !== 'man',
+      manQ: this.state.manQ || '', onManQ: e => this.setState({ manQ: e.target.value }),
+      ...(() => {
+        const a = this.getAdds(); const q = this.norm(this.state.manQ);
+        const list = a.prods.map(pr => {
+          const sacs = a.sachets.filter(x => x.prodId === pr.id);
+          const hay = this.norm([pr.nom, pr.the, pr.variante, pr.marque, pr.code].concat(sacs.map(x => x.code + ' ' + x.owner)).join(' '));
+          if (q && hay.indexOf(q) < 0) return null;
+          return { name: pr.nom || pr.the, code: pr.code, meta: [pr.the, pr.variante, pr.marque, sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet')].filter(Boolean).join(' · '),
+            remove: () => { if (!window.confirm('Supprimer le thé « ' + (pr.nom || pr.the) + ' » et ses ' + sacs.length + ' sachet(s), pour tout le monde ?')) return; const b = this.getAdds(); const ids = b.sachets.filter(x => x.prodId === pr.id).map(x => x.id); this.setAdds(Object.assign({}, b, { prods: b.prods.filter(x => x.id !== pr.id), sachets: b.sachets.filter(x => x.prodId !== pr.id), logs: b.logs.filter(l => ids.indexOf(l.lotId) < 0) })); },
+            sachets: sacs.map(x => ({ code: x.code, meta: [x.owner, x.achat ? 'acheté le ' + this.fmtDate(x.achat) : '', this.formatTxt(x)].filter(Boolean).join(' · '),
+              remove: () => { if (!window.confirm('Supprimer le sachet ' + x.code + ' (' + x.owner + ') ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.filter(y => y.id !== x.id), logs: b.logs.filter(l => l.lotId !== x.id) })); } })) };
+        }).filter(Boolean);
+        return { manList: list, manEmpty: !list.length };
+      })(),
       freqOptions: this.opts().freqs,
       newTag: this.state.newTag || '',
       onNewTag: e => this.setState({ newTag: e.target.value }),
