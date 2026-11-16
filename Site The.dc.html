@@ -699,7 +699,7 @@
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <sc-for list="{{ tagRows }}" as="t" hint-placeholder-count="4">
                 <div class="row-wrap" style="display: flex; align-items: center; gap: 10px; background: var(--color-bg); border-radius: 18px; padding: 8px 10px 8px 14px;">
-                  <input class="input" aria-label="Nom du tag" value="{{ t.name }}" onChange="{{ t.rename }}" style="flex: 1 1 200px; min-width: 0; font-size: 15px; padding: 8px 14px;">
+                  <input class="input" aria-label="Nom du tag" value="{{ t.draft }}" onChange="{{ t.edit }}" onBlur="{{ t.rename }}" onKeyDown="{{ t.key }}" style="flex: 1 1 200px; min-width: 0; font-size: 15px; padding: 8px 14px;">
                   <span style="font-size: 13px; opacity: .65; white-space: nowrap;">{{ t.count }}</span>
                   <div class="acts" style="flex: none; display: flex;"><button class="btn btn-ghost" onClick="{{ t.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></div>
                 </div>
@@ -2170,6 +2170,7 @@ class Component extends DCLogic {
   }
 
   setAdds(a) {
+    this._chg = (this._chg || 0) + 1;
     this._adds = a;
     try { localStorage.setItem('the-ajouts', JSON.stringify(a)); } catch (e) {}
     this.forceUpdate();
@@ -2197,9 +2198,10 @@ class Component extends DCLogic {
 
   async pullCloud(first) {
     if (!this.sb || this._dirty) return;
+    const chg = this._chg || 0;
     const { data, error } = await this.sb.from('the_data').select('payload, updated_at').eq('id', 'maison').maybeSingle();
     if (error) { if (this.state.session) this.setState({ syncErr: error.message }); return; }
-    if (this._dirty) return;
+    if (this._dirty || (this._chg || 0) !== chg) return;
     const remote = (data && data.payload) || {};
     const empty = !remote.owned && !remote.logs && !remote.teas && !remote.prods && !remote.sachets;
     const local = this.getAdds();
@@ -2739,7 +2741,10 @@ class Component extends DCLogic {
       tagRows: this.allTags().map(t => {
         const n = this.getAdds().prods.filter(p => (p.tags || []).indexOf(t) >= 0).length;
         return { name: t, count: n ? n + (n > 1 ? ' thés' : ' thé') : 'non utilisé',
-          rename: e => { const v = String(e.target.value || '').trim(); if (!v || v === t) return; if (this.allTags().some(x => x !== t && this.norm(x) === this.norm(v))) { window.alert('Ce tag existe déjà.'); this.forceUpdate(); return; } this.setTagList(this.allTags().map(x => x === t ? v : x), tags => tags.map(x => x === t ? v : x)); },
+          draft: (this.state.tagDraft || {})[t] != null ? this.state.tagDraft[t] : t,
+          edit: e => { const v = e.target.value; this.setState(s => ({ tagDraft: Object.assign({}, s.tagDraft, { [t]: v }) })); },
+          key: e => { if (e.key === 'Enter') e.target.blur(); },
+          rename: e => { this.setState(s => { const d = Object.assign({}, s.tagDraft); delete d[t]; return { tagDraft: d }; }); const v = String(e.target.value || '').trim(); if (!v || v === t) return; if (this.allTags().some(x => x !== t && this.norm(x) === this.norm(v))) { window.alert('Ce tag existe déjà.'); this.forceUpdate(); return; } this.setTagList(this.allTags().map(x => x === t ? v : x), tags => tags.map(x => x === t ? v : x)); },
           remove: () => { if (!window.confirm('Supprimer le tag « ' + t + ' »' + (n ? ' (utilisé sur ' + n + ' thé' + (n > 1 ? 's' : '') + ')' : '') + ' ?')) return; this.setTagList(this.allTags().filter(x => x !== t), tags => tags.filter(x => x !== t)); } };
       }),
       tabManOn: this.state.addTab === 'man', tabManOff: this.state.addTab !== 'man',
