@@ -37,9 +37,21 @@
     </sc-if>
     <a class="btn btn-ghost" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
-      <div style="display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 4px 3px 3px;">
-        <span style="display: flex; align-items: center; gap: 8px; padding: 3px 10px 3px 3px; font-size: 14px; font-weight: 600; white-space: nowrap;"><span style="width: 26px; height: 26px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}</span>
-        <button onClick="{{ logout }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 6px 10px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
+      <div style="position: relative;">
+        <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
+          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+          <button aria-label="Fermer le menu" onClick="{{ closeMenu }}" style="position: fixed; inset: 0; background: transparent; border: none; cursor: default; z-index: 40;"></button>
+          <div role="menu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
+            <button role="menuitem" onClick="{{ menuMine }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Mes thés</button>
+            <button role="menuitem" onClick="{{ menuLog }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Je bois un thé</button>
+            <button role="menuitem" onClick="{{ menuAdd }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">＋ Ajouter un thé</button>
+            <hr class="hr" style="margin: 4px 8px;">
+            <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
+          </div>
+        </sc-if>
       </div>
     </sc-if>
     <sc-if value="{{ cloudGuest }}" hint-placeholder-val="{{ false }}">
@@ -658,7 +670,7 @@
                 <span style="font-size: 12px; opacity: .6; padding-left: 6px;">Vide = {{ codeSuggest }}</span>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Lot ou marque</span>
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom du thé, lot ou marque</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Récolte de printemps, maison X" value="{{ form.lot }}" onChange="{{ setF.lot }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
@@ -2195,14 +2207,20 @@ class Component extends DCLogic {
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
       isMine: v === 'mine',
       isLogin: v === 'login',
-      navOn: v !== 'login' && !guest,
+      navOn: v !== 'login' && !this.state.cloud,
+      menuOpen: !!this.state.menuOpen, menuRot: this.state.menuOpen ? 180 : 0,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      menuMine: () => this.setState({ menuOpen: false, view: 'mine' }),
+      menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
+      menuAdd: () => this.setState({ menuOpen: false, view: 'add', addMsg: '' }),
       cloudUser: !!this.state.session,
       cloudGuest: guest,
       syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
       localMode: !this.state.cloud,
       meInitial: (this.me() || '?').slice(0, 1).toUpperCase(),
-      logout: async () => { if (this.sb) await this.sb.auth.signOut(); this.setState({ session: null, view: 'home' }); },
+      logout: async () => { this.setState({ menuOpen: false }); if (this.sb) await this.sb.auth.signOut(); this.setState({ session: null, view: 'home' }); },
       af: Object.assign({ nom: '', email: '', pass: '' }, this.state.af),
       setA: ['nom', 'email', 'pass'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ af: Object.assign({}, s.af, { [k]: val }) })); }; return o; }, {}),
       isSignup: authMode === 'signup', isSignin: authMode !== 'signup',
@@ -2255,7 +2273,7 @@ class Component extends DCLogic {
           the: o.the, code: o.code, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
           meta: [o.lot, o.boutique, o.annee, o.format, this.prixTxt(o)].filter(Boolean).join(' · ') || '—',
           avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '—',
-          statsTxt: st.n ? me + ' · ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') + ' · dernière le ' + this.fmtDate(st.last) : me + ' ne l\'a pas encore dégusté',
+          statsTxt: st.n ? 'Vous · ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') + ' · dernière le ' + this.fmtDate(st.last) : 'Vous ne l\'avez pas encore dégusté',
           hasLogs: this.logsFor(o.id).length > 0, open: open, rot: open ? 90 : 0,
           toggle: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
           logs: this.logsFor(o.id).map(l => ({ author: l.author || this.opts().users[0], note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '),
