@@ -69,7 +69,6 @@
       <button onClick="{{ openAdd }}" class="nq" style-hover="background: var(--color-accent-100);">＋ Nouveau thé</button>
     </div>
     </sc-if>
-    <sc-if value="{{ guestNav }}" hint-placeholder-val="{{ false }}"><a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a></sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
         <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
@@ -82,7 +81,6 @@
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
-            <a role="menuitem" href="Carte.html" style="cursor: pointer; width: 100%; text-align: left; display: block; text-decoration: none; box-sizing: border-box; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🗺️ Carte des origines</a>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -149,7 +147,7 @@
       <div style="animation: fadeUp .5s ease both; display: flex; flex-direction: column; gap: 36px; flex: 1; justify-content: center;">
         <div style="max-width: 600px;">
           <h1 style="font-size: 58px; margin: 0 0 16px;">Par où commencer&nbsp;?</h1>
-          <p style="font-size: 18px; opacity: .72; margin: 0; text-wrap: pretty;">Quatre portes d'entrée&nbsp;: la feuille, les objets qui la préparent, les cérémonies, et le pas-à-pas.</p>
+          <p style="font-size: 18px; opacity: .72; margin: 0; text-wrap: pretty;">Cinq portes d'entrée&nbsp;: la feuille, les objets qui la préparent, les cérémonies, le pas-à-pas et la carte des origines.</p>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
           <button onClick="{{ openTea }}" style="position: relative; overflow: hidden; text-align: left; cursor: pointer; border: none; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); border-radius: 40px; padding: 32px; min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; box-shadow: var(--shadow-sm); transition: transform .3s ease, box-shadow .3s ease;" style-hover="transform: translateY(-6px); box-shadow: var(--shadow-lg);">
@@ -176,6 +174,12 @@
             <h2 style="font-size: 38px; margin: 0; position: relative;">Le tuto</h2>
             <p style="margin: 0; font-size: 15px; opacity: .75; position: relative;">Se servir des ustensiles, pas à pas.</p>
           </button>
+          <a href="Carte.html" style="display: flex; flex-direction: column; text-decoration: none; box-sizing: border-box; position: relative; overflow: hidden; text-align: left; cursor: pointer; border: none; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); border-radius: 40px; padding: 32px; min-height: 260px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; box-shadow: var(--shadow-sm); transition: transform .3s ease, box-shadow .3s ease;" style-hover="transform: translateY(-6px); box-shadow: var(--shadow-lg);">
+            <span style="position: absolute; top: -56px; right: -40px; width: 210px; height: 210px; border-radius: 50%; background: var(--color-accent-2-200);"></span>
+            <span style="position: absolute; top: 34px; right: 60px; width: 92px; height: 92px; border-radius: 50%; background: var(--color-accent-2-700);"></span>
+            <h2 style="font-size: 38px; margin: 0; position: relative;">La carte</h2>
+            <p style="margin: 0; font-size: 15px; opacity: .75; position: relative;">Les origines des thés, région par région.</p>
+          </a>
         </div>
       </div>
     </sc-if>
