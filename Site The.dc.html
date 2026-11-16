@@ -35,7 +35,7 @@
     header.nav .nav-brand { font-size: 19px !important; }
     header.nav .nav-brand img { width: 36px !important; height: 36px !important; }
     header.nav .nav-quick { order: 6; width: 100%; }
-    header.nav .nav-quick .btn { flex: 1 1 0; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
+    header.nav .nav-quick .btn { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
     header.nav .nav-carte { order: 5; width: 100%; justify-content: flex-start; padding-left: 0 !important; font-size: 14px !important; }
     header .umenu { position: fixed !important; left: 16px !important; right: 16px !important; top: 64px !important; min-width: 0 !important; }
     main.page { padding: 8px 16px 64px !important; }
@@ -63,12 +63,12 @@
     </sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
     <div class="nav-quick" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-      <button class="btn btn-ghost" onClick="{{ menuFriends }}" style="white-space: nowrap;">👥 Amis<sc-if value="{{ friendBadge }}" hint-placeholder-val="{{ false }}"><span style="margin-left: 6px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); font-size: 12px; display: inline-flex; align-items: center; justify-content: center;">{{ friendCount }}</span></sc-if></button>
-      <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">☕ Dégustation</button>
-      <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Thé</button>
+      <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">Mes thés & dégustations</button>
+      <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">＋ Nouvelle dégustation</button>
+      <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
     </div>
     </sc-if>
-    <a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
+    <sc-if value="{{ guestNav }}" hint-placeholder-val="{{ false }}"><a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a></sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
         <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
@@ -78,12 +78,11 @@
         <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
           <button aria-label="Fermer le menu" onClick="{{ closeMenu }}" style="position: fixed; inset: 0; background: transparent; border: none; cursor: default; z-index: 40;"></button>
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
-            <button role="menuitem" onClick="{{ menuMine }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Mes thés</button>
-            <button role="menuitem" onClick="{{ menuLogs }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Mes dégustations</button>
-            <button role="menuitem" onClick="{{ menuLog }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Nouvelle dégustation</button>
-            <button role="menuitem" onClick="{{ menuAdd }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">＋ Ajouter un thé</button>
-            <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
+            <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
+            <button role="menuitem" onClick="{{ menuMine }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🍵 Mes thés & dégustations</button>
+            <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
+            <a role="menuitem" href="Carte.html" style="cursor: pointer; width: 100%; text-align: left; display: block; text-decoration: none; box-sizing: border-box; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🗺️ Carte des origines</a>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -284,6 +283,10 @@
 
     <sc-if value="{{ isMine }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 24px; animation: fadeUp .45s ease both;">
+        <div role="tablist" aria-label="Mes thés ou mes dégustations" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px;">
+          <button role="tab" aria-selected="{{ collTeaOn }}" onClick="{{ collTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ collTeaBg }}; color: {{ collTeaFg }};">🍵 Mes thés</button>
+          <button role="tab" aria-selected="{{ collLogOn }}" onClick="{{ collLog }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ collLogBg }}; color: {{ collLogFg }};">☕ Dégustations</button>
+        </div>
         <div style="display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;">
           <div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px;">
             <h1 style="font-size: 46px; margin: 0;">Mes thés</h1>
@@ -986,9 +989,13 @@
 
     <sc-if value="{{ isLogs }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both; max-width: 900px;">
+        <div role="tablist" aria-label="Mes thés ou mes dégustations" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px;">
+          <button role="tab" aria-selected="{{ collTeaOn }}" onClick="{{ collTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ collTeaBg }}; color: {{ collTeaFg }};">🍵 Mes thés</button>
+          <button role="tab" aria-selected="{{ collLogOn }}" onClick="{{ collLog }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ collLogBg }}; color: {{ collLogFg }};">☕ Dégustations</button>
+        </div>
         <div style="display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;">
           <div style="display: flex; flex-direction: column; gap: 10px;">
-            <h1 style="font-size: 46px; margin: 0;">Dégustations</h1>
+            <h1 style="font-size: 46px; margin: 0;">Mes dégustations</h1>
             <p style="font-size: 17px; opacity: .72; margin: 0;">{{ dlogsCount }}</p>
           </div>
           <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; margin-left: auto;">＋ Nouvelle dégustation</button>
@@ -4056,7 +4063,15 @@ class Component extends DCLogic {
       menuOpen: !!this.state.menuOpen, menuRot: this.state.menuOpen ? 180 : 0,
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
       closeMenu: () => this.setState({ menuOpen: false }),
-      menuMine: () => this.setState({ menuOpen: false, view: 'mine' }),
+      menuMine: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
+      menuProfile: () => this.setState({ menuOpen: false, view: 'profile', profUser: me, profEdit: false }),
+      openColl: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
+      collTea: () => this.setState({ view: 'mine', collView: 'mine' }),
+      collLog: () => this.setState({ view: 'logs', collView: 'logs' }),
+      collTeaOn: v === 'mine', collLogOn: v === 'logs',
+      collTeaBg: v === 'mine' ? 'var(--color-accent)' : 'transparent', collTeaFg: v === 'mine' ? 'var(--color-bg)' : 'var(--color-text)',
+      collLogBg: v === 'logs' ? 'var(--color-accent)' : 'transparent', collLogFg: v === 'logs' ? 'var(--color-bg)' : 'var(--color-text)',
+      guestNav: !this.state.session,
       menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
       menuPacks: () => this.setState({ menuOpen: false, view: 'packs' }),
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
