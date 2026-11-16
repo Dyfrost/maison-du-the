@@ -235,8 +235,8 @@
                 <span style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .55;">Résultats</span>
                 <div style="display: flex; flex-wrap: wrap; gap: 2px; align-self: flex-start; background: var(--color-bg); border-radius: 999px; padding: 3px;">
                   <sc-if value="{{ own.allOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.all }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Tous les thés</button></sc-if><sc-if value="{{ own.allOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.all }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Tous les thés</button></sc-if>
-                  <sc-if value="{{ own.mineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.mine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement les thés possédés</button></sc-if><sc-if value="{{ own.mineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.mine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement les thés possédés</button></sc-if>
-                  <sc-if value="{{ own.notmineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement les familles</button></sc-if><sc-if value="{{ own.notmineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement les familles</button></sc-if>
+                  <sc-if value="{{ own.mineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.mine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement mes thés</button></sc-if><sc-if value="{{ own.mineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.mine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement mes thés</button></sc-if>
+                  <sc-if value="{{ own.notmineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement le catalogue</button></sc-if><sc-if value="{{ own.notmineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement le catalogue</button></sc-if>
                 </div>
               </div>
             </div>
@@ -324,14 +324,14 @@
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <sc-for list="{{ mineSachets }}" as="sa" hint-placeholder-count="3">
             <sc-if value="{{ sa.col }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ sa.toggleExp }}" aria-expanded="false" style="width: 100%; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
+            <div role="button" tabindex="0" onClick="{{ sa.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <span style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</span>
+                <button onClick="{{ sa.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sa.marque }} · {{ sa.code }} · {{ sa.owner }}<sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"> · {{ sa.remainShort }}</sc-if></span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ sa.avg }}</span>
               <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
-            </button>
+            </div>
             </sc-if>
             <sc-if value="{{ sa.exp }}" hint-placeholder-val="{{ false }}">
             <div class="exp-wrap" style="position: relative; display: flex; flex-direction: column;">
@@ -457,15 +457,15 @@
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <sc-for list="{{ mineProds }}" as="m" hint-placeholder-count="3">
             <sc-if value="{{ m.col }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ m.toggleExp }}" aria-expanded="false" style="width: 100%; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
+            <div role="button" tabindex="0" onClick="{{ m.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <span style="width: 12px; height: 12px; flex: none; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span>
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <span style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" style-hover="color: var(--color-accent-700);">{{ m.name }}</span>
-                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ m.marque }} · {{ m.the }} · {{ m.nSac }}</span>
+                <button onClick="{{ m.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
+                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ m.marque }} · <button onClick="{{ m.catOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 12px; color: inherit; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 2px;" style-hover="color: var(--color-accent-700);">{{ m.the }}</button> · {{ m.nSac }}</span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ m.avg }}</span>
               <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
-            </button>
+            </div>
             </sc-if>
             <sc-if value="{{ m.exp }}" hint-placeholder-val="{{ false }}">
             <div class="exp-wrap" style="position: relative; display: flex; flex-direction: column;">
@@ -1022,14 +1022,14 @@
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="3">
             <sc-if value="{{ l.col }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ l.toggleExp }}" aria-expanded="false" style="width: 100%; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 8px 14px;">
+            <div role="button" tabindex="0" onClick="{{ l.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 8px 14px;">
               <span style="flex: none; min-width: 42px; text-align: center; font-family: var(--font-heading); font-size: 17px; color: var(--color-accent-700);">{{ l.note }}</span>
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <span style="font-family: var(--font-heading); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.name }}</span>
+                <button onClick="{{ l.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 15px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ l.name }}</button>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.marque }} · {{ l.when }} · {{ l.author }} · {{ l.code }}</span>
               </div>
               <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
-            </button>
+            </div>
             </sc-if>
             <sc-if value="{{ l.exp }}" hint-placeholder-val="{{ false }}">
             <div class="exp-wrap" style="position: relative; display: flex; flex-direction: column;">
@@ -3339,11 +3339,13 @@ class Component extends DCLogic {
       toggleJoin: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === l.id ? Object.assign({}, x, { with: joined ? (x.with || []).filter(w => w !== me) : (x.with || []).concat([me]) }) : x) })); } };
   }
 
+  stop(fn) { return e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); }; }
+
   startEditLog(l) {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -3645,7 +3647,7 @@ class Component extends DCLogic {
       canAdjust: o.owner === me, adjOpen: adjOpen, adjClosed: !adjOpen,
       isEmpty: this.isEmptySachet(o), notEmpty: !this.isEmptySachet(o),
       emptyTxt: this.isEmptySachet(o) ? (o.empty === true ? 'Vide' : 'Vide (d’après le calcul)') : '',
-      toggleEmpty: () => { const a = this.getAdds(); const now = this.isEmptySachet(o); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { empty: !now }) : x) })); },
+      toggleEmpty: () => { const a = this.getAdds(); const now = this.isEmptySachet(o); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? (now ? Object.assign({}, x, { empty: false, adjust: x.prevAdjust !== undefined ? x.prevAdjust : (x.adjust && x.adjust.left === 0 ? null : x.adjust || null), prevAdjust: undefined }) : Object.assign({}, x, { empty: true, prevAdjust: x.adjust || null, adjust: { left: 0, ts: Date.now() } })) : x) })); },
       adjUnit: o.prixMode === 'unite' ? 'unités' : 'g',
       adjVal: adjOpen ? (this.state.adjVal != null ? this.state.adjVal : '') : '',
       adjToggle: () => this.setState(s => ({ adjId: s.adjId === o.id ? null : o.id, adjVal: rm ? String(Math.round(rm.left * 10) / 10).replace('.', ',') : '' })),
@@ -3675,6 +3677,7 @@ class Component extends DCLogic {
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
+      nameOpen: this.stop(() => this.openProd(o.prodId)),
       taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
       edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
       remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); } };
@@ -3927,14 +3930,29 @@ class Component extends DCLogic {
     const teaDecl = decl[tea.name] || [];
     const sub = teaDecl[this.state.sub || 0] || {};
     const kwSel = this.state.kwSel || [];
-    const ownMode = this.state.ownMode || 'notmine';
+    const ownMode = this.state.ownMode || 'all';
     const qWords = this.norm(this.state.q).split(/[\s,]+/).filter(Boolean).concat(kwSel.map(k => this.norm(k)));
     const results = [];
     const famSel = this.state.famSel || [];
-    if (qWords.length || famSel.length || ownMode !== 'notmine') {
-      Object.keys(this.families).forEach(k => {
+    if (qWords.length || famSel.length || ownMode === 'mine') {
+      const meS = this.me();
+      const ad = this.getAdds();
+      ad.prods.forEach(pr => {
+        if (ownMode === 'notmine') return;
+        const fk = this.famOf(pr.the);
+        if (famSel.length && famSel.indexOf(fk) < 0) return;
+        const sacs = ad.sachets.filter(x => x.prodId === pr.id);
+        const mineP = sacs.some(x => x.owner === meS);
+        if (ownMode === 'mine' && !mineP) return;
+        const fm = fk ? this.families[fk] : {};
+        const hay = this.norm([pr.nom, pr.the, pr.variante, pr.marque, pr.ref, pr.code, (pr.tags || []).join(' '), pr.commentaire, fm.name, sacs.map(x => x.code + ' ' + x.owner).join(' ')].join(' '));
+        if (!qWords.every(w => hay.indexOf(w) >= 0)) return;
+        const st = this.statsMany(sacs.map(x => x.id));
+        results.push({ owned: mineP, name: pr.nom || pr.the, tr: '', color: fm.color || 'transparent', meta: 'Thé du commerce · ' + (pr.marque || '—') + ' · ' + pr.the, profil: (this.avgTxt(st) ? this.avgTxt(st) + ' sur ' + st.n + ' dégustation' + (st.n > 1 ? 's' : '') + ' · ' : '') + sacs.length + ' sachet' + (sacs.length > 1 ? 's' : '') + (pr.commentaire ? ' — ' + pr.commentaire : ''), open: () => this.openProd(pr.id) });
+      });
+      if (ownMode !== 'mine') Object.keys(this.families).forEach(k => {
         if (famSel.length && famSel.indexOf(k) < 0) return;
-        const ownedOk = t => { const o = !!(t.owned && t.owned.length); return ownMode === 'all' || (ownMode === 'mine' ? o : !o); };
+        const ownedOk = t => true;
         const fm = this.families[k];
         this.listFor(k).forEach((t, i) => {
           const tg = this.tagsFor(k, t);
@@ -3942,7 +3960,7 @@ class Component extends DCLogic {
           const hay = this.norm([t.name, t.origin, t.gout || fm.profil, t.recolte, fm.name, tg.pot, tg.cup, tg.cer, tg.trad, ds.map(d => d.name + ' ' + d.profil).join(' ')].join(' '));
           if (ownedOk(t) && qWords.every(w => hay.indexOf(w) >= 0)) {
             const dm = ds.filter(d => qWords.some(w => this.norm(d.name + ' ' + d.profil).indexOf(w) >= 0)).map(d => d.name);
-            results.push({ owned: !!(t.owned && t.owned.length), name: t.name, tr: this.trFor(t), color: fm.color, meta: fm.name + ' · ' + (t.origin || ''), profil: (t.gout || fm.profil) + (dm.length ? ' — déclinaisons : ' + dm.join(', ') : ''), open: () => this.setState({ view: 'tea', key: k, idx: i }) });
+            results.push({ owned: ad.prods.some(pp => this.norm(pp.the) === this.norm(t.name) && ad.sachets.some(x => x.prodId === pp.id && x.owner === meS)), name: t.name, tr: this.trFor(t), color: fm.color, meta: fm.name + ' · ' + (t.origin || ''), profil: (t.gout || fm.profil) + (dm.length ? ' — déclinaisons : ' + dm.join(', ') : ''), open: () => this.setState({ view: 'tea', key: k, idx: i }) });
           }
         });
       });
@@ -4083,9 +4101,9 @@ class Component extends DCLogic {
       showPanel: !!this.state.qFocus || famSel.length > 0 || kwSel.length > 0 || ownMode !== 'notmine',
       qPlaceholder: kwSel.length ? 'Ajouter un mot…' : 'Chercher un thé ou un profil…',
       kwActive: kwSel.map(k => ({ label: k, remove: () => this.setState(s => ({ kwSel: (s.kwSel || []).filter(x => x !== k) })) })),
-      clearSearch: () => this.setState({ q: '', kwSel: [], famSel: [], ownMode: 'notmine' }),
+      clearSearch: () => this.setState({ q: '', kwSel: [], famSel: [], ownMode: 'all' }),
       own: {
-        all: () => this.setState({ ownMode: 'notmine' }), allOn: ownMode === 'all', allOff: ownMode !== 'all',
+        all: () => this.setState({ ownMode: 'all' }), allOn: ownMode === 'all', allOff: ownMode !== 'all',
         mine: () => this.setState({ ownMode: 'mine' }), mineOn: ownMode === 'mine', mineOff: ownMode !== 'mine',
         notmine: () => this.setState({ ownMode: 'notmine' }), notmineOn: ownMode === 'notmine', notmineOff: ownMode !== 'notmine'
       },
@@ -4272,6 +4290,7 @@ class Component extends DCLogic {
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
             openTea: () => this.openProd(pid),
             openCat: () => this.openCatTea(o.the),
+            nameOpen: this.stop(() => this.openProd(pid)), catOpen: this.stop(() => this.openCatTea(o.the)),
             sachets: sacs.map(x => this.sachetView(x, me)),
             _k: (() => { const ids = allSacs.map(x => x.id); const ls = this.getAdds().logs.filter(l => ids.indexOf(l.lotId) >= 0); const pr = allSacs.filter(x => x.prixMode !== 'unite' && this.num(x.prixPaye) && this.num(x.quantite)).map(x => this.num(x.prixPaye) / this.num(x.quantite) * 100);
               return { alpha: o.nom || o.the, price: pr.length ? pr.reduce((t, n) => t + n, 0) / pr.length : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st.avg }; })() };
@@ -4432,8 +4451,8 @@ class Component extends DCLogic {
         return { label: this.families[k].name, color: this.families[k].color, on: on, off: !on,
           toggle: () => this.setState(s => { const cur = s.famSel || []; return { famSel: cur.indexOf(k) >= 0 ? cur.filter(x => x !== k) : cur.concat([k]) }; }) };
       }),
-      hasQuery: qWords.length > 0 || famSel.length > 0 || ownMode !== 'notmine',
-      noQuery: qWords.length === 0 && famSel.length === 0 && ownMode === 'notmine',
+      hasQuery: qWords.length > 0 || famSel.length > 0 || ownMode === 'mine',
+      noQuery: qWords.length === 0 && famSel.length === 0 && ownMode !== 'mine',
       kwChips: this.topKeywords().map(k => {
         const on = kwSel.indexOf(k) >= 0;
         return { label: k, on: on, off: !on, toggle: () => this.setState(s => {
@@ -4443,7 +4462,7 @@ class Component extends DCLogic {
         }) };
       }),
       results: results,
-      resultCount: results.length ? (results.length + (results.length > 1 ? ' thés correspondent' : ' thé correspond')) : 'Aucun thé ne correspond — essayez un autre mot.',
+      resultCount: results.length ? (results.length + (results.length > 1 ? ' thés correspondent' : ' thé correspond')) : 'Aucun thé ne correspond, essayez un autre mot.',
       teaPhoto: photos['tea:' + tea.name],
       teaLinks: {
         pot: () => this.openToolFor(tTags.pot, /japon/i.test(tTags.trad) ? 'jp' : 'cn'),
