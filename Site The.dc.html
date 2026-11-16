@@ -34,8 +34,8 @@
     <button class="btn btn-ghost" onClick="{{ openMine }}" style="white-space: nowrap;">Mes thés</button>
     <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">Je bois un thé</button>
     <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Ajouter</button>
-    <a class="btn btn-ghost" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
     </sc-if>
+    <a class="btn btn-ghost" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 4px 3px 3px;">
         <span style="display: flex; align-items: center; gap: 8px; padding: 3px 10px 3px 3px; font-size: 14px; font-weight: 600; white-space: nowrap;"><span style="width: 26px; height: 26px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}</span>
@@ -56,6 +56,9 @@
   </header>
 
   <main style="flex: 1; width: 100%; max-width: 1140px; margin: 0 auto; padding: 16px 40px 80px; display: flex; flex-direction: column;">
+    <sc-if value="{{ syncErrTxt }}" hint-placeholder-val="{{ false }}">
+      <p role="alert" style="margin: 0 0 16px; padding: 12px 18px; border-radius: 20px; background: var(--color-accent-100); color: var(--color-accent-900); font-size: 14px;">La sauvegarde en ligne a échoué : {{ syncErrTxt }}</p>
+    </sc-if>
 
     <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
       <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 0; animation: fadeUp .45s ease both;">
@@ -992,29 +995,55 @@
           </section>
         </sc-if>
 
-        <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 10px;">
-          <h2 style="font-size: 30px; margin: 0;">Mon avis</h2>
-          <p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">{{ teaOpinion }}</p>
+        <sc-if value="{{ teaHouseOpinion }}" hint-placeholder-val="{{ false }}">
+          <section style="display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="font-size: 30px; margin: 0;">L'avis de la maison</h2>
+            <p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">{{ teaHouseOpinion }}</p>
+          </section>
+        </sc-if>
 
-          <h3 style="font-size: 21px; margin: 18px 0 0;">Ceux que je possède</h3>
+        <sc-if value="{{ canAct }}" hint-placeholder-val="{{ true }}">
+        <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <h2 style="font-size: 30px; margin: 0; margin-right: auto;">Mon avis</h2>
+            <sc-if value="{{ teaIOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ teaToggleOwn }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
+            <sc-if value="{{ teaIDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ teaToggleOwn }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
+            <button class="btn btn-primary" onClick="{{ teaTaste2 }}" style="white-space: nowrap;">Noter une dégustation</button>
+          </div>
+          <sc-if value="{{ teaNoMyLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Vous n'avez pas encore noté ce thé.</p></sc-if>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <sc-for list="{{ teaMyLogs }}" as="l" hint-placeholder-count="1">
+              <div style="background: var(--color-bg); border-radius: 22px; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+                  <span style="font-family: var(--font-heading); font-size: 19px;">{{ l.note }}</span>
+                  <span style="font-size: 13px; opacity: .65;">{{ l.meta }}</span>
+                </div>
+                <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ l.avis }}</p></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ teaHasOwned }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-size: 21px; margin: 8px 0 0;">Ceux que je possède</h3>
           <div style="display: flex; flex-direction: column; gap: 12px;">
-            <sc-for list="{{ teaOwned }}" as="lot" hint-placeholder-count="2">
+            <sc-for list="{{ teaOwned }}" as="lot" hint-placeholder-count="1">
               <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
                 <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
                   <span style="font-family: var(--font-heading); font-size: 19px;">{{ lot.label }}</span>
-                  <span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.year }}</span>
-                  <span class="tag tag-neutral" style="white-space: nowrap;">{{ lot.format }}</span>
+                  <sc-if value="{{ lot.year }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.year }}</span></sc-if>
+                  <sc-if value="{{ lot.format }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ lot.format }}</span></sc-if>
                   <sc-if value="{{ lot.code }}" hint-placeholder-val="{{ false }}"><span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span></sc-if>
                   <sc-if value="{{ lot.ownersTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.ownersTxt }}</span></sc-if>
                   <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;">{{ lot.prixTxt }}</span></sc-if>
                   <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="margin-left: auto; font-family: var(--font-heading); font-size: 18px; white-space: nowrap;">{{ lot.avg }}</span></sc-if>
                 </div>
-                <div style="font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent-700);">Acheté chez {{ lot.shop }}</div>
-                <p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p>
+                <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent-700);">Acheté chez {{ lot.shop }}</div></sc-if>
+                <sc-if value="{{ lot.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p></sc-if>
               </div>
             </sc-for>
           </div>
+          </sc-if>
         </section>
+        </sc-if>
       </article>
     </sc-if>
 
@@ -2099,7 +2128,38 @@ class Component extends DCLogic {
       teaLore: tea.lore ?? this.ph.lore,
       teaTaste: tea.taste ?? this.ph.taste,
       teaOpinion: tea.opinion ?? this.ph.opinion,
-      teaOwned: tea.owned ?? this.ph.owned,
+      teaOwned: (tea.owned || []).map(l => Object.assign({}, l, { shopOn: !!l.shop && l.shop !== '—' })),
+      teaHasOwned: !!(tea.owned && tea.owned.length),
+      teaHouseOpinion: tea.opinion || '',
+      canAct: !guest && !!me,
+      ...(() => {
+        const lots = this.collection().filter(o => tea.name && this.norm(o.the) === this.norm(tea.name));
+        const mineLots = lots.filter(o => o.owners.indexOf(me) >= 0);
+        const myLogs = [].concat(...lots.map(o => this.logsFor(o.id))).filter(l => (l.author || this.opts().users[0]) === me).sort((x, y) => String(y.date).localeCompare(String(x.date)));
+        const newLot = owners => { const a = this.getAdds(); const id = 'a' + Date.now().toString(36); this.setAdds(Object.assign({}, a, { owned: a.owned.concat([{ id: id, owners: owners, the: tea.name, code: '', ref: '', lot: '', boutique: '', annee: '', format: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }]) })); return id; };
+        return {
+          teaIOwn: mineLots.length > 0, teaIDontOwn: !mineLots.length,
+          teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
+          teaNoMyLogs: !myLogs.length,
+          teaToggleOwn: () => {
+            if (!me || !tea.name) return;
+            const a = this.getAdds();
+            if (mineLots.length) {
+              const over = Object.assign({}, a.over);
+              mineLots.forEach(o => { over[o.id] = Object.assign({}, a.over[o.id], { owners: o.owners.filter(x => x !== me) }); });
+              this.setAdds(Object.assign({}, a, { over: over }));
+            } else if (lots.length) {
+              const o = lots[0];
+              this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: o.owners.concat([me]) }) }) }));
+            } else newLot([me]);
+          },
+          teaTaste2: () => {
+            if (!me || !tea.name) return;
+            const id = mineLots.length ? mineLots[0].id : (lots.length ? lots[0].id : newLot([]));
+            this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
+          }
+        };
+      })(),
       teaTags: tTags,
       teaProfil: tea.gout || fam.profil,
       teaRecolte: tea.recolte || this.ph.recolte,
@@ -2135,9 +2195,10 @@ class Component extends DCLogic {
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
       isMine: v === 'mine',
       isLogin: v === 'login',
-      navOn: v !== 'login',
+      navOn: v !== 'login' && !guest,
       cloudUser: !!this.state.session,
       cloudGuest: guest,
+      syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
       localMode: !this.state.cloud,
       meInitial: (this.me() || '?').slice(0, 1).toUpperCase(),
