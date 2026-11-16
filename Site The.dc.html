@@ -363,12 +363,12 @@
               <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <sc-if value="{{ m.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ m.toggleOwn }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
                 <sc-if value="{{ m.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ m.toggleOwn }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
-                <button class="btn btn-secondary" onClick="{{ m.taste }}" style="white-space: nowrap;">Noter une dégustation</button>
-                <button class="btn btn-ghost" onClick="{{ m.edit }}" style="white-space: nowrap;">Modifier</button>
+                <sc-if value="{{ m.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ m.taste }}" style="white-space: nowrap;">Noter une dégustation</button></sc-if>
+                <sc-if value="{{ m.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ m.edit }}" style="white-space: nowrap;">Modifier</button></sc-if>
                 <sc-if value="{{ m.hasLogs }}" hint-placeholder-val="{{ false }}">
                   <button onClick="{{ m.toggle }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px;" style-hover="background: var(--color-accent-100);"><span style="display: inline-block; font-size: 9px; transition: transform .2s ease; transform: rotate({{ m.rot }}deg);">▶</span>Historique</button>
                 </sc-if>
-                <button class="btn btn-ghost" onClick="{{ m.remove }}" style="white-space: nowrap; margin-left: auto; color: var(--color-accent-800);">Supprimer</button>
+                <sc-if value="{{ m.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ m.remove }}" style="white-space: nowrap; margin-left: auto; color: var(--color-accent-800);">Supprimer</button></sc-if>
               </div>
               <sc-if value="{{ m.open }}" hint-placeholder-val="{{ false }}">
                 <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--color-divider); padding-top: 12px;">
@@ -655,7 +655,19 @@
         </sc-if>
 
         <sc-if value="{{ tabLotOn }}" hint-placeholder-val="{{ false }}">
-          <div style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 22px;">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h2 style="font-size: 26px; margin: 0;">Le thé</h2>
+              <p style="margin: 0; font-size: 14px; opacity: .7;">Commun à tous : si quelqu'un l'a déjà ajouté, choisissez-le dans la liste.</p>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px; max-width: 620px;">
+              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé du commerce</span>
+              <select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; min-height: 50px;" value="{{ form.prodId }}" onChange="{{ pickProd }}">
+                <option value="">＋ Nouveau thé</option>
+                <sc-for list="{{ prodOptions }}" as="po" hint-placeholder-count="0"><option value="{{ po.id }}">{{ po.label }}</option></sc-for>
+              </select>
+            </label>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Famille de thé</span>
@@ -673,29 +685,64 @@
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Le nom donné par le fournisseur" value="{{ form.nomFour }}" onChange="{{ setF.nomFour }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Code perso</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ codeSuggest }}" value="{{ form.code }}" onChange="{{ setF.code }}">
-                <span style="font-size: 12px; opacity: .6; padding-left: 6px;">Vide = {{ codeSuggest }}</span>
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Maison X" value="{{ form.marque }}" onChange="{{ setF.marque }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" value="{{ form.ref }}" onChange="{{ setF.ref }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Maison X" value="{{ form.marque }}" onChange="{{ setF.marque }}">
-              </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Lot</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Récolte de printemps 2024" value="{{ form.lot }}" onChange="{{ setF.lot }}">
-              </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Acheté chez</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Boutique, ville ou site" value="{{ form.boutique }}" onChange="{{ setF.boutique }}">
               </label>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Code du thé</span>
+                <span class="tag tag-outline" style="align-self: flex-start; font-family: ui-monospace, Menlo, monospace; font-size: 14px; padding: 10px 16px;">{{ genCode }}</span>
+                <span style="font-size: 12px; opacity: .6; padding-left: 6px;">Nom du thé + réf. fournisseur, identique pour tous.</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <sc-for list="{{ tagChips }}" as="k" hint-placeholder-count="6">
+                    <sc-if value="{{ k.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ k.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent); background: var(--color-accent); color: var(--color-bg);">{{ k.name }}</button></sc-if>
+                    <sc-if value="{{ k.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ k.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-100);">{{ k.name }}</button></sc-if>
+                  </sc-for>
+                  <span style="display: inline-flex; gap: 6px; align-items: center;">
+                    <input class="input" aria-label="Nouveau tag" placeholder="Nouveau tag…" value="{{ newTag }}" onChange="{{ onNewTag }}" onKeyDown="{{ newTagKey }}" style="width: 160px; font-size: 14px; padding: 7px 14px; min-height: 0;">
+                    <button class="btn btn-secondary" onClick="{{ addTag }}" style="white-space: nowrap; padding: 7px 14px;">＋ Ajouter</button>
+                  </span>
+                </div>
+              </div>
+              <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le thé</span>
+                <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="Ce qui caractérise ce thé…" value="{{ form.prodComment }}" onChange="{{ setF.prodComment }}"></textarea>
+              </label>
+            </div>
+          </section>
+
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h2 style="font-size: 26px; margin: 0;">Mon sachet</h2>
+              <p style="margin: 0; font-size: 14px; opacity: .7;">Votre paquet à vous : unique, avec son propre code.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Année</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 2024" value="{{ form.annee }}" onChange="{{ setF.annee }}">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Code perso</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ codeSuggest }}" value="{{ form.code }}" onChange="{{ setF.code }}">
+                <span style="font-size: 12px; opacity: .6; padding-left: 6px;">Vide = {{ codeSuggest }}</span>
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date d'achat</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" type="date" placeholder="" value="{{ form.achat }}" onChange="{{ setF.achat }}">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date de production</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : printemps 2024" value="{{ form.prodDate }}" onChange="{{ setF.prodDate }}">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Lot</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : n° de lot sur le paquet" value="{{ form.lot }}" onChange="{{ setF.lot }}">
               </label>
               <div style="display: flex; flex-direction: column; gap: 10px; grid-column: 1 / -1; background: var(--color-bg); border-radius: 24px; padding: 16px 18px;">
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
@@ -724,30 +771,9 @@
                   <sc-for list="{{ freqOptions }}" as="q" hint-placeholder-count="0"><option value="{{ q.code }}">{{ q.code }} · {{ q.label }}</option></sc-for>
                 </select>
               </label>
-              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Je possède</span>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <sc-if value="{{ formIOwn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ toggleFormOwn }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent-2-600); background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède ce thé</button></sc-if>
-                  <sc-if value="{{ formIDontOwn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleFormOwn }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-2-100);">Je possède ce thé</button></sc-if>
-                </div>
-                <span style="font-size: 12px; opacity: .6; padding-left: 4px;">Chacun coche « Je possède » depuis son propre compte : le thé apparaît alors dans ses thés.</span>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <sc-for list="{{ tagChips }}" as="k" hint-placeholder-count="6">
-                    <sc-if value="{{ k.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ k.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent); background: var(--color-accent); color: var(--color-bg);">{{ k.name }}</button></sc-if>
-                    <sc-if value="{{ k.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ k.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-100);">{{ k.name }}</button></sc-if>
-                  </sc-for>
-                  <span style="display: inline-flex; gap: 6px; align-items: center;">
-                    <input class="input" aria-label="Nouveau tag" placeholder="Nouveau tag…" value="{{ newTag }}" onChange="{{ onNewTag }}" onKeyDown="{{ newTagKey }}" style="width: 160px; font-size: 14px; padding: 7px 14px; min-height: 0;">
-                    <button class="btn btn-secondary" onClick="{{ addTag }}" style="white-space: nowrap; padding: 7px 14px;">＋ Ajouter</button>
-                  </span>
-                </div>
-              </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Mon commentaire</span>
-                <textarea class="input" rows="3" placeholder="Votre avis détaillé sur ce lot…" value="{{ form.commentaire }}" onChange="{{ setF.commentaire }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le sachet</span>
+                <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="État, conservation, ressenti sur ce paquet…" value="{{ form.commentaire }}" onChange="{{ setF.commentaire }}"></textarea>
               </label>
             </div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -755,6 +781,7 @@
               <sc-if value="{{ isEditing }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ cancelEdit }}" style="white-space: nowrap;">Annuler</button></sc-if>
               <sc-if value="{{ addMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ addMsg }}</span></sc-if>
             </div>
+          </section>
           </div>
         </sc-if>
 
@@ -1062,25 +1089,42 @@
           <sc-if value="{{ teaNoMine }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Aucun pour l'instant.</p></sc-if>
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <sc-for list="{{ teaMine }}" as="lot" hint-placeholder-count="1">
-              <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                  <span style="font-family: var(--font-heading); font-size: 19px;">{{ lot.label }}</span>
-                  <sc-if value="{{ lot.year }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.year }}</span></sc-if>
-                  <sc-if value="{{ lot.format }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ lot.format }}</span></sc-if>
-                  <sc-if value="{{ lot.code }}" hint-placeholder-val="{{ false }}"><span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span></sc-if>
-                  <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;">{{ lot.prixTxt }}</span></sc-if>
-                  <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 18px; white-space: nowrap;">{{ lot.avg }}</span></sc-if>
-                  <span style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap;">
-                    <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ lot.toggle }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
-                    <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ lot.toggle }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
-                    <button class="btn btn-ghost" onClick="{{ lot.taste }}" style="white-space: nowrap;">Noter</button>
-                  </span>
+              <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: flex-start; gap: 14px;">
+                  <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span style="font-family: var(--font-heading); font-size: 20px;">{{ lot.label }}</span>
+                      <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span>
+                      <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;" title="Prix moyen des sachets">{{ lot.prixTxt }}</span></sc-if>
+                    </div>
+                    <sc-if value="{{ lot.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px; opacity: .8;">{{ lot.sub }}</div></sc-if>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
+                  </div>
+                  <div style="flex: none; display: flex; gap: 8px; align-items: center;">
+                    <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ lot.own }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
+                    <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ lot.own }}" style="white-space: nowrap;">Je possède</button></sc-if>
+                  </div>
                 </div>
-                <sc-if value="{{ lot.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px; opacity: .8;">{{ lot.sub }}</div></sc-if>
-                <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                 <div style="font-size: 13px; opacity: .7;">{{ lot.ownersTxt }}</div>
                 <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent-700);">Acheté chez {{ lot.shop }}</div></sc-if>
                 <sc-if value="{{ lot.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p></sc-if>
+                <sc-for list="{{ lot.sachets }}" as="sa" hint-placeholder-count="0">
+                  <div style="border-top: 1px solid var(--color-divider); padding-top: 10px; display: flex; align-items: flex-start; gap: 12px;">
+                    <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Mon sachet</span>
+                        <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
+                        <sc-if value="{{ sa.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 17px;">{{ sa.avg }}</span></sc-if>
+                      </div>
+                      <span style="font-size: 13px; opacity: .75;">{{ sa.meta }}</span>
+                      <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
+                    </div>
+                    <div style="flex: none; display: flex; gap: 4px;">
+                      <button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button>
+                      <button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button>
+                    </div>
+                  </div>
+                </sc-for>
               </div>
             </sc-for>
           </div>
@@ -1089,22 +1133,22 @@
           <sc-if value="{{ teaNoOthers }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Aucun pour l'instant.</p></sc-if>
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <sc-for list="{{ teaOthers }}" as="lot" hint-placeholder-count="1">
-              <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                  <span style="font-family: var(--font-heading); font-size: 19px;">{{ lot.label }}</span>
-                  <sc-if value="{{ lot.year }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.year }}</span></sc-if>
-                  <sc-if value="{{ lot.format }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ lot.format }}</span></sc-if>
-                  <sc-if value="{{ lot.code }}" hint-placeholder-val="{{ false }}"><span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span></sc-if>
-                  <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;">{{ lot.prixTxt }}</span></sc-if>
-                  <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 18px; white-space: nowrap;">{{ lot.avg }}</span></sc-if>
-                  <span style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap;">
-                    <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ lot.toggle }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
-                    <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ lot.toggle }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
-                    <button class="btn btn-ghost" onClick="{{ lot.taste }}" style="white-space: nowrap;">Noter</button>
-                  </span>
+              <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: flex-start; gap: 14px;">
+                  <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span style="font-family: var(--font-heading); font-size: 20px;">{{ lot.label }}</span>
+                      <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span>
+                      <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;" title="Prix moyen des sachets">{{ lot.prixTxt }}</span></sc-if>
+                    </div>
+                    <sc-if value="{{ lot.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px; opacity: .8;">{{ lot.sub }}</div></sc-if>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
+                  </div>
+                  <div style="flex: none; display: flex; gap: 8px; align-items: center;">
+                    <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ lot.own }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
+                    <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ lot.own }}" style="white-space: nowrap;">Je possède</button></sc-if>
+                  </div>
                 </div>
-                <sc-if value="{{ lot.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px; opacity: .8;">{{ lot.sub }}</div></sc-if>
-                <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                 <div style="font-size: 13px; opacity: .7;">{{ lot.ownersTxt }}</div>
                 <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent-700);">Acheté chez {{ lot.shop }}</div></sc-if>
                 <sc-if value="{{ lot.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p></sc-if>
@@ -1856,7 +1900,7 @@ class Component extends DCLogic {
   getAdds() {
     if (!this._adds) { try { this._adds = JSON.parse(localStorage.getItem('the-ajouts') || '{}'); } catch (e) { this._adds = {}; } }
     const a = this._adds;
-    a.teas = a.teas || []; a.owned = a.owned || []; a.decl = a.decl || []; a.over = a.over || {}; a.logs = a.logs || []; a.options = a.options || {};
+    a.teas = a.teas || []; a.owned = a.owned || []; a.decl = a.decl || []; a.over = a.over || {}; a.logs = a.logs || []; a.options = a.options || {}; a.prods = a.prods || []; a.sachets = a.sachets || [];
     a.owned.forEach((o, i) => { if (!o.id) o.id = 'a' + Date.now().toString(36) + i; });
     return a;
   }
@@ -1893,9 +1937,9 @@ class Component extends DCLogic {
     if (error) { if (this.state.session) this.setState({ syncErr: error.message }); return; }
     if (this._dirty) return;
     const remote = (data && data.payload) || {};
-    const empty = !remote.owned && !remote.logs && !remote.teas;
+    const empty = !remote.owned && !remote.logs && !remote.teas && !remote.prods && !remote.sachets;
     const local = this.getAdds();
-    if (empty && first && (local.owned.length || local.logs.length || local.teas.length || local.decl.length)) {
+    if (empty && first && (local.prods.length || local.sachets.length || local.logs.length)) {
       this.pushCloud();
     } else if (!empty) {
       this._adds = null;
@@ -1973,11 +2017,27 @@ class Component extends DCLogic {
 
   collection() {
     const a = this.getAdds();
-    const base = (this.state.csvLots || []).map((o, i) => Object.assign({ id: 'csv:' + i }, o)).concat(a.owned);
-    return base.map(o => a.over[o.id] ? Object.assign({}, o, a.over[o.id]) : o).filter(o => !o.deleted)
-      .map(o => Object.assign({}, o, { code: o.code || (this.camel(o.the) + (o.ref ? '-' + o.ref : '')), owners: Array.isArray(o.owners) ? o.owners : [] }));
+    return a.sachets.map(sa => {
+      const pr = a.prods.find(x => x.id === sa.prodId);
+      if (!pr) return null;
+      return { id: sa.id, prodId: pr.id, owner: sa.owner, owners: [sa.owner],
+        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '',
+        code: sa.code || '', achat: sa.achat || '', prodDate: sa.prodDate || '', annee: sa.prodDate || '', lot: sa.lot || '', prixMode: sa.prixMode || 'poids', prixPaye: sa.prixPaye || '', quantite: sa.quantite || '', freq: sa.freq || '', commentaire: sa.commentaire || '' };
+    }).filter(Boolean);
   }
 
+  prodCodeFor(nom, the, ref) {
+    const r = String(ref || '').trim();
+    return (this.camel(nom || the || '') || 'the') + (r ? '-' + r : '');
+  }
+
+  avgPrice(sachets) {
+    const g = [], u = [];
+    sachets.forEach(o => { const p = this.num(o.prixPaye), q = this.num(o.quantite); if (p == null || !q) return; (o.prixMode === 'unite' ? u : g).push(o.prixMode === 'unite' ? p / q : p / q * 100); });
+    const fmt = x => x.toFixed(2).replace('.', ',') + ' €';
+    const avg = arr => arr.reduce((t, x) => t + x, 0) / arr.length;
+    return [g.length ? fmt(avg(g)) + ' / 100 g' : '', u.length ? fmt(avg(u)) + ' / u' : ''].filter(Boolean).join(' · ');
+  }
   num(v) { const n = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isNaN(n) ? null : n; }
 
   allTags() {
@@ -2222,23 +2282,31 @@ class Component extends DCLogic {
       teaHouseOpinion: tea.opinion || '',
       canAct: !guest && !!me,
       ...(() => {
-        const lots = this.collection().filter(o => tea.name && this.norm(o.the) === this.norm(tea.name));
-        const myLogs = [].concat(...lots.map(o => this.logsFor(o.id))).filter(l => (l.author || this.opts().users[0]) === me).sort((x, y) => String(y.date).localeCompare(String(x.date)));
+        const a = this.getAdds();
+        const prods = a.prods.filter(x => tea.name && this.norm(x.the) === this.norm(tea.name));
+        const coll = this.collection();
+        const prodIds = prods.map(x => x.id);
+        const myLogs = a.logs.filter(l => (l.author || this.opts().users[0]) === me && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
         const taste = id => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
-        const card = o => {
-          const st = this.statsFor(o.id, me); const own = o.owners.indexOf(me) >= 0;
-          return { label: o.nom || o.lot || o.the, sub: [o.variante, o.marque, o.lot && o.nom ? o.lot : ''].filter(Boolean).join(' · '), tags: o.tags || [], year: o.annee || '', format: this.formatTxt(o), code: o.code || '', prixTxt: this.prixTxt(o), avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '',
-            ownersTxt: o.owners.length ? 'Possédé par ' + o.owners.join(' & ') : 'Personne ne le possède pour l\'instant',
-            shop: o.boutique || '', shopOn: !!o.boutique, note: o.commentaire || '', iOwn: own, iDontOwn: !own,
-            toggle: () => { const a = this.getAdds(); const nw = own ? o.owners.filter(x => x !== me) : o.owners.concat([me]); this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: nw }) }) })); },
-            taste: () => taste(o.id) };
+        const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
+        const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }, fill(pr)) }));
+        const card = pr => {
+          const sacs = coll.filter(o => o.prodId === pr.id);
+          const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i);
+          const mineS = sacs.filter(o => o.owner === me);
+          return { label: pr.nom || pr.the, sub: [pr.variante, pr.marque].filter(Boolean).join(' · '), tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '',
+            shop: pr.boutique || '', shopOn: !!pr.boutique, note: pr.commentaire || '',
+            ownersTxt: owners.length ? 'Possédé par ' + owners.join(' & ') : "Personne ne l'a pour l'instant",
+            iOwn: mineS.length > 0, iDontOwn: !mineS.length, own: () => addSachet(pr),
+            sachets: mineS.map(o => { const st = this.statsFor(o.id, me); return { code: o.code, meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '), note: o.commentaire || '', avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '', taste: () => taste(o.id),
+              edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, fill(pr), { code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }) }; }) };
         };
-        const mine = lots.filter(o => o.owners.indexOf(me) >= 0), others = lots.filter(o => o.owners.indexOf(me) < 0);
+        const mine = prods.filter(pr => coll.some(o => o.prodId === pr.id && o.owner === me)), others = prods.filter(pr => mine.indexOf(pr) < 0);
         return {
           teaMine: mine.map(card), teaOthers: others.map(card), teaNoMine: !mine.length, teaNoOthers: !others.length,
-          teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
+          teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
-          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { owners: [me], the: tea.name, variante: '', nomFour: '', marque: '', tags: [], ref: '', code: '', lot: '', boutique: '', annee: '', format: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }) }))
+          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '' }) }))
         };
       })(),
       teaTags: tTags,
@@ -2339,17 +2407,17 @@ class Component extends DCLogic {
       isLog: v === 'log',
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf) }),
-      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { owners: [me] }) })),
+      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
-      mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' thés' : ' thé') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » et cochez « Je possède ».'; })(),
+      mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » et cochez « Je possède ».'; })(),
       mineList: myColl.filter(o => { const q = this.norm(this.state.mq); return !q || this.norm([o.the, o.code, o.lot, o.boutique, o.annee].join(' ')).indexOf(q) >= 0; }).map(o => {
         const st = this.statsFor(o.id, me); const fk = this.famOf(o.the);
         const others = this.opts().users.filter(u => u !== me).map(u => { const s2 = this.statsFor(o.id, u); return s2.avg != null ? u + ' ' + s2.avg.toFixed(1).replace('.', ',') + '/20 (' + s2.n + ')' : ''; }).filter(Boolean).join(' · '); const open = !!(this.state.openLogs || {})[o.id];
         return {
           owners: o.owners, othersTxt: others, noOwner: !o.owners.length,
-          iOwn: !!me && o.owners.indexOf(me) >= 0, iDontOwn: !!me && o.owners.indexOf(me) < 0,
-          toggleOwn: () => { if (!me) return; const a = this.getAdds(); const cur = o.owners; const nw = cur.indexOf(me) >= 0 ? cur.filter(x => x !== me) : cur.concat([me]); this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: nw }) }) })); },
+          iOwn: false, iDontOwn: false, mine: o.owner === me,
+          toggleOwn: () => {},
           the: o.the, code: o.code, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
           meta: [o.variante, o.nom, o.marque, o.lot, o.boutique, o.annee, this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · ') || '—', tags: o.tags || [],
           avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '—',
@@ -2360,8 +2428,8 @@ class Component extends DCLogic {
             remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
           openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(o.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i) }); } },
           taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
-          edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { owners: o.owners.slice(), the: o.the, variante: o.variante || '', nomFour: o.nom || '', marque: o.marque || '', tags: (o.tags || []).slice(), ref: o.ref || '', code: o.code || '', lot: o.lot || '', boutique: o.boutique || '', annee: o.annee || '', format: o.format || '', prixMode: o.prixMode || 'poids', prixPaye: o.prixPaye || '', quantite: o.quantite || '', freq: o.freq || '', commentaire: o.commentaire || '' }) }),
-          remove: () => { if (!window.confirm('Supprimer « ' + o.the + ' » (' + o.code + ') de votre collection ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: { deleted: true } }) })); }
+          edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
+          remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); }
         };
       }),
       isEditing: !!this.state.editId,
@@ -2375,7 +2443,7 @@ class Component extends DCLogic {
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
       setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
-      lotOptions: coll.filter(o => o.owners.indexOf(me) >= 0).concat(coll.filter(o => o.owners.indexOf(me) < 0)).map(o => ({ id: o.id, label: o.the + ' — ' + o.code + (o.owners.indexOf(me) < 0 ? ' (' + o.owners.join(' & ') + ')' : '') })),
+      lotOptions: coll.filter(o => o.owner === me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code })),
       vessels: this.opts().vessels,
       vesselHint: (() => { const c = String((this.state.lf || {}).infusion || '').replace(/\*$/, '').trim().toUpperCase(); const v = this.opts().vessels.find(x => String(x.code).toUpperCase() === c); return v ? v.label + (/\*$/.test((this.state.lf || {}).infusion || '') ? ' · avec préchauffe' : '') : 'PGW, GGW, KYU, VM, TMR, XSI, CHR… ou votre propre code'; })(),
       techChips: this.opts().techs.filter(t => t.code).map(t => ({ code: t.code, label: t.label, add: () => this.setState(s => { const cur = String((s.lf || {}).technique || '').trim(); return { lf: Object.assign({}, s.lf, { technique: cur ? cur + '+' + t.code : t.code }) }; }) })),
@@ -2398,7 +2466,7 @@ class Component extends DCLogic {
       tabTeaOn: false, tabTeaOff: true,
       tabLotOn: (this.state.addTab || 'lot') === 'lot' || this.state.addTab === 'tea', tabLotOff: !((this.state.addTab || 'lot') === 'lot' || this.state.addTab === 'tea'),
       form: Object.assign({ famille: 'blanc', nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '', the: '', lot: '', boutique: '', annee: '', format: '', commentaire: '', ref: '', code: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', vParent: '', vNom: '', vTrad: '', vProfil: '', vDesc: '' }, this.state.form),
-      setF: ['variante', 'nomFour', 'marque', 'famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }, k === 'the' && val !== (s.form || {}).the ? { variante: '' } : {}) })); }; return o; }, {}),
+      setF: ['prodComment', 'achat', 'prodDate', 'variante', 'nomFour', 'marque', 'famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }, k === 'the' && val !== (s.form || {}).the ? { variante: '' } : {}) })); }; return o; }, {}),
       addMsg: this.state.addMsg || '',
       allTeaNames: Object.keys(this.families).reduce((a, k) => a.concat(this.listFor(k).map(t => t.name)), []),
       modeNew: () => this.setState({ addMode: 'new', addMsg: '' }),
@@ -2407,7 +2475,16 @@ class Component extends DCLogic {
       modeVarOn: this.state.addMode === 'var', modeVarOff: this.state.addMode !== 'var',
       showTeaForm: false,
       showVarForm: false,
-      codeSuggest: (() => { const fm = this.state.form || {}; const c = this.camel(fm.nomFour || fm.the || ''); return (c || 'nomDuThe') + '-' + (String(fm.ref || '').trim() || 'REF'); })(),
+      ...(() => {
+        const fm = this.state.form || {}; const a = this.getAdds();
+        const pr = fm.prodId ? a.prods.find(x => x.id === fm.prodId) : null;
+        const gen = pr ? pr.code : this.prodCodeFor(fm.nomFour, fm.the, fm.ref);
+        const ini = (me || '?').slice(0, 1).toUpperCase();
+        const n = a.sachets.filter(x => x.owner === me && pr && x.prodId === pr.id && x.id !== this.state.editId).length + 1;
+        return { genCode: gen, codeSuggest: gen + '-' + ini + n,
+          prodOptions: a.prods.slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the))).map(x => ({ id: x.id, label: [x.nom || x.the, x.the !== x.nom ? x.the : '', x.marque, x.code].filter(Boolean).join(' — ') })),
+          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } };
+      })(),
       noteHint: (() => { const n = parseFloat(String((this.state.form || {}).note20 || '').replace(',', '.')); if (isNaN(n)) return '0–4 à jeter · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel'; return n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? "Correct, sans plus" : n <= 18 ? 'Vraiment bon' : 'Exceptionnel'; })(),
       saveVar: () => {
         const fm = this.state.form || {};
@@ -2425,20 +2502,32 @@ class Component extends DCLogic {
       },
       saveLot: () => {
         const fm = this.state.form || {};
-        if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez le thé concerné.' }); return; }
+        if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez la famille de thé.' }); return; }
         if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
         const a = this.getAdds();
-        const code = String(fm.code || '').trim() || (this.camel(fm.nomFour || fm.the) + (String(fm.ref || '').trim() ? '-' + String(fm.ref).trim() : ''));
-        const owners = Array.isArray(fm.owners) ? fm.owners : [me];
-        const rec = { owners: owners, the: fm.the.trim(), nom: fm.nomFour || '', variante: fm.variante || '', marque: fm.marque || '', tags: fm.tags || [], code: code, ref: fm.ref, lot: fm.lot, boutique: fm.boutique, annee: fm.annee, format: fm.format, prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye, quantite: fm.quantite, freq: fm.freq, commentaire: fm.commentaire };
-        const clear = { owners: [me], the: '', variante: '', nomFour: '', marque: '', tags: [], ref: '', code: '', lot: '', boutique: '', annee: '', format: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' };
+        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], commentaire: fm.prodComment || '' };
+        let prods = a.prods.slice(), prodId = fm.prodId;
+        if (prodId && prods.some(x => x.id === prodId)) {
+          prods = prods.map(x => x.id === prodId ? Object.assign({}, x, prodFields) : x);
+        } else {
+          let code = this.prodCodeFor(prodFields.nom, prodFields.the, prodFields.ref), k = 2;
+          while (prods.some(x => x.code === code)) code = this.prodCodeFor(prodFields.nom, prodFields.the, prodFields.ref) + '-' + k++;
+          prodId = 'p' + Date.now().toString(36);
+          prods.push(Object.assign({ id: prodId, code: code }, prodFields));
+        }
+        const pr = prods.find(x => x.id === prodId);
+        const ini = (me || '?').slice(0, 1).toUpperCase();
+        const n = a.sachets.filter(x => x.owner === me && x.prodId === prodId && x.id !== this.state.editId).length + 1;
+        const code = String(fm.code || '').trim() || (pr.code + '-' + ini + n);
+        const sac = { prodId: prodId, owner: me, code: code, achat: fm.achat || '', prodDate: fm.prodDate || '', lot: fm.lot || '', prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye || '', quantite: fm.quantite || '', freq: fm.freq || '', commentaire: fm.commentaire || '' };
+        const clear = { prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' };
         if (this.state.editId) {
-          this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [this.state.editId]: rec }) }));
+          this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.map(x => x.id === this.state.editId ? Object.assign({}, x, sac, { owner: x.owner }) : x) }));
           this.setState(s => ({ view: 'mine', editId: null, form: Object.assign({}, s.form, clear) }));
           return;
         }
-        this.setAdds(Object.assign({}, a, { owned: a.owned.concat([Object.assign({ id: 'a' + Date.now().toString(36) }, rec)]) }));
-        this.setState(s => ({ addMsg: 'Lot ' + code + ' ajouté à « ' + fm.the.trim() + ' ».', form: Object.assign({}, s.form, clear) }));
+        this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.concat([Object.assign({ id: 's' + Date.now().toString(36) }, sac)]) }));
+        this.setState(s => ({ addMsg: 'Sachet ' + code + ' ajouté (' + (pr.nom || pr.the) + ').', form: Object.assign({}, s.form, clear) }));
       },
       hasAdds: (this.getAdds().teas.length + this.getAdds().decl.length + coll.length + this.getAdds().logs.length) > 0,
       addList: this.getAdds().teas.map((t, i) => ({ kind: 'Catalogue', label: t.nom, meta: (this.families[t.famille] || {}).name + (t.origine ? ' · ' + t.origine : ''), remove: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { teas: a.teas.filter((x, j) => j !== i) })); } }))
