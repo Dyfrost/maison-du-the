@@ -29,13 +29,14 @@
   @keyframes riseIn { 0% { opacity: 0; transform: translateY(40px) scale(.94); } 100% { opacity: 1; transform: none; } }
   .exp-wrap > :not(.exp-btn) { padding-right: 54px !important; }
   @media (max-width: 720px) { .sort-lbl { display: none; } }
+  .nq { cursor: pointer; white-space: nowrap; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: 999px; padding: 9px 16px; min-height: 36px; transition: background .15s ease; }
   .thumb { display: block; object-fit: cover; border-radius: 18px; background: var(--color-neutral-200); flex: none; }
   @media (max-width: 720px) {
     header.nav { padding: 12px 16px !important; gap: 8px !important; }
     header.nav .nav-brand { font-size: 19px !important; }
     header.nav .nav-brand img { width: 36px !important; height: 36px !important; }
     header.nav .nav-quick { order: 6; width: 100%; }
-    header.nav .nav-quick .btn { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
+    header.nav .nav-quick .nq { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; font-size: 13px !important; padding: 6px 8px !important; text-align: center; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
     header.nav .nav-carte { order: 5; width: 100%; justify-content: flex-start; padding-left: 0 !important; font-size: 14px !important; }
     header .umenu { position: fixed !important; left: 16px !important; right: 16px !important; top: 64px !important; min-width: 0 !important; }
     main.page { padding: 8px 16px 64px !important; }
@@ -62,10 +63,10 @@
     <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Ajouter</button>
     </sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
-    <div class="nav-quick" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-      <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">Mes thés & dégustations</button>
-      <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">＋ Nouvelle dégustation</button>
-      <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
+    <div class="nav-quick" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <button onClick="{{ openColl }}" class="nq" style-hover="background: var(--color-accent-100);">🍵 Mes thés & dégustations</button>
+      <button onClick="{{ openLog }}" class="nq" style-hover="background: var(--color-accent-100);">☕ Nouvelle dégustation</button>
+      <button onClick="{{ openAdd }}" class="nq" style-hover="background: var(--color-accent-100);">＋ Nouveau thé</button>
     </div>
     </sc-if>
     <sc-if value="{{ guestNav }}" hint-placeholder-val="{{ false }}"><a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a></sc-if>
