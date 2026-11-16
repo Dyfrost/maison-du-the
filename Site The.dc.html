@@ -73,6 +73,7 @@
             <button role="menuitem" onClick="{{ menuLog }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Nouvelle dégustation</button>
             <button role="menuitem" onClick="{{ menuAdd }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">＋ Ajouter un thé</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
+            <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -353,7 +354,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -413,7 +414,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -507,7 +508,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -591,7 +592,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -663,7 +664,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -682,6 +683,93 @@
                   </div>
           </sc-for>
         </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFriends }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 22px; animation: fadeUp .45s ease both; max-width: 820px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <h1 style="font-size: 46px; margin: 0;">Amis</h1>
+          <p style="font-size: 17px; opacity: .72; margin: 0;">Ajoutez quelqu’un avec son identifiant (par exemple Maël#0002). Une fois la demande acceptée, vous voyez son profil.</p>
+        </div>
+        <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; flex-direction: row; align-items: center; flex-wrap: wrap;">
+          <span style="width: 48px; height: 48px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 20px;">{{ fr.meInitial }}</span>
+          <div style="display: flex; flex-direction: column; gap: 2px; margin-right: auto;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Votre identifiant</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ fr.meTag }}</span></div>
+          <button class="btn btn-secondary" onClick="{{ fr.openMe }}" style="white-space: nowrap;">Mon profil →</button>
+        </section>
+        <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+          <h2 style="font-size: 24px; margin: 0;">Ajouter un ami</h2>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input class="input" value="{{ fr.q }}" onInput="{{ fr.setQ }}" placeholder="Prénom#0000" aria-label="Identifiant de l’ami" style="flex: 1 1 200px; min-width: 0;">
+            <button class="btn btn-primary" onClick="{{ fr.send }}" style="white-space: nowrap;">Envoyer la demande</button>
+          </div>
+          <sc-if value="{{ fr.msg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px;">{{ fr.msg }}</p></sc-if>
+        </section>
+        <sc-if value="{{ fr.hasIn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 24px; margin: 0;">Demandes reçues</h2>
+            <sc-for list="{{ fr.incoming }}" as="rq" hint-placeholder-count="1">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-family: var(--font-heading); font-size: 19px; margin-right: auto;">{{ rq.tag }}</span>
+                <button class="btn btn-primary" onClick="{{ rq.accept }}" style="white-space: nowrap;">Accepter</button>
+                <button class="btn btn-ghost" onClick="{{ rq.refuse }}" style="white-space: nowrap;">Refuser</button>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
+        <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+          <h2 style="font-size: 24px; margin: 0;">Mes amis</h2>
+          <sc-if value="{{ fr.noFriends }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore d’ami ajouté.</p></sc-if>
+          <sc-for list="{{ fr.friends }}" as="f" hint-placeholder-count="1">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <button onClick="{{ f.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 19px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ f.tag }} →</button>
+              <button class="btn btn-ghost" onClick="{{ f.remove }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Retirer</button>
+            </div>
+          </sc-for>
+        </section>
+        <sc-if value="{{ fr.hasOut }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 24px; margin: 0;">Demandes envoyées</h2>
+            <sc-for list="{{ fr.outgoing }}" as="rq" hint-placeholder-count="1">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 17px; margin-right: auto;">{{ rq.tag }} <span style="opacity: .6;">· en attente</span></span>
+                <button class="btn btn-ghost" onClick="{{ rq.cancel }}" style="white-space: nowrap; font-size: 13px;">Annuler</button>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 22px; animation: fadeUp .45s ease both; max-width: 900px;">
+        <sc-if value="{{ pf.locked }}" hint-placeholder-val="{{ false }}"><p style="font-size: 17px; opacity: .75; margin: 0;">Ce profil n’est visible que par ses amis.</p></sc-if>
+        <sc-if value="{{ pf.ok }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
+            <span style="width: 76px; height: 76px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 32px;">{{ pf.initial }}</span>
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="font-size: 46px; margin: 0;">{{ pf.name }}</h1><span style="font-family: ui-monospace, Menlo, monospace; font-size: 15px; opacity: .65;">#{{ pf.id }} · {{ pf.nFriends }}</span></div>
+          </div>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Description</span>
+            <sc-if value="{{ pf.editing }}" hint-placeholder-val="{{ false }}">
+              <textarea class="input" rows="4" value="{{ pf.draft }}" onInput="{{ pf.setDraft }}" placeholder="Quelques mots sur vous, vos thés préférés…" aria-label="Description" style="resize: vertical; border-radius: 20px;"></textarea>
+              <div style="display: flex; gap: 10px;"><button class="btn btn-primary" onClick="{{ pf.save }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ pf.cancel }}" style="white-space: nowrap;">Annuler</button></div>
+            </sc-if>
+            <sc-if value="{{ pf.notEditing }}" hint-placeholder-val="{{ true }}">
+              <p style="margin: 0; font-size: 17px; line-height: 1.65; white-space: pre-wrap; text-wrap: pretty;">{{ pf.desc }}</p>
+              <sc-if value="{{ pf.isMe }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pf.edit }}" style="align-self: flex-start; white-space: nowrap;">Modifier la description</button></sc-if>
+            </sc-if>
+          </section>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px;">
+            <sc-for list="{{ pf.kpis }}" as="k" hint-placeholder-count="8">
+              <div style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ k.label }}</span>
+                <span style="font-family: var(--font-heading); font-size: 22px; line-height: 1.15;">{{ k.value }}</span>
+                <sc-if value="{{ k.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .65;">{{ k.sub }}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -992,7 +1080,7 @@
                     <sc-if value="{{ w.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent-2-600); background: var(--color-accent-2-600); color: var(--color-bg);">✓ {{ w.name }}</button></sc-if>
                     <sc-if value="{{ w.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ w.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-2-100);">{{ w.name }}</button></sc-if>
                   </sc-for>
-                  <sc-if value="{{ noOthers }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">Les autres membres apparaîtront ici dès leur première connexion.</span></sc-if>
+                  <sc-if value="{{ noOthers }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">Ajoutez des amis (menu 👥 Amis) pour pouvoir les inclure dans une dégustation.</span></sc-if>
                 </div>
                 <span style="font-size: 12px; opacity: .6; padding-left: 4px;">La dégustation apparaîtra aussi chez eux, même si ce n'est pas leur thé.</span>
               </div>
@@ -1062,6 +1150,7 @@
           <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Options</button></sc-if><sc-if value="{{ tabOptOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Options</button></sc-if>
           <sc-if value="{{ tabManOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Gérer</button></sc-if><sc-if value="{{ tabManOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Gérer</button></sc-if>
           <sc-if value="{{ tabTagOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Tags</button></sc-if><sc-if value="{{ tabTagOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Tags</button></sc-if>
+          <sc-if value="{{ tabJrnOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabJrn }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Journal</button></sc-if><sc-if value="{{ tabJrnOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabJrn }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Journal</button></sc-if>
         </div>
 
         <datalist id="liste-thes">
@@ -1110,6 +1199,18 @@
           </section>
         </sc-if>
 
+        <sc-if value="{{ tabJrnOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Journal</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Tout ce qui se passe dans la maison : thés et sachets ajoutés, dégustations, quantités mises à jour…</p></div>
+            <sc-if value="{{ jrnEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien pour l’instant : le journal démarre maintenant.</p></sc-if>
+            <sc-for list="{{ jrn }}" as="ev" hint-placeholder-count="6">
+              <div style="display: flex; gap: 12px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--color-border, rgba(0,0,0,.08));">
+                <span style="font-size: 18px; width: 24px; flex: none;">{{ ev.icon }}</span>
+                <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 15px; text-wrap: pretty;"><b>{{ ev.who }}</b> {{ ev.text }}</span><span style="font-size: 12px; opacity: .6;">{{ ev.when }}</span></div>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabTagOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 4px;">
@@ -1730,7 +1831,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -1915,7 +2016,7 @@
                       </div>
                       <span style="font-size: 13px; opacity: .75;">{{ sa.meta }}</span>
                       <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                      <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="align-self: flex-start;">📭 {{ sa.emptyTxt }} · hors stats</span></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleEmpty }}" aria-pressed="{{ sa.isEmpty }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;"><sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}">✓</sc-if></span>Sachet vide</button></sc-if><sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                       <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     </div>
                     <div class="acts" style="flex: none; display: flex; gap: 4px;">
@@ -2744,6 +2845,150 @@ class Component extends DCLogic {
 
   norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 
+  // ---------- Amis, profils, journal ----------
+  userIds(o) {
+    o = o || this.getAdds().options || {};
+    const ids = Object.assign({}, o.userIds || {});
+    const users = (o.users || this.defaultUsers).slice();
+    const order = ['Raph', 'Maël'].filter(u => users.indexOf(u) >= 0).concat(users.filter(u => u !== 'Raph' && u !== 'Maël'));
+    let max = Object.keys(ids).reduce((m, k) => Math.max(m, parseInt(ids[k], 10) || 0), 0);
+    order.forEach(u => { if (!ids[u]) ids[u] = String(++max).padStart(4, '0'); });
+    return ids;
+  }
+
+  userTag(u) { return u + '#' + (this.userIds()[u] || '????'); }
+
+  friendsOf(u) {
+    return ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'ok' && (f.from === u || f.to === u)).map(f => f.from === u ? f.to : f.from);
+  }
+
+  setFriends(list) { this.setOpt('friends', list); }
+
+  friendsView(me) {
+    const all = (this.getAdds().options || {}).friends || [];
+    const others = (x) => all.filter(f => f !== x);
+    const fs = this.friendsOf(me);
+    const incoming = all.filter(f => f.status === 'pending' && f.to === me);
+    const outgoing = all.filter(f => f.status === 'pending' && f.from === me);
+    const send = () => {
+      const q = String(this.state.frQ || '').trim();
+      if (!q) return;
+      const ids = this.userIds();
+      const m = /^(.*?)\s*#\s*(\d{1,4})$/.exec(q);
+      let target = null;
+      if (m) { const num = m[2].padStart(4, '0'); target = Object.keys(ids).find(u => ids[u] === num && (!m[1] || this.norm(u) === this.norm(m[1]))); }
+      else target = Object.keys(ids).find(u => this.norm(u) === this.norm(q));
+      if (!target) return this.setState({ frMsg: 'Aucun compte ne correspond à « ' + q + ' ».' });
+      if (target === me) return this.setState({ frMsg: 'C’est vous !' });
+      if (fs.indexOf(target) >= 0) return this.setState({ frMsg: this.userTag(target) + ' est déjà votre ami.' });
+      const back = incoming.find(f => f.from === target);
+      if (back) { this.setFriends(all.map(f => f === back ? Object.assign({}, f, { status: 'ok' }) : f)); return this.setState({ frQ: '', frMsg: 'Vous êtes maintenant amis avec ' + this.userTag(target) + '.' }); }
+      if (outgoing.some(f => f.to === target)) return this.setState({ frMsg: 'Demande déjà envoyée.' });
+      this.setFriends(all.concat([{ from: me, to: target, status: 'pending', ts: new Date().toISOString() }]));
+      this.setState({ frQ: '', frMsg: 'Demande envoyée à ' + this.userTag(target) + '.' });
+    };
+    return { meTag: this.userTag(me), meInitial: (me || '?').slice(0, 1).toUpperCase(), openMe: () => this.setState({ view: 'profile', profUser: me, profEdit: false }),
+      q: this.state.frQ || '', setQ: e => this.setState({ frQ: e.target.value, frMsg: '' }), send: send, msg: this.state.frMsg || '',
+      hasIn: incoming.length > 0, hasOut: outgoing.length > 0,
+      incoming: incoming.map(f => ({ tag: this.userTag(f.from), accept: () => this.setFriends(all.map(x => x === f ? Object.assign({}, x, { status: 'ok' }) : x)), refuse: () => this.setFriends(others(f)) })),
+      outgoing: outgoing.map(f => ({ tag: this.userTag(f.to), cancel: () => this.setFriends(others(f)) })),
+      noFriends: !fs.length,
+      friends: fs.map(u => ({ tag: this.userTag(u), open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
+        remove: () => { if (window.confirm('Retirer ' + u + ' de vos amis ?')) this.setFriends(all.filter(f => !(f.status === 'ok' && ((f.from === u && f.to === me) || (f.from === me && f.to === u))))); } })) };
+  }
+
+  profileView(me) {
+    const u = this.state.profUser || me;
+    const isMe = u === me;
+    if (!isMe && this.friendsOf(me).indexOf(u) < 0) return { locked: true, ok: false, kpis: [] };
+    const a = this.getAdds();
+    const prof = ((a.options || {}).profiles || {})[u] || {};
+    const sacs = a.sachets.filter(o => o.owner === u);
+    const prodOf = id => { const sa = a.sachets.find(o => o.id === id); return sa ? a.prods.find(p => p.id === sa.prodId) : null; };
+    const logs = a.logs.filter(l => l.author === u || (l.with || []).indexOf(u) >= 0);
+    const by = {};
+    logs.forEach(l => { const p = prodOf(l.lotId); if (!p) return; const b = by[p.id] = by[p.id] || { p: p, n: 0, notes: [], g: 0 }; b.n++; const n = this.num(String(l.note || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); if (n != null) b.notes.push(n); b.g += this.num(l.qty) || 0; });
+    const arr = Object.keys(by).map(k => by[k]);
+    arr.forEach(b => { b.avg = b.notes.length ? b.notes.reduce((t, n) => t + n, 0) / b.notes.length : null; });
+    const most = arr.slice().sort((x, y) => y.n - x.n)[0];
+    const rated = arr.filter(b => b.avg != null);
+    const minN = rated.some(b => b.notes.length >= 2) ? 2 : 1;
+    const fav = rated.filter(b => b.notes.length >= minN).sort((x, y) => y.avg - x.avg || y.n - x.n)[0];
+    const allNotes = arr.reduce((t, b) => t.concat(b.notes), []);
+    const fam = {}; logs.forEach(l => { const p = prodOf(l.lotId); const fk = p && this.famOf(p.the); if (fk) fam[fk] = (fam[fk] || 0) + 1; });
+    const topFam = Object.keys(fam).sort((x, y) => fam[y] - fam[x])[0];
+    const last = logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')))[0];
+    const lastP = last && prodOf(last.lotId);
+    const grams = logs.reduce((t, l) => t + (this.num(l.qty) || 0), 0);
+    const nm = p => p.nom || p.the;
+    const f1 = n => n.toFixed(1).replace('.', ',');
+    const nf = this.friendsOf(u).length;
+    const kpis = [
+      { label: 'Thé le plus bu', value: most ? nm(most.p) : '—', sub: most ? most.n + (most.n > 1 ? ' dégustations' : ' dégustation') : '' },
+      { label: 'Thé préféré', value: fav ? nm(fav.p) : '—', sub: fav ? f1(fav.avg) + '/20 sur ' + fav.notes.length + ' note' + (fav.notes.length > 1 ? 's' : '') : '' },
+      { label: 'Famille favorite', value: topFam ? this.families[topFam].name : '—', sub: topFam ? fam[topFam] + ' dégustations' : '' },
+      { label: 'Dégustations', value: String(logs.length), sub: allNotes.length ? 'moyenne ' + f1(allNotes.reduce((t, n) => t + n, 0) / allNotes.length) + '/20' : '' },
+      { label: 'Sachets', value: String(sacs.length), sub: new Set(sacs.map(o => o.prodId)).size + ' thés différents' },
+      { label: 'Thé consommé', value: grams ? (grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g') : '—', sub: 'd’après les quantités notées' },
+      { label: 'Dernière dégustation', value: lastP ? nm(lastP) : '—', sub: last ? this.fmtDate(last.date) : '' },
+      { label: 'Thés goûtés', value: String(arr.length), sub: 'thés différents dégustés' }
+    ];
+    return { ok: true, locked: false, isMe: isMe, name: u, id: this.userIds()[u] || '????', initial: (u || '?').slice(0, 1).toUpperCase(),
+      nFriends: nf + (nf > 1 ? ' amis' : ' ami'),
+      desc: prof.desc || (isMe ? 'Pas encore de description.' : 'Pas de description.'),
+      editing: isMe && !!this.state.profEdit, notEditing: !(isMe && this.state.profEdit),
+      draft: this.state.profDraft || '', setDraft: e => this.setState({ profDraft: e.target.value }),
+      edit: () => this.setState({ profEdit: true, profDraft: prof.desc || '' }),
+      cancel: () => this.setState({ profEdit: false }),
+      save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
+      kpis: kpis };
+  }
+
+  diffEvents(prev, next) {
+    const who = this.sessionName() || this.state.me || '?';
+    const ts = new Date().toISOString();
+    const ev = [];
+    const byId = list => { const m = {}; (list || []).forEach(x => { if (x && x.id) m[x.id] = x; }); return m; };
+    const pP = byId(prev.prods), nP = byId(next.prods), pS = byId(prev.sachets), nS = byId(next.sachets), pL = byId(prev.logs), nL = byId(next.logs);
+    const pname = (pid) => { const p = nP[pid] || pP[pid]; return p ? (p.nom || p.the) : 'un thé'; };
+    const sname = (sid) => { const sa = nS[sid] || pS[sid]; return sa ? pname(sa.prodId) : 'un thé'; };
+    const addP = Object.keys(nP).filter(k => !pP[k]), addS = Object.keys(nS).filter(k => !pS[k]), addL = Object.keys(nL).filter(k => !pL[k]);
+    if (addP.length > 5 || addL.length > 10) {
+      ev.push({ type: 'import', icon: '📦', text: 'a importé ' + addP.length + ' thés, ' + addS.length + ' sachets et ' + addL.length + ' dégustations' });
+    } else {
+      addP.forEach(k => ev.push({ type: 'prod', icon: '🍵', text: 'a ajouté le thé « ' + pname(k) + ' »' }));
+      addS.forEach(k => { if (addP.indexOf(nS[k].prodId) < 0) ev.push({ type: 'sachet', icon: '🛍️', text: 'a ajouté un sachet de « ' + sname(k) + ' »' }); });
+      addL.forEach(k => { const l = nL[k]; ev.push({ type: 'log', icon: '☕', text: 'a dégusté « ' + sname(l.lotId) + ' »' + (l.note ? ' (' + l.note + '/20)' : '') }); });
+    }
+    Object.keys(pP).filter(k => !nP[k]).forEach(k => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé le thé « ' + (pP[k].nom || pP[k].the) + ' »' }));
+    Object.keys(pS).filter(k => !nS[k]).forEach(k => { if (nP[pS[k].prodId]) ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé un sachet de « ' + sname(k) + ' »' }); });
+    Object.keys(pL).filter(k => !nL[k]).forEach(k => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé une dégustation de « ' + sname(pL[k].lotId) + ' »' }));
+    Object.keys(nL).filter(k => pL[k] && pL[k] !== nL[k] && JSON.stringify(pL[k]) !== JSON.stringify(nL[k])).forEach(k => ev.push({ type: 'edit', icon: '✏️', text: 'a modifié une dégustation de « ' + sname(nL[k].lotId) + ' »' }));
+    Object.keys(nS).filter(k => pS[k] && pS[k] !== nS[k]).forEach(k => {
+      const o = pS[k], n = nS[k];
+      if (!!o.empty !== !!n.empty && o.owner === n.owner) ev.push({ type: 'empty', icon: '📭', text: n.empty ? 'a marqué son sachet de « ' + sname(k) + ' » comme vide' : 'a retiré la mention vide du sachet de « ' + sname(k) + ' »' });
+      else if (o.owner !== n.owner) ev.push({ type: 'give', icon: '🎁', text: 'a donné un sachet de « ' + sname(k) + ' » à ' + n.owner });
+      else if (JSON.stringify(o.adjust || null) !== JSON.stringify(n.adjust || null)) ev.push({ type: 'qty', icon: '⚖️', text: n.adjust ? 'a mis à jour la quantité restante de « ' + sname(k) + ' » : ' + n.adjust.left + ' ' + (n.prixMode === 'unite' ? 'unités' : 'g') : 'a remis le calcul automatique de « ' + sname(k) + ' »' });
+      else if (JSON.stringify(o) !== JSON.stringify(n)) ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le sachet de « ' + sname(k) + ' »' });
+    });
+    Object.keys(nP).filter(k => pP[k] && pP[k] !== nP[k] && JSON.stringify(pP[k]) !== JSON.stringify(nP[k])).forEach(k => ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le thé « ' + pname(k) + ' »' }));
+    const pT = (prev.teas || []).length, nT = (next.teas || []).length;
+    if (nT > pT && !(addP.length > 5)) (next.teas || []).slice(pT).forEach(t => ev.push({ type: 'cat', icon: '📖', text: 'a ajouté « ' + t.nom + ' » au catalogue' }));
+    const pD = (prev.decl || []).length, nD = (next.decl || []).length;
+    if (nD > pD && !(addP.length > 5)) (next.decl || []).slice(pD).forEach(d => ev.push({ type: 'cat', icon: '📖', text: 'a ajouté la variante « ' + d.nom + ' » de ' + d.the }));
+    const po = (prev.options || {}).friends || [], no = (next.options || {}).friends || [];
+    no.filter(f => f.status === 'ok' && !po.some(x => x.from === f.from && x.to === f.to && x.status === 'ok')).forEach(f => ev.push({ type: 'friend', icon: '🤝', text: 'et ' + (f.from === who ? f.to : f.from) + ' sont maintenant amis' }));
+    return ev.map((e, i) => Object.assign({ id: 'e' + Date.now().toString(36) + i, ts: ts, who: who }, e));
+  }
+
+  journal() {
+    return (this.getAdds().events || []).slice().reverse().slice(0, 200).map(e => {
+      const d = new Date(e.ts);
+      const when = isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      return { icon: e.icon || '•', who: e.who, text: e.text, when: when };
+    });
+  }
+
   getAdds() {
     if (!this._adds) { try { this._adds = JSON.parse(localStorage.getItem('the-ajouts') || '{}'); } catch (e) { this._adds = {}; } }
     const a = this._adds;
@@ -2754,6 +2999,13 @@ class Component extends DCLogic {
 
   setAdds(a) {
     this._chg = (this._chg || 0) + 1;
+    try {
+      const prev = this._adds || {};
+      if (prev !== a && this.state.session) {
+        const ev = this.diffEvents(prev, a);
+        if (ev.length) a = Object.assign({}, a, { events: (a.events || prev.events || []).concat(ev).slice(-400) });
+      }
+    } catch (e) {}
     this._adds = a;
     try { localStorage.setItem('the-ajouts', JSON.stringify(a)); } catch (e) {}
     this.forceUpdate();
@@ -2814,7 +3066,10 @@ class Component extends DCLogic {
     if (!nm) return;
     const a = this.getAdds();
     const users = (a.options && a.options.users) || [];
-    if (users.indexOf(nm) < 0) this.setAdds(Object.assign({}, a, { options: Object.assign({}, a.options, { users: users.concat([nm]) }) }));
+    const o2 = Object.assign({}, a.options, { users: users.indexOf(nm) < 0 ? users.concat([nm]) : users });
+    const ids = this.userIds(o2);
+    const cur = (a.options && a.options.userIds) || {};
+    if (users.indexOf(nm) < 0 || Object.keys(ids).some(k => cur[k] !== ids[k])) this.setAdds(Object.assign({}, a, { options: Object.assign(o2, { userIds: ids }) }));
   }
 
   sessionName() {
@@ -2871,7 +3126,7 @@ class Component extends DCLogic {
       const pr = a.prods.find(x => x.id === sa.prodId);
       if (!pr) return null;
       return { id: sa.id, prodId: pr.id, owner: sa.owner, owners: [sa.owner],
-        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: sa.photoThe || '', photo: sa.photo || '', history: sa.history || [], adjust: sa.adjust || null,
+        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: sa.photoThe || '', photo: sa.photo || '', history: sa.history || [], adjust: sa.adjust || null, empty: sa.empty,
         code: sa.code || '', achat: sa.achat || '', prodDate: sa.prodDate || '', annee: sa.prodDate || '', lot: sa.lot || '', prixMode: sa.prixMode || 'poids', prixPaye: sa.prixPaye || '', quantite: sa.quantite || '', freq: sa.freq || '', commentaire: sa.commentaire || '' };
     }).filter(Boolean);
   }
@@ -2907,6 +3162,14 @@ class Component extends DCLogic {
 
   logTs(l) { const t = parseInt(String(l.id || '').slice(1), 36); return isNaN(t) ? 0 : t; }
 
+  isEmptySachet(o) {
+    if (!o) return false;
+    if (o.empty === true) return true;
+    if (o.empty === false) return false;
+    const r = this.remainFor(o);
+    return !!(r && r.left <= 0);
+  }
+
   remainFor(o) {
     const adj = o.adjust && o.adjust.left != null ? o.adjust : null;
     const init0 = this.num(o.quantite);
@@ -2929,7 +3192,11 @@ class Component extends DCLogic {
 
   inLog(l, u) { return (l.author || '') === u || (l.with || []).indexOf(u) >= 0; }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { canEdit: (l.author || '') === me, editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  startEditLog(l) {
+    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
+  }
+
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -3212,6 +3479,9 @@ class Component extends DCLogic {
     const adjOpen = this.state.adjId === o.id;
     const adjustCtl = {
       canAdjust: o.owner === me, adjOpen: adjOpen, adjClosed: !adjOpen,
+      isEmpty: this.isEmptySachet(o), notEmpty: !this.isEmptySachet(o),
+      emptyTxt: this.isEmptySachet(o) ? (o.empty === true ? 'Vide' : 'Vide (d’après le calcul)') : '',
+      toggleEmpty: () => { const a = this.getAdds(); const now = this.isEmptySachet(o); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { empty: !now }) : x) })); },
       adjUnit: o.prixMode === 'unite' ? 'unités' : 'g',
       adjVal: adjOpen ? (this.state.adjVal != null ? this.state.adjVal : '') : '',
       adjToggle: () => this.setState(s => ({ adjId: s.adjId === o.id ? null : o.id, adjVal: rm ? String(Math.round(rm.left * 10) / 10).replace('.', ',') : '' })),
@@ -3237,7 +3507,7 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: (l.author || '') === me,
+      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l),
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
@@ -3476,7 +3746,7 @@ class Component extends DCLogic {
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
-    const v = (guest && ['mine', 'log', 'add'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
+    const v = (guest && ['mine', 'log', 'add', 'friends', 'profile'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -3565,7 +3835,7 @@ class Component extends DCLogic {
       openTea: () => this.go('types', null, 0),
       openTools: () => this.go('tools'),
       goHome: () => this.go('home'),
-      goBack: () => (v === 'tea' && this.state.teaBack === 'prod') ? this.setState({ view: 'prod', teaBack: null }) : v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'prod' ? (this.state.prodBack || 'mine') : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
+      goBack: () => (v === 'tea' && this.state.teaBack === 'prod') ? this.setState({ view: 'prod', teaBack: null }) : v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'profile' ? 'friends' : v === 'prod' ? (this.state.prodBack || 'mine') : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
       pick: pick,
       currentName: fam.name,
       currentDesc: fam.desc,
@@ -3669,7 +3939,17 @@ class Component extends DCLogic {
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
       isStats: v === 'stats',
-      st: v === 'stats' ? this.computeStats(coll, me) : {},
+      menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frMsg: '' }),
+      friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; return n ? ' (' + n + ')' : ''; })(),
+      isFriends: v === 'friends',
+      fr: v === 'friends' ? this.friendsView(me) : {},
+      isProfile: v === 'profile',
+      pf: v === 'profile' ? this.profileView(me) : {},
+      tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
+      tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',
+      jrn: this.state.addTab === 'jrn' ? this.journal() : [],
+      jrnEmpty: this.state.addTab === 'jrn' && !(this.getAdds().events || []).length,
+      st: v === 'stats' ? this.computeStats(coll.filter(o => !this.isEmptySachet(o)), me) : {},
       isLogs: v === 'logs',
       saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : 'Enregistrer la dégustation',
       editingLog: !!this.state.editLogId,
@@ -3846,8 +4126,8 @@ class Component extends DCLogic {
       ...(() => {
         const o = coll.find(x => x.id === (this.state.lf || {}).lotId);
         const r = o ? this.remainFor(o) : null;
-        const others = this.opts().users.filter(u => u && u !== me);
         const cur = (this.state.lf || {}).with || [];
+        const others = this.friendsOf(me).filter(u => u && u !== me).concat(cur.filter(u => u !== me && this.friendsOf(me).indexOf(u) < 0));
         return { qtyUnit: o && o.prixMode === 'unite' ? 'unités' : 'g', logRemain: r ? r.txt + ' avant cette dégustation' : (o ? 'Quantité du sachet non renseignée : pas d\'estimation du reste.' : ''),
           noOthers: !others.length,
           withChips: others.map(u => { const on = cur.indexOf(u) >= 0; return { name: u, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.lf || {}).with || []; return { lf: Object.assign({}, s.lf, { with: on ? c.filter(x => x !== u) : c.concat([u]) }) }; }) }; }) };
