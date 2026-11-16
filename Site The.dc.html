@@ -368,8 +368,7 @@
             <sc-if value="{{ grpTheOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ grpThe }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Thé</button></sc-if><sc-if value="{{ grpTheOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ grpThe }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Thé</button></sc-if>
             <sc-if value="{{ grpSacOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ grpSac }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Sachet</button></sc-if><sc-if value="{{ grpSacOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ grpSac }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Sachet</button></sc-if>
           </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: -10px;">
+          <span style="width: 14px;" aria-hidden="true"></span>
           <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Affichage</span>
           <div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;">
             <sc-if value="{{ vBigOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ vBig }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Grand</button></sc-if><sc-if value="{{ vBigOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ vBig }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Grand</button></sc-if>
@@ -622,9 +621,31 @@
           </div>
           <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; margin-left: auto;">＋ Nouvelle dégustation</button>
         </div>
-        <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 3px;"><sc-if value="{{ dsMeOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dsMe }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Mes dégustations</button></sc-if><sc-if value="{{ dsMeOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dsMe }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Mes dégustations</button></sc-if><sc-if value="{{ dsAllOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dsAll }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Toutes</button></sc-if><sc-if value="{{ dsAllOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dsAll }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Toutes</button></sc-if></div>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;"><sc-if value="{{ dsMeOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dsMe }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Mes dégustations</button></sc-if><sc-if value="{{ dsMeOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dsMe }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Mes dégustations</button></sc-if><sc-if value="{{ dsAllOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dsAll }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Toutes</button></sc-if><sc-if value="{{ dsAllOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dsAll }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Toutes</button></sc-if></div>
+          <span style="width: 14px;" aria-hidden="true"></span>
+          <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Affichage</span>
+          <div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;">
+            <sc-if value="{{ dvBigOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dvBig }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Grand</button></sc-if><sc-if value="{{ dvBigOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dvBig }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Grand</button></sc-if>
+            <sc-if value="{{ dvSmallOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dvSmall }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Liste</button></sc-if><sc-if value="{{ dvSmallOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dvSmall }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Liste</button></sc-if>
+          </div>
+        </div>
         <input class="input" type="search" aria-label="Filtrer les dégustations" placeholder="Filtrer par thé, code, personne, avis…" value="{{ dq }}" onChange="{{ onDq }}" style="width: 100%; max-width: 520px; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
         <sc-if value="{{ dlogsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune dégustation pour l'instant.</p></sc-if>
+        <sc-if value="{{ dvSmallOn }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 8px 14px;">
+              <span style="flex: none; min-width: 42px; text-align: center; font-family: var(--font-heading); font-size: 17px; color: var(--color-accent-700);">{{ l.note }}</span>
+              <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-family: var(--font-heading); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.name }}</span>
+                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.when }} · {{ l.author }} · {{ l.code }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ dvBigOn }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; flex-direction: column; gap: 10px;">
             <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="2">
               <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
@@ -651,6 +672,7 @@
               </article>
             </sc-for>
         </div>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -1885,7 +1907,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
 class Component extends DCLogic {
-  state = { view: 'home', key: null, idx: 0, vmode: (() => { try { return localStorage.getItem('the-vmode') || 'big'; } catch (e) { return 'big'; } })() };
+  state = { view: 'home', key: null, idx: 0, vmode: (() => { try { return localStorage.getItem('the-vmode') || 'big'; } catch (e) { return 'big'; } })(), dvmode: (() => { try { return localStorage.getItem('the-dvmode') || 'big'; } catch (e) { return 'big'; } })() };
 
   ph = {
     recolte: "Une ligne : cueillette, saison, façonnage.",
@@ -2832,6 +2854,9 @@ class Component extends DCLogic {
       isLogs: v === 'logs',
       dsMeOn: (this.state.ds || 'me') === 'me', dsMeOff: (this.state.ds || 'me') !== 'me', dsAllOn: this.state.ds === 'all', dsAllOff: this.state.ds !== 'all',
       dsMe: () => this.setState({ ds: 'me' }), dsAll: () => this.setState({ ds: 'all' }),
+      dvBigOn: (this.state.dvmode || 'big') === 'big', dvBigOff: (this.state.dvmode || 'big') !== 'big', dvSmallOn: this.state.dvmode === 'small', dvSmallOff: this.state.dvmode !== 'small',
+      dvBig: () => { this.setState({ dvmode: 'big' }); try { localStorage.setItem('the-dvmode', 'big'); } catch (e) {} },
+      dvSmall: () => { this.setState({ dvmode: 'small' }); try { localStorage.setItem('the-dvmode', 'small'); } catch (e) {} },
       dq: this.state.dq || '', onDq: e => this.setState({ dq: e.target.value }),
       ...(() => {
         const all = this.getAdds().logs.filter(l => coll.some(o => o.id === l.lotId));
