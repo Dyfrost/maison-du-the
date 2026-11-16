@@ -2784,7 +2784,7 @@ class Component extends DCLogic {
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
       setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
-      lotOptions: coll.filter(o => o.owner === me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code })).concat(coll.filter(o => o.owner !== me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code + ' (sachet de ' + o.owner + ')' }))),
+      lotOptions: coll.filter(o => o.owner === me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code })),
       ...(() => {
         const o = coll.find(x => x.id === (this.state.lf || {}).lotId);
         const r = o ? this.remainFor(o) : null;
@@ -2802,6 +2802,7 @@ class Component extends DCLogic {
       saveLog: () => {
         const l = this.state.lf || {};
         if (!l.lotId) { this.setState({ logMsg: 'Choisissez le thé dégusté.' }); return; }
+        if (!coll.some(x => x.id === l.lotId && x.owner === me)) { this.setState({ logMsg: 'Vous ne pouvez noter que vos propres sachets.' }); return; }
         const a = this.getAdds();
         const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || new Date().toISOString().slice(0, 10) });
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
