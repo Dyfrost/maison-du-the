@@ -25,3 +25,10 @@ insert into public.the_data (id, payload) values ('maison', '{}'::jsonb) on conf
 grant select on public.the_data to anon;
 drop policy if exists "visiteurs lisent" on public.the_data;
 create policy "visiteurs lisent" on public.the_data for select to anon using (true);
+
+-- Photos : bucket public, envoi réservé aux membres connectés
+insert into storage.buckets (id, name, public) values ('photos', 'photos', true) on conflict (id) do nothing;
+drop policy if exists "membres envoient des photos" on storage.objects;
+create policy "membres envoient des photos" on storage.objects for insert to authenticated with check (bucket_id = 'photos');
+drop policy if exists "tout le monde voit les photos" on storage.objects;
+create policy "tout le monde voit les photos" on storage.objects for select using (bucket_id = 'photos');

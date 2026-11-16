@@ -20,6 +20,23 @@
   a:hover { color: var(--color-accent-800); }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
   @keyframes riseIn { 0% { opacity: 0; transform: translateY(40px) scale(.94); } 100% { opacity: 1; transform: none; } }
+  .thumb { display: block; object-fit: cover; border-radius: 18px; background: var(--color-neutral-200); flex: none; }
+  @media (max-width: 720px) {
+    header.nav { padding: 12px 16px !important; gap: 8px !important; }
+    header.nav .nav-brand { font-size: 19px !important; }
+    header.nav .nav-carte { order: 5; width: 100%; justify-content: flex-start; padding-left: 0 !important; font-size: 14px !important; }
+    header .umenu { position: fixed !important; left: 16px !important; right: 16px !important; top: 64px !important; min-width: 0 !important; }
+    main.page { padding: 8px 16px 64px !important; }
+    main.page h1 { font-size: 34px !important; line-height: 1.1 !important; }
+    main.page h2 { font-size: 23px !important; }
+    main.page section, main.page .pad { padding: 18px 16px !important; border-radius: 24px !important; }
+    main.page .row-wrap { flex-wrap: wrap !important; }
+    main.page .row-wrap > div { flex: 1 1 0 !important; min-width: 0 !important; }
+    main.page .row-wrap > .acts, main.page .row-wrap > .side { flex: 1 1 100% !important; justify-content: flex-start !important; align-items: flex-start !important; text-align: left !important; flex-direction: row !important; gap: 8px !important; }
+    main.page input, main.page select, main.page textarea { font-size: 16px !important; }
+    main.page [style*="minmax(140px, 1fr)"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    main.page [style*="min-height: 280px"], main.page [style*="min-height: 260px"] { min-height: 180px !important; padding: 22px !important; }
+  }
 </style>
 </helmet>
 
@@ -32,7 +49,7 @@
     <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">Je bois un thé</button>
     <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Ajouter</button>
     </sc-if>
-    <a class="btn btn-ghost" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
+    <a class="btn btn-ghost nav-carte" href="Carte.html" style="white-space: nowrap;">Carte des origines</a>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
         <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
@@ -41,7 +58,7 @@
         </button>
         <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
           <button aria-label="Fermer le menu" onClick="{{ closeMenu }}" style="position: fixed; inset: 0; background: transparent; border: none; cursor: default; z-index: 40;"></button>
-          <div role="menu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
+          <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuMine }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Mes thés</button>
             <button role="menuitem" onClick="{{ menuLog }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Je bois un thé</button>
             <button role="menuitem" onClick="{{ menuPacks }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Tous les sachets</button>
@@ -65,7 +82,7 @@
     </sc-if>
   </header>
 
-  <main style="flex: 1; width: 100%; max-width: 1140px; margin: 0 auto; padding: 16px 40px 80px; display: flex; flex-direction: column;">
+  <main class="page" style="flex: 1; width: 100%; max-width: 1140px; margin: 0 auto; padding: 16px 40px 80px; display: flex; flex-direction: column;">
     <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
       <button class="btn btn-secondary" style="white-space: nowrap; align-self: flex-start; margin: -8px 0 22px;" onClick="{{ goBack }}">← Retour</button>
     </sc-if>
@@ -342,8 +359,9 @@
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <sc-for list="{{ mineProds }}" as="m" hint-placeholder-count="2">
             <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);">
-              <div style="display: flex; align-items: flex-start; gap: 16px;">
-                <span style="width: 16px; height: 16px; flex: none; margin-top: 8px; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span>
+              <div class="row-wrap" style="display: flex; align-items: flex-start; gap: 16px;">
+                <sc-if value="{{ m.photo }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ m.photo }}" alt="" style="width: 72px; height: 72px;"></sc-if>
+                <sc-if value="{{ m.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 16px; height: 16px; flex: none; margin-top: 8px; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span></sc-if>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
@@ -356,7 +374,7 @@
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                 </div>
-                <div style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
+                <div class="side" style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
                   <span style="font-family: var(--font-heading); font-size: 22px;">{{ m.avg }}</span>
                   <span style="font-size: 12px; opacity: .65; white-space: nowrap;">{{ m.avgSub }}</span>
                 </div>
@@ -366,6 +384,7 @@
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                   <sc-for list="{{ m.sachets }}" as="sa" hint-placeholder-count="1">
                   <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                    <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px;"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ ph }}" alt="" style="width: 72px; height: 72px; border-radius: 14px;"></a></sc-for></div></sc-if>
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
@@ -423,6 +442,7 @@
                         <button onClick="{{ sa.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 20px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
                         <span style="font-size: 13px; opacity: .7;">{{ sa.the }}</span>
                       </div>
+                    <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px;"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ ph }}" alt="" style="width: 72px; height: 72px; border-radius: 14px;"></a></sc-for></div></sc-if>
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                       <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
                       <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
@@ -798,6 +818,15 @@
                   </span>
                 </div>
               </div>
+              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Photo du thé</span>
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                  <sc-if value="{{ form.prodPhoto }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ form.prodPhoto }}" alt="Photo du thé" style="width: 96px; height: 96px;"></sc-if>
+                  <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer;">📷 {{ prodPhotoBtn }}<input type="file" accept="image/*" onChange="{{ onProdPhoto }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label>
+                  <sc-if value="{{ form.prodPhoto }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ onProdPhotoClear }}" style="white-space: nowrap;">Retirer</button></sc-if>
+                  <sc-if value="{{ prodPhotoMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">{{ prodPhotoMsg }}</span></sc-if>
+                </div>
+              </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le thé</span>
                 <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="Ce qui caractérise ce thé…" value="{{ form.prodComment }}" onChange="{{ setF.prodComment }}"></textarea>
@@ -855,6 +884,15 @@
                   <sc-for list="{{ freqOptions }}" as="q" hint-placeholder-count="0"><option value="{{ q.code }}">{{ q.code }} · {{ q.label }}</option></sc-for>
                 </select>
               </label>
+              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Photo du sachet</span>
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                  <sc-if value="{{ form.sachetPhoto }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ form.sachetPhoto }}" alt="Photo du sachet" style="width: 96px; height: 96px;"></sc-if>
+                  <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer;">📷 {{ sachetPhotoBtn }}<input type="file" accept="image/*" onChange="{{ onSachetPhoto }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label>
+                  <sc-if value="{{ form.sachetPhoto }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ onSachetPhotoClear }}" style="white-space: nowrap;">Retirer</button></sc-if>
+                  <sc-if value="{{ sachetPhotoMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">{{ sachetPhotoMsg }}</span></sc-if>
+                </div>
+              </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le sachet</span>
                 <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="État, conservation, ressenti sur ce paquet…" value="{{ form.commentaire }}" onChange="{{ setF.commentaire }}"></textarea>
@@ -1175,7 +1213,8 @@
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <sc-for list="{{ teaMine }}" as="lot" hint-placeholder-count="1">
               <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <div class="row-wrap" style="display: flex; align-items: flex-start; gap: 14px;">
+                  <sc-if value="{{ lot.photo }}" hint-placeholder-val="{{ false }}"><a href="{{ lot.photo }}" target="_blank" rel="noopener" aria-label="Voir la photo du thé"><img class="thumb" src="{{ lot.photo }}" alt="" style="width: 84px; height: 84px;"></a></sc-if>
                   <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                       <span style="font-family: var(--font-heading); font-size: 20px;">{{ lot.label }}</span>
@@ -1187,7 +1226,7 @@
                     <div style="font-size: 14px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque :</span> {{ lot.marque }}</div>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                   </div>
-                  <div style="flex: none; display: flex; gap: 8px; align-items: center;">
+                  <div class="acts" style="flex: none; display: flex; gap: 8px; align-items: center;">
                     <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ lot.own }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
                     <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ lot.own }}" style="white-space: nowrap;">Je possède</button></sc-if>
                   </div>
@@ -1195,7 +1234,8 @@
                 <div style="font-size: 13px; opacity: .7;">{{ lot.ownersTxt }}</div>
                 <sc-if value="{{ lot.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p></sc-if>
                 <sc-for list="{{ lot.sachets }}" as="sa" hint-placeholder-count="0">
-                  <div style="border-top: 1px solid var(--color-divider); padding-top: 10px; display: flex; align-items: flex-start; gap: 12px;">
+                  <div class="row-wrap" style="border-top: 1px solid var(--color-divider); padding-top: 10px; display: flex; align-items: flex-start; gap: 12px;">
+                    <sc-if value="{{ sa.photo }}" hint-placeholder-val="{{ false }}"><a href="{{ sa.photo }}" target="_blank" rel="noopener" aria-label="Voir la photo du sachet"><img class="thumb" src="{{ sa.photo }}" alt="" style="width: 60px; height: 60px; border-radius: 14px;"></a></sc-if>
                     <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
                       <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Mon sachet</span>
@@ -1205,7 +1245,7 @@
                       <span style="font-size: 13px; opacity: .75;">{{ sa.meta }}</span>
                       <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     </div>
-                    <div style="flex: none; display: flex; gap: 4px;">
+                    <div class="acts" style="flex: none; display: flex; gap: 4px;">
                       <button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button>
                       <button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button>
                     </div>
@@ -1220,7 +1260,8 @@
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <sc-for list="{{ teaOthers }}" as="lot" hint-placeholder-count="1">
               <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <div class="row-wrap" style="display: flex; align-items: flex-start; gap: 14px;">
+                  <sc-if value="{{ lot.photo }}" hint-placeholder-val="{{ false }}"><a href="{{ lot.photo }}" target="_blank" rel="noopener" aria-label="Voir la photo du thé"><img class="thumb" src="{{ lot.photo }}" alt="" style="width: 84px; height: 84px;"></a></sc-if>
                   <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                       <span style="font-family: var(--font-heading); font-size: 20px;">{{ lot.label }}</span>
@@ -1232,7 +1273,7 @@
                     <div style="font-size: 14px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque :</span> {{ lot.marque }}</div>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                   </div>
-                  <div style="flex: none; display: flex; gap: 8px; align-items: center;">
+                  <div class="acts" style="flex: none; display: flex; gap: 8px; align-items: center;">
                     <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ lot.own }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
                     <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ lot.own }}" style="white-space: nowrap;">Je possède</button></sc-if>
                   </div>
@@ -2108,9 +2149,36 @@ class Component extends DCLogic {
       const pr = a.prods.find(x => x.id === sa.prodId);
       if (!pr) return null;
       return { id: sa.id, prodId: pr.id, owner: sa.owner, owners: [sa.owner],
-        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '',
+        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: pr.photo || '', photo: sa.photo || '',
         code: sa.code || '', achat: sa.achat || '', prodDate: sa.prodDate || '', annee: sa.prodDate || '', lot: sa.lot || '', prixMode: sa.prixMode || 'poids', prixPaye: sa.prixPaye || '', quantite: sa.quantite || '', freq: sa.freq || '', commentaire: sa.commentaire || '' };
     }).filter(Boolean);
+  }
+
+  async uploadPhoto(file, kind, field) {
+    if (!file) return;
+    const msgKey = field + 'Msg';
+    this.setState({ [msgKey]: 'Envoi de la photo…' });
+    try {
+      const url = URL.createObjectURL(file);
+      const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+      const cloud = !!(this.sb && this.state.session);
+      const max = cloud ? 1400 : 700;
+      const r = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * r); c.height = Math.round(img.naturalHeight * r);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      let out;
+      if (cloud) {
+        const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.82));
+        const path = kind + '/' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8) + '.jpg';
+        const { error } = await this.sb.storage.from('photos').upload(path, blob, { contentType: 'image/jpeg', upsert: false });
+        if (error) throw error;
+        out = this.sb.storage.from('photos').getPublicUrl(path).data.publicUrl;
+      } else out = c.toDataURL('image/jpeg', 0.72);
+      this.setState(s => ({ [msgKey]: '', form: Object.assign({}, s.form, { [field]: out }) }));
+    } catch (e) {
+      this.setState({ [msgKey]: "La photo n'a pas pu être envoyée : " + (e && e.message ? e.message : e) });
+    }
   }
 
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
@@ -2124,7 +2192,8 @@ class Component extends DCLogic {
   sachetView(o, me) {
     const st = this.statsFor(o.id); const open = !!(this.state.openLogs || {})[o.id];
     const fk = this.famOf(o.the);
-    return { id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
+    const photos = [o.photo, o.prodPhoto].filter(Boolean);
+    return { photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
       name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque, boutique: o.boutique, prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: o.prixPaye ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
@@ -2136,7 +2205,7 @@ class Component extends DCLogic {
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(o.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i) }); } },
       taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
-      edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
+      edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
       remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); } };
   }
 
@@ -2403,26 +2472,26 @@ class Component extends DCLogic {
         const prodIds = prods.map(x => x.id);
         const myLogs = a.logs.filter(l => (l.author || this.opts().users[0]) === me && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
         const taste = id => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
-        const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
-        const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }, fill(pr)) }));
+        const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '', prodPhoto: pr.photo || '' });
+        const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }, fill(pr)) }));
         const card = pr => {
           const sacs = coll.filter(o => o.prodId === pr.id);
           const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i);
           const mineS = sacs.filter(o => o.owner === me);
           const pst = this.statsMany(sacs.map(o => o.id));
-          return { label: pr.nom || pr.the, sub: pr.variante || '', marque: pr.marque || '—', tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '', avg: this.avgTxt(pst), avgSub: pst.n ? '(' + pst.n + ')' : '',
+          return { photo: pr.photo || '', label: pr.nom || pr.the, sub: pr.variante || '', marque: pr.marque || '—', tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '', avg: this.avgTxt(pst), avgSub: pst.n ? '(' + pst.n + ')' : '',
             shop: pr.boutique || '', shopOn: !!pr.boutique, note: pr.commentaire || '',
             ownersTxt: owners.length ? 'Possédé par ' + owners.join(' & ') : "Personne ne l'a pour l'instant",
             iOwn: mineS.length > 0, iDontOwn: !mineS.length, own: () => addSachet(pr),
-            sachets: mineS.map(o => { const st = this.statsFor(o.id); return { code: o.code, meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'année de production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '), note: o.commentaire || '', avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '', taste: () => taste(o.id),
-              edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, fill(pr), { code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }) }; }) };
+            sachets: mineS.map(o => { const st = this.statsFor(o.id); return { photo: o.photo || '', code: o.code, meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'année de production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '), note: o.commentaire || '', avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '', taste: () => taste(o.id),
+              edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, fill(pr), { sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }) }; }) };
         };
         const mine = prods.filter(pr => coll.some(o => o.prodId === pr.id && o.owner === me)), others = prods.filter(pr => mine.indexOf(pr) < 0);
         return {
           teaMine: mine.map(card), teaOthers: others.map(card), teaNoMine: !mine.length, teaNoOthers: !others.length,
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
-          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '' }) }))
+          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
         };
       })(),
       teaTags: tTags,
@@ -2504,6 +2573,13 @@ class Component extends DCLogic {
         const vs = key ? d[key].map(x => x.name) : [];
         return { variantOptions: vs, noVariants: !vs.length, variantPh: !nm ? "Choisissez d'abord la famille" : (vs.length ? '— Aucune —' : 'Pas de variante pour ce thé') };
       })(),
+      onProdPhoto: e => this.uploadPhoto(e.target.files && e.target.files[0], 'the', 'prodPhoto'),
+      onSachetPhoto: e => this.uploadPhoto(e.target.files && e.target.files[0], 'sachet', 'sachetPhoto'),
+      onProdPhotoClear: () => this.setState(s => ({ form: Object.assign({}, s.form, { prodPhoto: '' }) })),
+      onSachetPhotoClear: () => this.setState(s => ({ form: Object.assign({}, s.form, { sachetPhoto: '' }) })),
+      prodPhotoBtn: (this.state.form || {}).prodPhoto ? 'Changer la photo' : 'Ajouter une photo',
+      sachetPhotoBtn: (this.state.form || {}).sachetPhoto ? 'Changer la photo' : 'Ajouter une photo',
+      prodPhotoMsg: this.state.prodPhotoMsg || '', sachetPhotoMsg: this.state.sachetPhotoMsg || '',
       tagChips: this.allTags().map(k => { const cur = (this.state.form || {}).tags || []; const on = cur.indexOf(k) >= 0; return { name: k, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.form || {}).tags || []; return { form: Object.assign({}, s.form, { tags: on ? c.filter(x => x !== k) : c.concat([k]) }) }; }) }; }),
       formIOwn: ((this.state.form || {}).owners || [me]).indexOf(me) >= 0,
       formIDontOwn: ((this.state.form || {}).owners || [me]).indexOf(me) < 0,
@@ -2524,7 +2600,7 @@ class Component extends DCLogic {
       isLog: v === 'log',
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf) }),
-      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }) })),
+      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
       mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » et cochez « Je possède ».'; })(),
@@ -2536,7 +2612,7 @@ class Component extends DCLogic {
           const sacs = list.filter(o => o.prodId === pid); const o = sacs[0]; const fk = this.famOf(o.the);
           const allSacs = coll.filter(x => x.prodId === pid);
           const st = this.statsMany(allSacs.map(x => x.id)); const open = !!(this.state.openProds || {})[pid];
-          return { name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
+          return { photo: o.prodPhoto || '', noPhoto: !o.prodPhoto, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
             marque: o.marque || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
             avg: this.avgTxt(st) || '—', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
@@ -2601,7 +2677,7 @@ class Component extends DCLogic {
         const n = a.sachets.filter(x => x.owner === me && pr && x.prodId === pr.id && x.id !== this.state.editId).length + 1;
         return { genCode: gen, codeSuggest: (this.state.editId && fm.code) ? fm.code : gen + '-' + ini + n + '-XXXX',
           prodOptions: a.prods.slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the))).map(x => ({ id: x.id, label: [x.nom || x.the, x.the !== x.nom ? x.the : '', x.marque, x.code].filter(Boolean).join(' — ') })),
-          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } };
+          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '', prodPhoto: x.photo || '' } : { prodId: '', prodPhoto: '' }) })); } };
       })(),
       noteHint: (() => { const n = parseFloat(String((this.state.form || {}).note20 || '').replace(',', '.')); if (isNaN(n)) return '0–4 à jeter · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel'; return n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? "Correct, sans plus" : n <= 18 ? 'Vraiment bon' : 'Exceptionnel'; })(),
       saveVar: () => {
@@ -2623,7 +2699,7 @@ class Component extends DCLogic {
         if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez la famille de thé.' }); return; }
         if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
         const a = this.getAdds();
-        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], commentaire: fm.prodComment || '' };
+        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], commentaire: fm.prodComment || '', photo: fm.prodPhoto || '' };
         let prods = a.prods.slice(), prodId = fm.prodId;
         if (prodId && prods.some(x => x.id === prodId)) {
           prods = prods.map(x => x.id === prodId ? Object.assign({}, x, prodFields) : x);
@@ -2640,8 +2716,8 @@ class Component extends DCLogic {
         const rnd = () => String(Math.floor(1000 + Math.random() * 9000));
         let code = old && old.prodId === prodId && old.code ? old.code : pr.code + '-' + ini + n + '-' + rnd();
         while (a.sachets.some(x => x.code === code && (!old || x.id !== old.id))) code = pr.code + '-' + ini + n + '-' + rnd();
-        const sac = { prodId: prodId, owner: me, code: code, achat: fm.achat || '', prodDate: fm.prodDate || '', lot: fm.lot || '', prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye || '', quantite: fm.quantite || '', freq: fm.freq || '', commentaire: fm.commentaire || '' };
-        const clear = { prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' };
+        const sac = { prodId: prodId, owner: me, code: code, achat: fm.achat || '', prodDate: fm.prodDate || '', lot: fm.lot || '', prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye || '', quantite: fm.quantite || '', freq: fm.freq || '', commentaire: fm.commentaire || '', photo: fm.sachetPhoto || '' };
+        const clear = { prodPhoto: '', sachetPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' };
         if (this.state.editId) {
           this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.map(x => x.id === this.state.editId ? Object.assign({}, x, sac, { owner: x.owner }) : x) }));
           this.setState(s => ({ view: 'mine', editId: null, form: Object.assign({}, s.form, clear) }));
