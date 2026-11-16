@@ -353,7 +353,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -363,7 +363,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -413,7 +413,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -423,7 +423,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -507,7 +507,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -517,7 +517,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -591,7 +591,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -601,7 +601,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -663,7 +663,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -673,7 +673,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -896,7 +896,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ l.remove }}" style="align-self: flex-start; white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></sc-if>
+                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -926,7 +926,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ l.remove }}" style="align-self: flex-start; white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></sc-if>
+                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -939,7 +939,7 @@
     <sc-if value="{{ isLog }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 24px; animation: fadeUp .45s ease both; max-width: 900px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <h1 style="font-size: 46px; margin: 0;">Nouvelle dégustation</h1>
+          <h1 style="font-size: 46px; margin: 0;">{{ logTitle }}</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Une fiche par dégustation, comme dans votre tableur.</p>
         </div>
         <div style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 20px;">
@@ -1015,7 +1015,7 @@
             </label>
           </div>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <button class="btn btn-primary" onClick="{{ saveLog }}" style="white-space: nowrap;">Enregistrer la dégustation</button>
+            <button class="btn btn-primary" onClick="{{ saveLog }}" style="white-space: nowrap;">{{ saveLogLabel }}</button><sc-if value="{{ editingLog }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ cancelLogEdit }}" style="white-space: nowrap;">Annuler</button></sc-if>
             <sc-if value="{{ logMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ logMsg }}</span></sc-if>
           </div>
         </div>
@@ -1085,7 +1085,6 @@
                 <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Nom" value="{{ cf.name.val }}" onChange="{{ cf.name.edit }}" onBlur="{{ cf.name.save }}" onKeyDown="{{ cf.name.key }}"></label>
                 <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Profil" value="{{ cf.profil.val }}" onChange="{{ cf.profil.edit }}" onBlur="{{ cf.profil.save }}" onKeyDown="{{ cf.profil.key }}"></label>
                 <label style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 100%;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Description</span><input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" value="{{ cf.desc.val }}" onChange="{{ cf.desc.edit }}" onBlur="{{ cf.desc.save }}" onKeyDown="{{ cf.desc.key }}"></label>
-                <button class="btn btn-ghost" onClick="{{ cf.reset }}" style="white-space: nowrap;">Réinitialiser</button>
               </div></sc-for>
             </div></sc-if>
             <sc-if value="{{ ceTeaOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1130,7 +1129,6 @@
                 </div>
               </sc-for>
             </div>
-            <button class="btn btn-ghost" onClick="{{ resetTags }}" style="align-self: flex-start; white-space: nowrap;">Remettre les tags par défaut</button>
           </section>
         </sc-if>
 
@@ -1251,7 +1249,6 @@
               </div>
               <button class="btn btn-secondary" onClick="{{ addFreq }}" style="align-self: flex-start; white-space: nowrap;">＋ Ajouter une ligne</button>
             </section>
-            <button class="btn btn-ghost" onClick="{{ resetOpts }}" style="align-self: flex-start; white-space: nowrap;">Revenir aux options de départ</button>
           </div>
         </sc-if>
 
@@ -1484,23 +1481,6 @@
           </div>
         </sc-if>
 
-        <sc-if value="{{ hasAdds }}" hint-placeholder-val="{{ false }}">
-          <section style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-              <h2 style="font-size: 28px; margin: 0;">Mes ajouts</h2>
-              <button class="btn btn-secondary" onClick="{{ exportAdds }}" style="white-space: nowrap; margin-left: auto;">Télécharger en CSV</button>
-            </div>
-            <p style="margin: 0; font-size: 14px; opacity: .65; text-wrap: pretty;">Gardés dans ce navigateur. Pour les rendre définitifs, téléchargez-les et collez les lignes dans vos fichiers Excel.</p>
-            <sc-for list="{{ addList }}" as="a" hint-placeholder-count="2">
-              <div style="background: var(--color-surface); border-radius: 22px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
-                <span class="tag tag-neutral" style="white-space: nowrap;">{{ a.kind }}</span>
-                <span style="flex: 1 1 200px; font-family: var(--font-heading); font-size: 17px;">{{ a.label }}</span>
-                <span style="flex: 2 1 200px; font-size: 14px; opacity: .7;">{{ a.meta }}</span>
-                <button onClick="{{ a.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 6px 10px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Supprimer</button>
-              </div>
-            </sc-for>
-          </section>
-        </sc-if>
       </div>
     </sc-if>
 
@@ -1750,7 +1730,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
                     </div>
                     <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                     <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
@@ -1760,7 +1740,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -1791,7 +1771,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ l.remove }}" style="align-self: flex-start; white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></sc-if>
+                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -1935,7 +1915,7 @@
                       </div>
                       <span style="font-size: 13px; opacity: .75;">{{ sa.meta }}</span>
                       <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
-                      <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button></sc-if></div></sc-if>
                       <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
                     </div>
                     <div class="acts" style="flex: none; display: flex; gap: 4px;">
@@ -2510,6 +2490,10 @@ class Component extends DCLogic {
     this.setState({ sheet: sheet, csvLots: csvLots });
   }
 
+  componentDidUpdate() {
+    if (this.state.editLogId && this.state.view !== 'log') this.setState({ editLogId: null, lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } });
+  }
+
   componentDidMount() {
     this.initCloud();
     this.loadSheet();
@@ -2945,7 +2929,7 @@ class Component extends DCLogic {
 
   inLog(l, u) { return (l.author || '') === u || (l.with || []).indexOf(u) >= 0; }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { canEdit: (l.author || '') === me, editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: (l.author || '') === me, remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -3680,13 +3664,17 @@ class Component extends DCLogic {
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
       closeMenu: () => this.setState({ menuOpen: false }),
       menuMine: () => this.setState({ menuOpen: false, view: 'mine' }),
-      menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
+      menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
       menuPacks: () => this.setState({ menuOpen: false, view: 'packs' }),
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
       isStats: v === 'stats',
       st: v === 'stats' ? this.computeStats(coll, me) : {},
       isLogs: v === 'logs',
+      saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : 'Enregistrer la dégustation',
+      editingLog: !!this.state.editLogId,
+      logTitle: this.state.editLogId ? 'Modifier la dégustation' : 'Nouvelle dégustation',
+      cancelLogEdit: () => this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } })),
       tSortUi: this.sortUi('tSort'), dSortUi: this.sortUi('dSort'),
       dsMeOn: (this.state.ds || 'me') === 'me', dsMeOff: (this.state.ds || 'me') !== 'me', dsAllOn: this.state.ds === 'all', dsAllOff: this.state.ds !== 'all',
       dsMe: () => this.setState({ ds: 'me' }), dsAll: () => this.setState({ ds: 'all' }),
@@ -3807,7 +3795,7 @@ class Component extends DCLogic {
       resetOpts: () => { if (!window.confirm('Remettre vaisselle, techniques et fréquences par défaut ? (Les comptes sont conservés.)')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { options: { users: this.opts().users } })); },
       isLog: v === 'log',
       openMine: () => this.setState({ view: 'mine' }),
-      openLog: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf) }),
+      openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
       newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
@@ -3874,6 +3862,12 @@ class Component extends DCLogic {
         if (!l.lotId) { this.setState({ logMsg: 'Choisissez le thé dégusté.' }); return; }
         if (!coll.some(x => x.id === l.lotId && x.owner === me)) { this.setState({ logMsg: 'Vous ne pouvez noter que vos propres sachets.' }); return; }
         const a = this.getAdds();
+        if (this.state.editLogId) {
+          const id = this.state.editLogId;
+          this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === id ? Object.assign({}, x, l, { id: x.id, author: x.author, with: (l.with || []).filter(w => w !== x.author) }) : x) }));
+          this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', logMsg: '', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } }));
+          return;
+        }
         const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || new Date().toISOString().slice(0, 10) });
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
         const o = coll.find(x => x.id === l.lotId);
