@@ -1669,11 +1669,126 @@
       </div>
     </sc-if>
 
+    <sc-if value="{{ isProd }}" hint-placeholder-val="{{ false }}">
+      <article style="display: flex; flex-direction: column; gap: 24px; animation: fadeUp .45s ease both; max-width: 900px;">
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
+          <sc-if value="{{ pv.photo }}" hint-placeholder-val="{{ false }}"><a href="{{ pv.photo }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ pv.photo }}" alt="" style="width: 132px; height: 132px; border-radius: 26px;"></a></sc-if>
+          <div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <button class="tag tag-accent" onClick="{{ pv.openTea }}" style="border: none; cursor: pointer; font-family: var(--font-body);">{{ pv.the }} →</button>
+              <sc-if value="{{ pv.variante }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">Variante : {{ pv.variante }}</span></sc-if>
+              <button class="tag tag-accent-2" onClick="{{ pv.openFam }}" style="border: none; cursor: pointer; font-family: var(--font-body);">Famille : {{ pv.famName }} →</button>
+            </div>
+            <h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+              <span class="tag tag-outline" style="font-family: ui-monospace, Menlo, monospace; font-size: 13px;">{{ pv.code }}</span>
+              <span style="font-size: 15px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque :</span> {{ pv.marque }}</span>
+              <sc-if value="{{ pv.ref }}" hint-placeholder-val="{{ false }}"><span style="font-size: 15px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. :</span> {{ pv.ref }}</span></sc-if>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ pv.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent">{{ tg }}</span></sc-for></div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+          <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Note moyenne</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ pv.avg }}</span><span style="font-size: 12px; opacity: .65;">{{ pv.avgSub }}</span></div>
+          <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix moyen</span><span style="font-family: var(--font-heading); font-size: 20px;">{{ pv.prix }}</span></div>
+          <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Sachets</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ pv.nSac }}</span><span style="font-size: 12px; opacity: .65;">{{ pv.owners }}</span></div>
+        </div>
+        <sc-if value="{{ pv.comment }}" hint-placeholder-val="{{ false }}"><section style="display: flex; flex-direction: column; gap: 8px;"><h2 style="font-size: 26px; margin: 0;">À propos</h2><p style="font-size: 17px; line-height: 1.7; opacity: .88; margin: 0; text-wrap: pretty;">{{ pv.comment }}</p></section></sc-if>
+        <section style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0; margin-right: auto;">Les sachets</h2>
+            <sc-if value="{{ pv.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.addSachet }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
+            <sc-if value="{{ pv.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ pv.addSachet }}" style="white-space: nowrap;">Je possède</button></sc-if>
+          </div>
+          <sc-for list="{{ pv.sachets }}" as="sa" hint-placeholder-count="1">
+                  <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                        <button onClick="{{ sa.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 20px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
+                        <span style="font-size: 13px; opacity: .7;">{{ sa.the }}</span>
+                      </div>
+                    <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px;"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img class="thumb" src="{{ ph }}" alt="" style="width: 72px; height: 72px; border-radius: 14px;"></a></sc-for></div></sc-if>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                      <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ sa.code }}</span>
+                      <span style="font-family: var(--font-heading); font-size: 18px;">{{ sa.avg }}</span>
+                      <span style="font-size: 12px; opacity: .65;">{{ sa.nTxt }}</span>
+                      <sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette « Donné par »" title="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if>
+                      <span style="margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap;">
+                        <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.taste }}" style="white-space: nowrap;">Noter</button><button class="btn btn-ghost" onClick="{{ sa.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap;">Donner</button><button class="btn btn-ghost" onClick="{{ sa.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
+                      </span>
+                    </div>
+                    <sc-if value="{{ sa.giving }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
+                        <span style="font-size: 14px;">Donner ce sachet à :</span>
+                        <sc-for list="{{ sa.giveTo }}" as="gt" hint-placeholder-count="2"><button class="btn btn-secondary" onClick="{{ gt.give }}" style="white-space: nowrap; background: var(--color-bg);">{{ gt.name }}</button></sc-for>
+                        <sc-if value="{{ sa.noGive }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">Aucun autre membre pour l'instant.</span></sc-if>
+                        <button class="btn btn-ghost" onClick="{{ sa.giveToggle }}" style="white-space: nowrap; margin-left: auto;">Annuler</button>
+                      </div>
+                    </sc-if>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Propriétaire</span><span style="font-size: 14px;">{{ sa.owner }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque</span><span style="font-size: 14px;">{{ sa.marque }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Date d'achat</span><span style="font-size: 14px;">{{ sa.achat }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Année de production</span><span style="font-size: 14px;">{{ sa.prodDate }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Lot</span><span style="font-size: 14px;">{{ sa.lot }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Format</span><span style="font-size: 14px;">{{ sa.format }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix payé</span><span style="font-size: 14px;">{{ sa.paye }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix</span><span style="font-size: 14px;">{{ sa.prix }}</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Fréquence</span><span style="font-size: 14px;">{{ sa.freq }}</span></div>
+                    </div>
+                    <sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; max-width: 360px;"><div role="img" aria-label="{{ sa.remainTxt }}" style="height: 8px; border-radius: 999px; background: var(--color-neutral-300); overflow: hidden;"><div style="height: 100%; width: {{ sa.remainPct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></div></div><span style="font-size: 12px; opacity: .75;">{{ sa.remainTxt }}</span></div></sc-if>
+                    <sc-if value="{{ sa.canAdjust }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><sc-if value="{{ sa.adjClosed }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap; padding-left: 0;">⚖ Mettre à jour la quantité restante</button></sc-if><sc-if value="{{ sa.adjOpen }}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">Il reste <input class="input" inputMode="decimal" aria-label="Quantité restante" value="{{ sa.adjVal }}" onChange="{{ sa.adjEdit }}" onKeyDown="{{ sa.adjKey }}" style="width: 100px; font-size: 16px; padding: 6px 12px; min-height: 0;"> {{ sa.adjUnit }}</label><button class="btn btn-primary" onClick="{{ sa.adjSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sa.adjToggle }}" style="white-space: nowrap;">Annuler</button><sc-if value="{{ sa.hasAdjust }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sa.adjClear }}" style="white-space: nowrap; font-size: 13px;">Revenir au calcul automatique</button></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ sa.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85; text-wrap: pretty;">{{ sa.note }}</p></sc-if>
+                    <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0;"><span style="display: inline-block; transform: rotate({{ sa.rot }}deg); transition: transform .2s;">▶</span> Voir les dégustations</button></sc-if>
+                    <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
+                        <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
+                          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
+                            <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
+                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+          </sc-for>
+        </section>
+        <section style="display: flex; flex-direction: column; gap: 12px;">
+          <h2 style="font-size: 26px; margin: 0;">Dégustations</h2>
+          <sc-if value="{{ pv.noLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore de dégustation pour ce thé.</p></sc-if>
+          <sc-for list="{{ pv.logs }}" as="l" hint-placeholder-count="1">
+              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                  <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
+                  <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
+                </div>
+                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
+                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
+                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
+                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                  </div>
+                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ l.remove }}" style="align-self: flex-start; white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></sc-if>
+                  <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
+                </div>
+              </article>
+          </sc-for>
+        </section>
+      </article>
+    </sc-if>
+
     <sc-if value="{{ isTea }}" hint-placeholder-val="{{ false }}">
       <article style="display: flex; flex-direction: column; gap: 28px; animation: fadeUp .45s ease both; max-width: 820px;">
         <div>
           <span class="tag tag-accent" style="white-space: nowrap;">{{ teaOrigin }}</span>
-          <sc-if value="{{ teaAvg }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap; margin-left: 6px;">{{ teaAvg }}</span></sc-if>
           <h1 style="font-size: 52px; margin: 14px 0 0;">{{ teaName }}</h1>
           <sc-if value="{{ teaTr }}" hint-placeholder-val="{{ false }}"><p style="margin: 6px 0 0; font-size: 19px; font-style: italic; opacity: .7;">{{ teaTr }}</p></sc-if>
         </div>
@@ -1778,7 +1893,7 @@
                   <sc-if value="{{ lot.photo }}" hint-placeholder-val="{{ false }}"><a href="{{ lot.photo }}" target="_blank" rel="noopener" aria-label="Voir la photo du thé"><img class="thumb" src="{{ lot.photo }}" alt="" style="width: 84px; height: 84px;"></a></sc-if>
                   <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                      <span style="font-family: var(--font-heading); font-size: 20px;">{{ lot.label }}</span>
+                      <button onClick="{{ lot.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ lot.label }} →</button>
                       <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span>
                       <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;" title="Prix moyen des sachets">{{ lot.prixTxt }}</span></sc-if>
                       <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 18px; white-space: nowrap;" title="Moyenne des dégustations de ce thé">{{ lot.avg }} <span style="font-family: var(--font-body); font-size: 12px; opacity: .6;">{{ lot.avgSub }}</span></span></sc-if>
@@ -1827,7 +1942,7 @@
                   <sc-if value="{{ lot.photo }}" hint-placeholder-val="{{ false }}"><a href="{{ lot.photo }}" target="_blank" rel="noopener" aria-label="Voir la photo du thé"><img class="thumb" src="{{ lot.photo }}" alt="" style="width: 84px; height: 84px;"></a></sc-if>
                   <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                      <span style="font-family: var(--font-heading); font-size: 20px;">{{ lot.label }}</span>
+                      <button onClick="{{ lot.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ lot.label }} →</button>
                       <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span>
                       <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;" title="Prix moyen des sachets">{{ lot.prixTxt }}</span></sc-if>
                       <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 18px; white-space: nowrap;" title="Moyenne des dégustations de ce thé">{{ lot.avg }} <span style="font-family: var(--font-body); font-size: 12px; opacity: .6;">{{ lot.avgSub }}</span></span></sc-if>
@@ -2985,6 +3100,32 @@ class Component extends DCLogic {
       opts: ['price', 'last', 'count', 'alpha', 'note'].map(k => ({ name: labels[k], on: k === key, off: k !== key, pick: () => this.setState({ sortOpen: null, [which]: { key: k, dir: k === 'alpha' ? 'asc' : 'desc' } }) })) };
   }
 
+  openProd(pid) { this.setState(s => ({ view: 'prod', prodId: pid, prodBack: s.view === 'prod' ? s.prodBack : s.view, lexp: null })); }
+
+  prodView(me, coll) {
+    const a = this.getAdds();
+    const pr = a.prods.find(x => x.id === this.state.prodId);
+    if (!pr) return { name: 'Thé introuvable', sachets: [], logs: [], tags: [], noLogs: true };
+    const fk = this.famOf(pr.the);
+    const sacs = coll.filter(o => o.prodId === pr.id);
+    const ids = sacs.map(o => o.id);
+    const st = this.statsMany(ids);
+    const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i);
+    const ls = a.logs.filter(l => ids.indexOf(l.lotId) >= 0).sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')));
+    const mineS = sacs.filter(o => o.owner === me);
+    const photo = (sacs.find(o => o.prodPhoto) || sacs.find(o => o.photo) || {});
+    return { name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
+      photo: photo.prodPhoto || photo.photo || '',
+      famName: fk ? this.families[fk].name : '—',
+      openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
+      openFam: () => { if (fk) this.go('list', fk, 0); },
+      avg: this.avgTxt(st) || '—', avgSub: st.n ? 'sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
+      prix: this.avgPrice(sacs) || '—', nSac: String(sacs.length), owners: owners.length ? 'chez ' + owners.join(', ') : 'personne pour l’instant',
+      iOwn: mineS.length > 0, iDontOwn: !mineS.length,
+      addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
+      sachets: sacs.map(o => this.sachetView(o, me)), logs: ls.map(l => this.logCard(l, coll, me)), noLogs: !ls.length };
+  }
+
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
 
   statsMany(ids) {
@@ -3043,7 +3184,7 @@ class Component extends DCLogic {
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
       logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: (l.author || '') === me,
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
-      openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(o.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i) }); } },
+      openTea: () => this.openProd(o.prodId),
       taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
       edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
       remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); } };
@@ -3274,7 +3415,7 @@ class Component extends DCLogic {
     else this.setState({ view: fallbackGroup ? 'toolsGroup' : 'tools', group: fallbackGroup || this.state.group });
   }
 
-  go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0 });
+  go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null });
 
   renderVals() {
     this.applyFamOv();
@@ -3340,6 +3481,8 @@ class Component extends DCLogic {
       isTypes: v === 'types',
       isList: v === 'list',
       isTea: v === 'tea',
+      isProd: v === 'prod',
+      pv: v === 'prod' ? this.prodView(me, coll) : {},
       isTools: v === 'tools',
       isToolsGroup: v === 'toolsGroup',
       openChina: () => this.setState({ view: 'toolsGroup', group: 'cn' }),
@@ -3367,7 +3510,7 @@ class Component extends DCLogic {
       openTea: () => this.go('types', null, 0),
       openTools: () => this.go('tools'),
       goHome: () => this.go('home'),
-      goBack: () => v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
+      goBack: () => (v === 'tea' && this.state.teaBack === 'prod') ? this.setState({ view: 'prod', teaBack: null }) : v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'prod' ? (this.state.prodBack || 'mine') : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
       pick: pick,
       currentName: fam.name,
       currentDesc: fam.desc,
@@ -3410,7 +3553,8 @@ class Component extends DCLogic {
           const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i);
           const mineS = sacs.filter(o => o.owner === me);
           const pst = this.statsMany(sacs.map(o => o.id));
-          return { photo: (sacs.find(o => o.prodPhoto) || {}).prodPhoto || '', label: pr.nom || pr.the, sub: pr.variante || '', marque: pr.marque || '—', tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '', avg: this.avgTxt(pst), avgSub: pst.n ? '(' + pst.n + ')' : '',
+          const openP = () => this.openProd(pr.id);
+          return { openP: openP, photo: (sacs.find(o => o.prodPhoto) || {}).prodPhoto || '', label: pr.nom || pr.the, sub: pr.variante || '', marque: pr.marque || '—', tags: pr.tags || [], code: pr.code, prixTxt: this.avgPrice(sacs), prixLabel: sacs.length > 1 ? 'moyenne' : '', avg: this.avgTxt(pst), avgSub: pst.n ? '(' + pst.n + ')' : '',
             shop: pr.boutique || '', shopOn: !!pr.boutique, note: pr.commentaire || '',
             ownersTxt: owners.length ? 'Possédé par ' + owners.join(' & ') : "Personne ne l'a pour l'instant",
             iOwn: mineS.length > 0, iDontOwn: !mineS.length, own: () => addSachet(pr),
@@ -3602,7 +3746,7 @@ class Component extends DCLogic {
             avg: this.avgTxt(st) || '—', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
-            openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(o.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i) }); } },
+            openTea: () => this.openProd(pid),
             sachets: sacs.map(x => this.sachetView(x, me)),
             _k: (() => { const ids = allSacs.map(x => x.id); const ls = this.getAdds().logs.filter(l => ids.indexOf(l.lotId) >= 0); const pr = allSacs.filter(x => x.prixMode !== 'unite' && this.num(x.prixPaye) && this.num(x.quantite)).map(x => this.num(x.prixPaye) / this.num(x.quantite) * 100);
               return { alpha: o.nom || o.the, price: pr.length ? pr.reduce((t, n) => t + n, 0) / pr.length : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st.avg }; })() };
