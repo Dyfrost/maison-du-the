@@ -833,6 +833,34 @@
               </sc-if>
             </sc-for>
           </div>
+          <section style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0;">Succès</h2><span style="font-size: 14px; opacity: .65;">{{ pf.achCount }}</span></div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+              <sc-for list="{{ pf.ach }}" as="a" hint-placeholder-count="6">
+                <sc-if value="{{ a.got }}" hint-placeholder-val="{{ true }}">
+                <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
+                  <span aria-hidden="true" style="font-size: 34px; line-height: 1; flex: none;">{{ a.emoji }}</span>
+                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1;">
+                    <span style="font-family: var(--font-heading); font-size: 17px; line-height: 1.15;">{{ a.name }}</span>
+                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">{{ a.level }}</span>
+                    <span style="font-size: 12px; opacity: .7; text-wrap: pretty;">{{ a.desc }}</span>
+                    <sc-if value="{{ a.hasNext }}" hint-placeholder-val="{{ true }}"><span style="height: 5px; border-radius: 999px; background: var(--color-bg); overflow: hidden; margin-top: 4px;"><span style="display: block; height: 100%; width: {{ a.pct }}%; background: var(--color-accent);"></span></span></sc-if>
+                  </div>
+                </div>
+                </sc-if>
+                <sc-if value="{{ a.locked }}" hint-placeholder-val="{{ false }}">
+                <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; opacity: .55;">
+                  <span aria-hidden="true" style="font-size: 34px; line-height: 1; flex: none; filter: grayscale(1);">{{ a.emoji }}</span>
+                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1;">
+                    <span style="font-family: var(--font-heading); font-size: 17px; line-height: 1.15;">🔒 {{ a.name }}</span>
+                    <span style="font-size: 12px; opacity: .8; text-wrap: pretty;">{{ a.desc }}</span>
+                    <sc-if value="{{ a.hasNext }}" hint-placeholder-val="{{ true }}"><span style="height: 5px; border-radius: 999px; background: var(--color-bg); overflow: hidden; margin-top: 4px;"><span style="display: block; height: 100%; width: {{ a.pct }}%; background: var(--color-neutral-500);"></span></span></sc-if>
+                  </div>
+                </div>
+                </sc-if>
+              </sc-for>
+            </div>
+          </section>
         </sc-if>
       </div>
     </sc-if>
@@ -3032,7 +3060,7 @@ class Component extends DCLogic {
     const allNotes = arr.reduce((t, b) => t.concat(b.notes), []);
     const fam = {}; logs.forEach(l => { const p = prodOf(l.lotId); const fk = p && this.famOf(p.the); if (fk) fam[fk] = (fam[fk] || 0) + 1; });
     const topFam = Object.keys(fam).sort((x, y) => fam[y] - fam[x])[0];
-    const last = logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')))[0];
+    const last = logs.filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || '')).sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')))[0];
     const lastP = last && prodOf(last.lotId);
     const grams = logs.reduce((t, l) => t + (this.num(l.qty) || 0), 0);
     const nm = p => p.nom || p.the;
@@ -3057,7 +3085,58 @@ class Component extends DCLogic {
       edit: () => this.setState({ profEdit: true, profDraft: prof.desc || '' }),
       cancel: () => this.setState({ profEdit: false }),
       save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
-      kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)) };
+      kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)),
+      ach: this.achievementsFor(u), achCount: (() => { const l = this.achievementsFor(u); return l.filter(x => x.got).length + '/' + l.length + ' débloqués'; })() };
+  }
+
+  achievementsFor(u) {
+    const a = this.getAdds();
+    const sacs = a.sachets.filter(o => o.owner === u);
+    const logs = a.logs.filter(l => l.author === u || (l.with || []).indexOf(u) >= 0);
+    const sac = id => a.sachets.find(o => o.id === id);
+    const prodOf = id => { const sa = sac(id); return sa ? a.prods.find(p => p.id === sa.prodId) : null; };
+    const noteN = l => this.num(String(l.note || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, ''));
+    const hourOf = l => { const m = /^(\d{1,2})/.exec(String(l.heure || '')); return m ? +m[1] : null; };
+    const teas = new Set(logs.map(l => (prodOf(l.lotId) || {}).id).filter(Boolean)).size;
+    const grams = logs.reduce((t, l) => t + (this.qtyNum ? (this.qtyNum(l.qty) || 0) : (this.num(l.qty) || 0)), 0);
+    const fams = new Set(logs.map(l => { const p = prodOf(l.lotId); return p ? this.famOf(p.the) : null; }).filter(Boolean)).size;
+    const nFam = Object.keys(this.families).length;
+    const days = Array.from(new Set(logs.map(l => l.date).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d || '')))).sort();
+    let best = 0, cur = 0, prev = null;
+    days.forEach(d => { const t = new Date(d + 'T00:00:00').getTime(); cur = prev != null && Math.round((t - prev) / 86400000) === 1 ? cur + 1 : 1; best = Math.max(best, cur); prev = t; });
+    const top = logs.filter(l => { const n = noteN(l); return n != null && n >= 19; }).length;
+    const shared = logs.filter(l => (l.with || []).length > 0).length;
+    const emptied = sacs.filter(o => this.isEmptySachet(Object.assign({}, o, { the: (a.prods.find(p => p.id === o.prodId) || {}).the }))).length;
+    const early = logs.filter(l => { const h = hourOf(l); return h != null && h < 8; }).length;
+    const late = logs.filter(l => { const h = hourOf(l); return h != null && (h >= 22 || h < 3); }).length;
+    const sal = this.salonOf(u);
+    const nf = this.friendsOf(u).length;
+    const defs = [
+      { key: 'col', v: sacs.length, unit: 'sachets', tiers: [[1, '🌱', 'Première feuille'], [10, '🫖', 'Collectionneur'], [25, '🏺', 'Cave à thé'], [50, '🏯', 'Maison de thé'], [100, '🐉', 'Dragon de jade']] },
+      { key: 'logs', v: logs.length, unit: 'dégustations', tiers: [[1, '☕', 'Première tasse'], [10, '🍵', 'Habitué'], [50, '🧘', 'Adepte'], [100, '🎎', 'Maître de cérémonie'], [250, '⛩️', 'Sage du gongfu'], [500, '🌕', 'Immortel']] },
+      { key: 'teas', v: teas, unit: 'thés différents goûtés', tiers: [[5, '🧭', 'Curieux'], [15, '🗺️', 'Explorateur'], [30, '🌏', 'Globe-trotteur'], [60, '📚', 'Encyclopédiste']] },
+      { key: 'g', v: Math.round(grams), unit: 'g infusés', tiers: [[100, '⚖️', '100 g infusés'], [500, '🎒', 'Demi-kilo'], [1000, '🏋️', 'Kilo de feuilles'], [5000, '🐘', 'Cinq kilos']] },
+      { key: 'fam', v: fams, unit: 'familles goûtées', tiers: [[3, '🎨', 'Palette'], [6, '🌈', 'Arc-en-ciel'], [nFam, '🏆', 'Toutes les couleurs']] },
+      { key: 'streak', v: best, unit: 'jours d’affilée', tiers: [[3, '🔥', 'Trois jours de suite'], [7, '☯️', 'Semaine zen'], [30, '🌙', 'Un mois de thé']] },
+      { key: 'top', v: top, unit: 'notes ≥ 19/20', tiers: [[1, '💎', 'Coup de cœur'], [5, '👑', 'Palais royal'], [15, '✨', 'Chasseur de pépites']] },
+      { key: 'shared', v: shared, unit: 'dégustations à plusieurs', tiers: [[1, '👥', 'Thé partagé'], [10, '🤝', 'Convivial'], [25, '🎉', 'Grande tablée']] },
+      { key: 'empty', v: emptied, unit: 'sachets vidés', tiers: [[1, '🫙', 'Fond du sachet'], [5, '♻️', 'Rien ne se perd'], [15, '🗑️', 'Gros buveur']] },
+      { key: 'early', v: early, unit: 'thés avant 8 h', tiers: [[1, '🌅', 'Lève-tôt'], [10, '🐓', 'Aube infusée']] },
+      { key: 'late', v: late, unit: 'thés après 22 h', tiers: [[1, '🦉', 'Oiseau de nuit'], [10, '🌌', 'Veilleur']] },
+      { key: 'social', v: nf, unit: 'amis', tiers: [[1, '🫂', 'Premier ami'], [5, '🏮', 'Bien entouré']] },
+      { key: 'salon', v: sal ? (sal.chief === u ? 2 : 1) : 0, unit: '', tiers: [[1, '🍶', 'Membre d’un salon'], [2, '👑', 'Chef de salon']], noProgress: true }
+    ];
+    return defs.map(d => {
+      let lvl = -1; d.tiers.forEach((t, i) => { if (d.v >= t[0]) lvl = i; });
+      const next = d.tiers[lvl + 1];
+      const curT = lvl >= 0 ? d.tiers[lvl] : d.tiers[0];
+      const base = lvl >= 0 ? d.tiers[lvl][0] : 0;
+      const pct = next ? Math.max(0, Math.min(100, Math.round((d.v - base) / Math.max(1, next[0] - base) * 100))) : 100;
+      return { got: lvl >= 0, locked: lvl < 0, emoji: curT[1], name: curT[2],
+        level: lvl >= 0 ? 'Niveau ' + (lvl + 1) + '/' + d.tiers.length : 'À débloquer',
+        desc: d.noProgress ? (lvl >= 0 ? (next ? 'Prochain : ' + next[1] + ' ' + next[2] : 'Niveau max') : 'Rejoindre ou créer un salon') : lvl < 0 ? d.v + ' / ' + d.tiers[0][0] + ' ' + d.unit : d.v + ' ' + d.unit + (next ? ' · prochain : ' + next[1] + ' ' + next[2] + ' (' + next[0] + ')' : ' · niveau max'),
+        pct: pct, hasNext: !!next && !d.noProgress };
+    }).sort((x, y) => y.got - x.got);
   }
 
   diffEvents(prev, next) {
