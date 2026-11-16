@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carte des origines — Maison du Thé</title>
+<link rel="stylesheet" href="_ds/organic-c107f2b2-6e10-450d-ab8a-cbfbcee7c3a5/styles.css">
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
+  a { color: var(--color-accent-700); text-underline-offset: 3px; }
+  a:hover { color: var(--color-accent-800); }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 40px 80px; }
+  #map { width: 100%; border-radius: 34px; background: var(--color-surface); box-shadow: var(--shadow-sm); overflow: hidden; }
+  #map svg { display: block; width: 100%; height: auto; }
+  .dot { cursor: pointer; }
+  .country { cursor: pointer; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .chip {
+    cursor: pointer; border: 1px solid var(--color-divider); background: transparent;
+    font-family: var(--font-heading); font-size: 14px; color: var(--color-text);
+    padding: 8px 16px; border-radius: 999px; white-space: nowrap;
+  }
+  .chip:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+  .chip[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-bg); }
+  .tip {
+    position: fixed; pointer-events: none; opacity: 0; transition: opacity .12s ease;
+    background: var(--color-neutral-900); color: var(--color-neutral-100);
+    padding: 10px 14px; border-radius: 18px; box-shadow: var(--shadow-lg);
+    font-size: 13px; line-height: 1.4; max-width: 240px; z-index: 10;
+  }
+  .tip b { font-family: var(--font-heading); font-weight: 400; font-size: 15px; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 22px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap; }
+  .legend i { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--color-divider); }
+</style>
+</head>
+<body>
+
+<header class="nav" style="padding: 22px 40px; gap: 14px; max-width: 1140px; margin: 0 auto;">
+  <a class="nav-brand" href="Site%20The.dc.html" style="font-size: 21px; white-space: nowrap; text-decoration: none; color: var(--color-text);">Maison du Thé</a>
+  <a class="btn btn-secondary" href="Site The.dc.html" style="white-space: nowrap;">← Retour au site</a>
+</header>
+
+<main class="wrap">
+  <div style="max-width: 640px; margin-bottom: 24px;">
+    <h1 style="font-size: 46px; margin: 0 0 12px;">Carte des origines</h1>
+    <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Chaque point est un thé, posé sur son terroir. Zoomez par région, ou passez de pays en pays — un clic sur un pays l'ouvre en grand.</p>
+  </div>
+
+  <div class="controls" id="regions"></div>
+  <div class="controls" style="margin-bottom: 22px;">
+    <button class="chip" id="prev" title="Pays précédent">‹</button>
+    <span id="here" style="font-family: var(--font-heading); font-size: 17px; min-width: 170px;">Asie</span>
+    <button class="chip" id="next" title="Pays suivant">›</button>
+    <span id="count" style="font-size: 14px; opacity: .65;"></span>
+  </div>
+
+  <div id="map"></div>
+
+  <section id="lore" style="margin-top: 26px; background: var(--color-surface); border-radius: 34px; padding: 30px 32px; display: flex; flex-direction: column; gap: 12px;"></section>
+
+  <div class="legend">
+    <span><i style="background: var(--color-neutral-100)"></i>Blanc</span>
+    <span><i style="background: var(--color-accent-2-400)"></i>Vert</span>
+    <span><i style="background: var(--color-accent-300)"></i>Jaune</span>
+    <span><i style="background: #5f7f99"></i>Oolong (bleu)</span>
+    <span><i style="background: #9e3b2e"></i>Noir (rouge)</span>
+    <span><i style="background: var(--color-accent-800)"></i>Sombre</span>
+  </div>
+</main>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+const FAMILIES = {
+  blanc:  { label: 'Blanc',        color: css('--color-neutral-100') },
+  vert:   { label: 'Vert',         color: css('--color-accent-2-400') },
+  jaune:  { label: 'Jaune',        color: css('--color-accent-300') },
+  oolong: { label: 'Oolong (bleu)',color: '#5f7f99' },
+  noir:   { label: 'Noir (rouge)', color: '#9e3b2e' },
+  sombre: { label: 'Sombre',       color: css('--color-accent-800') }
+};
+
+const TEAS = [
+  { f: 'blanc',  i: 0, name: 'Bai Hao Yin Zhen',        origin: 'Fuding, Fujian, Chine',     c: 'China', p: 'Fujian', lat: 27.33, lon: 119.99 },
+  { f: 'blanc',  i: 1, name: 'Bai Mu Dan',              origin: 'Zhenghe, Fujian, Chine',    c: 'China', p: 'Fujian', lat: 27.37, lon: 118.85 },
+  { f: 'blanc',  i: 2, name: 'Shou Mei',                origin: 'Fujian, Chine',             c: 'China', p: 'Fujian', lat: 26.20, lon: 117.60 },
+  { f: 'vert',   i: 0, name: 'Long Jing',               origin: 'Hangzhou, Zhejiang, Chine', c: 'China', p: 'Zhejiang', lat: 30.23, lon: 120.09 },
+  { f: 'vert',   i: 1, name: 'Sencha',                  origin: 'Shizuoka, Japon',    c: 'Japan', p: 'Shizuoka', lat: 34.98, lon: 138.38 },
+  { f: 'vert',   i: 2, name: 'Gyokuro',                 origin: 'Uji, Japon',         c: 'Japan', p: 'Kyoto', lat: 34.88, lon: 135.80 },
+  { f: 'jaune',  i: 0, name: 'Jun Shan Yin Zhen',       origin: 'Hunan, Chine',              c: 'China', p: 'Hunan', lat: 29.35, lon: 113.05 },
+  { f: 'jaune',  i: 1, name: 'Meng Ding Huang Ya',      origin: 'Sichuan, Chine',            c: 'China', p: 'Sichuan', lat: 30.08, lon: 103.12 },
+  { f: 'jaune',  i: 2, name: 'Huoshan Huang Ya',        origin: 'Anhui, Chine',              c: 'China', p: 'Anhui', lat: 31.40, lon: 116.33 },
+  { f: 'oolong', i: 0, name: 'Tie Guan Yin',            origin: 'Anxi, Fujian, Chine',       c: 'China', p: 'Fujian', lat: 25.06, lon: 118.19 },
+  { f: 'oolong', i: 1, name: 'Da Hong Pao',             origin: 'Monts Wuyi, Fujian, Chine', c: 'China', p: 'Fujian', lat: 27.72, lon: 117.97 },
+  { f: 'oolong', i: 2, name: 'Dong Ding',               origin: 'Nantou, Taïwan',     c: 'Taiwan', p: 'Taiwan', lat: 23.73, lon: 120.75 },
+  { f: 'noir',   i: 0, name: 'Golden Assam',            origin: 'Assam, Inde',        c: 'India',     lat: 26.74, lon: 94.21 },
+  { f: 'noir',   i: 1, name: 'Darjeeling second flush', origin: 'Darjeeling, Inde',   c: 'India',     lat: 27.04, lon: 88.26 },
+  { f: 'noir',   i: 2, name: 'Keemun',                  origin: 'Qimen, Anhui, Chine',       c: 'China', p: 'Anhui', lat: 29.87, lon: 117.72 },
+  { f: 'noir',   i: 3, name: 'Uva',                     origin: 'Uva, Sri Lanka',     c: 'Sri Lanka', lat: 6.88,  lon: 81.05 },
+  { f: 'sombre', i: 0, name: "Pu'er shou",              origin: 'Yunnan, Chine',             c: 'China', p: 'Yunnan', lat: 22.78, lon: 100.97 },
+  { f: 'sombre', i: 1, name: 'Liu Bao',                 origin: 'Wuzhou, Guangxi, Chine',    c: 'China', p: 'Guangxi', lat: 23.48, lon: 111.28 },
+  { f: 'sombre', i: 2, name: 'Fu Zhuan',                origin: 'Anhua, Hunan, Chine',       c: 'China', p: 'Hunan', lat: 28.38, lon: 111.22 }
+];
+
+// Small boxes, wound so d3's spherical path reads them as the inside, not the complement.
+const box = (w, s, e, n) => ({ type: 'Polygon', coordinates: [[[w, s], [w, n], [e, n], [e, s], [w, s]]] });
+
+const REGIONS = [
+  { id: 'asie',   label: 'Asie',            geo: box(62, -2, 152, 47), zoom: false },
+  { id: 'est',    label: 'Asie de l\u2019Est', geo: box(98, 18, 146, 46), zoom: true },
+  { id: 'sud',    label: 'Asie du Sud',     geo: box(68, 5, 94, 32),   zoom: true },
+  { id: 'monde',  label: 'Monde',           geo: box(-170, -56, 178, 76), zoom: false }
+];
+
+const COUNTRIES_FR = { 'China': 'Chine', 'Japan': 'Japon', 'India': 'Inde', 'Sri Lanka': 'Sri Lanka', 'Taiwan': 'Taïwan', 'Kenya': 'Kenya' };
+const TEA_COUNTRIES = ['China', 'Japan', 'India', 'Sri Lanka', 'Taiwan', 'Kenya'];
+
+const LORE = {
+  'Asie': "Tout part d'ici : le théier vient des confins du Yunnan, de la Birmanie et de l'Assam, et c'est le long de ces reliefs que les six familles se sont différenciées. Zoomez sur une région ou un pays pour lire son histoire — ce texte est à réécrire avec vos mots.",
+  'Asie de l’Est': "Chine, Japon, Taïwan : le berceau des gestes. Wok pour fixer le vert en Chine, vapeur au Japon, torréfactions longues à Taïwan — trois écoles issues d'une même feuille. Paragraphe à compléter.",
+  'Asie du Sud': "Inde et Sri Lanka : des jardins nés au XIXᵉ siècle, pensés pour de grands volumes et des thés noirs de caractère, de l'Assam humide aux crêtes fraîches de Darjeeling. Paragraphe à compléter.",
+  'Monde': "Le thé a quitté l'Asie tard : Afrique de l'Est, Turquie, Géorgie, Amérique du Sud produisent aujourd'hui, mais les terroirs historiques restent concentrés sur cette bande asiatique. Paragraphe à compléter.",
+  'Chine': "Le pays où tout commence, et le seul à produire les six familles. Chaque province a sa signature : Fujian pour les blancs et les oolongs, Zhejiang pour le Long Jing, Yunnan pour les thés sombres. Paragraphe à compléter.",
+  'Japon': "Presque uniquement du vert, étuvé à la vapeur plutôt que chauffé au wok, et un goût marqué pour l'ombrage des jardins — Uji, Shizuoka, Kagoshima. Paragraphe à compléter.",
+  'Inde': "Deux mondes : la plaine chaude de l'Assam, malté et puissant, et les pentes de Darjeeling, fines et muscatées, récoltées par vagues successives. Paragraphe à compléter.",
+  'Sri Lanka': "Ceylan, organisé par altitudes — low, mid et high grown — dont Uva, célèbre pour le vent sec qui concentre ses arômes. Paragraphe à compléter.",
+  'Taïwan': "L'île des oolongs de montagne : Dong Ding, Alishan, Shan Lin Xi, entre roulage serré et torréfactions douces. Paragraphe à compléter."
+};
+
+const PROV_LORE = {
+  'Fujian': "La province la plus prolifique : les blancs de Fuding et Zhenghe, les oolongs d'Anxi et les rochers des monts Wuyi. Paragraphe à compléter.",
+  'Zhejiang': "Hangzhou et le lac de l'Ouest, patrie du Long Jing, thé vert pressé à plat dans le wok. Paragraphe à compléter.",
+  'Yunnan': "Vieilles forêts de théiers, feuilles larges, et la fermentation qui donne le pu'er. Paragraphe à compléter.",
+  'Hunan': "Thés jaunes du lac Dongting et briques fermentées d'Anhua. Paragraphe à compléter.",
+  'Anhui': "Keemun et Huoshan Huang Ya : des montagnes humides, des thés fins. Paragraphe à compléter.",
+  'Sichuan': "Meng Ding, l'un des plus anciens jardins documentés de Chine. Paragraphe à compléter.",
+  'Guangxi': "Wuzhou et le Liu Bao, thé sombre vieilli en paniers de bambou. Paragraphe à compléter.",
+  'Taiwan': "Oolongs de haute montagne, héritiers des techniques du Fujian. Paragraphe à compléter.",
+  'Shizuoka': "Première région productrice du Japon : sencha à perte de vue au pied du Fuji. Paragraphe à compléter.",
+  'Guizhou': "Plateaux brumeux, verts de montagne comme le Duyun Mao Jian. Paragraphe \u00e0 compl\u00e9ter.",
+  'Jiangxi': "Lu Shan Yun Wu et les th\u00e9s des monts Lu. Paragraphe \u00e0 compl\u00e9ter.",
+  'Hubei': "Briques de th\u00e9 sombre et verts d'Enshi. Paragraphe \u00e0 compl\u00e9ter.",
+  'Guangdong': "Phoenix Dan Cong, les oolongs parfum\u00e9s de Chaozhou. Paragraphe \u00e0 compl\u00e9ter.",
+  'Jiangsu': "Bi Luo Chun du lac Tai. Paragraphe \u00e0 compl\u00e9ter.",
+  'Henan': "Xinyang Mao Jian, le vert le plus septentrional des grands crus. Paragraphe \u00e0 compl\u00e9ter.",
+  'Kagoshima': "Deuxi\u00e8me r\u00e9gion du Japon, r\u00e9coltes pr\u00e9coces au climat doux. Paragraphe \u00e0 compl\u00e9ter.",
+  'Mie': "Kabusecha et sencha d'Ise. Paragraphe \u00e0 compl\u00e9ter.",
+  'Miyazaki': "Kamairicha, vert japonais chauff\u00e9 au po\u00eale. Paragraphe \u00e0 compl\u00e9ter.",
+  'Fukuoka': "Yame, gyokuro de grande r\u00e9putation. Paragraphe \u00e0 compl\u00e9ter.",
+  'Saitama': "Sayama, le th\u00e9 le plus au nord du Japon. Paragraphe \u00e0 compl\u00e9ter.",
+  'Nara': "Yamato-cha, l'un des berceaux du th\u00e9 japonais. Paragraphe \u00e0 compl\u00e9ter.",
+  'Kyoto': "Uji, berceau du gyokuro et du matcha, jardins ombrés depuis le XIIᵉ siècle. Paragraphe à compléter."
+};
+
+// Provinces de thé affichées sur la carte (les autres ne sont pas tracées).
+const TEA_PROVINCES = {
+  China: ['Fujian', 'Zhejiang', 'Yunnan', 'Hunan', 'Anhui', 'Sichuan', 'Guangxi', 'Guizhou', 'Jiangxi', 'Hubei', 'Guangdong', 'Jiangsu', 'Henan'],
+  Japan: ['Shizuoka', 'Kagoshima', 'Kyoto', 'Mie', 'Miyazaki', 'Fukuoka', 'Saitama', 'Nara']
+};
+const PROV_FR = { 'Kyoto': 'Kyoto (Uji)' };
+
+const W = 1140, H = 640, PAD = 44;
+const tip = document.getElementById('tip');
+
+// Reprend les thés depuis le tableur (contenu.xlsx, feuille « Thes », sinon thes.csv).
+const PAYS_EN = { 'chine': 'China', 'japon': 'Japan', 'inde': 'India', 'sri lanka': 'Sri Lanka', 'taiwan': 'Taiwan', 'taïwan': 'Taiwan', 'kenya': 'Kenya' };
+async function loadSheetTeas() {
+  if (!window.XLSX) return;
+  const readCsv = (X, txt) => X.read(txt, { type: 'string', FS: (txt.split('\n')[0].split(';').length > txt.split('\n')[0].split(',').length) ? ';' : ',', raw: true });
+  const X = window.XLSX;
+  let rows = [];
+  try { const r = await fetch('contenu.xlsx');
+    if (r.ok) { const wb = X.read(await r.arrayBuffer());
+      const n = wb.SheetNames.find(s => /th/i.test(s)) || wb.SheetNames[0];
+      rows = X.utils.sheet_to_json(wb.Sheets[n], { defval: '' }); } } catch (e) {}
+  if (!rows.length) {
+    try { const r = await fetch('thes.csv');
+      if (r.ok) rows = X.utils.sheet_to_json(readCsv(X, await r.text()).Sheets.Sheet1, { defval: '' }); } catch (e) {}
+  }
+  const key = s => String(s || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/^the\s+/, '').replace(/\s*\(.*\)$/, '');
+  const out = [], count = {};
+  rows.forEach(r => {
+    const f = key(r.famille), lat = parseFloat(r.lat), lon = parseFloat(r.lon);
+    if (!FAMILIES[f] || isNaN(lat) || isNaN(lon)) return;
+    count[f] = (count[f] || 0);
+    out.push({ f: f, i: count[f]++, name: r.nom, origin: [r.origine, r.pays].filter(Boolean).join(', '),
+               c: PAYS_EN[String(r.pays || '').trim().toLowerCase()] || r.pays, p: r.province || undefined, lat: lat, lon: lon });
+  });
+  if (out.length) { TEAS.length = 0; out.forEach(t => TEAS.push(t)); }
+}
+
+Promise.all([
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json'),
+  loadSheetTeas()
+]).then(([topology]) => {
+  const countries = topojson.feature(topology, topology.objects.countries).features;
+  const byName = {};
+  countries.forEach(f => { byName[f.properties.name] = f; });
+
+  const svg = d3.select('#map').append('svg')
+    .attr('viewBox', '0 0 ' + W + ' ' + H)
+    .attr('role', 'img')
+    .attr('aria-label', 'Carte des origines des thés');
+
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', css('--color-surface'));
+
+  let projection = d3.geoMercator();
+  let path = d3.geoPath(projection);
+
+  const gLand = svg.append('g');
+  const gProv = svg.append('g');
+  const gDots = svg.append('g');
+
+  // Provinces of China (cn-atlas) and prefectures of Japan (dataofjapan/land).
+  let provinces = [];
+  Promise.all([
+    d3.json('https://cdn.jsdelivr.net/npm/cn-atlas/cn-atlas.json').catch(() => null),
+    d3.json('https://cdn.jsdelivr.net/gh/dataofjapan/land@master/japan.topojson').catch(() => null)
+  ]).then(([cn, jp]) => {
+    const extra = (cc) => TEAS.filter(t => t.c === cc && t.p).map(t => t.p);
+    const keepCN = TEA_PROVINCES.China.concat(extra('China'));
+    const keepJP = TEA_PROVINCES.Japan.concat(extra('Japan'));
+    if (cn) provinces = provinces.concat(topojson.feature(cn, cn.objects.provinces).features
+      .map(f => { f.pname = String(f.properties.name || '').replace(/ (Province|Sheng)$/i, ''); f.country = 'China'; return f; })
+      .filter(f => keepCN.some(n => f.pname.indexOf(n) === 0)));
+    if (jp) provinces = provinces.concat(topojson.feature(jp, jp.objects.japan).features
+      .map(f => { f.pname = String(f.properties.nam || '').replace(/ (Ken|Fu|To|Do)$/, ''); f.country = 'Japan'; return f; })
+      .filter(f => keepJP.indexOf(f.pname) >= 0));
+    provinces.forEach(f => { f.label = PROV_FR[f.pname] || f.pname; });
+    draw();
+  });
+
+  const land = gLand.selectAll('path').data(countries).join('path')
+    .attr('class', 'country')
+    .attr('stroke', css('--color-neutral-400'))
+    .attr('stroke-width', 0.8)
+    .on('mousemove', function (e, f) {
+      if (TEA_COUNTRIES.indexOf(f.properties.name) < 0) return;
+      d3.select(this).attr('fill', css('--color-accent-2-300'));
+      tip.innerHTML = '<b>' + (COUNTRIES_FR[f.properties.name] || f.properties.name) + '</b><span style="opacity:.7">Cliquer pour zoomer sur le pays</span>';
+      tip.style.opacity = 1;
+      tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px';
+      tip.style.top = (e.clientY + 16) + 'px';
+    })
+    .on('mouseleave', function (e, f) { d3.select(this).attr('fill', landFill(f)); tip.style.opacity = 0; })
+    .on('click', (e, f) => { if (TEA_COUNTRIES.indexOf(f.properties.name) >= 0) goCountry(f.properties.name); else { countryIdx = -1; setRegionPressed(null); fitTo(f, true, f.properties.name); } });
+
+  function landFill(f) { return TEA_COUNTRIES.indexOf(f.properties.name) >= 0 ? css('--color-accent-2-200') : css('--color-neutral-200'); }
+
+  let countryIdx = -1;
+  let state = { label: 'Asie', zoomed: false };
+
+  function fitTo(geo, zoomed, label) {
+    projection.fitExtent([[PAD, PAD], [W - PAD, H - PAD]], geo);
+    path = d3.geoPath(projection);
+    state.zoomed = zoomed;
+    if (label) state.label = label;
+    draw();
+  }
+
+  function draw() {
+    land.transition().duration(650)
+      .attr('d', path)
+      .attr('fill', landFill);
+
+    const provFill = f => state.label === f.label ? css('--color-accent-2-500') : css('--color-accent-2-400');
+    const prov = gProv.selectAll('path').data(provinces).join('path')
+      .attr('fill', provFill)
+      .style('cursor', 'pointer')
+      .attr('stroke', css('--color-bg'))
+      .attr('stroke-width', 1.2)
+      .on('mousemove', function (e, f) {
+        d3.select(this).attr('fill', css('--color-accent-2-600'));
+        const n = TEAS.filter(t => t.p && f.pname.indexOf(t.p) === 0).length;
+        tip.innerHTML = '<b>' + f.label + '</b>' + (n ? n + (n > 1 ? ' thés · ' : ' thé · ') : '') + '<span style="opacity:.7">Cliquer pour ouvrir la province</span>';
+        tip.style.opacity = 1;
+        tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px';
+        tip.style.top = (e.clientY + 16) + 'px';
+      })
+      .on('mouseleave', function (e, f) { d3.select(this).attr('fill', provFill(f)); tip.style.opacity = 0; })
+      .on('click', (e, f) => { e.stopPropagation(); openProvince(f); });
+    prov.transition().duration(650).attr('d', path);
+
+    const r = state.zoomed ? 11 : 8;
+    const g = gDots.selectAll('g.pin').data(TEAS, d => d.name);
+    const enter = g.enter().append('g').attr('class', 'pin');
+    enter.append('circle').attr('class', 'dot');
+    enter.append('text');
+
+    const all = enter.merge(g);
+    all.select('circle')
+      .on('mousemove', (e, d) => {
+        tip.innerHTML = '<b>' + d.name + '</b>' + d.origin + ' · ' + FAMILIES[d.f].label + '<br><span style="opacity:.7">Cliquer pour ouvrir la fiche</span>';
+        tip.style.opacity = 1;
+        tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px';
+        tip.style.top = (e.clientY + 16) + 'px';
+      })
+      .on('mouseleave', () => { tip.style.opacity = 0; })
+      .on('click', (e, d) => { e.stopPropagation(); window.location.href = 'Site%20The.dc.html#the=' + d.f + '-' + d.i; })
+      .transition().duration(650)
+      .attr('cx', d => projection([d.lon, d.lat])[0])
+      .attr('cy', d => projection([d.lon, d.lat])[1])
+      .attr('r', r)
+      .attr('fill', d => FAMILIES[d.f].color)
+      .attr('stroke', css('--color-bg'))
+      .attr('stroke-width', 2);
+
+    all.select('text')
+      .text(d => d.name)
+      .attr('font-family', 'Figtree, system-ui, sans-serif')
+      .attr('font-size', 15)
+      .attr('paint-order', 'stroke')
+      .attr('stroke', css('--color-bg'))
+      .attr('stroke-width', 4)
+      .attr('fill', css('--color-neutral-900'))
+      .attr('opacity', state.zoomed ? 1 : 0)
+      .transition().duration(650)
+      .attr('x', d => projection([d.lon, d.lat])[0] + r + 8)
+      .attr('y', d => projection([d.lon, d.lat])[1] + 5);
+
+    document.getElementById('here').textContent = state.label;
+    const n = teasHere().length;
+    document.getElementById('count').textContent = state.zoomed && n ? (n + (n > 1 ? ' thés' : ' thé')) : '';
+    drawLore();
+  }
+
+  function openProvince(f) {
+    countryIdx = -1; setRegionPressed(null);
+    state.prov = f.pname;
+    fitTo(f, true, f.label);
+  }
+
+  function teasHere() {
+    return TEAS.filter(t => COUNTRIES_FR[t.c] === state.label || (t.p && (t.p === state.label || (state.prov && state.label === (PROV_FR[state.prov] || state.prov) && state.prov.indexOf(t.p) === 0))));
+  }
+
+  function drawLore() {
+    const el = document.getElementById('lore');
+    const text = LORE[state.label] || PROV_LORE[state.label] || PROV_LORE[state.prov] || "Description à écrire pour cette zone — histoire du terroir, climat, façons de faire.";
+    const teas = teasHere();
+    let html = '<h2 style="font-size: 30px; margin: 0;">' + state.label + '</h2>'
+      + '<p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">' + text + '</p>';
+    if (teas.length) {
+      html += '<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">'
+        + teas.map(t => '<a class="chip" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;" href="Site%20The.dc.html#the=' + t.f + '-' + t.i + '">'
+            + '<i style="width:12px;height:12px;border-radius:50%;background:' + FAMILIES[t.f].color + ';border:1px solid var(--color-divider)"></i>' + t.name + '</a>').join('')
+        + '</div>';
+    }
+    const cc = Object.keys(COUNTRIES_FR).find(k => COUNTRIES_FR[k] === state.label);
+    const provs = provinces.filter(p => p.country === cc);
+    if (provs.length) {
+      html += '<div style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6; margin-top: 10px;">Provinces du thé</div>'
+        + '<div style="display: flex; flex-wrap: wrap; gap: 8px;">'
+        + provs.map((p, k) => '<button class="chip" data-prov="' + k + '">' + p.label + '</button>').join('')
+        + '</div>';
+    }
+    el.innerHTML = html;
+    el.querySelectorAll('[data-prov]').forEach(b => { b.onclick = () => openProvince(provs[Number(b.dataset.prov)]); });
+  }
+
+  function goCountry(name) {
+    state.prov = null;
+    countryIdx = TEA_COUNTRIES.indexOf(name);
+    setRegionPressed(null);
+    fitTo(byName[name], true, COUNTRIES_FR[name] || name);
+  }
+
+  function step(d) {
+    countryIdx = (countryIdx + d + TEA_COUNTRIES.length) % TEA_COUNTRIES.length;
+    goCountry(TEA_COUNTRIES[countryIdx]);
+  }
+
+  const regionsEl = document.getElementById('regions');
+  REGIONS.forEach(rg => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = rg.label; b.dataset.id = rg.id;
+    b.setAttribute('aria-pressed', rg.id === 'asie' ? 'true' : 'false');
+    b.onclick = () => { countryIdx = -1; state.prov = null; setRegionPressed(rg.id); fitTo(rg.geo, rg.zoom, rg.label); };
+    regionsEl.appendChild(b);
+  });
+  function setRegionPressed(id) {
+    regionsEl.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === id)));
+  }
+
+  document.getElementById('prev').onclick = () => step(-1);
+  document.getElementById('next').onclick = () => step(1);
+
+  fitTo(REGIONS[0].geo, false, 'Asie');
+});
+</script>
+</body>
+</html>

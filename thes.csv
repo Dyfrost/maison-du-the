@@ -1,0 +1,61 @@
+﻿famille;nom;origine;pays;province;recolte;gout;fabrication;degustation;avis;lat;lon;theiere;tasses;tradition;ceremonie;temperature
+blanc;Bai Hao Yin Zhen;Fuding, Fujian;Chine;Fujian;test récole;test gout;test fabrication;test dégustation;test avis;27.33;119.99;;;;;
+blanc;Bai Mu Dan;Zhenghe, Fujian;Chine;Fujian;;;;;;27.37;118.85;;;;;
+blanc;Shou Mei;Fujian;Chine;Fujian;;;;;;26.20;117.60;;;;;
+blanc;Bai Hu Die;Fujian;Chine;Fujian;;;;;;27.10;118.60;;;;;
+blanc;Gong Mei;Jianyang, Fujian;Chine;Fujian;;;;;;27.33;118.12;;;;;
+blanc;Yue Guang Bai (Clair de lune);Pu'er, Yunnan;Chine;Yunnan;;;;;;22.79;100.98;;;;;
+blanc;Darjeeling White;Darjeeling;Inde;;;;;;;27.04;88.26;;;;;
+vert;Long Jing;Hangzhou, Zhejiang;Chine;Zhejiang;;;;;;30.23;120.09;;;;;
+vert;Sencha;Shizuoka;Japon;Shizuoka;;;;;;34.98;138.38;;;;;
+vert;Gyokuro;Uji;Japon;Kyoto;;;;;;34.88;135.80;;;;;
+vert;Bi Luo Chun;Lac Tai, Jiangsu;Chine;Jiangsu;;;;;;31.07;120.27;;;;;
+vert;Huang Shan Mao Feng;Huangshan, Anhui;Chine;Anhui;;;;;;30.13;118.17;;;;;
+vert;Tai Ping Hou Kui;Taiping, Anhui;Chine;Anhui;;;;;;30.30;118.12;;;;;
+vert;Liu An Gua Pian;Lu'an, Anhui;Chine;Anhui;;;;;;31.75;116.50;;;;;
+vert;Xinyang Mao Jian;Xinyang, Henan;Chine;Henan;;;;;;32.13;114.07;;;;;
+vert;Duyun Mao Jian;Duyun, Guizhou;Chine;Guizhou;;;;;;26.26;107.52;;;;;
+vert;Gunpowder (Zhu Cha);Zhejiang;Chine;Zhejiang;;;;;;29.90;120.60;;;;;
+vert;Matcha;Uji;Japon;Kyoto;;;;;;34.89;135.81;;;;;
+vert;Genmaicha;Shizuoka;Japon;Shizuoka;;;;;;34.97;138.40;;;;;
+vert;Hojicha;Kyoto;Japon;Kyoto;;;;;;35.01;135.77;;;;;
+vert;Kabusecha;Ise;Japon;Mie;;;;;;34.49;136.71;;;;;
+vert;Kamairicha;Takachiho;Japon;Miyazaki;;;;;;32.71;131.31;;;;;
+jaune;Jun Shan Yin Zhen;Hunan;Chine;Hunan;;;;;;29.35;113.05;;;;;
+jaune;Meng Ding Huang Ya;Sichuan;Chine;Sichuan;;;;;;30.08;103.12;;;;;
+jaune;Huoshan Huang Ya;Anhui;Chine;Anhui;;;;;;31.40;116.33;;;;;
+jaune;Wei Shan Mao Jian;Ningxiang, Hunan;Chine;Hunan;;;;;;28.05;112.12;;;;;
+jaune;Mo Gan Huang Ya;Mont Mogan, Zhejiang;Chine;Zhejiang;;;;;;30.61;119.87;;;;;
+oolong;Tie Guan Yin;Anxi, Fujian;Chine;Fujian;;;;;;25.06;118.19;;;;;
+oolong;Da Hong Pao;Monts Wuyi, Fujian;Chine;Fujian;;;;;;27.72;117.97;;;;;
+oolong;Dong Ding;Nantou;Taïwan;Taiwan;;;;;;23.73;120.75;;;;;
+oolong;Feng Huang Dan Cong;Chaozhou, Guangdong;Chine;Guangdong;;;;;;23.68;116.62;;;;;
+oolong;Rou Gui;Monts Wuyi, Fujian;Chine;Fujian;;;;;;27.70;117.95;;;;;
+oolong;Shui Xian;Monts Wuyi, Fujian;Chine;Fujian;;;;;;27.74;118.00;;;;;
+oolong;Huang Jin Gui;Anxi, Fujian;Chine;Fujian;;;;;;25.10;118.15;;;;;
+oolong;Alishan;Chiayi;Taïwan;Taiwan;;;;;;23.51;120.80;;;;;
+oolong;Li Shan;Taichung;Taïwan;Taiwan;;;;;;24.25;121.25;;;;;
+oolong;Dong Fang Mei Ren (Oriental Beauty);Hsinchu;Taïwan;Taiwan;;;;;;24.70;121.10;;;;;
+oolong;Jin Xuan (Milky oolong);Nantou;Taïwan;Taiwan;;;;;;23.90;120.68;;;;;
+oolong;Darjeeling Oolong;Darjeeling;Inde;;;;;;;27.00;88.30;;;;;
+noir;Golden Assam;Assam;Inde;;;;;;;26.74;94.21;;;;;
+noir;Darjeeling second flush;Darjeeling;Inde;;;;;;;27.04;88.26;;;;;
+noir;Keemun;Qimen, Anhui;Chine;Anhui;;;;;;29.87;117.72;;;;;
+noir;Uva;Uva;Sri Lanka;;;;;;;6.88;81.05;;;;;
+noir;Lapsang Souchong;Tongmu, Monts Wuyi, Fujian;Chine;Fujian;;;;;;27.79;117.68;;;;;
+noir;Jin Jun Mei;Tongmu, Monts Wuyi, Fujian;Chine;Fujian;;;;;;27.82;117.70;;;;;
+noir;Dian Hong;Fengqing, Yunnan;Chine;Yunnan;;;;;;24.58;99.92;;;;;
+noir;Darjeeling first flush;Darjeeling;Inde;;;;;;;27.06;88.24;;;;;
+noir;Nilgiri;Nilgiri, Tamil Nadu;Inde;;;;;;;11.40;76.70;;;;;
+noir;Nuwara Eliya;Nuwara Eliya;Sri Lanka;;;;;;;6.97;80.78;;;;;
+noir;Ruby Red (Hong Yu);Sun Moon Lake, Nantou;Taïwan;Taiwan;;;;;;23.86;120.92;;;;;
+noir;Kenya CTC;Kericho;Kenya;;;;;;;-0.37;35.29;;;;;
+sombre;Pu'er shou;Yunnan;Chine;Yunnan;;;;;;22.78;100.97;;;;;
+sombre;Liu Bao;Wuzhou, Guangxi;Chine;Guangxi;;;;;;23.48;111.28;;;;;
+sombre;Fu Zhuan;Anhua, Hunan;Chine;Hunan;;;;;;28.38;111.22;;;;;
+sombre;Pu'er sheng;Xishuangbanna, Yunnan;Chine;Yunnan;;;;;;21.95;100.80;;;;;
+sombre;Tuocha;Xiaguan, Dali, Yunnan;Chine;Yunnan;;;;;;25.58;100.23;;;;;
+sombre;Qian Liang Cha;Anhua, Hunan;Chine;Hunan;;;;;;28.37;111.20;;;;;
+sombre;Ya An Zang Cha;Ya'an, Sichuan;Chine;Sichuan;;;;;;29.98;103.00;;;;;
+sombre;Qing Zhuan;Chibi, Hubei;Chine;Hubei;;;;;;29.72;113.90;;;;;
+sombre;Liu An Lan Cha;Qimen, Anhui;Chine;Anhui;;;;;;29.85;117.70;;;;;

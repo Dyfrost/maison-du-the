@@ -1,0 +1,20 @@
+﻿famille;nom;origine;pays;province;recolte;gout;fabrication;degustation;avis;lat;lon
+blanc;Bai Hao Yin Zhen;Fuding, Fujian;Chine;Fujian;test récole;test gout;test fabrication;test dégustation;test avis;27.33;119.99
+blanc;Bai Mu Dan;Zhenghe, Fujian;Chine;Fujian;;;;;;27.37;118.85
+blanc;Shou Mei;Fujian;Chine;Fujian;;;;;;26.20;117.60
+vert;Long Jing;Hangzhou, Zhejiang;Chine;Zhejiang;;;;;;30.23;120.09
+vert;Sencha;Shizuoka;Japon;Shizuoka;;;;;;34.98;138.38
+vert;Gyokuro;Uji;Japon;Kyoto;;;;;;34.88;135.80
+jaune;Jun Shan Yin Zhen;Hunan;Chine;Hunan;;;;;;29.35;113.05
+jaune;Meng Ding Huang Ya;Sichuan;Chine;Sichuan;;;;;;30.08;103.12
+jaune;Huoshan Huang Ya;Anhui;Chine;Anhui;;;;;;31.40;116.33
+oolong;Tie Guan Yin;Anxi, Fujian;Chine;Fujian;;;;;;25.06;118.19
+oolong;Da Hong Pao;Monts Wuyi, Fujian;Chine;Fujian;;;;;;27.72;117.97
+oolong;Dong Ding;Nantou;Taïwan;Taiwan;;;;;;23.73;120.75
+noir;Golden Assam;Assam;Inde;;;;;;;26.74;94.21
+noir;Darjeeling second flush;Darjeeling;Inde;;;;;;;27.04;88.26
+noir;Keemun;Qimen, Anhui;Chine;Anhui;;;;;;29.87;117.72
+noir;Uva;Uva;Sri Lanka;;;;;;;6.88;81.05
+sombre;Pu'er shou;Yunnan;Chine;Yunnan;;;;;;22.78;100.97
+sombre;Liu Bao;Wuzhou, Guangxi;Chine;Guangxi;;;;;;23.48;111.28
+sombre;Fu Zhuan;Anhua, Hunan;Chine;Hunan;;;;;;28.38;111.22
