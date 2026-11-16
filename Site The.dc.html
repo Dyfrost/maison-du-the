@@ -480,10 +480,10 @@
       <div style="display: flex; flex-direction: column; gap: 26px; animation: fadeUp .45s ease both; max-width: 860px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <h1 style="font-size: 46px; margin: 0;">Ajouter</h1>
-          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Enrichissez le catalogue ou votre collection. Les ajouts apparaissent tout de suite sur le site.</p>
+          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Ajoutez un thé que vous avez acheté. Le catalogue des familles ne change pas : le thé apparaît dans « Mon avis » sur sa fiche.</p>
         </div>
         <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px; flex-wrap: wrap;">
-          <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un thé au catalogue</button></sc-if><sc-if value="{{ tabTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un thé au catalogue</button></sc-if>
+          <sc-if value="{{ never }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un thé au catalogue</button></sc-if><sc-if value="{{ never }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un thé au catalogue</button></sc-if>
           <sc-if value="{{ tabLotOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un thé que je possède</button></sc-if><sc-if value="{{ tabLotOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un thé que je possède</button></sc-if>
           <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Options</button></sc-if><sc-if value="{{ tabOptOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Options</button></sc-if>
         </div>
@@ -1018,9 +1018,7 @@
         <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 14px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
             <h2 style="font-size: 30px; margin: 0; margin-right: auto;">Mon avis</h2>
-            <sc-if value="{{ teaIOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ teaToggleOwn }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
-            <sc-if value="{{ teaIDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ teaToggleOwn }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
-            <button class="btn btn-primary" onClick="{{ teaTaste2 }}" style="white-space: nowrap;">Noter une dégustation</button>
+            <button class="btn btn-secondary" onClick="{{ teaBuy }}" style="white-space: nowrap;">＋ J'en ai acheté</button>
           </div>
           <sc-if value="{{ teaNoMyLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Vous n'avez pas encore noté ce thé.</p></sc-if>
           <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1034,26 +1032,56 @@
               </div>
             </sc-for>
           </div>
-          <sc-if value="{{ teaHasOwned }}" hint-placeholder-val="{{ false }}">
+
           <h3 style="font-size: 21px; margin: 8px 0 0;">Ceux que je possède</h3>
+          <sc-if value="{{ teaNoMine }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Aucun pour l'instant.</p></sc-if>
           <div style="display: flex; flex-direction: column; gap: 12px;">
-            <sc-for list="{{ teaOwned }}" as="lot" hint-placeholder-count="1">
+            <sc-for list="{{ teaMine }}" as="lot" hint-placeholder-count="1">
               <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                   <span style="font-family: var(--font-heading); font-size: 19px;">{{ lot.label }}</span>
                   <sc-if value="{{ lot.year }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.year }}</span></sc-if>
                   <sc-if value="{{ lot.format }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ lot.format }}</span></sc-if>
                   <sc-if value="{{ lot.code }}" hint-placeholder-val="{{ false }}"><span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span></sc-if>
-                  <sc-if value="{{ lot.ownersTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.ownersTxt }}</span></sc-if>
                   <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;">{{ lot.prixTxt }}</span></sc-if>
-                  <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="margin-left: auto; font-family: var(--font-heading); font-size: 18px; white-space: nowrap;">{{ lot.avg }}</span></sc-if>
+                  <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 18px; white-space: nowrap;">{{ lot.avg }}</span></sc-if>
+                  <span style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ lot.toggle }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
+                    <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ lot.toggle }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
+                    <button class="btn btn-ghost" onClick="{{ lot.taste }}" style="white-space: nowrap;">Noter</button>
+                  </span>
                 </div>
+                <div style="font-size: 13px; opacity: .7;">{{ lot.ownersTxt }}</div>
                 <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent-700);">Acheté chez {{ lot.shop }}</div></sc-if>
                 <sc-if value="{{ lot.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p></sc-if>
               </div>
             </sc-for>
           </div>
-          </sc-if>
+
+          <h3 style="font-size: 21px; margin: 8px 0 0;">Ceux que je ne possède pas</h3>
+          <sc-if value="{{ teaNoOthers }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Aucun pour l'instant.</p></sc-if>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <sc-for list="{{ teaOthers }}" as="lot" hint-placeholder-count="1">
+              <div style="background: var(--color-bg); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                  <span style="font-family: var(--font-heading); font-size: 19px;">{{ lot.label }}</span>
+                  <sc-if value="{{ lot.year }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent-2" style="white-space: nowrap;">{{ lot.year }}</span></sc-if>
+                  <sc-if value="{{ lot.format }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" style="white-space: nowrap;">{{ lot.format }}</span></sc-if>
+                  <sc-if value="{{ lot.code }}" hint-placeholder-val="{{ false }}"><span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ lot.code }}</span></sc-if>
+                  <sc-if value="{{ lot.prixTxt }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;">{{ lot.prixTxt }}</span></sc-if>
+                  <sc-if value="{{ lot.avg }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-heading); font-size: 18px; white-space: nowrap;">{{ lot.avg }}</span></sc-if>
+                  <span style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <sc-if value="{{ lot.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ lot.toggle }}" aria-pressed="true" style="white-space: nowrap; background: var(--color-accent-2-600); color: var(--color-bg);">✓ Je possède</button></sc-if>
+                    <sc-if value="{{ lot.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ lot.toggle }}" aria-pressed="false" style="white-space: nowrap;">Je possède</button></sc-if>
+                    <button class="btn btn-ghost" onClick="{{ lot.taste }}" style="white-space: nowrap;">Noter</button>
+                  </span>
+                </div>
+                <div style="font-size: 13px; opacity: .7;">{{ lot.ownersTxt }}</div>
+                <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent-700);">Acheté chez {{ lot.shop }}</div></sc-if>
+                <sc-if value="{{ lot.note }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.65; opacity: .85; text-wrap: pretty;">{{ lot.note }}</p></sc-if>
+              </div>
+            </sc-for>
+          </div>
         </section>
         </sc-if>
       </article>
@@ -1827,6 +1855,7 @@ class Component extends DCLogic {
     });
     this._onFocus = () => this.pullCloud(false);
     window.addEventListener('focus', this._onFocus);
+    this._poll = setInterval(() => { if (!document.hidden) this.pullCloud(false); }, 20000);
   }
 
   async pullCloud(first) {
@@ -1901,7 +1930,7 @@ class Component extends DCLogic {
 
   declAll() {
     const base = this.state.decl || {};
-    const ad = this.getAdds().decl || [];
+    const ad = []; // familles et variantes fixes : seules les données du catalogue comptent
     if (!ad.length) return base;
     const out = Object.assign({}, base);
     ad.forEach(d => { out[d.the] = (out[d.the] || []).concat([{ name: d.nom, fr: d.traduction || undefined, profil: d.profil || '', desc: d.description || '', avis: '' }]); });
@@ -1995,7 +2024,7 @@ class Component extends DCLogic {
     const sheet = this.state.sheet || {};
     const base = (sheet[k] && sheet[k].length) ? sheet[k] : ((this.families[k] || {}).teas || []);
     const adds = this.getAdds();
-    const extra = adds.teas.filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.traduction || undefined, gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
+    const extra = [].filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.traduction || undefined, gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
     return base.concat(extra).map(t => {
       if (raw) return t;
       const me = this.me();
@@ -2140,36 +2169,26 @@ class Component extends DCLogic {
       teaLore: tea.lore ?? this.ph.lore,
       teaTaste: tea.taste ?? this.ph.taste,
       teaOpinion: tea.opinion ?? this.ph.opinion,
-      teaOwned: (tea.owned || []).map(l => Object.assign({}, l, { shopOn: !!l.shop && l.shop !== '—' })),
-      teaHasOwned: !!(tea.owned && tea.owned.length),
       teaHouseOpinion: tea.opinion || '',
       canAct: !guest && !!me,
       ...(() => {
         const lots = this.collection().filter(o => tea.name && this.norm(o.the) === this.norm(tea.name));
-        const mineLots = lots.filter(o => o.owners.indexOf(me) >= 0);
         const myLogs = [].concat(...lots.map(o => this.logsFor(o.id))).filter(l => (l.author || this.opts().users[0]) === me).sort((x, y) => String(y.date).localeCompare(String(x.date)));
-        const newLot = owners => { const a = this.getAdds(); const id = 'a' + Date.now().toString(36); this.setAdds(Object.assign({}, a, { owned: a.owned.concat([{ id: id, owners: owners, the: tea.name, code: '', ref: '', lot: '', boutique: '', annee: '', format: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }]) })); return id; };
+        const taste = id => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
+        const card = o => {
+          const st = this.statsFor(o.id, me); const own = o.owners.indexOf(me) >= 0;
+          return { label: o.lot || o.the, year: o.annee || '', format: o.format || '', code: o.code || '', prixTxt: this.prixTxt(o), avg: st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : '',
+            ownersTxt: o.owners.length ? 'Possédé par ' + o.owners.join(' & ') : 'Personne ne le possède pour l\'instant',
+            shop: o.boutique || '', shopOn: !!o.boutique, note: o.commentaire || '', iOwn: own, iDontOwn: !own,
+            toggle: () => { const a = this.getAdds(); const nw = own ? o.owners.filter(x => x !== me) : o.owners.concat([me]); this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: nw }) }) })); },
+            taste: () => taste(o.id) };
+        };
+        const mine = lots.filter(o => o.owners.indexOf(me) >= 0), others = lots.filter(o => o.owners.indexOf(me) < 0);
         return {
-          teaIOwn: mineLots.length > 0, teaIDontOwn: !mineLots.length,
+          teaMine: mine.map(card), teaOthers: others.map(card), teaNoMine: !mine.length, teaNoOthers: !others.length,
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
-          teaToggleOwn: () => {
-            if (!me || !tea.name) return;
-            const a = this.getAdds();
-            if (mineLots.length) {
-              const over = Object.assign({}, a.over);
-              mineLots.forEach(o => { over[o.id] = Object.assign({}, a.over[o.id], { owners: o.owners.filter(x => x !== me) }); });
-              this.setAdds(Object.assign({}, a, { over: over }));
-            } else if (lots.length) {
-              const o = lots[0];
-              this.setAdds(Object.assign({}, a, { over: Object.assign({}, a.over, { [o.id]: Object.assign({}, a.over[o.id], { owners: o.owners.concat([me]) }) }) }));
-            } else newLot([me]);
-          },
-          teaTaste2: () => {
-            if (!me || !tea.name) return;
-            const id = mineLots.length ? mineLots[0].id : (lots.length ? lots[0].id : newLot([]));
-            this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
-          }
+          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { owners: [me], the: tea.name, ref: '', code: '', lot: '', boutique: '', annee: '', format: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '' }) }))
         };
       })(),
       teaTags: tTags,
@@ -2314,8 +2333,9 @@ class Component extends DCLogic {
       recentLogs: this.getAdds().logs.slice().sort((x, y) => String(y.date).localeCompare(String(x.date))).slice(0, 8).map(l => { const o = coll.find(x => x.id === l.lotId) || {}; return { author: l.author || this.opts().users[0], note: l.note || '—', the: (o.the || '?') + (o.code ? ' · ' + o.code : ''), avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.qty, l.technique, l.repas].filter(Boolean).join(' · ') }; }),
       tabTea: () => this.setState({ addTab: 'tea', addMsg: '' }),
       tabLot: () => this.setState({ addTab: 'lot', addMsg: '' }),
-      tabTeaOn: (this.state.addTab || 'tea') === 'tea', tabTeaOff: (this.state.addTab || 'tea') !== 'tea',
-      tabLotOn: this.state.addTab === 'lot', tabLotOff: this.state.addTab !== 'lot',
+      never: false,
+      tabTeaOn: false, tabTeaOff: true,
+      tabLotOn: (this.state.addTab || 'lot') === 'lot' || this.state.addTab === 'tea', tabLotOff: !((this.state.addTab || 'lot') === 'lot' || this.state.addTab === 'tea'),
       form: Object.assign({ famille: 'blanc', nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '', the: '', lot: '', boutique: '', annee: '', format: '', commentaire: '', ref: '', code: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', vParent: '', vNom: '', vTrad: '', vProfil: '', vDesc: '' }, this.state.form),
       setF: ['famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }) })); }; return o; }, {}),
       addMsg: this.state.addMsg || '',
@@ -2345,6 +2365,7 @@ class Component extends DCLogic {
       saveLot: () => {
         const fm = this.state.form || {};
         if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez le thé concerné.' }); return; }
+        if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
         const a = this.getAdds();
         const code = String(fm.code || '').trim() || (this.camel(fm.the) + (String(fm.ref || '').trim() ? '-' + String(fm.ref).trim() : ''));
         const owners = Array.isArray(fm.owners) ? fm.owners : [me];
