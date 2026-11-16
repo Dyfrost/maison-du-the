@@ -662,8 +662,8 @@
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Commencez à taper : Bai Mu Dan…" value="{{ form.the }}" onChange="{{ setF.the }}" list="liste-thes">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" value="{{ form.ref }}" onChange="{{ setF.ref }}">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom du thé</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Le nom donné par le fournisseur" value="{{ form.nomFour }}" onChange="{{ setF.nomFour }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Code perso</span>
@@ -671,8 +671,8 @@
                 <span style="font-size: 12px; opacity: .6; padding-left: 6px;">Vide = {{ codeSuggest }}</span>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom du thé</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Le nom donné par le fournisseur" value="{{ form.nomFour }}" onChange="{{ setF.nomFour }}">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" value="{{ form.ref }}" onChange="{{ setF.ref }}">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque</span>
@@ -732,6 +732,10 @@
                     <sc-if value="{{ k.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ k.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent); background: var(--color-accent); color: var(--color-bg);">{{ k.name }}</button></sc-if>
                     <sc-if value="{{ k.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ k.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-100);">{{ k.name }}</button></sc-if>
                   </sc-for>
+                  <span style="display: inline-flex; gap: 6px; align-items: center;">
+                    <input class="input" aria-label="Nouveau tag" placeholder="Nouveau tag…" value="{{ newTag }}" onChange="{{ onNewTag }}" onKeyDown="{{ newTagKey }}" style="width: 160px; font-size: 14px; padding: 7px 14px; min-height: 0;">
+                    <button class="btn btn-secondary" onClick="{{ addTag }}" style="white-space: nowrap; padding: 7px 14px;">＋ Ajouter</button>
+                  </span>
                 </div>
               </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
@@ -1969,6 +1973,21 @@ class Component extends DCLogic {
 
   num(v) { const n = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isNaN(n) ? null : n; }
 
+  allTags() {
+    const extra = (this.opts().tags || []).filter(t => this.keywords.indexOf(t) < 0);
+    return this.keywords.concat(extra);
+  }
+
+  addTag() {
+    const t = String(this.state.newTag || '').trim();
+    if (!t) return;
+    const name = t.charAt(0).toUpperCase() + t.slice(1);
+    const exist = this.allTags().find(x => this.norm(x) === this.norm(name));
+    const tag = exist || name;
+    if (!exist) this.setOpt('tags', (this.opts().tags || []).concat([tag]));
+    this.setState(s => { const c = (s.form || {}).tags || []; return { newTag: '', form: Object.assign({}, s.form, { tags: c.indexOf(tag) >= 0 ? c : c.concat([tag]) }) }; });
+  }
+
   formatTxt(o) {
     const q = this.num(o.quantite);
     if (q != null) return String(o.quantite).trim() + (o.prixMode === 'unite' ? ' u' : ' g');
@@ -2007,7 +2026,7 @@ class Component extends DCLogic {
 
   opts() {
     const o = this.getAdds().options || {};
-    return { users: o.users || this.defaultUsers, vessels: o.vessels || this.vesselList, techs: o.techs || this.techList, freqs: o.freqs || this.defaultFreqs };
+    return { users: o.users || this.defaultUsers, vessels: o.vessels || this.vesselList, techs: o.techs || this.techList, freqs: o.freqs || this.defaultFreqs, tags: o.tags || [] };
   }
 
   setOpt(key, val) {
@@ -2283,7 +2302,11 @@ class Component extends DCLogic {
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
       tabOptOn: this.state.addTab === 'opt', tabOptOff: this.state.addTab !== 'opt',
       freqOptions: this.opts().freqs,
-      tagChips: this.keywords.map(k => { const cur = (this.state.form || {}).tags || []; const on = cur.indexOf(k) >= 0; return { name: k, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.form || {}).tags || []; return { form: Object.assign({}, s.form, { tags: on ? c.filter(x => x !== k) : c.concat([k]) }) }; }) }; }),
+      newTag: this.state.newTag || '',
+      onNewTag: e => this.setState({ newTag: e.target.value }),
+      newTagKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.addTag(); } },
+      addTag: () => this.addTag(),
+      tagChips: this.allTags().map(k => { const cur = (this.state.form || {}).tags || []; const on = cur.indexOf(k) >= 0; return { name: k, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.form || {}).tags || []; return { form: Object.assign({}, s.form, { tags: on ? c.filter(x => x !== k) : c.concat([k]) }) }; }) }; }),
       formIOwn: ((this.state.form || {}).owners || [me]).indexOf(me) >= 0,
       formIDontOwn: ((this.state.form || {}).owners || [me]).indexOf(me) < 0,
       toggleFormOwn: () => this.setState(s => { const c = (s.form || {}).owners || [me]; return { form: Object.assign({}, s.form, { owners: c.indexOf(me) >= 0 ? c.filter(x => x !== me) : c.concat([me]) }) }; }),
