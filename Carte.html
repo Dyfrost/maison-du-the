@@ -14,7 +14,10 @@
   a:hover { color: var(--color-accent-800); }
   .wrap { max-width: 1140px; margin: 0 auto; padding: 0 40px 80px; }
   #map { width: 100%; border-radius: 34px; background: var(--color-surface); box-shadow: var(--shadow-sm); overflow: hidden; }
-  #map svg { display: block; width: 100%; height: auto; }
+  #map svg { display: block; width: 100%; height: auto; cursor: grab; touch-action: none; }
+  #map svg:active { cursor: grabbing; }
+  .zbtn { width: 40px; height: 40px; padding: 0; font-size: 18px; background: var(--color-bg); box-shadow: var(--shadow-sm); }
+  @media (max-width: 720px) { .wrap { padding: 0 16px 60px; } header.nav { padding: 14px 16px !important; } h1 { font-size: 34px !important; } #lore { padding: 20px 18px !important; } }
   .dot { cursor: pointer; }
   .country { cursor: pointer; }
   .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
@@ -52,31 +55,19 @@
 </header>
 
 <main class="wrap">
-  <div style="max-width: 640px; margin-bottom: 24px;">
+  <div style="max-width: 680px; margin-bottom: 20px;">
     <h1 style="font-size: 46px; margin: 0 0 12px;">Carte des origines</h1>
-    <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Chaque point est un thé, posé sur son terroir. Zoomez par région, ou passez de pays en pays — un clic sur un pays l'ouvre en grand.</p>
+    <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Chaque région est colorée selon le thé qu'elle produit surtout ; les pastilles indiquent toutes les familles présentes. Faites glisser pour vous déplacer, la molette ou le pincement pour zoomer, et cliquez sur une région pour le détail.</p>
   </div>
-
-  <div class="controls" id="regions"></div>
-  <div class="controls" style="margin-bottom: 22px;">
-    <button class="chip" id="prev" title="Pays précédent">‹</button>
-    <span id="here" style="font-family: var(--font-heading); font-size: 17px; min-width: 170px;">Asie</span>
-    <button class="chip" id="next" title="Pays suivant">›</button>
-    <span id="count" style="font-size: 14px; opacity: .65;"></span>
+  <div class="controls" id="legend" aria-label="Filtrer par famille"></div>
+  <div id="map" style="position: relative;">
+    <div style="position: absolute; right: 14px; top: 14px; display: flex; flex-direction: column; gap: 6px; z-index: 2;">
+      <button class="chip zbtn" id="zin" aria-label="Zoomer">+</button>
+      <button class="chip zbtn" id="zout" aria-label="Dézoomer">−</button>
+      <button class="chip zbtn" id="zreset" aria-label="Recentrer">⟲</button>
+    </div>
   </div>
-
-  <div id="map"></div>
-
-  <section id="lore" style="margin-top: 26px; background: var(--color-surface); border-radius: 34px; padding: 30px 32px; display: flex; flex-direction: column; gap: 12px;"></section>
-
-  <div class="legend">
-    <span><i style="background: var(--color-neutral-100)"></i>Blanc</span>
-    <span><i style="background: var(--color-accent-2-400)"></i>Vert</span>
-    <span><i style="background: var(--color-accent-300)"></i>Jaune</span>
-    <span><i style="background: #5f7f99"></i>Oolong (bleu)</span>
-    <span><i style="background: #9e3b2e"></i>Noir (rouge)</span>
-    <span><i style="background: var(--color-accent-800)"></i>Sombre</span>
-  </div>
+  <section id="lore" style="margin-top: 22px; background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 14px;"></section>
 </main>
 
 <div class="tip" id="tip"></div>
@@ -202,203 +193,146 @@ async function loadSheetTeas() {
   if (out.length) { TEAS.length = 0; out.forEach(t => TEAS.push(t)); }
 }
 
+// ---- Carte par régions : une zone = une province (Chine, Japon) ou un pays ----
+const CENTER_FIX = { 'Taiwan': [121, 23.7], 'Sri Lanka': [80.7, 7.6], 'Kenya': [37.5, 0.2], 'India': [80, 22] };
+const ASIA = box(62, -2, 152, 47);
+
 Promise.all([
   d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json'),
+  d3.json('https://cdn.jsdelivr.net/npm/cn-atlas/cn-atlas.json').catch(() => null),
+  d3.json('https://cdn.jsdelivr.net/gh/dataofjapan/land@master/japan.topojson').catch(() => null),
   loadSheetTeas()
-]).then(([topology]) => {
+]).then(([topology, cn, jp]) => {
   const countries = topojson.feature(topology, topology.objects.countries).features;
-  const byName = {};
-  countries.forEach(f => { byName[f.properties.name] = f; });
+  const byName = {}; countries.forEach(f => { byName[f.properties.name] = f; });
 
-  const svg = d3.select('#map').append('svg')
-    .attr('viewBox', '0 0 ' + W + ' ' + H)
-    .attr('role', 'img')
-    .attr('aria-label', 'Carte des origines des thés');
+  // Provinces chinoises et préfectures japonaises qui produisent du thé
+  const provs = [];
+  const extra = cc => TEAS.filter(t => t.c === cc && t.p).map(t => t.p);
+  if (cn) topojson.feature(cn, cn.objects.provinces).features.forEach(f => {
+    const n = String(f.properties.name || '').replace(/ (Province|Sheng)$/i, '');
+    const hit = TEA_PROVINCES.China.concat(extra('China')).find(p => n.indexOf(p) === 0);
+    if (hit) provs.push({ id: 'cn-' + hit, name: hit, country: 'China', geo: f });
+  });
+  if (jp) topojson.feature(jp, jp.objects.japan).features.forEach(f => {
+    const n = String(f.properties.nam || '').replace(/ (Ken|Fu|To|Do)$/, '');
+    if (TEA_PROVINCES.Japan.concat(extra('Japan')).indexOf(n) >= 0) provs.push({ id: 'jp-' + n, name: PROV_FR[n] || n, key: n, country: 'Japan', geo: f });
+  });
 
+  // Une « zone » par province, plus un pays entier là où on n'a pas de découpage
+  const zones = provs.slice();
+  TEA_COUNTRIES.forEach(c => { if (!zones.some(z => z.country === c) && byName[c]) zones.push({ id: 'c-' + c, name: COUNTRIES_FR[c] || c, country: c, geo: byName[c], whole: true }); });
+  const zoneOf = t => {
+    if (t.p) { const z = zones.find(z => !z.whole && z.country === t.c && String(z.key || z.name).indexOf(t.p) === 0); if (z) return z; }
+    return zones.find(z => z.whole && z.country === t.c) || null;
+  };
+  zones.forEach(z => { z.teas = []; });
+  TEAS.forEach(t => { const z = zoneOf(t); if (z) z.teas.push(t); });
+  const famOrder = Object.keys(FAMILIES);
+  zones.forEach(z => {
+    z.fams = famOrder.filter(f => z.teas.some(t => t.f === f));
+    const c = {}; z.teas.forEach(t => { c[t.f] = (c[t.f] || 0) + 1; });
+    z.main = z.fams.slice().sort((a, b) => c[b] - c[a])[0] || null;
+  });
+  const live = zones.filter(z => z.teas.length);
+
+  const svg = d3.select('#map').append('svg').attr('viewBox', '0 0 ' + W + ' ' + H).attr('role', 'img').attr('aria-label', 'Carte des régions productrices de thé');
   svg.append('rect').attr('width', W).attr('height', H).attr('fill', css('--color-surface'));
+  const projection = d3.geoMercator().fitExtent([[PAD, PAD], [W - PAD, H - PAD]], ASIA);
+  const path = d3.geoPath(projection);
+  const root = svg.append('g');
+  const gLand = root.append('g'), gZones = root.append('g'), gMarks = root.append('g');
 
-  let projection = d3.geoMercator();
-  let path = d3.geoPath(projection);
+  let filter = null, selected = null, k = 1;
+  const mix = (c, pct) => 'color-mix(in srgb, ' + c + ' ' + pct + '%, ' + css('--color-surface') + ')';
+  const zoneFill = z => {
+    if (!z.main) return css('--color-neutral-200');
+    if (filter && z.fams.indexOf(filter) < 0) return css('--color-neutral-200');
+    const f = filter || z.main;
+    const col = f === 'blanc' ? css('--color-neutral-400') : FAMILIES[f].color;
+    return mix(col, selected === z ? 95 : 62);
+  };
 
-  const gLand = svg.append('g');
-  const gProv = svg.append('g');
-  const gDots = svg.append('g');
+  gLand.selectAll('path').data(countries).join('path').attr('d', path)
+    .attr('fill', f => TEA_COUNTRIES.indexOf(f.properties.name) >= 0 ? css('--color-neutral-300') : css('--color-neutral-200'))
+    .attr('stroke', css('--color-neutral-400')).attr('stroke-width', 0.6).attr('vector-effect', 'non-scaling-stroke');
 
-  // Provinces of China (cn-atlas) and prefectures of Japan (dataofjapan/land).
-  let provinces = [];
-  Promise.all([
-    d3.json('https://cdn.jsdelivr.net/npm/cn-atlas/cn-atlas.json').catch(() => null),
-    d3.json('https://cdn.jsdelivr.net/gh/dataofjapan/land@master/japan.topojson').catch(() => null)
-  ]).then(([cn, jp]) => {
-    const extra = (cc) => TEAS.filter(t => t.c === cc && t.p).map(t => t.p);
-    const keepCN = TEA_PROVINCES.China.concat(extra('China'));
-    const keepJP = TEA_PROVINCES.Japan.concat(extra('Japan'));
-    if (cn) provinces = provinces.concat(topojson.feature(cn, cn.objects.provinces).features
-      .map(f => { f.pname = String(f.properties.name || '').replace(/ (Province|Sheng)$/i, ''); f.country = 'China'; return f; })
-      .filter(f => keepCN.some(n => f.pname.indexOf(n) === 0)));
-    if (jp) provinces = provinces.concat(topojson.feature(jp, jp.objects.japan).features
-      .map(f => { f.pname = String(f.properties.nam || '').replace(/ (Ken|Fu|To|Do)$/, ''); f.country = 'Japan'; return f; })
-      .filter(f => keepJP.indexOf(f.pname) >= 0));
-    provinces.forEach(f => { f.label = PROV_FR[f.pname] || f.pname; });
-    draw();
-  });
+  const showTip = (e, html) => { tip.innerHTML = html; tip.style.opacity = 1; tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px'; tip.style.top = (e.clientY + 16) + 'px'; };
+  const famBadges = z => z.fams.map(f => '<span style="display:inline-flex;align-items:center;gap:5px;margin-right:8px"><i style="width:9px;height:9px;border-radius:50%;background:' + FAMILIES[f].color + ';display:inline-block;border:1px solid rgba(255,255,255,.4)"></i>' + FAMILIES[f].label.replace(/ \(.*\)/, '') + '</span>').join('');
 
-  const land = gLand.selectAll('path').data(countries).join('path')
-    .attr('class', 'country')
-    .attr('stroke', css('--color-neutral-400'))
-    .attr('stroke-width', 0.8)
-    .on('mousemove', function (e, f) {
-      if (TEA_COUNTRIES.indexOf(f.properties.name) < 0) return;
-      d3.select(this).attr('fill', css('--color-accent-2-300'));
-      tip.innerHTML = '<b>' + (COUNTRIES_FR[f.properties.name] || f.properties.name) + '</b><span style="opacity:.7">Cliquer pour zoomer sur le pays</span>';
-      tip.style.opacity = 1;
-      tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px';
-      tip.style.top = (e.clientY + 16) + 'px';
-    })
-    .on('mouseleave', function (e, f) { d3.select(this).attr('fill', landFill(f)); tip.style.opacity = 0; })
-    .on('click', (e, f) => { if (TEA_COUNTRIES.indexOf(f.properties.name) >= 0) goCountry(f.properties.name); else { countryIdx = -1; setRegionPressed(null); fitTo(f, true, f.properties.name); } });
+  const zp = gZones.selectAll('path').data(live).join('path').attr('d', z => path(z.geo))
+    .attr('stroke', css('--color-bg')).attr('stroke-width', 1.2).attr('vector-effect', 'non-scaling-stroke')
+    .style('cursor', 'pointer')
+    .on('mousemove', function (e, z) { const f = filter || z.main; d3.select(this).attr('fill', mix(f === 'blanc' ? css('--color-neutral-500') : FAMILIES[f].color, 90)); showTip(e, '<b>' + z.name + '</b>' + famBadges(z) + '<br><span style="opacity:.7">' + z.teas.length + (z.teas.length > 1 ? ' thés' : ' thé') + ' · cliquer pour le détail</span>'); })
+    .on('mouseleave', function (e, z) { d3.select(this).attr('fill', zoneFill(z)); tip.style.opacity = 0; })
+    .on('click', (e, z) => { e.stopPropagation(); select(z, true); });
 
-  function landFill(f) { return TEA_COUNTRIES.indexOf(f.properties.name) >= 0 ? css('--color-accent-2-200') : css('--color-neutral-200'); }
+  // Repère par zone : petites pastilles des familles + nom (le nom apparaît en zoomant)
+  const center = z => projection(CENTER_FIX[z.country] && z.whole ? CENTER_FIX[z.country] : d3.geoCentroid(z.geo));
+  const mk = gMarks.selectAll('g').data(live).join('g').style('pointer-events', 'none');
+  mk.selectAll('circle').data(z => z.fams.map((f, i) => ({ f: f, i: i, n: z.fams.length }))).join('circle')
+    .attr('fill', d => FAMILIES[d.f].color).attr('stroke', css('--color-bg')).attr('stroke-width', 1.5).attr('vector-effect', 'non-scaling-stroke');
+  mk.append('text').attr('class', 'zl').text(z => z.name)
+    .attr('font-family', 'Figtree, system-ui, sans-serif').attr('text-anchor', 'middle')
+    .attr('paint-order', 'stroke').attr('stroke', css('--color-bg')).attr('fill', css('--color-neutral-900'));
 
-  let countryIdx = -1;
-  let state = { label: 'Asie', zoomed: false };
-
-  function fitTo(geo, zoomed, label) {
-    projection.fitExtent([[PAD, PAD], [W - PAD, H - PAD]], geo);
-    path = d3.geoPath(projection);
-    state.zoomed = zoomed;
-    if (label) state.label = label;
-    draw();
+  function layoutMarks() {
+    const r = 5 / Math.sqrt(k), gap = r * 2.3;
+    mk.attr('transform', z => { const c = center(z); return 'translate(' + c[0] + ',' + c[1] + ')'; });
+    mk.selectAll('circle').attr('r', r).attr('cx', d => (d.i - (d.n - 1) / 2) * gap).attr('cy', 0)
+      .attr('opacity', d => !filter || d.f === filter ? 1 : 0.25);
+    mk.select('text').attr('font-size', 12 / k).attr('stroke-width', 3 / k).attr('y', -r - 5 / k)
+      .attr('opacity', z => (k >= 2.2 || selected === z) ? 1 : 0);
   }
+  function paint() { zp.attr('fill', zoneFill); layoutMarks(); }
 
-  function draw() {
-    land.transition().duration(650)
-      .attr('d', path)
-      .attr('fill', landFill);
+  const zoom = d3.zoom().scaleExtent([1, 14]).translateExtent([[-W * 0.5, -H * 0.5], [W * 1.5, H * 1.5]])
+    .on('zoom', e => { root.attr('transform', e.transform); k = e.transform.k; layoutMarks(); tip.style.opacity = 0; });
+  svg.call(zoom).on('dblclick.zoom', null);
+  svg.on('click', () => { if (selected) { selected = null; paint(); drawPanel(null); } });
 
-    const provFill = f => state.label === f.label ? css('--color-accent-2-500') : css('--color-accent-2-400');
-    const prov = gProv.selectAll('path').data(provinces).join('path')
-      .attr('fill', provFill)
-      .style('cursor', 'pointer')
-      .attr('stroke', css('--color-bg'))
-      .attr('stroke-width', 1.2)
-      .on('mousemove', function (e, f) {
-        d3.select(this).attr('fill', css('--color-accent-2-600'));
-        const n = TEAS.filter(t => t.p && f.pname.indexOf(t.p) === 0).length;
-        tip.innerHTML = '<b>' + f.label + '</b>' + (n ? n + (n > 1 ? ' thés · ' : ' thé · ') : '') + '<span style="opacity:.7">Cliquer pour ouvrir la province</span>';
-        tip.style.opacity = 1;
-        tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px';
-        tip.style.top = (e.clientY + 16) + 'px';
-      })
-      .on('mouseleave', function (e, f) { d3.select(this).attr('fill', provFill(f)); tip.style.opacity = 0; })
-      .on('click', (e, f) => { e.stopPropagation(); openProvince(f); });
-    prov.transition().duration(650).attr('d', path);
-
-    const r = state.zoomed ? 11 : 8;
-    const g = gDots.selectAll('g.pin').data(TEAS, d => d.name);
-    const enter = g.enter().append('g').attr('class', 'pin');
-    enter.append('circle').attr('class', 'dot');
-    enter.append('text');
-
-    const all = enter.merge(g);
-    all.select('circle')
-      .on('mousemove', (e, d) => {
-        tip.innerHTML = '<b>' + d.name + '</b>' + d.origin + ' · ' + FAMILIES[d.f].label + '<br><span style="opacity:.7">Cliquer pour ouvrir la fiche</span>';
-        tip.style.opacity = 1;
-        tip.style.left = Math.min(e.clientX + 16, window.innerWidth - 260) + 'px';
-        tip.style.top = (e.clientY + 16) + 'px';
-      })
-      .on('mouseleave', () => { tip.style.opacity = 0; })
-      .on('click', (e, d) => { e.stopPropagation(); window.location.href = 'Site%20The.dc.html#the=' + d.f + '-' + d.i; })
-      .transition().duration(650)
-      .attr('cx', d => projection([d.lon, d.lat])[0])
-      .attr('cy', d => projection([d.lon, d.lat])[1])
-      .attr('r', r)
-      .attr('fill', d => FAMILIES[d.f].color)
-      .attr('stroke', css('--color-bg'))
-      .attr('stroke-width', 2);
-
-    all.select('text')
-      .text(d => d.name)
-      .attr('font-family', 'Figtree, system-ui, sans-serif')
-      .attr('font-size', 15)
-      .attr('paint-order', 'stroke')
-      .attr('stroke', css('--color-bg'))
-      .attr('stroke-width', 4)
-      .attr('fill', css('--color-neutral-900'))
-      .attr('opacity', state.zoomed ? 1 : 0)
-      .transition().duration(650)
-      .attr('x', d => projection([d.lon, d.lat])[0] + r + 8)
-      .attr('y', d => projection([d.lon, d.lat])[1] + 5);
-
-    document.getElementById('here').textContent = state.label;
-    const n = teasHere().length;
-    document.getElementById('count').textContent = state.zoomed && n ? (n + (n > 1 ? ' thés' : ' thé')) : '';
-    drawLore();
+  function zoomTo(geo) {
+    const [[x0, y0], [x1, y1]] = path.bounds(geo);
+    const s = Math.min(8, 0.8 / Math.max((x1 - x0) / W, (y1 - y0) / H));
+    svg.transition().duration(700).call(zoom.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(s).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));
   }
+  function select(z, fly) { selected = z; paint(); drawPanel(z); if (fly) zoomTo(z.geo); }
 
-  function openProvince(f) {
-    countryIdx = -1; setRegionPressed(null);
-    state.prov = f.pname;
-    fitTo(f, true, f.label);
-  }
-
-  function teasHere() {
-    return TEAS.filter(t => COUNTRIES_FR[t.c] === state.label || (t.p && (t.p === state.label || (state.prov && state.label === (PROV_FR[state.prov] || state.prov) && state.prov.indexOf(t.p) === 0))));
-  }
-
-  function drawLore() {
+  // Panneau de détail
+  function drawPanel(z) {
     const el = document.getElementById('lore');
-    const text = LORE[state.label] || PROV_LORE[state.label] || PROV_LORE[state.prov] || "Description à écrire pour cette zone — histoire du terroir, climat, façons de faire.";
-    const teas = teasHere();
-    let html = '<h2 style="font-size: 30px; margin: 0;">' + state.label + '</h2>'
-      + '<p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">' + text + '</p>';
-    if (teas.length) {
-      html += '<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">'
-        + teas.map(t => '<a class="chip" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;" href="Site%20The.dc.html#the=' + t.f + '-' + t.i + '">'
-            + '<i style="width:12px;height:12px;border-radius:50%;background:' + FAMILIES[t.f].color + ';border:1px solid var(--color-divider)"></i>' + t.name + '</a>').join('')
-        + '</div>';
+    if (!z) {
+      el.innerHTML = '<h2 style="font-size: 26px; margin: 0;">Choisissez une région</h2>'
+        + '<p style="font-size: 16px; line-height: 1.7; opacity: .8; margin: 0;">' + LORE['Asie'] + '</p>'
+        + '<p style="font-size: 14px; opacity: .65; margin: 0;">' + live.length + ' régions productrices · ' + TEAS.length + ' thés au catalogue.</p>';
+      return;
     }
-    const cc = Object.keys(COUNTRIES_FR).find(k => COUNTRIES_FR[k] === state.label);
-    const provs = provinces.filter(p => p.country === cc);
-    if (provs.length) {
-      html += '<div style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6; margin-top: 10px;">Provinces du thé</div>'
-        + '<div style="display: flex; flex-wrap: wrap; gap: 8px;">'
-        + provs.map((p, k) => '<button class="chip" data-prov="' + k + '">' + p.label + '</button>').join('')
-        + '</div>';
-    }
+    const text = PROV_LORE[z.key || z.name] || PROV_LORE[z.name] || LORE[z.name] || '';
+    let html = '<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><h2 style="font-size: 30px; margin: 0;">' + z.name + '</h2>'
+      + (z.whole ? '' : '<span style="font-size:14px;opacity:.65">' + (COUNTRIES_FR[z.country] || z.country) + '</span>') + '</div>';
+    if (text) html += '<p style="font-size: 16px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">' + text + '</p>';
+    z.fams.forEach(f => {
+      const ts = z.teas.filter(t => t.f === f);
+      html += '<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px"><div style="display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.75"><i style="width:12px;height:12px;border-radius:50%;background:' + FAMILIES[f].color + ';border:1px solid var(--color-divider);display:inline-block"></i>' + FAMILIES[f].label.replace(/ \(.*\)/, '') + ' · ' + ts.length + '</div>'
+        + '<div style="display:flex;flex-wrap:wrap;gap:8px">' + ts.map(t => '<a class="chip" style="text-decoration:none" href="Site%20The.dc.html#the=' + t.f + '-' + t.i + '">' + t.name + ' →</a>').join('') + '</div></div>';
+    });
     el.innerHTML = html;
-    el.querySelectorAll('[data-prov]').forEach(b => { b.onclick = () => openProvince(provs[Number(b.dataset.prov)]); });
   }
 
-  function goCountry(name) {
-    state.prov = null;
-    countryIdx = TEA_COUNTRIES.indexOf(name);
-    setRegionPressed(null);
-    fitTo(byName[name], true, COUNTRIES_FR[name] || name);
-  }
-
-  function step(d) {
-    countryIdx = (countryIdx + d + TEA_COUNTRIES.length) % TEA_COUNTRIES.length;
-    goCountry(TEA_COUNTRIES[countryIdx]);
-  }
-
-  const regionsEl = document.getElementById('regions');
-  REGIONS.forEach(rg => {
+  // Légende = filtre par famille
+  const leg = document.getElementById('legend');
+  famOrder.forEach(f => {
     const b = document.createElement('button');
-    b.className = 'chip'; b.textContent = rg.label; b.dataset.id = rg.id;
-    b.setAttribute('aria-pressed', rg.id === 'asie' ? 'true' : 'false');
-    b.onclick = () => { countryIdx = -1; state.prov = null; setRegionPressed(rg.id); fitTo(rg.geo, rg.zoom, rg.label); };
-    regionsEl.appendChild(b);
+    b.className = 'chip'; b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = '<i style="width:12px;height:12px;border-radius:50%;background:' + FAMILIES[f].color + ';border:1px solid var(--color-divider);display:inline-block;margin-right:8px;vertical-align:-1px"></i>' + FAMILIES[f].label.replace(/ \(.*\)/, '');
+    b.onclick = () => { filter = filter === f ? null : f; leg.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', 'false')); if (filter) b.setAttribute('aria-pressed', 'true'); paint(); };
+    leg.appendChild(b);
   });
-  function setRegionPressed(id) {
-    regionsEl.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === id)));
-  }
+  document.getElementById('zin').onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1.6);
+  document.getElementById('zout').onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1 / 1.6);
+  document.getElementById('zreset').onclick = () => { selected = null; paint(); drawPanel(null); svg.transition().duration(600).call(zoom.transform, d3.zoomIdentity); };
 
-  document.getElementById('prev').onclick = () => step(-1);
-  document.getElementById('next').onclick = () => step(1);
-
-  fitTo(REGIONS[0].geo, false, 'Asie');
+  paint(); drawPanel(null);
 });
 </script>
 </body>
