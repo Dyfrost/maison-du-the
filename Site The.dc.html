@@ -381,7 +381,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -441,7 +441,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -535,7 +535,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -619,7 +619,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -691,7 +691,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -1052,7 +1052,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
+                  <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -1082,7 +1082,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
+                  <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -1909,7 +1909,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -1940,7 +1940,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
+                  <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -3078,7 +3078,12 @@ class Component extends DCLogic {
     Object.keys(pP).filter(k => !nP[k]).forEach(k => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé le thé « ' + (pP[k].nom || pP[k].the) + ' »' }));
     Object.keys(pS).filter(k => !nS[k]).forEach(k => { if (nP[pS[k].prodId]) ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé un sachet de « ' + sname(k) + ' »' }); });
     Object.keys(pL).filter(k => !nL[k]).forEach(k => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé une dégustation de « ' + sname(pL[k].lotId) + ' »' }));
-    Object.keys(nL).filter(k => pL[k] && pL[k] !== nL[k] && JSON.stringify(pL[k]) !== JSON.stringify(nL[k])).forEach(k => ev.push({ type: 'edit', icon: '✏️', text: 'a modifié une dégustation de « ' + sname(nL[k].lotId) + ' »' }));
+    Object.keys(nL).filter(k => pL[k] && pL[k] !== nL[k] && JSON.stringify(pL[k]) !== JSON.stringify(nL[k])).forEach(k => {
+      const o = pL[k], n = nL[k];
+      const onlyWith = JSON.stringify(Object.assign({}, o, { with: [] })) === JSON.stringify(Object.assign({}, n, { with: [] }));
+      if (onlyWith && n.author !== who) ev.push({ type: 'join', icon: '🫖', text: ((n.with || []).indexOf(who) >= 0 ? 's’est ajouté à la dégustation de ' : 's’est retiré de la dégustation de ') + n.author + ' (« ' + sname(n.lotId) + ' »)' });
+      else ev.push({ type: 'edit', icon: '✏️', text: 'a modifié une dégustation de « ' + sname(n.lotId) + ' »' });
+    });
     Object.keys(nS).filter(k => pS[k] && pS[k] !== nS[k]).forEach(k => {
       const o = pS[k], n = nS[k];
       if (!!o.empty !== !!n.empty && o.owner === n.owner) ev.push({ type: 'empty', icon: '📭', text: n.empty ? 'a marqué son sachet de « ' + sname(k) + ' » comme vide' : 'a retiré la mention vide du sachet de « ' + sname(k) + ' »' });
@@ -3325,11 +3330,20 @@ class Component extends DCLogic {
 
   openFamily(fk) { if (fk) this.setState(s => ({ view: 'list', key: fk, idx: 0, teaBack: null, famBack: s.view })); }
 
+  joinInfo(l, me) {
+    const author = l.author || '';
+    const sal = this.salonOf(me);
+    const can = !!sal && this.norm(author) !== this.norm(me) && sal.members.indexOf(author) >= 0;
+    const joined = (l.with || []).indexOf(me) >= 0;
+    return { canJoin: can, joinTxt: joined ? '✓ J’y étais (me retirer)' : '＋ J’y étais aussi',
+      toggleJoin: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === l.id ? Object.assign({}, x, { with: joined ? (x.with || []).filter(w => w !== me) : (x.with || []).concat([me]) }) : x) })); } };
+  }
+
   startEditLog(l) {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -3540,8 +3554,16 @@ class Component extends DCLogic {
       newTeas.length + ' thés ajoutés au catalogue, ' + (data.newDecl || []).length + ' variantes'
     ];
     if (dup.length) lines.push(dup.length + ' déjà présents (même nom et même réf.) : ils seront ignorés');
+    (data.addLogs || []).forEach(g => {
+      const sa = a.sachets.find(x => x.code === g.sachet);
+      if (!sa) { lines.push('Sachet ' + g.sachet + ' introuvable : ses ' + g.logs.length + ' dégustations seront ignorées'); return; }
+      const pr = a.prods.find(x => x.id === sa.prodId) || {};
+      const dupL = g.logs.filter(l => a.logs.some(x => x.lotId === sa.id && x.date === l.date && String(x.note) === String(l.note))).length;
+      lines.push(g.logs.length + ' dégustations à ajouter au sachet ' + g.sachet + ' (' + (pr.nom || pr.the || '?') + ', ' + sa.owner + ')' + (dupL ? ', dont ' + dupL + ' déjà présentes qui seront ignorées' : ''));
+    });
+    if (!data.teas.length) lines.splice(0, 3);
     if (missingUsers.length) lines.push('Attention : ' + missingUsers.join(', ') + ' ne s’est encore jamais connecté ; les sachets lui seront quand même attribués');
-    if ((a.options || {}).importDone) lines.push('Un import a déjà été fait le ' + this.fmtDate(a.options.importDone.date) + ' : vérifiez avant de relancer');
+    if (data.teas.length && (a.options || {}).importDone) lines.push('Un import a déjà été fait le ' + this.fmtDate(a.options.importDone.date) + ' : vérifiez avant de relancer');
     return lines;
   }
 
@@ -3554,7 +3576,7 @@ class Component extends DCLogic {
     const declAll = this.declAll();
     (data.newDecl || []).forEach(v => { if (!(declAll[v.the] || []).some(d => this.norm(d.name) === this.norm(v.nom))) decl.push({ the: v.the, nom: v.nom, traduction: '', profil: v.profil || '', description: '' }); });
     const prods = a.prods.slice(), sachets = a.sachets.slice(), logs = a.logs.slice();
-    let skipped = 0, nLogs = 0, k = 0;
+    let skipped = 0, skippedL = 0, nLogs = 0, k = 0;
     const rnd = () => String(Math.floor(1000 + Math.random() * 9000));
     data.teas.forEach(t => {
       if (prods.some(p => this.norm(p.nom) === this.norm(t.name) && String(p.ref || '') === String(t.ref || ''))) { skipped++; return; }
@@ -3575,10 +3597,19 @@ class Component extends DCLogic {
         nLogs++;
       });
     });
+    (data.addLogs || []).forEach(g => {
+      const sa = sachets.find(x => x.code === g.sachet); if (!sa) return;
+      g.logs.forEach(l => {
+        if (logs.some(x => x.lotId === sa.id && x.date === l.date && String(x.note) === String(l.note))) { skipped++; skippedL++; return; }
+        const ts = (Date.parse((l.date || '') + 'T12:00:00') || Date.now()) + (k++);
+        logs.push({ id: 'l' + ts.toString(36), lotId: sa.id, author: g.author || sa.owner, with: [], date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' });
+        nLogs++;
+      });
+    });
     this._adds = null;
     const cur = this.getAdds();
     this.setAdds(Object.assign({}, cur, { teas: teas, decl: decl, prods: prods, sachets: sachets, logs: logs, options: Object.assign({}, cur.options, { importDone: { date: new Date().toISOString().slice(0, 10), source: data.source || '' } }) }));
-    return { prods: data.teas.length - skipped, logs: nLogs, skipped: skipped };
+    return { prods: data.teas.length - (skipped - skippedL), logs: nLogs, skipped: skipped };
   }
 
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
@@ -3640,7 +3671,7 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l),
+      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me),
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
@@ -4153,7 +4184,7 @@ class Component extends DCLogic {
       },
       impReady: !!this.state.impReady, impLines: this.state.impLines || [], impMsg: this.state.impMsg || '',
       impCancel: () => { this._impData = null; this.setState({ impReady: false, impMsg: '' }); },
-      impRun: () => { if (!this._impData) return; const r = this.runImport(this._impData); this._impData = null; this.setState({ impReady: false, impMsg: 'Import terminé : ' + r.prods + ' thés et ' + r.logs + ' dégustations ajoutés' + (r.skipped ? ', ' + r.skipped + ' déjà présents ignorés' : '') + '.' }); },
+      impRun: () => { if (!this._impData) return; const r = this.runImport(this._impData); this._impData = null; this.setState({ impReady: false, impMsg: 'Import terminé : ' + (r.prods ? r.prods + ' thés et ' : '') + r.logs + ' dégustations ajoutées' + (r.skipped ? ', ' + r.skipped + ' éléments déjà présents ignorés' : '') + '.' }); },
       tabTag: () => this.setState({ addTab: 'tag', addMsg: '' }),
       tabTagOn: this.state.addTab === 'tag', tabTagOff: this.state.addTab !== 'tag',
       newTagKey2: e => { if (e.key === 'Enter') { e.preventDefault(); this.addTag2(); } },
