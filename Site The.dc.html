@@ -352,7 +352,6 @@
                   <span style="font-size: 13px; opacity: .7;">{{ m.the }}</span>
                   <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px;">
                     <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque :</span> {{ m.marque }}</span>
-                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Acheté chez :</span> {{ m.boutique }}</span>
                     <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix moyen :</span> {{ m.prix }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
@@ -435,7 +434,6 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px 16px;">
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Propriétaire</span><span style="font-size: 14px;">{{ sa.owner }}</span></div>
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque</span><span style="font-size: 14px;">{{ sa.marque }}</span></div>
-                        <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Acheté chez</span><span style="font-size: 14px;">{{ sa.boutique }}</span></div>
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Date d'achat</span><span style="font-size: 14px;">{{ sa.achat }}</span></div>
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Année de production</span><span style="font-size: 14px;">{{ sa.prodDate }}</span></div>
                         <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Lot</span><span style="font-size: 14px;">{{ sa.lot }}</span></div>
@@ -486,7 +484,7 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Heure</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 16h30" value="{{ lf.heure }}" onChange="{{ setL.heure }}">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" type="time" value="{{ lf.heure }}" onChange="{{ setL.heure }}">
               </label>
             <label style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Note / 20</span>
@@ -519,7 +517,7 @@
               </label>
             <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
               <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Technique d'infusion</span>
-              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : *+RV+RC10" value="{{ lf.technique }}" onChange="{{ setL.technique }}">
+              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : *+RV+RC" value="{{ lf.technique }}" onChange="{{ setL.technique }}">
               <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                 <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6">
                   <button onClick="{{ t.add }}" title="{{ t.label }}" style="cursor: pointer; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 13px; padding: 5px 11px; border-radius: 999px; border: 1px dashed var(--color-accent-2-500); background: var(--color-accent-2-100); color: var(--color-accent-2-900);" style-hover="background: var(--color-accent-2-200);">{{ t.code }} · <span style="font-family: var(--font-body);">{{ t.label }}</span></button>
@@ -540,13 +538,27 @@
           <section style="display: flex; flex-direction: column; gap: 10px;">
             <h2 style="font-size: 26px; margin: 0;">Dernières dégustations</h2>
             <sc-for list="{{ recentLogs }}" as="l" hint-placeholder-count="2">
-              <div style="background: var(--color-surface); border-radius: 22px; padding: 14px 18px; display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline;">
-                <span style="font-family: var(--font-heading); font-size: 18px; min-width: 52px;">{{ l.note }}</span>
-                <span style="font-family: var(--font-heading); font-size: 16px;">{{ l.the }}</span>
-                <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
-                <span style="font-size: 13px; opacity: .7; flex: 1 1 240px;">{{ l.meta }}</span>
-                <span style="font-size: 14px; flex: 1 1 100%; opacity: .88; text-wrap: pretty;">{{ l.avis }}</span>
-              </div>
+              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                  <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
+                  <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
+                </div>
+                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span style="font-family: var(--font-heading); font-size: 20px;">{{ l.name }}</span>
+                    <span style="font-size: 13px; opacity: .7;">{{ l.the }}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
+                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
+                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
+                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                  </div>
+                  <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
+                </div>
+              </article>
             </sc-for>
           </section>
         </sc-if>
@@ -768,10 +780,6 @@
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" value="{{ form.ref }}" onChange="{{ setF.ref }}">
               </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Acheté chez</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Boutique, ville ou site" value="{{ form.boutique }}" onChange="{{ setF.boutique }}">
-              </label>
               <div style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Code du thé</span>
                 <span class="tag tag-outline" style="align-self: flex-start; font-family: ui-monospace, Menlo, monospace; font-size: 14px; padding: 10px 16px;">{{ genCode }}</span>
@@ -858,7 +866,7 @@
               <sc-if value="{{ addMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ addMsg }}</span></sc-if>
             </div>
           </section>
-          <button class="btn btn-secondary" onClick="{{ openMine }}" style="align-self: flex-start; white-space: nowrap;">Voir mes thés →</button>
+          <button class="btn btn-primary" onClick="{{ openMine }}" style="align-self: flex-start; white-space: nowrap;">Voir mes thés →</button>
           </div>
         </sc-if>
 
@@ -1147,10 +1155,9 @@
         <sc-if value="{{ canAct }}" hint-placeholder-val="{{ true }}">
         <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 14px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-            <h2 style="font-size: 30px; margin: 0; margin-right: auto;">Mon avis</h2>
+            <h2 style="font-size: 30px; margin: 0; margin-right: auto;">Les thés de la maison</h2>
             <button class="btn btn-secondary" onClick="{{ teaBuy }}" style="white-space: nowrap;">＋ J'en ai acheté</button>
           </div>
-          <sc-if value="{{ teaNoMyLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Vous n'avez pas encore noté ce thé.</p></sc-if>
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <sc-for list="{{ teaMyLogs }}" as="l" hint-placeholder-count="1">
               <div style="background: var(--color-bg); border-radius: 22px; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;">
@@ -1178,7 +1185,6 @@
                     </div>
                     <sc-if value="{{ lot.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px; opacity: .8;">Variante : {{ lot.sub }}</div></sc-if>
                     <div style="font-size: 14px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque :</span> {{ lot.marque }}</div>
-                    <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Acheté chez :</span> {{ lot.shop }}</div></sc-if>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                   </div>
                   <div style="flex: none; display: flex; gap: 8px; align-items: center;">
@@ -1224,7 +1230,6 @@
                     </div>
                     <sc-if value="{{ lot.sub }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px; opacity: .8;">Variante : {{ lot.sub }}</div></sc-if>
                     <div style="font-size: 14px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque :</span> {{ lot.marque }}</div>
-                    <sc-if value="{{ lot.shopOn }}" hint-placeholder-val="{{ false }}"><div style="font-size: 14px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Acheté chez :</span> {{ lot.shop }}</div></sc-if>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ lot.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                   </div>
                   <div style="flex: none; display: flex; gap: 8px; align-items: center;">
@@ -2235,7 +2240,7 @@ class Component extends DCLogic {
   ];
 
   techList = [
-    { code: '*', label: 'Préchauffe de la vaisselle' }, { code: 'RV', label: 'Réveil des feuilles' }, { code: 'RC10', label: 'Rinçage 10 s' },
+    { code: '*', label: 'Préchauffe de la vaisselle' }, { code: 'RV', label: 'Réveil des feuilles' }, { code: 'RC', label: 'Rinçage' },
     { code: 'KRD', label: 'Koridashi (sur glaçons)' }, { code: 'VC', label: 'Versage sur le côté' }, { code: 'x', label: 'Rien de spécial' }
   ];
 
@@ -2572,7 +2577,7 @@ class Component extends DCLogic {
         this.setState({ logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
       },
       hasRecent: this.getAdds().logs.length > 0,
-      recentLogs: this.getAdds().logs.slice().sort((x, y) => String(y.date).localeCompare(String(x.date))).slice(0, 8).map(l => { const o = coll.find(x => x.id === l.lotId) || {}; return { author: l.author || this.opts().users[0], note: l.note || '—', the: (o.the || '?') + (o.code ? ' · ' + o.code : ''), avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.qty, l.technique, l.repas].filter(Boolean).join(' · ') }; }),
+      recentLogs: this.getAdds().logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { author: l.author || this.opts().users[0], note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', details: [['Infusion', l.infusion], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }),
       tabTea: () => this.setState({ addTab: 'tea', addMsg: '' }),
       tabLot: () => this.setState({ addTab: 'lot', addMsg: '' }),
       never: false,
