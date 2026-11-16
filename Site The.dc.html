@@ -1102,8 +1102,9 @@
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
               <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé</span>
+              <input class="input" type="search" value="{{ lotQ }}" onInput="{{ setLotQ }}" placeholder="🔎 Tapez quelques lettres : nom, marque ou code" aria-label="Rechercher un thé" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;">
               <select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ lf.lotId }}" onChange="{{ setL.lotId }}">
-                <option value="">Choisir dans mes thés…</option>
+                <option value="">Choisir dans mes thés (A → Z)…</option>
                 <sc-for list="{{ lotOptions }}" as="o" hint-placeholder-count="0"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
               </select>
             </label>
@@ -4318,7 +4319,22 @@ class Component extends DCLogic {
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
       setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
-      lotOptions: coll.filter(o => o.owner === me).map(o => ({ id: o.id, label: (o.nom || o.the) + ' — ' + o.code })),
+      lotOptions: (() => {
+        const q = this.norm(this.state.lotQ || '').split(/\s+/).filter(Boolean);
+        const cur = (this.state.lf || {}).lotId;
+        return coll.filter(o => o.owner === me)
+          .filter(o => o.id === cur || !q.length || q.every(w => this.norm([o.nom, o.the, o.variante, o.marque, o.code].join(' ')).indexOf(w) >= 0))
+          .map(o => ({ o: o, empty: this.isEmptySachet(o) }))
+          .sort((x, y) => (x.empty - y.empty) || (x.o.nom || x.o.the).localeCompare(y.o.nom || y.o.the, 'fr', { sensitivity: 'base' }) || x.o.code.localeCompare(y.o.code))
+          .map(x => ({ id: x.o.id, label: (x.o.nom || x.o.the) + (x.empty ? ' (vide)' : '') + ' — ' + x.o.code }));
+      })(),
+      lotQ: this.state.lotQ || '',
+      setLotQ: e => {
+        const val = e.target.value;
+        const q = this.norm(val).split(/\s+/).filter(Boolean);
+        const hits = coll.filter(o => o.owner === me && q.length && q.every(w => this.norm([o.nom, o.the, o.variante, o.marque, o.code].join(' ')).indexOf(w) >= 0));
+        this.setState(st => ({ lotQ: val, lf: hits.length === 1 ? Object.assign({}, st.lf, { lotId: hits[0].id }) : st.lf }));
+      },
       ...(() => {
         const o = coll.find(x => x.id === (this.state.lf || {}).lotId);
         const r = o ? this.remainFor(o) : null;
@@ -4347,7 +4363,7 @@ class Component extends DCLogic {
         const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || new Date().toISOString().slice(0, 10) });
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
         const o = coll.find(x => x.id === l.lotId);
-        this.setState({ logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
+        this.setState({ lotQ: '', logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
       },
       hasRecent: this.getAdds().logs.length > 0,
       recentLogs: this.getAdds().logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => this.logCard(l, coll, me)),
