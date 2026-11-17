@@ -110,8 +110,8 @@
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
-            <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
+            <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
@@ -996,7 +996,7 @@
             <h2 style="font-size: 24px; margin: 0;">{{ gearFormTitle }}</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Zhuni de Maël, Gaiwan blanc" value="{{ gf.name }}" onInput="{{ setG.name }}"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Type</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}">{{ gt.l }}</option></sc-for></select></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}">{{ gt.l }}</option></sc-for></select></label><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Modèle</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.model }}" onChange="{{ setG.model }}"><option value="">—</option><sc-for list="{{ gearModelsOpts }}" as="gm" hint-placeholder-count="4"><option value="{{ gm }}">{{ gm }}</option></sc-for></select></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Code court (facultatif)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : PGW, YX1" value="{{ gf.code }}" onInput="{{ setG.code }}"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Contenance (ml)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 120" value="{{ gf.volume }}" onInput="{{ setG.volume }}"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matière</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : argile zhuni, porcelaine" value="{{ gf.material }}" onInput="{{ setG.material }}"></label>
@@ -1016,8 +1016,11 @@
           </section>
         </sc-if>
         <sc-if value="{{ gearEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7; font-size: 16px;">Pas encore de matériel. Ajoutez votre première théière !</p></sc-if>
+        <sc-for list="{{ gearGroups }}" as="gg" hint-placeholder-count="2">
+        <section style="display: flex; flex-direction: column; gap: 12px;">
+        <h2 style="font-size: 24px; margin: 0; display: flex; align-items: baseline; gap: 10px;"><span aria-hidden="true">{{ gg.icon }}</span>{{ gg.title }}<span style="font-family: var(--font-body); font-size: 14px; opacity: .6;">{{ gg.n }}</span></h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
-          <sc-for list="{{ gearList }}" as="g" hint-placeholder-count="3">
+          <sc-for list="{{ gg.items }}" as="g" hint-placeholder-count="3">
             <button onClick="{{ g.open }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-surface); border-radius: 26px; padding: 14px; display: flex; gap: 14px; align-items: center; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);">
               <sc-if value="{{ g.photo }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ g.photo }}" alt="" style="width: 76px; height: 76px;"></sc-if>
               <sc-if value="{{ g.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 76px; height: 76px; border-radius: 18px; background: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 34px; flex: none;">{{ g.icon }}</span></sc-if>
@@ -1025,6 +1028,8 @@
             </button>
           </sc-for>
         </div>
+        </section>
+        </sc-for>
       </div>
     </sc-if>
 
@@ -1199,13 +1204,39 @@
             </div>
           </section>
           <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Rituels</h2><span style="font-size: 13px; opacity: .65;">Types d’infusion et techniques les plus utilisés</span></div>
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Rituels</h2><span style="font-size: 13px; opacity: .65;">Techniques d’infusion les plus utilisées</span></div>
             <sc-if value="{{ st.ritualsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <sc-for list="{{ st.rituals }}" as="b" hint-placeholder-count="4">
                 <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
                   <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Matériel le plus utilisé</h2><span style="font-size: 13px; opacity: .65;">Nombre de dégustations par pièce</span></div>
+            <sc-if value="{{ st.gearEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.gearBars }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
+                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Le matériel de la maison</h2><span style="font-size: 13px; opacity: .65;">Pièces par catégorie</span></div>
+            <sc-if value="{{ st.gearCatEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ st.gearCatBars }}" as="b" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
+                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
                   <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
                 </div>
               </sc-for>
@@ -3421,7 +3452,17 @@ class Component extends DCLogic {
     };
   }
 
-  gearTypeList() { return [['theiere', '🫖', 'Théière'], ['gaiwan', '🍵', 'Gaiwan'], ['kyusu', '🫖', 'Kyusu'], ['tasse', '☕', 'Tasse'], ['pichet', '🧉', 'Pichet de partage'], ['bouilloire', '♨️', 'Bouilloire'], ['autre', '🧺', 'Autre']]; }
+  gearTypeList() { return [['theiere', '🫖', 'Théières'], ['tasse', '🍵', 'Tasses & bols'], ['bateau', '🛶', 'Bateaux & plateaux'], ['autre', '🧺', 'Autres ustensiles']]; }
+  gearCatKey(t) { return ['theiere', 'gaiwan', 'kyusu'].indexOf(t) >= 0 ? 'theiere' : t === 'tasse' ? 'tasse' : t === 'bateau' ? 'bateau' : 'autre'; }
+  gearCat(g) { const k = this.gearCatKey(g.type); return this.gearTypeList().find(t => t[0] === k); }
+  gearModelOf(g) { if (g.model) return g.model; return { gaiwan: 'Gaiwan', kyusu: 'Kyusu', pichet: 'Pichet de partage', bouilloire: 'Bouilloire' }[g.type] || ''; }
+  gearModels(cat) {
+    const titles = { theiere: ['Théières'], tasse: ['Tasses', 'Tasses & bols'], bateau: ['Bateaux & plateaux', 'Plateaux'], autre: ['Autres ustensiles'] }[cat] || [];
+    const out = [];
+    Object.keys(this.toolGroups).forEach(gk => (this.toolGroups[gk].cats || []).forEach(c => { if (titles.indexOf(c.title) >= 0) (c.items || []).forEach(it => { if (it.name && out.indexOf(it.name) < 0) out.push(it.name); }); }));
+    if (cat === 'autre') ['Bouilloire', 'Pichet de partage', 'Filtre', 'Pince à tasses'].forEach(n => { if (out.indexOf(n) < 0) out.push(n); });
+    return out;
+  }
   lfGearIds() { const lf = this.state.lf || {}; return lf.gearIds || (lf.gearId ? [lf.gearId] : []); }
   gearOf(u) { return (this.getAdds().gear || []).filter(g => g.owner === u); }
   logUsesGear(l, g, uniq) {
@@ -3447,7 +3488,7 @@ class Component extends DCLogic {
     const a = this.getAdds();
     const g = (a.gear || []).find(x => x.id === this.state.gearId);
     if (!g) return { name: 'Introuvable', kpis: [], months: [], fams: [], teas: [], noLogs: true };
-    const T = this.gearTypeList().find(t => t[0] === g.type) || this.gearTypeList()[6];
+    const T = this.gearCat(g);
     const logs = this.gearLogs(g);
     const sacBy = {}; a.sachets.forEach(x => { sacBy[x.id] = x; });
     const prodOf = l => { const sa = sacBy[l.lotId]; return sa ? a.prods.find(p => p.id === sa.prodId) : null; };
@@ -3465,9 +3506,9 @@ class Component extends DCLogic {
     const maxM = Math.max(1, ...months.map(m => m.n));
     const f1 = n => n.toFixed(1).replace('.', ',');
     const mine = g.owner === me;
-    return { name: g.name, icon: T[1], typeName: T[2], photo: g.photo || '', noPhoto: !g.photo, comment: g.comment || '', mine: mine,
+    return { name: g.name, icon: T[1], typeName: T[2] + (this.gearModelOf(g) ? ' · ' + this.gearModelOf(g) : ''), photo: g.photo || '', noPhoto: !g.photo, comment: g.comment || '', mine: mine,
       meta: [g.owner !== me ? 'à ' + g.owner : '', g.code ? 'code ' + g.code : '', g.volume ? g.volume + ' ml' : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', g.prix ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
-      edit: () => this.setState({ view: 'gear', gearEdit: g.id, gf: Object.assign({}, g), gearMsg: '', form: Object.assign({}, this.state.form, { gearPhoto: g.photo || '' }) }),
+      edit: () => this.setState({ view: 'gear', gearEdit: g.id, gf: Object.assign({}, g, { type: this.gearCatKey(g.type), model: this.gearModelOf(g) }), gearMsg: '', form: Object.assign({}, this.state.form, { gearPhoto: g.photo || '' }) }),
       remove: () => { if (!window.confirm('Supprimer « ' + g.name + ' » ? Les dégustations restent, sans théière associée.')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: (b.gear || []).filter(x => x.id !== g.id) })); this.setState({ view: 'gear' }); },
       kpis: [
         { label: 'Dégustations', value: String(logs.length), sub: dates.length ? 'depuis le ' + this.fmtDate(dates[0]) : '' },
@@ -4224,8 +4265,12 @@ class Component extends DCLogic {
       { label: 'Dépensé', value: eur(spent), sub: per100.length ? 'en moyenne ' + eur(avg(per100)) + ' / 100 g' : '' },
       { label: 'Coût par séance', value: costs.length ? eur(avg(costs)) : '—', sub: costs.length ? 'sur ' + costs.length + ' dégustation' + (costs.length > 1 ? 's' : '') + ' chiffrée' + (costs.length > 1 ? 's' : '') : 'renseignez prix et quantité' },
       { label: 'Plus longue série', value: best + ' j', sub: 'jours d’affilée avec au moins un thé' },
-      { label: 'Membres', value: String(users.length), sub: users.join(', ') }
+      { label: 'Membres', value: String(users.length), sub: users.join(', ') },
+      { label: 'Matériel', value: String((a.gear || []).length), sub: (() => { const gs = (a.gear || []).map(g => [g, logs.filter(l => this.logUsesGear(l, g)).length]).sort((x, y) => y[1] - x[1]); return gs.length && gs[0][1] ? 'le plus utilisé : ' + gs[0][0].name : 'pièces enregistrées'; })() }
     ];
+    const gearUse = (a.gear || []).map(g => [g.name + (users.length > 1 ? ' (' + g.owner + ')' : ''), logs.filter(l => this.logUsesGear(l, g)).length, g]).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]);
+    const gearBars = bars(gearUse.slice(0, 10).map(x => [x[0], x[1]]), p => p[1] + ' dégust.');
+    const gearCatBars = bars(this.gearTypeList().map(T => [T[1] + ' ' + T[2], (a.gear || []).filter(g => this.gearCatKey(g.type) === T[0]).length]).filter(x => x[1] > 0), p => p[1] + ' pièce' + (p[1] > 1 ? 's' : ''));
     const byProd = a.prods.map(pr => { const ids = coll.filter(o => o.prodId === pr.id).map(o => o.id); const ns = logs.filter(l => ids.indexOf(l.lotId) >= 0).map(noteOf).filter(n => n != null); return [pr.nom || pr.the, avg(ns), ns.length]; }).filter(x => x[1] != null).sort((x, y) => y[1] - x[1]).slice(0, 6);
     const top = byProd.map(x => ({ label: x[0], pct: Math.max(2, Math.round(x[1] / 20 * 100)), txt: f1(x[1]) + '/20 (' + x[2] + ')' }));
     const mem = users.map(u => { const ls = logs.filter(l => this.inLog(l, u)); const ns = ls.map(noteOf).filter(n => n != null); return [u, ls.length, avg(ns)]; }).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]);
@@ -4241,7 +4286,7 @@ class Component extends DCLogic {
     const val = a.prods.map(pr => { const all = coll.filter(o => o.prodId === pr.id); const sacs = all.filter(o => o.prixMode !== 'unite' && this.num(o.prixPaye) && this.num(o.quantite)); const ids = all.map(o => o.id); const n = avg(logs.filter(l => ids.indexOf(l.lotId) >= 0).map(noteOf).filter(x => x != null)); const pr100 = avg(sacs.map(o => this.num(o.prixPaye) / this.num(o.quantite) * 100)); return n != null && pr100 ? [pr.nom || pr.the, n / pr100, n, pr100] : null; }).filter(Boolean).sort((x, y) => y[1] - x[1]).slice(0, 6);
     const value = bars(val.map(x => [x[0] + ' · ' + f1(x[2]) + '/20 · ' + eur(x[3]), x[1]]), p => f1(p[1]) + ' pt/€');
     const low = coll.map(o => [o, this.remainFor(o)]).filter(x => x[1]).sort((x, y) => x[1].pct - y[1].pct).slice(0, 6).map(x => ({ label: (x[0].nom || x[0].the) + ' (' + x[0].owner + ')', pct: Math.max(2, x[1].pct), txt: x[1].pct + ' % · ' + f1(x[1].left) + ' ' + x[1].unit }));
-    const rituals = bars(count(logs.map(l => l.infusion).concat([].concat(...logs.map(l => String(l.technique || '').split('+').map(t => t.trim()))))).slice(0, 8));
+    const rituals = bars(count([].concat(...logs.map(l => String(l.technique || '').split('+').map(t => t.trim())))).slice(0, 8));
     const countries = bars(count(coll.map(o => { const k = this.famOf(o.the); const t = k ? this.listFor(k, true).find(x => this.norm(x.name) === this.norm(o.the)) : null; return t ? (t.pays || String(t.origin || '').split(',').pop().trim()) : ''; })));
     const facts = [];
     const mine = mem.find(x => x[0] === me);
@@ -4259,6 +4304,7 @@ class Component extends DCLogic {
     return { tagline: logs.length ? logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' passée' + (logs.length > 1 ? 's' : '') + ' au crible. Aucune n’a été maltraitée.' : 'Des chiffres sur tout et n’importe quoi, dès que la maison commencera à boire.',
       kpis: kpis, top: top, topEmpty: !top.length, members: members, membersEmpty: !members.length, fams: fams, famsEmpty: !fams.length, tags: tags, tagsEmpty: !tags.length,
       days: logs.length ? daysB : [], logsEmpty: !logs.length, hours: hoursB, hoursEmpty: !hoursB.length, value: value, valueEmpty: !value.length, low: low, lowEmpty: !low.length,
+      gearBars: gearBars, gearEmpty: !gearBars.length, gearCatBars: gearCatBars, gearCatEmpty: !gearCatBars.length,
       rituals: rituals, ritualsEmpty: !rituals.length, countries: countries, countriesEmpty: !countries.length, facts: facts };
   }
 
@@ -5055,14 +5101,15 @@ class Component extends DCLogic {
       isGear: v === 'gear', isGearItem: v === 'gearItem',
       gi: v === 'gearItem' ? this.gearItemView(me) : {},
       ...(() => {
-        if (v !== 'gear') return { gearList: [], gearTypes: [] };
+        if (v !== 'gear') return { gearGroups: [], gearTypes: [] };
         const gf = this.state.gf || {};
-        const set = {}; ['name', 'type', 'code', 'volume', 'material', 'origin', 'achat', 'prix', 'comment'].forEach(k => { set[k] = e => { const val = e.target.value; this.setState(s0 => ({ gf: Object.assign({}, s0.gf, { [k]: val }) })); }; });
+        const set = {}; ['name', 'type', 'model', 'code', 'volume', 'material', 'origin', 'achat', 'prix', 'comment'].forEach(k => { set[k] = e => { const val = e.target.value; this.setState(s0 => ({ gf: Object.assign({}, s0.gf, { [k]: val }) })); }; });
         const open = !!this.state.gearEdit;
         const mineG = this.gearOf(me);
         return {
           gf: gf, setG: set, gearFormOpen: open, gearFormTitle: this.state.gearEdit === 'new' ? 'Nouveau matériel' : 'Modifier le matériel',
           gearTypes: this.gearTypeList().map(t => ({ v: t[0], l: t[1] + ' ' + t[2] })),
+          gearModelsOpts: this.gearModels(this.gearCatKey(gf.type || 'theiere')),
           gearNew: () => this.setState({ gearEdit: 'new', gf: { type: 'theiere' }, gearMsg: '', form: Object.assign({}, this.state.form, { gearPhoto: '' }) }),
           gearCancel: () => this.setState({ gearEdit: null, gearMsg: '' }),
           gearPhoto: (this.state.form || {}).gearPhoto || '', gearPhotoBtn: (this.state.form || {}).gearPhoto ? 'Changer la photo' : 'Ajouter une photo', gearPhotoMsg: this.state.gearPhotoMsg || '',
@@ -5074,7 +5121,7 @@ class Component extends DCLogic {
             if (!String(d.name || '').trim()) { this.setState({ gearMsg: 'Donnez un nom à ce matériel.' }); return; }
             const b = this.getAdds(); const list = (b.gear || []).slice();
             const photo = (this.state.form || {}).gearPhoto || '';
-            const fields = { name: String(d.name).trim(), type: d.type || 'theiere', code: String(d.code || '').trim(), volume: d.volume || '', material: d.material || '', origin: d.origin || '', achat: d.achat || '', prix: d.prix || '', comment: d.comment || '', photo: photo };
+            const fields = { name: String(d.name).trim(), type: this.gearCatKey(d.type || 'theiere'), model: d.model || this.gearModelOf(d), code: String(d.code || '').trim(), volume: d.volume || '', material: d.material || '', origin: d.origin || '', achat: d.achat || '', prix: d.prix || '', comment: d.comment || '', photo: photo };
             let id = this.state.gearEdit;
             if (id === 'new') { id = 'g' + Date.now().toString(36); list.push(Object.assign({ id: id, owner: me }, fields)); }
             else { const i = list.findIndex(x => x.id === id); if (i >= 0) list[i] = Object.assign({}, list[i], fields); }
@@ -5082,10 +5129,10 @@ class Component extends DCLogic {
             this.setState({ gearEdit: null, gearMsg: '' });
           },
           gearEmpty: !mineG.length,
-          gearList: mineG.map(g => { const T = this.gearTypeList().find(t => t[0] === g.type) || this.gearTypeList()[6]; return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; })
+          gearGroups: this.gearTypeList().map(T => ({ icon: T[1], title: T[2], items: mineG.filter(g => this.gearCatKey(g.type) === T[0]) })).filter(G => G.items.length).map(G => ({ icon: G.icon, title: G.title, n: String(G.items.length), items: G.items.map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [this.gearModelOf(g), g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) }))
         };
       })(),
-      lfGearChips: this.gearOf(me).map(g => { const T = this.gearTypeList().find(t => t[0] === g.type) || this.gearTypeList()[6]; const cur = this.lfGearIds(); const on = cur.indexOf(g.id) >= 0;
+      lfGearChips: this.gearOf(me).slice().sort((x, y) => this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr')).map(g => { const T = this.gearCat(g); const cur = this.lfGearIds(); const on = cur.indexOf(g.id) >= 0;
         return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name, on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
           toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; }),
       gearHint: this.gearOf(me).length ? 'Touchez tout ce que vous utilisez : théière, tasses, bouilloire… Géré dans le menu du profil → Mon matériel.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
