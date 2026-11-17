@@ -81,6 +81,7 @@
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
+            <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -1326,18 +1327,18 @@
     <sc-if value="{{ isAdd }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 26px; animation: fadeUp .45s ease both; max-width: 860px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <h1 style="font-size: 46px; margin: 0;">Ajouter un thé</h1>
-          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Ajoutez un sachet que vous avez acheté. Si le thé n'existe pas encore, sa référence est créée en même temps. Les familles, thés et variantes du catalogue s'ajoutent dans l'onglet « Catalogue ».</p>
+          <h1 style="font-size: 46px; margin: 0;">{{ addTitle }}</h1>
+          <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">{{ addIntro }}</p>
         </div>
-        <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
-        <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px; flex-wrap: wrap;">
-          <sc-if value="{{ tabLotOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un sachet</button></sc-if><sc-if value="{{ tabLotOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un sachet</button></sc-if>
-          <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Catalogue</button></sc-if><sc-if value="{{ tabTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Catalogue</button></sc-if>
-          <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Options</button></sc-if><sc-if value="{{ tabOptOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabOpt }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Options</button></sc-if>
-          <sc-if value="{{ tabManOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Gérer</button></sc-if><sc-if value="{{ tabManOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabMan }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Gérer</button></sc-if>
-          <sc-if value="{{ tabTagOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Tags</button></sc-if><sc-if value="{{ tabTagOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Tags</button></sc-if>
-          <sc-if value="{{ tabJrnOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabJrn }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Journal</button></sc-if><sc-if value="{{ tabJrnOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabJrn }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Journal</button></sc-if>
-        </div>
+        <sc-if value="{{ isAdminView }}" hint-placeholder-val="{{ false }}">
+        <nav aria-label="Sections d’administration" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px;">
+          <sc-for list="{{ admNav }}" as="an" hint-placeholder-count="8">
+            <button onClick="{{ an.go }}" aria-current="{{ an.cur }}" style="cursor: pointer; text-align: left; border: none; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px; background: {{ an.bg }}; color: {{ an.fg }}; font-family: var(--font-body); box-shadow: {{ an.ring }};" style-hover="filter: brightness(.97);">
+              <span aria-hidden="true" style="font-size: 20px; line-height: 1;">{{ an.icon }}</span>
+              <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 15px; font-weight: 600;">{{ an.name }}</span><span style="font-size: 12px; opacity: .7; line-height: 1.3;">{{ an.sub }}</span></span>
+            </button>
+          </sc-for>
+        </nav>
         </sc-if>
 
         <datalist id="liste-thes">
@@ -1345,13 +1346,14 @@
         </datalist>
 
         <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 28px; margin: 0;">Ajouter au catalogue</h2><p style="margin: 0; font-size: 15px; opacity: .72;">Un thé entièrement nouveau, ou une variante d’un thé déjà au catalogue (par exemple une récolte ou un style particulier).</p></div>
           <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 3px; flex-wrap: wrap;">
             <sc-if value="{{ modeNewOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Nouveau thé</button></sc-if><sc-if value="{{ modeNewOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Nouveau thé</button></sc-if>
             <sc-if value="{{ modeVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variante d'un thé existant</button></sc-if><sc-if value="{{ modeVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variante d'un thé existant</button></sc-if>
           </div>
         </sc-if>
 
-        <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ tabCatOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Modifier le catalogue</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Modifiez un champ puis validez avec Entrée ou en quittant le champ. Renommer un thé ou une variante met à jour les sachets qui y sont rattachés.</p></div>
             <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-if value="{{ ceFamOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceFam }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Familles</button></sc-if><sc-if value="{{ ceFamOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceFam }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Familles</button></sc-if><sc-if value="{{ ceTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceTea }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Thés</button></sc-if><sc-if value="{{ ceTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceTea }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Thés</button></sc-if><sc-if value="{{ ceVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceVar }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variantes</button></sc-if><sc-if value="{{ ceVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceVar }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variantes</button></sc-if></div>
@@ -1386,10 +1388,48 @@
           </section>
         </sc-if>
 
+        <sc-if value="{{ tabUsrOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Utilisateurs et accès admin</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les admins voient les onglets Catalogue, Options, Gérer, Tags et Journal. Les autres peuvent seulement ajouter leurs thés, leurs sachets et leurs dégustations.</p></div>
+            <input class="input" type="search" value="{{ admQ }}" onInput="{{ setAdmQ }}" placeholder="🔎 Rechercher un utilisateur (prénom ou #0003)" aria-label="Rechercher un utilisateur">
+            <sc-if value="{{ admEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun utilisateur ne correspond.</p></sc-if>
+            <sc-for list="{{ admUsers }}" as="au" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
+                <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; flex: none;">{{ au.initial }}</span>
+                <div style="display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ au.tag }}</span><span style="font-size: 12px; opacity: .65;">{{ au.sub }}</span></div>
+                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if>
+                <sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.toggle }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
+        <sc-if value="{{ tabMrgOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Fusionner des thés du catalogue</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Quand un même thé existe sous deux noms (« Le Bai Mu Dan » et « Bai Mu Dan »), rattachez le doublon au bon nom : ses thés du commerce et ses variantes passent sur le thé gardé, puis le doublon disparaît du catalogue.</p></div>
+            <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Doublon à fusionner</span>
+              <select class="input" value="{{ mgSrc }}" onChange="{{ setMgSrc }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé en double…</option><sc-for list="{{ mgTeas }}" as="mt" hint-placeholder-count="3"><option value="{{ mt.key }}">{{ mt.label }}</option></sc-for></select></label>
+            <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Le garder sous le nom de</span>
+              <select class="input" value="{{ mgTgt }}" onChange="{{ setMgTgt }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé à garder…</option><sc-for list="{{ mgTeas }}" as="mt" hint-placeholder-count="3"><option value="{{ mt.key }}">{{ mt.label }}</option></sc-for></select></label>
+            <sc-if value="{{ mgPreview }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 18px; padding: 12px 16px;">{{ mgPreview }}</p></sc-if>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ mgRun }}" style="white-space: nowrap;">🔀 Fusionner</button><sc-if value="{{ mgMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ mgMsg }}</span></sc-if></div>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabJrnOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Journal</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Tout ce qui se passe dans la maison : thés et sachets ajoutés, dégustations, quantités mises à jour…</p></div>
-            <sc-if value="{{ jrnEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien pour l’instant : le journal démarre maintenant.</p></sc-if>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; align-items: end;">
+              <label style="display: flex; flex-direction: column; gap: 4px; grid-column: 1 / -1;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Recherche</span><input class="input" type="search" value="{{ jq }}" onInput="{{ setJq }}" placeholder="🔎 Un thé, un nom, un mot…" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 14px;"></label>
+              <label style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Utilisateur</span><select class="input" value="{{ jUser }}" onChange="{{ setJUser }}" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 14px;"><option value="">Tous</option><sc-for list="{{ jUsers }}" as="ju" hint-placeholder-count="2"><option value="{{ ju }}">{{ ju }}</option></sc-for></select></label>
+              <label style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Action</span><select class="input" value="{{ jType }}" onChange="{{ setJType }}" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 14px;"><option value="">Toutes</option><sc-for list="{{ jTypes }}" as="jt" hint-placeholder-count="4"><option value="{{ jt.key }}">{{ jt.label }}</option></sc-for></select></label>
+              <label style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Du</span><input class="input" type="datetime-local" value="{{ jFrom }}" onChange="{{ setJFrom }}" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 14px;"></label>
+              <label style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Au</span><input class="input" type="datetime-local" value="{{ jTo }}" onChange="{{ setJTo }}" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 14px;"></label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <span style="font-size: 14px; opacity: .75; margin-right: auto;">{{ jCount }}</span>
+              <sc-if value="{{ jFiltered }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ jReset }}" style="white-space: nowrap; font-size: 14px;">Effacer les filtres</button></sc-if>
+              <button class="btn btn-secondary" onClick="{{ jExport }}" style="white-space: nowrap;">⬇ Exporter (CSV)</button>
+            </div>
+            <sc-if value="{{ jrnEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">{{ jEmptyTxt }}</p></sc-if>
             <sc-for list="{{ jrn }}" as="ev" hint-placeholder-count="6">
               <div style="display: flex; gap: 12px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--color-border, rgba(0,0,0,.08));">
                 <span style="font-size: 18px; width: 24px; flex: none;">{{ ev.icon }}</span>
@@ -1469,19 +1509,6 @@
         </sc-if>
 
         <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}">
-          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Utilisateurs et accès admin</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les admins voient les onglets Catalogue, Options, Gérer, Tags et Journal. Les autres peuvent seulement ajouter leurs thés, leurs sachets et leurs dégustations.</p></div>
-            <input class="input" type="search" value="{{ admQ }}" onInput="{{ setAdmQ }}" placeholder="🔎 Rechercher un utilisateur (prénom ou #0003)" aria-label="Rechercher un utilisateur">
-            <sc-if value="{{ admEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun utilisateur ne correspond.</p></sc-if>
-            <sc-for list="{{ admUsers }}" as="au" hint-placeholder-count="3">
-              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
-                <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; flex: none;">{{ au.initial }}</span>
-                <div style="display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ au.tag }}</span><span style="font-size: 12px; opacity: .65;">{{ au.sub }}</span></div>
-                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if>
-                <sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.toggle }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if>
-              </div>
-            </sc-for>
-          </section>
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
               <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
@@ -3079,6 +3106,34 @@ class Component extends DCLogic {
 
   setFriends(list) { this.setOpt('friends', list); }
 
+  mergeVals() {
+    if (this.state.addTab !== 'mrg') return { mgTeas: [] };
+    const all = [];
+    Object.keys(this.families).forEach(k => this.listFor(k, true).forEach(t => all.push({ fam: k, name: t.name, orig: t.orig || t.name, key: k + '|' + (t.orig || t.name) })));
+    const a = this.getAdds();
+    const cnt = n => a.prods.filter(p => this.norm(p.the) === this.norm(n)).length;
+    all.sort((x, y) => x.name.localeCompare(y.name, 'fr', { sensitivity: 'base' }));
+    const src = all.find(x => x.key === this.state.mgSrc), tgt = all.find(x => x.key === this.state.mgTgt);
+    const dAll = this.declAll();
+    let preview = '';
+    if (src && tgt) preview = src.key === tgt.key ? 'Choisissez deux thés différents.' : cnt(src.name) + ' thé(s) du commerce et ' + (dAll[src.name] || []).length + ' variante(s) de « ' + src.name + ' » seront rattachés à « ' + tgt.name + ' » (' + this.families[tgt.fam].name + '). « ' + src.name + ' » sera retiré du catalogue.';
+    return { mgTeas: all.map(x => ({ key: x.key, label: x.name + ' — ' + this.families[x.fam].name + ' · ' + cnt(x.name) + ' thé(s) du commerce' })),
+      mgSrc: this.state.mgSrc || '', mgTgt: this.state.mgTgt || '', setMgSrc: e => this.setState({ mgSrc: e.target.value, mgMsg: '' }), setMgTgt: e => this.setState({ mgTgt: e.target.value, mgMsg: '' }),
+      mgPreview: preview, mgMsg: this.state.mgMsg || '',
+      mgRun: () => {
+        if (!src || !tgt || src.key === tgt.key) { this.setState({ mgMsg: 'Choisissez le doublon et le thé à garder.' }); return; }
+        if (!window.confirm('Fusionner « ' + src.name + ' » dans « ' + tgt.name + ' » ?')) return;
+        const n = cnt(src.name);
+        const isAdded = a.teas.some(t => this.norm(t.nom) === this.norm(src.orig) && t.famille === src.fam);
+        this.setCatOv('tea', src.orig, { hidden: true }, b => ({
+          prods: b.prods.map(p => this.norm(p.the) === this.norm(src.name) ? Object.assign({}, p, { the: tgt.name }) : p),
+          decl: (b.decl || []).map(d => (this.norm(d.the) === this.norm(src.name) || this.norm(d.the) === this.norm(src.orig)) ? Object.assign({}, d, { the: tgt.orig }) : d),
+          teas: isAdded ? b.teas.filter(t => !(this.norm(t.nom) === this.norm(src.orig) && t.famille === src.fam)) : b.teas
+        }));
+        this.setState({ mgSrc: '', mgTgt: '', mgMsg: '« ' + src.name + ' » fusionné dans « ' + tgt.name + ' » (' + n + ' thé(s) du commerce déplacés).' });
+      } };
+  }
+
   admins(o) { o = o || this.getAdds().options || {}; return Array.isArray(o.admins) ? o.admins : ['Raph', 'Maël']; }
   isAdmin(u) { return !!u && this.admins().indexOf(u) >= 0; }
 
@@ -3403,13 +3458,50 @@ class Component extends DCLogic {
     return ev.map((e, i) => Object.assign({ id: 'e' + Date.now().toString(36) + i, ts: ts, who: who }, e));
   }
 
+  jTypeLabels() {
+    return { prod: '🍵 Thé ajouté', sachet: '🛍️ Sachet ajouté', log: '☕ Dégustation', edit: '✏️ Modification', del: '🗑️ Suppression', qty: '⚖️ Quantité', empty: '📭 Sachet vide', give: '🎁 Don', share: '🤲 Partage', join: '🫖 Dégustation à plusieurs', cat: '📖 Catalogue', import: '📦 Import', friend: '🤝 Amis', salon: '🏮 Salon', admin: '🛡️ Admin' };
+  }
+
+  journalFiltered() {
+    const q = this.norm(this.state.jq || '');
+    const u = this.state.jUser || '', t = this.state.jType || '';
+    const from = this.state.jFrom ? new Date(this.state.jFrom).getTime() : null;
+    const to = this.state.jTo ? new Date(this.state.jTo).getTime() : null;
+    return (this.getAdds().events || []).filter(e => {
+      const ts = new Date(e.ts).getTime();
+      if (u && e.who !== u) return false;
+      if (t && e.type !== t) return false;
+      if (from != null && !(ts >= from)) return false;
+      if (to != null && !(ts <= to + 59999)) return false;
+      if (q && this.norm((e.who || '') + ' ' + (e.text || '')).indexOf(q) < 0) return false;
+      return true;
+    }).slice().reverse();
+  }
+
   journal() {
-    return (this.getAdds().events || []).slice().reverse().slice(0, 200).map(e => {
+    return this.journalFiltered().slice(0, 300).map(e => {
       const d = new Date(e.ts);
       const when = isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
       return { icon: e.icon || '•', who: e.who, text: e.text, when: when };
     });
   }
+
+  exportJournal() {
+    const rows = this.journalFiltered();
+    const lab = this.jTypeLabels();
+    const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const lines = [['Date', 'Heure', 'Utilisateur', 'Action', 'Détail'].map(esc).join(';')].concat(rows.map(e => {
+      const d = new Date(e.ts);
+      return [isNaN(d) ? '' : d.toLocaleDateString('fr-FR'), isNaN(d) ? '' : d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), e.who, (lab[e.type] || e.type || '').replace(/^\S+\s/, ''), e.text].map(esc).join(';');
+    }));
+    const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = 'journal-maison-du-the-' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
 
   getAdds() {
     if (!this._adds) { try { this._adds = JSON.parse(localStorage.getItem('the-ajouts') || '{}'); } catch (e) { this._adds = {}; } }
@@ -3479,6 +3571,7 @@ class Component extends DCLogic {
     this._pushT = setTimeout(async () => {
       const { error } = await this.sb.from('the_data').upsert({ id: 'maison', payload: this.getAdds(), updated_at: new Date().toISOString() });
       if (seq === this._seq) this._dirty = false;
+      if (error && error.code === 'P0001') { this._dirty = false; this.setState({ syncErr: '' }); window.alert('Modification refusée : ' + error.message); this.pullCloud(); return; }
       this.setState({ syncAt: error ? this.state.syncAt : new Date(), syncErr: error ? error.message : '' });
     }, 500);
   }
@@ -3508,6 +3601,7 @@ class Component extends DCLogic {
     this.setState({ authMsg: '' });
     if (mode === 'signup') {
       if (!String(af.nom || '').trim()) { this.setState({ authMsg: 'Indiquez votre prénom.' }); return; }
+      if (this.opts().users.some(u => this.norm(u) === this.norm(af.nom.trim()))) { this.setState({ authMsg: 'Ce prénom est déjà pris : ajoutez une initiale (ex. ' + af.nom.trim() + ' B.).' }); return; }
       const { data, error } = await this.sb.auth.signUp({ email: af.email.trim(), password: af.pass, options: { data: { nom: af.nom.trim() } } });
       if (error) { this.setState({ authMsg: this.authErr(error) }); return; }
       if (!data.session) this.setState({ authMsg: 'Compte créé. Confirmez votre adresse via l\'e-mail reçu, puis connectez-vous.', authMode: 'signin' });
@@ -4283,7 +4377,10 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); if (!this.isAdmin(me0) && ['tea', 'opt', 'man', 'tag', 'jrn'].indexOf(this.state.addTab) >= 0) this.state.addTab = 'lot'; }
+    { const me0 = this.me(); const ADM = ['tea', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn'];
+      if (this.state.view === 'admin' && !this.isAdmin(me0)) this.state.view = 'home';
+      if (this.state.view === 'add') this.state.addTab = 'lot';
+      if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'tea'; }
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
@@ -4481,7 +4578,13 @@ class Component extends DCLogic {
         notmine: () => this.setState({ ownMode: 'notmine' }), notmineOn: ownMode === 'notmine', notmineOff: ownMode !== 'notmine'
       },
       isLore: v === 'lore',
-      isAdd: v === 'add',
+      isAdd: v === 'add' || v === 'admin', isAdminView: v === 'admin',
+      menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'tea', addMsg: '' }),
+      addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
+      addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
+      admNav: [['tea', '➕', 'Ajouter au catalogue', 'Nouveau thé ou variante'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Données', 'Import et suppression'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg',
+      ...this.mergeVals(),
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
       isMine: v === 'mine',
       isLogin: v === 'login',
@@ -4524,7 +4627,27 @@ class Component extends DCLogic {
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
       tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',
       jrn: this.state.addTab === 'jrn' ? this.journal() : [],
-      jrnEmpty: this.state.addTab === 'jrn' && !(this.getAdds().events || []).length,
+      ...(() => {
+        if (this.state.addTab !== 'jrn') return { jUsers: [], jTypes: [] };
+        const evs = this.getAdds().events || [];
+        const n = this.journalFiltered().length;
+        const filtered = !!(this.state.jq || this.state.jUser || this.state.jType || this.state.jFrom || this.state.jTo);
+        const lab = this.jTypeLabels();
+        const types = Array.from(new Set(evs.map(e => e.type).filter(Boolean)));
+        return {
+          jrnEmpty: n === 0, jEmptyTxt: evs.length ? 'Aucune action ne correspond à ces filtres.' : 'Rien pour l’instant : le journal démarre maintenant.',
+          jq: this.state.jq || '', setJq: e => this.setState({ jq: e.target.value }),
+          jUser: this.state.jUser || '', setJUser: e => this.setState({ jUser: e.target.value }),
+          jType: this.state.jType || '', setJType: e => this.setState({ jType: e.target.value }),
+          jFrom: this.state.jFrom || '', setJFrom: e => this.setState({ jFrom: e.target.value }),
+          jTo: this.state.jTo || '', setJTo: e => this.setState({ jTo: e.target.value }),
+          jUsers: Array.from(new Set(evs.map(e => e.who).filter(Boolean))).sort((x, y) => x.localeCompare(y, 'fr')),
+          jTypes: types.map(k => ({ key: k, label: lab[k] || k })).sort((x, y) => x.label.replace(/^\S+\s/, '').localeCompare(y.label.replace(/^\S+\s/, ''), 'fr')),
+          jCount: filtered ? n + ' action' + (n > 1 ? 's' : '') + ' sur ' + evs.length : evs.length + ' action' + (evs.length > 1 ? 's' : '') + ' au total' + (n > 300 ? ' (300 plus récentes affichées)' : ''),
+          jFiltered: filtered, jReset: () => this.setState({ jq: '', jUser: '', jType: '', jFrom: '', jTo: '' }),
+          jExport: () => this.exportJournal()
+        };
+      })(),
       st: v === 'stats' ? this.computeStats(coll.filter(o => !this.isEmptySachet(o)), me) : {},
       isLogs: v === 'logs',
       saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : 'Enregistrer la dégustation',
