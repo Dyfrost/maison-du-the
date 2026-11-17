@@ -86,6 +86,14 @@ begin
     end if;
   end loop;
 
+  -- Matériel des autres : ni supprimé, ni modifié
+  for x in select * from jsonb_array_elements(coalesce(o->'gear', '[]'::jsonb)) loop
+    if x->>'owner' <> me and not exists (
+      select 1 from jsonb_array_elements(coalesce(n->'gear', '[]'::jsonb)) y where y = x) then
+      raise exception 'Vous ne pouvez pas modifier le matériel de %.', x->>'owner';
+    end if;
+  end loop;
+
   -- Dégustations des autres : jamais supprimées
   for x in select * from jsonb_array_elements(coalesce(o->'logs', '[]'::jsonb)) loop
     if coalesce(x->>'author', '') <> me and not exists (
