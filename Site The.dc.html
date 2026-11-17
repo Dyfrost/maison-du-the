@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./i18n.js"></script>
 <script src="./support.js"></script>
+<script src="./teapets.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -904,6 +905,14 @@
         </section>
             <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
             <section style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0;">🐸 L’enclos des tea pets</h2><span style="font-size: 13px; opacity: .65;">{{ sl.petsTxt }}</span></div>
+              <div class="tp-pen" data-pets="{{ sl.petsJson }}" role="img" aria-label="{{ sl.petsTxt }}">
+                <span class="tp-deco" style="left: 6%; top: 62%;">🪨</span><span class="tp-deco" style="left: 84%; top: 70%;">🌿</span><span class="tp-deco" style="left: 70%; top: 18%;">🍵</span><span class="tp-deco" style="left: 30%; top: 82%;">🌼</span><span class="tp-deco" style="left: 52%; top: 40%; opacity: .5;">🌱</span>
+              </div>
+            </section>
+            </sc-if>
+            <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
+            <section style="display: flex; flex-direction: column; gap: 12px;">
               <h2 style="font-size: 24px; margin: 0;">Stats communes</h2>
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;">
                 <sc-for list="{{ sl.stats }}" as="k" hint-placeholder-count="8">
@@ -1078,6 +1087,7 @@
             <h1 style="font-size: 44px; margin: 0;">{{ gi.name }}</h1>
             <span style="font-size: 15px; opacity: .75;">{{ gi.meta }}</span>
             <sc-if value="{{ gi.comment }}" hint-placeholder-val="{{ false }}"><p style="margin: 4px 0 0; font-size: 16px; line-height: 1.6; white-space: pre-wrap;">{{ gi.comment }}</p></sc-if>
+            <sc-if value="{{ gi.isPet }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 14px; margin-top: 6px; background: #8fbf5a; border-radius: 18px; padding: 10px 14px; box-shadow: inset 0 0 0 4px #7a5432; align-self: flex-start;"><sc-if value="{{ gi.hasSprite }}" hint-placeholder-val="{{ false }}"><img src="{{ gi.sprite }}" alt="Pixel art" width="96" height="96" style="width: 96px; height: 96px; image-rendering: pixelated; display: block;"></sc-if><sc-if value="{{ gi.mine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ gi.remakeSprite }}" style="white-space: nowrap; background: var(--color-bg);">{{ gi.spriteBtn }}</button></sc-if></div></sc-if>
             <sc-if value="{{ gi.mine }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 12px; margin-top: 4px;"><button class="btn btn-secondary" onClick="{{ gi.edit }}" style="white-space: nowrap;">Modifier</button><button class="btn btn-ghost" onClick="{{ gi.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></div></sc-if>
           </div>
         </div>
@@ -3078,6 +3088,30 @@ class Component extends DCLogic {
     if (this.state.editLogId && this.state.view !== 'log') this.setState({ editLogId: null, lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } });
   }
 
+  makeGearSprite(id) {
+    const g = (this.getAdds().gear || []).find(x => x.id === id);
+    if (!g || !g.photo || !window.mdtMakeSprite) return;
+    this.setState({ spriteBusy: id });
+    window.mdtMakeSprite(g.photo).then(sp => {
+      const b = this.getAdds();
+      this.setAdds(Object.assign({}, b, { gear: (b.gear || []).map(x => x.id === id ? Object.assign({}, x, { sprite: sp, spriteOf: x.photo }) : x) }));
+      this.setState({ spriteBusy: null });
+    }).catch(e => { this.setState({ spriteBusy: null }); window.alert('Le pixel art n’a pas pu être créé : ' + (e && e.message ? e.message : 'photo illisible')); });
+  }
+
+  migrateGear2() {
+    const a = this.getAdds();
+    if (!this.isAdmin(this.sessionName()) || (a.options || {}).gearMig2) return;
+    const gear = a.gear || [];
+    const logs = a.logs.map(l => {
+      const add = gear.filter(g => g.code && this.logUsesGear(l, g)).map(g => g.id);
+      if (!add.length) return l;
+      const ids = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); add.forEach(id => { if (ids.indexOf(id) < 0) ids.push(id); });
+      return Object.assign({}, l, { gearIds: ids, gearId: '' });
+    });
+    this.setAdds(Object.assign({}, a, { logs: logs, gear: gear.map(g => { const c = Object.assign({}, g); delete c.code; return c; }), options: Object.assign({}, a.options, { gearMig2: true }) }));
+  }
+
   migrateGear1() {
     const a = this.getAdds();
     const me = this.sessionName();
@@ -3604,8 +3638,9 @@ class Component extends DCLogic {
     const maxM = Math.max(1, ...months.map(m => m.n));
     const f1 = n => n.toFixed(1).replace('.', ',');
     const mine = g.owner === me;
-    return { name: g.name, icon: T[1], typeName: T[2] + (this.gearModelOf(g) ? ' · ' + this.gearModelOf(g) : ''), photo: g.photo || '', noPhoto: !g.photo, comment: g.comment || '', mine: mine,
-      meta: [g.owner !== me ? 'à ' + g.owner : '', g.code ? 'code ' + g.code : '', g.volume ? g.volume + ' ml' : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', g.prix ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
+    const isPet = this.gearCatKey(g.type) === 'teapet';
+    return { isPet: isPet && !!g.photo, sprite: g.sprite || '', hasSprite: !!g.sprite, spriteBusy: this.state.spriteBusy === g.id, spriteBtn: this.state.spriteBusy === g.id ? 'Création du pixel art…' : (g.sprite ? '↻ Refaire le pixel art' : '✨ Créer le pixel art'), remakeSprite: () => this.makeGearSprite(g.id), name: g.name, icon: T[1], typeName: T[2] + (this.gearModelOf(g) ? ' · ' + this.gearModelOf(g) : ''), photo: g.photo || '', noPhoto: !g.photo, comment: g.comment || '', mine: mine,
+      meta: [g.owner !== me ? 'à ' + g.owner : '',  g.volume ? g.volume + ' ml' : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', g.prix ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
       edit: () => this.setState({ view: 'gear', gearEdit: g.id, gf: Object.assign({}, g, { type: this.gearCatKey(g.type), model: this.gearModelOf(g) }), gearMsg: '', form: Object.assign({}, this.state.form, { gearPhoto: g.photo || '' }) }),
       remove: () => { if (!window.confirm('Supprimer « ' + g.name + ' » ? Les dégustations restent, sans théière associée.')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: (b.gear || []).filter(x => x.id !== g.id) })); this.setState({ view: 'gear' }); },
       kpis: [
@@ -3707,7 +3742,10 @@ class Component extends DCLogic {
     const n = mine.members.length;
     const descEditing = isChief && !!this.state.slDescEdit;
     const sc = this.salonColor(mine);
+    const pets = (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet' && mine.members.indexOf(g.owner) >= 0);
     return Object.assign(base, { tagBg: sc.bg, tagFg: sc.fg,
+      petsJson: JSON.stringify(pets.map(g => ({ id: g.id, name: g.name, owner: g.owner, sprite: g.sprite || '' }))),
+      petsTxt: pets.length ? pets.length + ' tea pet' + (pets.length > 1 ? 's' : '') + ' en balade · ajoutez-en avec une photo dans Mon matériel' : 'Aucun tea pet pour l’instant : ajoutez-en un avec une photo dans Mon matériel (catégorie Tea pets).',
       colors: Object.keys(this.salonColors()).map(k => { const c = this.salonColors()[k]; const on = (mine.color || 'terre') === k; return { name: c[0], bg: c[1], fg: c[2], on: on, ring: on ? '0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-text)' : 'inset 0 0 0 1px rgba(0,0,0,.12)', pick: () => upd(x => Object.assign(x, { color: k })) }; }),
       desc: mine.desc || '', descEditing: descEditing, descShow: !descEditing, canDesc: isChief,
       descBtn: mine.desc ? '✎ Modifier la description' : '＋ Ajouter une description',
@@ -4147,7 +4185,7 @@ class Component extends DCLogic {
       try { localStorage.setItem('the-ajouts', JSON.stringify(remote)); } catch (e) {}
     }
     this.ensureMember();
-    if (first) { try { this.migrateGear1(); } catch (e) {} }
+    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} }
     this.setState({ syncAt: new Date(), syncErr: '' });
   }
 
@@ -5254,6 +5292,8 @@ class Component extends DCLogic {
               }
             }
             this.setAdds(Object.assign({}, b, { gear: list, logs: logs }));
+            const saved = list.find(x => x.id === id);
+            if (saved && saved.type === 'teapet' && saved.photo && saved.spriteOf !== saved.photo) this.makeGearSprite(saved.id);
             this.setState({ gearEdit: null, gearMsg: '' });
           },
           gearEmpty: !mineG.length,
