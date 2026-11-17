@@ -777,7 +777,7 @@
             </sc-if>
             <sc-for list="{{ sl.members }}" as="mb" hint-placeholder-count="2">
               <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0;">
-                <button onClick="{{ mb.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 17px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ mb.label }}</button>
+                <button onClick="{{ mb.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 17px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ mb.label }}<sc-if value="{{ mb.badge }}" hint-placeholder-val="{{ false }}"> <span style="font-size: 13px; padding: 2px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--color-accent); margin-left: 4px;">{{ mb.badge }}</span></sc-if></button>
                 <sc-if value="{{ mb.canManage }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ mb.makeChief }}" style="white-space: nowrap; font-size: 13px;">Nommer chef</button><button class="btn btn-ghost" onClick="{{ mb.kick }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Exclure</button></sc-if>
               </div>
             </sc-for>
@@ -3082,7 +3082,7 @@ class Component extends DCLogic {
       cancelDesc: () => this.setState({ slDescEdit: false }),
       saveDesc: () => { const d = String(this.state.slDescDraft || '').trim(); upd(x => Object.assign(x, { desc: d })); this.setState({ slDescEdit: false }); },
       stats: this.salonStats(mine), has: true, none: false, name: mine.name, isChief: isChief, count: n + (n > 1 ? ' membres' : ' membre'),
-      members: mine.members.slice().sort((x, y) => (y === mine.chief) - (x === mine.chief)).map(u => ({ label: (u === mine.chief ? '👑 ' : '') + this.userTag(u) + (u === me ? ' (vous)' : ''),
+      members: mine.members.slice().sort((x, y) => (y === mine.chief) - (x === mine.chief)).map(u => ({ badge: this.badgeOf(u), label: (u === mine.chief ? '👑 ' : '') + this.userTag(u) + (u === me ? ' (vous)' : ''),
         open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
         canManage: isChief && u !== me,
         makeChief: () => { if (window.confirm('Nommer ' + u + ' chef du salon ?')) upd(x => Object.assign(x, { chief: u })); },
