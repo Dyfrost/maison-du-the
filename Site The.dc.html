@@ -4466,8 +4466,20 @@ class Component extends DCLogic {
     const url = location.origin + location.pathname + '#' + kind + '=' + id;
     const done = msg => { this.setState({ shareToast: msg }); clearTimeout(this._toastT); this._toastT = setTimeout(() => this.setState({ shareToast: '' }), 2500); };
     if (navigator.share) { navigator.share({ title: title, text: text, url: url }).catch(() => {}); return; }
-    const copy = () => { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done('Lien copié !'); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(() => done('Lien copié !'), copy); else copy();
+    const copy = () => { const ta = document.createElement('textarea'); ta.value = (text ? text + '\n' : '') + url; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done('Lien copié !'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText((text ? text + '\n' : '') + url).then(() => done('Lien copié !'), copy); else copy();
+  }
+
+  shareLogMsg(l) {
+    const a = this.getAdds(); const sa = a.sachets.find(x => x.id === l.lotId) || {}; const p = a.prods.find(x => x.id === sa.prodId) || {};
+    const name = p.nom || p.the || 'un thé'; const me = this.state.session ? this.me() : '';
+    const who = l.author && l.author !== me ? l.author + ' a goûté' : 'J’ai goûté';
+    const note = l.note ? (/^\d+([.,]\d+)?$/.test(String(l.note)) ? l.note + '/20' : l.note) : '';
+    const avis = String(l.avis || '').trim(); const av = avis ? ' « ' + (avis.length > 120 ? avis.slice(0, 117) + '…' : avis) + ' »' : '';
+    return '🍵 ' + who + ' ' + name + (p.marque ? ' (' + p.marque + ')' : '') + (note ? ' et lui a mis ' + note + ' !' : ' !') + av + '\nDécouvre la dégustation complète (matériel, temps, température…) sur la Maison du Thé, notre carnet de thés partagé entre amis 👇';
+  }
+  shareProdMsg(pr) {
+    return '🍃 Regarde ce thé : ' + (pr.nom || pr.the) + (pr.marque ? ' de ' + pr.marque : '') + ' !\nOn l’a dans la Maison du Thé, notre collection de thés partagée entre amis : famille, origine et prix au 100 g, tout est là 👇';
   }
 
   applyHash() {
@@ -4489,7 +4501,7 @@ class Component extends DCLogic {
     return { ok: true, missing: false, note: l.note || '—', name: p.nom || p.the || 'Thé', avis: l.avis || '',
       meta: [l.author ? 'par ' + l.author + ((l.with || []).length ? ' avec ' + l.with.join(', ') : '') : '', l.date ? 'le ' + this.fmtDate(l.date) : '', l.heure ? 'à ' + l.heure : '', p.the && p.the !== p.nom ? p.the : '', p.marque || ''].filter(Boolean).join(' · '),
       details: details, openTea: () => { if (p.id) this.openProd(p.id); },
-      share: () => this.shareLink('log', l.id, 'Dégustation : ' + (p.nom || p.the), (p.nom || p.the) + ' — ' + (l.note || '?') + '/20') };
+      share: () => this.shareLink('log', l.id, 'Dégustation : ' + (p.nom || p.the), this.shareLogMsg(l)) };
   }
 
   stop(fn) { return e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); }; }
@@ -4498,7 +4510,7 @@ class Component extends DCLogic {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), (o.nom || o.the || '') + ' — ' + (l.note || '?') + '/20'), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -4698,7 +4710,7 @@ class Component extends DCLogic {
     const ls = a.logs.filter(l => ids.indexOf(l.lotId) >= 0).sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')));
     const mineS = sacs.filter(o => o.owner === me);
     const photo = (sacs.find(o => o.prodPhoto) || sacs.find(o => o.photo) || {});
-    return { member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, (pr.nom || pr.the) + ' — ' + (pr.marque || '') + ' · Maison du Thé'), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
+    return { member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
       famName: fk ? this.families[fk].name : '—',
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
@@ -4888,7 +4900,7 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', (l.note || '?') + '/20'),
+      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', this.shareLogMsg(l)),
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
