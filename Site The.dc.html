@@ -1031,6 +1031,23 @@
         </div>
         </section>
         </sc-for>
+        <sc-if value="{{ hasGearSalon }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;"><h2 style="font-size: 28px; margin: 0;">🏮 Le matériel du salon {{ gearSalonName }}</h2><p style="margin: 0; font-size: 15px; opacity: .72;">Vous pouvez vous en servir dans vos dégustations : il apparaît avec le nom de son propriétaire.</p></div>
+        <sc-for list="{{ gearSalon }}" as="gs" hint-placeholder-count="1">
+        <section style="display: flex; flex-direction: column; gap: 12px;">
+        <h3 style="font-size: 20px; margin: 0;">Chez {{ gs.owner }}</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
+          <sc-for list="{{ gs.items }}" as="g" hint-placeholder-count="2">
+            <button onClick="{{ g.open }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-surface); border-radius: 26px; padding: 14px; display: flex; gap: 14px; align-items: center; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);">
+              <sc-if value="{{ g.photo }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ g.photo }}" alt="" style="width: 64px; height: 64px;"></sc-if>
+              <sc-if value="{{ g.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 64px; height: 64px; border-radius: 16px; background: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 28px; flex: none;">{{ g.icon }}</span></sc-if>
+              <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 18px;">{{ g.name }}</span><span style="font-size: 13px; opacity: .7;">{{ g.sub }}</span><span style="font-size: 13px; color: var(--color-accent-700); font-weight: 600;">{{ g.stat }}</span></span>
+            </button>
+          </sc-for>
+        </div>
+        </section>
+        </sc-for>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -3445,6 +3462,7 @@ class Component extends DCLogic {
     return out;
   }
   lfGearIds() { const lf = this.state.lf || {}; return lf.gearIds || (lf.gearId ? [lf.gearId] : []); }
+  gearUsable(u) { const sal = this.salonOf(u); const mem = sal ? sal.members : [u]; return (this.getAdds().gear || []).filter(g => g.owner === u || mem.indexOf(g.owner) >= 0); }
   gearOf(u) { return (this.getAdds().gear || []).filter(g => g.owner === u); }
   logUsesGear(l, g, uniq) {
     if (l.gearId === g.id || (l.gearIds || []).indexOf(g.id) >= 0) return true;
@@ -5109,13 +5127,16 @@ class Component extends DCLogic {
             this.setState({ gearEdit: null, gearMsg: '' });
           },
           gearEmpty: !mineG.length,
+          gearSalon: (() => { const sal = this.salonOf(me); if (!sal) return []; return sal.members.filter(u => u !== me).map(u => ({ owner: u, items: (this.getAdds().gear || []).filter(g => g.owner === u).map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? g.volume + ' ml' : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) })).filter(x => x.items.length); })(),
+          hasGearSalon: !!this.salonOf(me) && (this.getAdds().gear || []).some(g => g.owner !== me && this.salonOf(me).members.indexOf(g.owner) >= 0),
+          gearSalonName: (this.salonOf(me) || {}).name || '',
           gearGroups: this.gearTypeList().map(T => ({ icon: T[1], title: T[2], items: mineG.filter(g => this.gearCatKey(g.type) === T[0]) })).filter(G => G.items.length).map(G => ({ icon: G.icon, title: G.title, n: String(G.items.length), items: G.items.map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [this.gearModelOf(g), g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) }))
         };
       })(),
-      lfGearChips: this.gearOf(me).slice().sort((x, y) => this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr')).map(g => { const T = this.gearCat(g); const cur = this.lfGearIds(); const on = cur.indexOf(g.id) >= 0;
-        return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name, on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
+      lfGearChips: this.gearUsable(me).slice().sort((x, y) => ((x.owner !== me) - (y.owner !== me)) || String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr')).map(g => { const T = this.gearCat(g); const cur = this.lfGearIds(); const on = cur.indexOf(g.id) >= 0;
+        return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
           toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; }),
-      gearHint: this.gearOf(me).length ? 'Touchez tout ce que vous utilisez : théière, tasses, bouilloire… Géré dans le menu du profil → Mon matériel.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
+      gearHint: this.gearUsable(me).length ? 'Votre matériel, puis celui des membres de votre salon (avec le nom du propriétaire).' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
 
       menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frMsg: '' }),
       friendCount: ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length + this.salonInvitesFor(me).length,
