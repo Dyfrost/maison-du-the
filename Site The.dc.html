@@ -40,6 +40,7 @@
     header.nav .nav-brand img { width: 36px !important; height: 36px !important; }
     header.nav .nav-quick { order: 6; width: 100%; }
     header.nav .nav-lang { margin-left: auto; }
+    .lf-note-row { grid-template-columns: 1fr !important; }
     .ad-table { min-width: var(--ad-min) !important; }
     .adm-nav { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
     header.nav .nav-quick .nq { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; font-size: 13px !important; padding: 6px 8px !important; text-align: center; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
@@ -1370,83 +1371,61 @@
           <h1 style="font-size: 46px; margin: 0;">{{ logTitle }}</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Une fiche par dégustation, comme dans votre tableur.</p>
         </div>
-        <div style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 20px;">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-            <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé</span>
-              <input class="input" type="search" value="{{ lotQ }}" onInput="{{ setLotQ }}" placeholder="🔎 Tapez quelques lettres : nom, marque ou code" aria-label="Rechercher un thé" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;">
-              <select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ lf.lotId }}" onChange="{{ setL.lotId }}">
-                <option value="">Choisir dans mes thés (A → Z)…</option>
-                <sc-for list="{{ lotOptions }}" as="o" hint-placeholder-count="0"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
-              </select>
-            </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="" value="{{ lf.date }}" onChange="{{ setL.date }}" type="date">
-              </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Heure</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" type="time" value="{{ lf.heure }}" onChange="{{ setL.heure }}">
-              </label>
-            <label style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Note / 20</span>
-              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 16,5 · F11 · R13" value="{{ lf.note }}" onChange="{{ setL.note }}">
-              <span style="font-size: 12px; opacity: .6; padding-left: 6px;">{{ logNoteHint }}</span>
-            </label>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🍵</span>Le thé</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
+              <input class="input" type="search" value="{{ lotQ }}" onInput="{{ setLotQ }}" placeholder="🔎 Rechercher : nom, marque, code" aria-label="Rechercher un thé" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;">
+              <select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" value="{{ lf.lotId }}" onChange="{{ setL.lotId }}" aria-label="Thé"><option value="">Choisir dans mes thés (A → Z)…</option><sc-for list="{{ lotOptions }}" as="o" hint-placeholder-count="0"><option value="{{ o.id }}">{{ o.label }}</option></sc-for></select>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🕒</span>Quand, et avec qui</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.date }}" onChange="{{ setL.date }}"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Heure</span><input class="input" type="time" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.heure }}" onChange="{{ setL.heure }}"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Moment</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="RAV · goûter · palet breton" value="{{ lf.repas }}" onChange="{{ setL.repas }}"></label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px;">Avec</span>
+              <sc-for list="{{ withChips }}" as="w" hint-placeholder-count="2">
+                <sc-if value="{{ w.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.toggle }}" aria-pressed="true" style="cursor: pointer; border: 1.5px solid var(--color-accent-700); background: var(--color-accent-100); color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px;">✓ {{ w.name }}</button></sc-if>
+                <sc-if value="{{ w.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ w.toggle }}" aria-pressed="false" style="cursor: pointer; border: 1.5px solid transparent; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px;" style-hover="border-color: var(--color-divider);">{{ w.name }}</button></sc-if>
+              </sc-for>
+              <sc-if value="{{ noOthers }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">Ajoutez des amis pour les inclure.</span></sc-if>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🫖</span>L’infusion</h2>
             <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matériel</span>
-              <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap;">
-                <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 7px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
-              </div>
-              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Autre (saisie libre)" value="{{ lf.infusion }}" onChange="{{ setL.infusion }}">
-              <span style="font-size: 12px; opacity: .6; padding-left: 6px;">{{ gearHint }}</span>
-            </div>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 30/45/60 · 4m · inf" value="{{ lf.temps }}" onChange="{{ setL.temps }}">
-              </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 90 · f (à froid)" value="{{ lf.temperature }}" onChange="{{ setL.temperature }}">
-              </label>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité utilisée ({{ qtyUnit }})</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 4" inputMode="decimal" value="{{ lf.qty }}" onChange="{{ setL.qty }}">
-                <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; padding-left: 6px;">{{ logRemain }}</span></sc-if>
-              </label>
-              <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Dégusté avec</span>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <sc-for list="{{ withChips }}" as="w" hint-placeholder-count="2">
-                    <sc-if value="{{ w.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ w.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent-2-600); background: var(--color-accent-2-600); color: var(--color-bg);">✓ {{ w.name }}</button></sc-if>
-                    <sc-if value="{{ w.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ w.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-2-100);">{{ w.name }}</button></sc-if>
-                  </sc-for>
-                  <sc-if value="{{ noOthers }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">Ajoutez des amis (menu 👥 Amis) pour pouvoir les inclure dans une dégustation.</span></sc-if>
-                </div>
-                <span style="font-size: 12px; opacity: .6; padding-left: 4px;">La dégustation apparaîtra aussi chez eux, même si ce n'est pas leur thé.</span>
-              </div>
-              <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Repas / goûter</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : RAV · palet breton" value="{{ lf.repas }}" onChange="{{ setL.repas }}">
-              </label>
-            <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Technique d'infusion</span>
-              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : *+RV+RC" value="{{ lf.technique }}" onChange="{{ setL.technique }}">
-              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6">
-                  <button onClick="{{ t.add }}" title="{{ t.label }}" style="cursor: pointer; white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 13px; padding: 5px 11px; border-radius: 999px; border: 1px dashed var(--color-accent-2-500); background: var(--color-accent-2-100); color: var(--color-accent-2-900);" style-hover="background: var(--color-accent-2-200);">{{ t.code }} · <span style="font-family: var(--font-body);">{{ t.label }}</span></button>
-                </sc-for>
+              <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matériel</span>
+              <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+                <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
+                <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" value="{{ lf.infusion }}" onChange="{{ setL.infusion }}">
               </div>
             </div>
-            <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Avis</span>
-              <textarea class="input" rows="4" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" value="{{ lf.avis }}" onChange="{{ setL.avis }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
-            </label>
-          </div>
-          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" value="{{ lf.temps }}" onChange="{{ setL.temps }}"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" value="{{ lf.temperature }}" onChange="{{ setL.temperature }}"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" value="{{ lf.qty }}" onChange="{{ setL.qty }}" inputMode="decimal"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Technique</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="*+RV+RC" value="{{ lf.technique }}" onChange="{{ setL.technique }}"></label>
+            </div>
+            <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; margin-top: -4px;">{{ logRemain }}</span></sc-if>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.add }}" title="{{ t.label }}" style="cursor: pointer; border: none; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 12px; padding: 4px 10px; border-radius: 999px;" style-hover="background: var(--color-accent-2-100);"><b>{{ t.code }}</b> <span style="opacity: .7;">{{ t.label }}</span></button></sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">⭐</span>Note et avis</h2><span style="font-size: 12px; opacity: .6;">{{ logNoteHint }}</span></div>
+            <div style="display: grid; grid-template-columns: minmax(120px, 170px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
+              <input class="input" aria-label="Note sur 20" style="width: 100%; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 16px; text-align: center;" placeholder="16,5" value="{{ lf.note }}" onChange="{{ setL.note }}">
+              <textarea class="input" rows="3" aria-label="Avis" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" value="{{ lf.avis }}" onChange="{{ setL.avis }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 16px; border-radius: 20px; resize: vertical;"></textarea>
+            </div>
+          </section>
+          <div style="position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 999px; padding: 8px; box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,.12)); align-self: flex-start;">
             <button class="btn btn-primary" onClick="{{ saveLog }}" style="white-space: nowrap;">{{ saveLogLabel }}</button><sc-if value="{{ editingLog }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ cancelLogEdit }}" style="white-space: nowrap;">Annuler</button></sc-if>
-            <sc-if value="{{ logMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ logMsg }}</span></sc-if>
           </div>
+          <sc-if value="{{ logMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ logMsg }}</span></sc-if>
         </div>
         <sc-if value="{{ hasRecent }}" hint-placeholder-val="{{ false }}">
           <section style="display: flex; flex-direction: column; gap: 10px;">
