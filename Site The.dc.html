@@ -72,7 +72,7 @@
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
         <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
-          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}<sc-if value="{{ meSalon }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ meSalon }}</span></sc-if>
+          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}<sc-if value="{{ meSalon }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ meSalon }}</span></sc-if><sc-if value="{{ meBadge }}" hint-placeholder-val="{{ false }}"><span class="nav-badge" title="{{ meBadge }}" style="font-size: 16px; line-height: 1;">{{ meBadgeEmoji }}</span></sc-if>
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -744,7 +744,7 @@
           <sc-if value="{{ fr.noFriends }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore d’ami ajouté.</p></sc-if>
           <sc-for list="{{ fr.friends }}" as="f" hint-placeholder-count="1">
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-              <button onClick="{{ f.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 19px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ f.tag }}<sc-if value="{{ f.salon }}" hint-placeholder-val="{{ false }}"> <span style="font-family: var(--font-body); font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ f.salon }}</span></sc-if> →</button>
+              <button onClick="{{ f.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 19px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ f.tag }}<sc-if value="{{ f.salon }}" hint-placeholder-val="{{ false }}"> <span style="font-family: var(--font-body); font-size: 13px; padding: 2px 8px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ f.salon }}</span></sc-if><sc-if value="{{ f.badge }}" hint-placeholder-val="{{ false }}"> <span style="font-family: var(--font-body); font-size: 13px; padding: 2px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--color-accent);">{{ f.badge }}</span></sc-if> →</button>
               <button class="btn btn-ghost" onClick="{{ f.remove }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Retirer</button>
             </div>
           </sc-for>
@@ -821,7 +821,7 @@
         <sc-if value="{{ pf.ok }}" hint-placeholder-val="{{ true }}">
           <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
             <span style="width: 76px; height: 76px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 32px;">{{ pf.initial }}</span>
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="font-size: 46px; margin: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">{{ pf.name }}<sc-if value="{{ pf.salon }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ pf.salon }}</span></sc-if></h1><span style="font-family: ui-monospace, Menlo, monospace; font-size: 15px; opacity: .65;">#{{ pf.id }} · {{ pf.nFriends }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 2px;"><h1 style="font-size: 46px; margin: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">{{ pf.name }}<sc-if value="{{ pf.salon }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-accent-100); color: var(--color-accent-800);">{{ pf.salon }}</span></sc-if><sc-if value="{{ pf.badge }}" hint-placeholder-val="{{ false }}"><span style="font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-surface); color: var(--color-text); box-shadow: inset 0 0 0 1.5px var(--color-accent);">{{ pf.badge }}</span></sc-if></h1><span style="font-family: ui-monospace, Menlo, monospace; font-size: 15px; opacity: .65;">#{{ pf.id }} · {{ pf.nFriends }}</span></div>
           </div>
           <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
             <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Description</span>
@@ -864,6 +864,7 @@
                     <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">{{ a.level }}</span>
                     <span style="font-size: 12px; opacity: .7; text-wrap: pretty;">{{ a.desc }}</span>
                     <sc-if value="{{ a.hasNext }}" hint-placeholder-val="{{ true }}"><span style="height: 5px; border-radius: 999px; background: var(--color-bg); overflow: hidden; margin-top: 4px;"><span style="display: block; height: 100%; width: {{ a.pct }}%; background: var(--color-accent);"></span></span></sc-if>
+                    <sc-if value="{{ a.canShow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.toggleShow }}" aria-pressed="{{ a.shown }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 4px 0 0; font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--color-accent-700);">{{ a.showTxt }}</button></sc-if>
                   </div>
                 </div>
                 </sc-if>
@@ -3103,7 +3104,7 @@ class Component extends DCLogic {
       incoming: incoming.map(f => ({ tag: this.userTag(f.from), accept: () => this.setFriends(all.map(x => x === f ? Object.assign({}, x, { status: 'ok' }) : x)), refuse: () => this.setFriends(others(f)) })),
       outgoing: outgoing.map(f => ({ tag: this.userTag(f.to), cancel: () => this.setFriends(others(f)) })),
       noFriends: !fs.length,
-      friends: fs.map(u => ({ tag: this.userTag(u), salon: (this.salonOf(u) || {}).name || '', open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
+      friends: fs.map(u => ({ tag: this.userTag(u), badge: this.badgeOf(u), salon: (this.salonOf(u) || {}).name || '', open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
         remove: () => { if (window.confirm('Retirer ' + u + ' de vos amis ?')) this.setFriends(all.filter(f => !(f.status === 'ok' && ((f.from === u && f.to === me) || (f.from === me && f.to === u))))); } })) };
   }
 
@@ -3153,7 +3154,9 @@ class Component extends DCLogic {
       cancel: () => this.setState({ profEdit: false }),
       save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
       kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)),
-      ach: this.achievementsFor(u), achCount: (() => { const l = this.achievementsFor(u); return l.filter(x => x.got).length + '/' + l.length + ' débloqués'; })() };
+      badge: this.badgeOf(u),
+      ach: this.achievementsFor(u).map(x => Object.assign(x, { canShow: isMe && x.got, shown: (prof.badge || '') === x.key, showTxt: (prof.badge || '') === x.key ? '✓ Affiché à côté du nom' : 'Afficher à côté du nom',
+        toggleShow: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { badge: (prof.badge || '') === x.key ? '' : x.key }); this.setOpt('profiles', all); } })), achCount: (() => { const l = this.achievementsFor(u); return l.filter(x => x.got).length + '/' + l.length + ' débloqués'; })() };
   }
 
   achievementsFor(u) {
@@ -3199,11 +3202,18 @@ class Component extends DCLogic {
       const curT = lvl >= 0 ? d.tiers[lvl] : d.tiers[0];
       const base = lvl >= 0 ? d.tiers[lvl][0] : 0;
       const pct = next ? Math.max(0, Math.min(100, Math.round((d.v - base) / Math.max(1, next[0] - base) * 100))) : 100;
-      return { got: lvl >= 0, locked: lvl < 0, emoji: curT[1], name: curT[2],
+      return { key: d.key, got: lvl >= 0, locked: lvl < 0, emoji: curT[1], name: curT[2],
         level: lvl >= 0 ? 'Niveau ' + (lvl + 1) + '/' + d.tiers.length : 'À débloquer',
         desc: d.noProgress ? (lvl >= 0 ? (next ? 'Prochain : ' + next[1] + ' ' + next[2] : 'Niveau max') : 'Rejoindre ou créer un salon') : lvl < 0 ? d.v + ' / ' + d.tiers[0][0] + ' ' + d.unit : d.v + ' ' + d.unit + (next ? ' · prochain : ' + next[1] + ' ' + next[2] + ' (' + next[0] + ')' : ' · niveau max'),
         pct: pct, hasNext: !!next && !d.noProgress };
     }).sort((x, y) => y.got - x.got);
+  }
+
+  badgeOf(u) {
+    const k = ((((this.getAdds().options || {}).profiles || {})[u]) || {}).badge;
+    if (!k) return '';
+    const a = this.achievementsFor(u).find(x => x.key === k && x.got);
+    return a ? a.emoji + ' ' + a.name : '';
   }
 
   diffEvents(prev, next) {
@@ -4295,6 +4305,7 @@ class Component extends DCLogic {
       menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frMsg: '' }),
       friendCount: ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length + this.salonInvitesFor(me).length,
       meSalon: (this.salonOf(me) || {}).name || '',
+      meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
       friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n + this.salonInvitesFor(me).length; return m ? ' (' + m + ')' : ''; })(),
       isFriends: v === 'friends',
       fr: v === 'friends' ? this.friendsView(me) : {},
