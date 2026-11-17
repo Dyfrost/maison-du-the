@@ -1,6 +1,9 @@
 // Maison du Thé — bascule français / anglais avec traduction automatique.
 // En anglais, chaque texte affiché par React (et, sur la carte, chaque texte du DOM)
 // est traduit à la volée puis mémorisé dans le navigateur.
+// Date du jour (fuseau local, pas UTC) au format AAAA-MM-JJ
+window.mdtDayKey = function (d) { d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+window.mdtToday = function () { return window.mdtDayKey(new Date()); };
 (function () {
   var KEY = 'mdt-lang', CK = 'mdt-tr-fr-en';
   var lang = 'fr';

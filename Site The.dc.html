@@ -1843,6 +1843,41 @@
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ mgRun }}" style="white-space: nowrap;">🔀 Fusionner</button><sc-if value="{{ mgMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ mgMsg }}</span></sc-if></div>
           </section>
         </sc-if>
+        <sc-if value="{{ tabInfOn }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 26px; margin: 0;">🐸 Les tea pets : règles du jeu</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85;">Tout est recalculé à partir des dégustations : rien à saisir en plus. Un tea pet « boit » quand il est coché dans le matériel d’une dégustation.</p>
+            <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55;">
+              <li><b>Points de vie (PV)</b> : 100 au maximum. Chaque dégustation avec lui rend +40 PV (+55 pour un gourmand).</li>
+              <li><b>Soif</b> : après quelques jours de répit sans thé (1 à 3 selon le caractère), il perd chaque jour environ 9 PV × son coefficient de soif.</li>
+              <li><b>Le niveau protège</b> : −7 % de perte par niveau au-dessus du premier, jusqu’à −55 %.</li>
+              <li><b>Propriétaire assidu</b> : si son propriétaire a bu un autre thé ce jour-là, la perte est divisée par deux.</li>
+              <li><b>KO</b> : à 0 PV il s’endort (couché, grisé, 💤). Une seule dégustation avec lui le réveille.</li>
+              <li><b>Expérience</b> : +10 XP par dégustation, +5 si la note est ≥ 16, +3 à plusieurs, plus le bonus de son caractère.</li>
+              <li><b>Chef de l’enclos 👑</b> : le tea pet qui a seul le niveau le plus haut.</li>
+              <li><b>Humeurs</b> : ❤️ a bu aujourd’hui · ✨ en forme (≥ 75 PV) · 💧 assoiffé (&lt; 35 PV, il ralentit) · 💤 KO.</li>
+              <li>Le caractère est tiré au hasard une fois pour toutes à la création du tea pet.</li>
+            </ul>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 22px; margin: 0;">Les caractères</h2>
+            <div style="overflow-x: auto;"><div role="table" style="display: grid; grid-template-columns: minmax(140px, 1fr) 70px 80px 100px 90px minmax(200px, 2fr); min-width: 720px;">
+              <span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Caractère</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Répit</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Soif</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Perte (Nv. 1)</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Soin</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Bonus</span>
+              <sc-for list="{{ infTempers }}" as="it" hint-placeholder-count="7">
+                <span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;"><b>{{ it.icon }} {{ it.name }}</b><br><span style="font-size: 12.5px; opacity: .7;">{{ it.desc }}</span></span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ it.grace }}</span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ it.rate }}</span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ it.loss }}</span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ it.heal }}</span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ it.bonus }}</span>
+              </sc-for>
+            </div></div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 22px; margin: 0;">Les niveaux</h2>
+            <div style="overflow-x: auto;"><div role="table" style="display: grid; grid-template-columns: repeat(3, minmax(100px, 1fr)); max-width: 520px;">
+              <span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Niveau</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">XP totale</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Perte de PV</span>
+              <sc-for list="{{ infLevels }}" as="il" hint-placeholder-count="8"><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ il.lvl }}</span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ il.xp }}</span><span role="cell" style="padding: 9px 10px; border-top: 1px solid var(--color-divider); font-size: 14px; vertical-align: top;">{{ il.red }}</span></sc-for>
+            </div></div>
+          </section>
+        </div>
+        </sc-if>
         <sc-if value="{{ tabJrnOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Journal</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Tout ce qui se passe dans la maison : thés et sachets ajoutés, dégustations, quantités mises à jour…</p></div>
@@ -3163,7 +3198,7 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate() {
-    if (this.state.editLogId && this.state.view !== 'log') this.setState({ editLogId: null, lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } });
+    if (this.state.editLogId && this.state.view !== 'log') this.setState({ editLogId: null, lf: { lotId: '', with: [], date: mdtToday() } });
   }
 
   makeGearSprite(id) {
@@ -3637,7 +3672,7 @@ class Component extends DCLogic {
       rows = a.sachets.map(x => { const p = prodBy[x.prodId] || {}; const o = this.collection().find(c => c.id === x.id); const rm = o ? this.remainFor(o) : null; const nl = (logsBySac[x.id] || []).length; const ts = this.idTs(x.id);
         return { id: x.id, v: { code: x.code || '—', nom: p.nom || p.the || '?', owner: x.owner + ((x.shares || []).length ? ' (+' + x.shares.map(z => z.to).join(', ') + ')' : ''), qty: x.quantite ? x.quantite + (x.prixMode === 'unite' ? ' u' : ' g') : '—', reste: rm ? Math.round(rm.left) : null, nLog: nl, etat: o && this.isEmptySachet(o) ? 'Vide' : 'En cours', date: ts },
           raw: x, fields: [['code', 'Code du sachet'], ['owner', 'Propriétaire', this.opts().users.map(u => [u, u])], ['prodId', 'Thé du commerce', a.prods.slice().sort((m, n2) => (m.nom || m.the).localeCompare(n2.nom || n2.the, 'fr')).map(pp => [pp.id, (pp.nom || pp.the) + (pp.marque ? ' · ' + pp.marque : '')])], ['achat', 'Date d’achat', 'date'], ['prodDate', 'Année de production'], ['lot', 'Lot'], ['quantite', 'Quantité'], ['prixMode', 'Unité', [['poids', 'grammes'], ['unite', 'unités']]], ['prixPaye', 'Prix payé (€)'], ['freq', 'Fréquence'], ['commentaire', 'Commentaire', 'area']],
-          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(z => z.id === x.id ? Object.assign({}, z, { code: d.code, owner: d.owner, prodId: d.prodId, achat: d.achat, prodDate: d.prodDate, lot: d.lot, quantite: d.quantite, prixMode: d.prixMode, prixPaye: d.prixPaye, freq: d.freq, commentaire: d.commentaire }, d.owner !== z.owner ? { history: (z.history || []).concat([{ from: z.owner, to: d.owner, date: new Date().toISOString().slice(0, 10), admin: true }]) } : {}) : z) })); },
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(z => z.id === x.id ? Object.assign({}, z, { code: d.code, owner: d.owner, prodId: d.prodId, achat: d.achat, prodDate: d.prodDate, lot: d.lot, quantite: d.quantite, prixMode: d.prixMode, prixPaye: d.prixPaye, freq: d.freq, commentaire: d.commentaire }, d.owner !== z.owner ? { history: (z.history || []).concat([{ from: z.owner, to: d.owner, date: mdtToday(), admin: true }]) } : {}) : z) })); },
           open: () => p.id && this.openProd(p.id), delMsg: 'Supprimer le sachet ' + (x.code || '') + ' de ' + x.owner + ' ? Ses ' + nl + ' dégustation(s) seront aussi supprimées.', delFn: delSacs([x.id]) }; });
     } else if (kind === 'log') {
       cols = [['date', 'Date'], ['nom', 'Thé'], ['author', 'Auteur'], ['note', 'Note'], ['qty', 'Qté'], ['avis', 'Avis']];
@@ -3702,7 +3737,7 @@ class Component extends DCLogic {
         const esc = x => '"' + String(x == null ? '' : x).replace(/"/g, '""') + '"';
         const lines = [cols.map(c => esc(c[1])).join(';')].concat(list.map(r => cols.map(c => esc(cell(r, c[0]))).join(';')));
         const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
-        const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'maison-du-the-' + kind + '-' + new Date().toISOString().slice(0, 10) + '.csv'; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+        const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'maison-du-the-' + kind + '-' + mdtToday() + '.csv'; document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
       }
     };
   }
@@ -3768,21 +3803,35 @@ class Component extends DCLogic {
     return String(l.infusion || '').split(/\s*[,+]\s*/).some(x => keys.indexOf(this.norm(x.replace(/\*$/, ''))) >= 0);
   }
   // ---------- Tea pets : vie, XP, niveau ----------
+  petTempers = [
+    { key: 'zen', name: 'Zen', icon: '🧘', grace: 3, rate: 0.75, heal: 40, desc: 'Très patient : tient 3 jours sans thé puis ne perd que lentement.', bonus: '—' },
+    { key: 'paresseux', name: 'Paresseux', icon: '😴', grace: 3, rate: 0.9, heal: 40, desc: 'Dort beaucoup : met du temps à avoir soif.', bonus: '—' },
+    { key: 'curieux', name: 'Curieux', icon: '🔍', grace: 2, rate: 1.0, heal: 40, desc: 'Adore la nouveauté.', bonus: '+5 XP pour un thé qu’il n’avait jamais goûté' },
+    { key: 'joueur', name: 'Joueur', icon: '🎈', grace: 2, rate: 1.1, heal: 40, desc: 'Aime la compagnie.', bonus: '+6 XP (au lieu de +3) pour une dégustation à plusieurs' },
+    { key: 'farceur', name: 'Farceur', icon: '🃏', grace: 2, rate: 1.0, heal: 40, desc: 'Fait la fête le week-end.', bonus: '+5 XP le samedi et le dimanche' },
+    { key: 'grognon', name: 'Grognon', icon: '😤', grace: 1, rate: 1.15, heal: 40, desc: 'Difficile à contenter, a vite soif.', bonus: '+10 XP (au lieu de +5) quand la note est ≥ 16' },
+    { key: 'gourmand', name: 'Gourmand', icon: '🍩', grace: 1, rate: 1.3, heal: 55, desc: 'A très vite soif mais se régale.', bonus: '+55 PV par dégustation (au lieu de +40)' }
+  ];
+  petTemper(g) { let h = 0; String(g.id).split('').forEach(c => { h = (h * 33 + c.charCodeAt(0)) >>> 0; }); return this.petTempers[(h >> 7) % this.petTempers.length]; }
   petLevel(xp) { let L = 1; while (15 * (L + 1) * L <= xp) L++; return L; }
   petStats(g) {
-    const dkey = d => d.toISOString().slice(0, 10);
-    const today = new Date(); const tKey = dkey(today);
-    let h = 0; String(g.id).split('').forEach(c => { h = (h * 33 + c.charCodeAt(0)) >>> 0; });
-    const grace = 1 + (h % 3);                       // 1 à 3 jours de répit selon le caractère
-    const rate = 0.75 + ((h >> 3) % 56) / 100;       // 0,75 à 1,30 : certains ont plus soif que d'autres
-    const temper = ['gourmand', 'paresseux', 'curieux', 'grognon', 'joueur', 'zen', 'farceur'][(h >> 7) % 7];
+    const dkey = d => d.toISOString().slice(0, 10);   // dates « AAAA-MM-JJ » manipulées en UTC
+    const tKey = mdtToday(); const today = new Date(tKey);
+    const T = this.petTemper(g);
+    const grace = T.grace, rate = T.rate, temper = T.icon + ' ' + T.name.toLowerCase();
+    const seenTea = {};
     const logs = this.gearLogs(g).filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || ''));
     const byDay = {}; logs.forEach(l => { (byDay[l.date] = byDay[l.date] || []).push(l); });
     const ownerDays = {}; this.getAdds().logs.forEach(l => { if (/^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && (l.author === g.owner || (l.with || []).indexOf(g.owner) >= 0)) ownerDays[l.date] = 1; });
-    const xpOf = l => { const n = parseFloat(String(l.note || '').replace(',', '.')); return 10 + (isFinite(n) && n >= 16 ? 5 : 0) + ((l.with || []).length ? 3 : 0); };
+    const sacs = this.getAdds().sachets;
+    const xpOf = l => { const n = parseFloat(String(l.note || '').replace(',', '.')); const good = isFinite(n) && n >= 16;
+      let x = 10 + (good ? (T.key === 'grognon' ? 10 : 5) : 0) + ((l.with || []).length ? (T.key === 'joueur' ? 6 : 3) : 0);
+      if (T.key === 'curieux') { const pid = (sacs.find(z => z.id === l.lotId) || {}).prodId || l.lotId; if (!seenTea[pid]) { seenTea[pid] = 1; x += 5; } }
+      if (T.key === 'farceur') { const wd = new Date(l.date).getUTCDay(); if (wd === 0 || wd === 6) x += 5; }
+      return x; };
     const created = this.idTs(g.id);
     const days = Object.keys(byDay).sort();
-    let start = created ? new Date(created) : (days[0] ? new Date(days[0]) : today);
+    let start = created ? new Date(mdtDayKey(new Date(created))) : (days[0] ? new Date(days[0]) : today);
     if (days[0] && new Date(days[0]) < start) start = new Date(days[0]);
     const minStart = new Date(today.getTime() - 120 * 864e5);
     let xp = 0; logs.forEach(l => { if (new Date(l.date) < minStart || new Date(l.date) < start) xp += xpOf(l); });
@@ -3791,7 +3840,7 @@ class Component extends DCLogic {
     for (let d = new Date(dkey(start)); dkey(d) <= tKey; d = new Date(d.getTime() + 864e5)) {
       const k = dkey(d);
       if (k === tKey) lvlBefore = this.petLevel(xp);
-      if (byDay[k]) { byDay[k].forEach(l => { xp += xpOf(l); }); hp = Math.min(100, hp + 40); dry = 0; }
+      if (byDay[k]) { byDay[k].forEach(l => { xp += xpOf(l); }); hp = Math.min(100, hp + T.heal); dry = 0; }
       else if (k !== tKey) {
         dry++;
         if (dry > grace) { const lvl = this.petLevel(xp); let loss = 9 * rate * (1 - Math.min(0.55, (lvl - 1) * 0.07)); if (ownerDays[k]) loss *= 0.5; hp = Math.max(0, hp - loss); }
@@ -3837,7 +3886,7 @@ class Component extends DCLogic {
     const fam = {}; logs.forEach(l => { const p = prodOf(l); const fk = p && this.famOf(p.the); if (fk) fam[fk] = (fam[fk] || 0) + 1; });
     const famTot = Object.values(fam).reduce((t, n) => t + n, 0) || 1;
     const now = new Date(); const months = [];
-    for (let i = 11; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); const key = d.toISOString().slice(0, 7); months.push({ key: key, lbl: d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', ''), n: logs.filter(l => String(l.date || '').slice(0, 7) === key).length }); }
+    for (let i = 11; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); const key = mdtDayKey(d).slice(0, 7); months.push({ key: key, lbl: d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', ''), n: logs.filter(l => String(l.date || '').slice(0, 7) === key).length }); }
     const maxM = Math.max(1, ...months.map(m => m.n));
     const f1 = n => n.toFixed(1).replace('.', ',');
     const mine = g.owner === me;
@@ -4334,7 +4383,7 @@ class Component extends DCLogic {
     const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = url; link.download = 'journal-maison-du-the-' + new Date().toISOString().slice(0, 10) + '.csv';
+    link.href = url; link.download = 'journal-maison-du-the-' + mdtToday() + '.csv';
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
@@ -4989,7 +5038,7 @@ class Component extends DCLogic {
     });
     this._adds = null;
     const cur = this.getAdds();
-    this.setAdds(Object.assign({}, cur, { teas: teas, decl: decl, prods: prods, sachets: sachets, logs: logs, options: Object.assign({}, cur.options, { importDone: { date: new Date().toISOString().slice(0, 10), source: data.source || '' } }) }));
+    this.setAdds(Object.assign({}, cur, { teas: teas, decl: decl, prods: prods, sachets: sachets, logs: logs, options: Object.assign({}, cur.options, { importDone: { date: mdtToday(), source: data.source || '' } }) }));
     return { prods: data.teas.length - (skipped - skippedL), logs: nLogs, skipped: skipped };
   }
 
@@ -5014,7 +5063,7 @@ class Component extends DCLogic {
       giveTo: others.map(u => ({ name: u, give: () => {
         if (!window.confirm('Donner le sachet ' + o.code + ' à ' + u + ' ? Il passera dans ses thés.')) return;
         const a = this.getAdds();
-        this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { owner: u, history: (x.history || []).concat([{ from: o.owner, to: u, date: new Date().toISOString().slice(0, 10) }]) }) : x) }));
+        this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { owner: u, history: (x.history || []).concat([{ from: o.owner, to: u, date: mdtToday() }]) }) : x) }));
         this.setState({ giveId: null });
       } })),
       fromTxt: (() => { const h = (o.history || [])[(o.history || []).length - 1]; return h && !h.hidden ? 'Donné par ' + h.from + ' le ' + this.fmtDate(h.date) : ''; })(),
@@ -5039,7 +5088,7 @@ class Component extends DCLogic {
         const g = unitC === baseU ? amt : 0;
         if (rm && g > rm.left + 0.001) { window.alert('Il ne vous reste qu’environ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + (baseU === 'u' ? ' unités' : ' g') + ' dans ce sachet.'); return; }
         const a = this.getAdds();
-        this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { shares: (x.shares || []).concat([{ to: to, grams: g, amount: amt, unit: unitC, ts: Date.now(), date: new Date().toISOString().slice(0, 10) }]), adjust: x.adjust ? Object.assign({}, x.adjust, { left: Math.max(0, x.adjust.left - g) }) : x.adjust }) : x) }));
+        this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { shares: (x.shares || []).concat([{ to: to, grams: g, amount: amt, unit: unitC, ts: Date.now(), date: mdtToday() }]), adjust: x.adjust ? Object.assign({}, x.adjust, { left: Math.max(0, x.adjust.left - g) }) : x.adjust }) : x) }));
         this.setState({ shareId: null, shareG: '' });
       },
       hasPortions: portions.length > 0, isGuest: o.owner !== me && portions.some(p => p.who === me),
@@ -5111,7 +5160,7 @@ class Component extends DCLogic {
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
       nameOpen: this.stop(() => this.openProd(o.prodId)),
-      taste: () => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf), o.id) }),
+      taste: () => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: mdtToday() }, this.state.lf), o.id) }),
       edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
       remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); },
       menuRemove: () => { this.setState({ sacMenu: null }); if (!window.confirm('Supprimer le sachet ' + o.code + ' et ses dégustations ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); } };
@@ -5347,7 +5396,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn'];
+    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf'];
       if (this.state.view === 'admin' && !this.isAdmin(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'new'; }
@@ -5438,7 +5487,7 @@ class Component extends DCLogic {
         const pool = coll.filter(o => this.canTaste(o, me) && !this.isEmptySachet(o)).sort((x, y) => String(x.id).localeCompare(String(y.id)));
         let sug = null;
         if (pool.length) {
-          const day = new Date().toISOString().slice(0, 10);
+          const day = mdtToday();
           let hsh = 0; (day + me).split('').forEach(c => { hsh = (hsh * 31 + c.charCodeAt(0)) >>> 0; });
           sug = pool[(hsh + (this.state.sugShift || 0)) % pool.length];
         }
@@ -5448,7 +5497,7 @@ class Component extends DCLogic {
             sugMeta: [fk ? this.families[fk].name : '', sug.marque, sug.owner !== me ? 'partagé par ' + sug.owner : ''].filter(Boolean).join(' · '),
             sugWhy: last ? (days > 30 ? 'Pas goûté depuis ' + days + ' jours, il t’attend !' : 'Dernière dégustation le ' + this.fmtDate(last) + '.') : 'Jamais dégusté : c’est le moment de le découvrir !',
             sugAvg: this.avgTxt(st) || '', ...(() => { const c = this.noteColors(st.avg != null ? String(Math.round(st.avg * 10) / 10) : ''); return { sugAvgColor: c.noteBg }; })(),
-            sugTaste: () => this.setState(s0 => ({ view: 'log', logMsg: '', editLogId: null, lf: this.lfWithLot(Object.assign({ date: new Date().toISOString().slice(0, 10), with: [] }, s0.editLogId ? {} : s0.lf, { lotId: '' }), sug.id) })),
+            sugTaste: () => this.setState(s0 => ({ view: 'log', logMsg: '', editLogId: null, lf: this.lfWithLot(Object.assign({ date: mdtToday(), with: [] }, s0.editLogId ? {} : s0.lf, { lotId: '' }), sug.id) })),
             sugOpen: () => this.openProd(sug.prodId),
             sugOther: () => this.setState(s0 => ({ sugShift: (s0.sugShift || 0) + 1 + Math.floor(Math.random() * Math.max(1, pool.length - 1)) })), sugMany: pool.length > 1 }; })();
         return { dash: true, noDash: false, hasSug: !!sug, ...sugInfo,
@@ -5534,7 +5583,7 @@ class Component extends DCLogic {
         const coll = this.collection();
         const prodIds = prods.map(x => x.id);
         const myLogs = a.logs.filter(l => this.inLog(l, me) && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
-        const taste = id => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf), id) });
+        const taste = id => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: mdtToday() }, this.state.lf), id) });
         const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
         const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, fill(pr)) }));
         const card = pr => {
@@ -5599,7 +5648,7 @@ class Component extends DCLogic {
       menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'new', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
@@ -5621,7 +5670,7 @@ class Component extends DCLogic {
       collTeaBg: v === 'mine' ? 'var(--color-accent)' : 'transparent', collTeaFg: v === 'mine' ? 'var(--color-bg)' : 'var(--color-text)',
       collLogBg: v === 'logs' ? 'var(--color-accent)' : 'transparent', collLogFg: v === 'logs' ? 'var(--color-bg)' : 'var(--color-text)',
       guestNav: !this.state.session,
-      menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
+      menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
       menuPacks: () => this.setState({ menuOpen: false, view: 'packs' }),
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
@@ -5742,6 +5791,9 @@ class Component extends DCLogic {
       isProfile: v === 'profile',
       pf: v === 'profile' ? this.profileView(me) : {},
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
+      tabInfOn: this.state.addTab === 'inf',
+      infTempers: this.petTempers.map(t => ({ icon: t.icon, name: t.name, desc: t.desc, grace: t.grace + ' j', rate: '×' + String(t.rate).replace('.', ','), loss: '≈ ' + String(Math.round(9 * t.rate * 10) / 10).replace('.', ',') + ' PV/j', heal: '+' + t.heal + ' PV', bonus: t.bonus })),
+      infLevels: [1, 2, 3, 4, 5, 6, 7, 8].map(L => ({ lvl: 'Nv. ' + L, xp: String(15 * L * (L - 1)) + ' XP', red: '−' + Math.round(Math.min(0.55, (L - 1) * 0.07) * 100) + ' %' })),
       tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',
       jrn: this.state.addTab === 'jrn' ? this.journal() : [],
       ...(() => {
@@ -5770,7 +5822,7 @@ class Component extends DCLogic {
       saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : 'Enregistrer la dégustation',
       editingLog: !!this.state.editLogId,
       logTitle: this.state.editLogId ? 'Modifier la dégustation' : 'Nouvelle dégustation',
-      cancelLogEdit: () => this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } })),
+      cancelLogEdit: () => this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', lf: { lotId: '', with: [], date: mdtToday() } })),
       tSortUi: this.sortUi('tSort'), dSortUi: this.sortUi('dSort'),
       dsMeOn: (this.state.ds || 'me') === 'me', dsMeOff: (this.state.ds || 'me') !== 'me', dsAllOn: this.state.ds === 'all', dsAllOff: this.state.ds !== 'all',
       dsMe: () => this.setState({ ds: 'me' }), dsAll: () => this.setState({ ds: 'all' }),
@@ -5791,7 +5843,7 @@ class Component extends DCLogic {
       })(),
       menuAdd: () => this.setState({ menuOpen: false, view: 'add', addMsg: '' }),
       cloudUser: !!this.state.session,
-      tabs: !this.state.session ? [] : [['home', '🏠', 'Accueil', () => this.setState({ view: 'home', menuOpen: false, notifOpen: false })], ['coll', '🍵', 'Mes thés', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: s0.collView || 'mine' }))], ['log', '＋', 'Dégustation', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s0.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s0.lf) }))], ['gear', '🫖', 'Matériel', () => this.setState({ view: 'gear', gearEdit: null, gearMsg: '', menuOpen: false, notifOpen: false })], ['profile', '👤', 'Profil', () => this.setState({ menuOpen: false, notifOpen: false, view: 'profile', profUser: me, profEdit: false })]].map(t => { const act = t[0] === 'home' ? v === 'home' : t[0] === 'coll' ? (v === 'mine' || v === 'logs') : t[0] === 'log' ? v === 'log' : t[0] === 'gear' ? (v === 'gear' || v === 'gearItem') : (v === 'profile' && this.state.profUser === me); return { icon: t[1], label: t[2], go: t[3], main: t[0] === 'log', plain: t[0] !== 'log', color: act ? 'var(--color-accent-700)' : 'var(--color-text)', weight: act ? '700' : '500', cur: act ? 'page' : 'false' }; }),
+      tabs: !this.state.session ? [] : [['home', '🏠', 'Accueil', () => this.setState({ view: 'home', menuOpen: false, notifOpen: false })], ['coll', '🍵', 'Mes thés', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: s0.collView || 'mine' }))], ['log', '＋', 'Dégustation', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s0.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s0.lf) }))], ['gear', '🫖', 'Matériel', () => this.setState({ view: 'gear', gearEdit: null, gearMsg: '', menuOpen: false, notifOpen: false })], ['profile', '👤', 'Profil', () => this.setState({ menuOpen: false, notifOpen: false, view: 'profile', profUser: me, profEdit: false })]].map(t => { const act = t[0] === 'home' ? v === 'home' : t[0] === 'coll' ? (v === 'mine' || v === 'logs') : t[0] === 'log' ? v === 'log' : t[0] === 'gear' ? (v === 'gear' || v === 'gearItem') : (v === 'profile' && this.state.profUser === me); return { icon: t[1], label: t[2], go: t[3], main: t[0] === 'log', plain: t[0] !== 'log', color: act ? 'var(--color-accent-700)' : 'var(--color-text)', weight: act ? '700' : '500', cur: act ? 'page' : 'false' }; }),
       cloudGuest: guest,
       syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
@@ -5915,7 +5967,7 @@ class Component extends DCLogic {
       resetOpts: () => { if (!window.confirm('Remettre vaisselle, techniques et fréquences par défaut ? (Les comptes sont conservés.)')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { options: { users: this.opts().users } })); },
       isLog: v === 'log',
       openMine: () => this.setState({ view: 'mine' }),
-      openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s.lf) })),
+      openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
       newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
@@ -5965,7 +6017,7 @@ class Component extends DCLogic {
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
       lfPrefilled: (this.state.lf || {}).prefilled || '',
       lfWhenOpen: !!this.state.lfWhenOpen, lfWhenClosed: !this.state.lfWhenOpen, toggleLfWhen: () => this.setState(s0 => ({ lfWhenOpen: !s0.lfWhenOpen })),
-      lfWhenSummary: (() => { const lf = this.state.lf || {}; const today = new Date().toISOString().slice(0, 10); return [lf.date ? (lf.date === today ? 'Aujourd’hui' : 'le ' + this.fmtDate(lf.date)) : 'Date non précisée', lf.heure ? 'à ' + lf.heure : '', lf.repas || '', (lf.with || []).length ? 'avec ' + lf.with.join(', ') : 'seul·e'].filter(Boolean).join(' · '); })(),
+      lfWhenSummary: (() => { const lf = this.state.lf || {}; const today = mdtToday(); return [lf.date ? (lf.date === today ? 'Aujourd’hui' : 'le ' + this.fmtDate(lf.date)) : 'Date non précisée', lf.heure ? 'à ' + lf.heure : '', lf.repas || '', (lf.with || []).length ? 'avec ' + lf.with.join(', ') : 'seul·e'].filter(Boolean).join(' · '); })(),
       noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
       noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
       lfNoteColor: this.noteColors((this.state.lf || {}).note).noteBg,
@@ -6015,13 +6067,13 @@ class Component extends DCLogic {
         if (this.state.editLogId) {
           const id = this.state.editLogId;
           this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === id ? Object.assign({}, x, l, { id: x.id, author: x.author, with: (l.with || []).filter(w => w !== x.author) }) : x) }));
-          this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', logMsg: '', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } }));
+          this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } }));
           return;
         }
-        const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || new Date().toISOString().slice(0, 10) });
+        const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || mdtToday() });
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
         const o = coll.find(x => x.id === l.lotId);
-        this.setState({ lotQ: '', logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: new Date().toISOString().slice(0, 10), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
+        this.setState({ lotQ: '', logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
       },
       hasRecent: this.getAdds().logs.length > 0,
       recentLogs: this.getAdds().logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => this.logCard(l, coll, me)),
