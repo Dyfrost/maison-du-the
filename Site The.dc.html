@@ -1967,10 +1967,13 @@
           </sc-for>
         </section>
         <section style="display: flex; flex-direction: column; gap: 12px;">
-          <h2 style="font-size: 26px; margin: 0;">Dégustations</h2>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0; margin-right: auto;">Dégustations</h2>
+            <sc-if value="{{ pv.hasLogs }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;"><sc-for list="{{ pv.sortOpts }}" as="so" hint-placeholder-count="3"><button onClick="{{ so.pick }}" aria-pressed="{{ so.on }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: {{ so.bg }}; color: {{ so.fg }};">{{ so.name }}</button></sc-for></div></sc-if>
+          </div>
           <sc-if value="{{ pv.noLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore de dégustation pour ce thé.</p></sc-if>
           <sc-for list="{{ pv.logs }}" as="l" hint-placeholder-count="1">
-              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+              <sc-if value="{{ l.best }}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); margin-bottom: -6px;">🏆 Meilleure dégustation</span></sc-if>
+              <article style="{{ l.bestBorder }}background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
                 <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
@@ -3690,7 +3693,16 @@ class Component extends DCLogic {
       prix: this.avgPrice(sacs) || '—', nSac: String(sacs.length), owners: owners.length ? 'chez ' + owners.join(', ') : 'personne pour l’instant',
       iOwn: mineS.length > 0, iDontOwn: !mineS.length,
       addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
-      sachets: sacs.map(o => this.sachetView(o, me)), logs: ls.map(l => this.logCard(l, coll, me)), noLogs: !ls.length };
+      sachets: sacs.map(o => this.sachetView(o, me)), noLogs: !ls.length, hasLogs: ls.length > 1,
+      ...(() => {
+        const mode = this.state.pvSort || 'recent';
+        const nn = l => { const n = this.num(String(l.note || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); return n == null ? -1 : n; };
+        const bestL = ls.slice().sort((x, y) => nn(y) - nn(x))[0];
+        const bestId = bestL && nn(bestL) >= 0 ? bestL.id : null;
+        const sorted = mode === 'best' ? ls.slice().sort((x, y) => nn(y) - nn(x) || (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))) : mode === 'old' ? ls.slice().reverse() : ls;
+        const opts = [['best', '🏆 Meilleures'], ['recent', 'Plus récentes'], ['old', 'Plus anciennes']].map(o => ({ name: o[1], on: mode === o[0], bg: mode === o[0] ? 'var(--color-text)' : 'transparent', fg: mode === o[0] ? 'var(--color-bg)' : 'var(--color-text)', pick: () => this.setState({ pvSort: o[0] }) }));
+        return { sortOpts: opts, logs: sorted.map(l => Object.assign(this.logCard(l, coll, me), { best: l.id === bestId && ls.length > 1, bestBorder: l.id === bestId && ls.length > 1 ? 'box-shadow: inset 0 0 0 2px var(--color-accent); ' : '' })) };
+      })() };
   }
 
   importPreview(data) {
