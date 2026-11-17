@@ -1456,8 +1456,22 @@
                   <div role="row" style="display: grid; grid-template-columns: {{ adGrid }}; align-items: center; border-top: 1px solid var(--color-divider); background: {{ ar.bg }};">
                     <span role="cell" style="padding: 8px 10px;"><input type="checkbox" checked="{{ ar.sel }}" onChange="{{ ar.toggle }}" aria-label="Sélectionner"></span>
                     <sc-for list="{{ ar.cells }}" as="cc" hint-placeholder-count="5"><span role="cell" style="padding: 8px 10px; font-size: 13.5px; min-width: 0; overflow-wrap: anywhere;">{{ cc }}</span></sc-for>
-                    <span role="cell" style="padding: 6px 10px; text-align: right; white-space: nowrap;"><button onClick="{{ ar.open }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 4px 6px;">Ouvrir</button><button onClick="{{ ar.del }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-800); padding: 4px 6px;">Supprimer</button></span>
+                    <span role="cell" style="padding: 6px 10px; text-align: right; white-space: nowrap;"><button onClick="{{ ar.edit }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 4px 6px;">Modifier</button><button onClick="{{ ar.open }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 4px 6px;">Ouvrir</button><button onClick="{{ ar.del }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-800); padding: 4px 6px;">Supprimer</button></span>
                   </div>
+                  <sc-if value="{{ ar.editing }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: sticky; left: 0; width: min(1036px, calc(100vw - 72px)); box-sizing: border-box; background: var(--color-accent-100); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--color-divider);">
+                      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px;">
+                        <sc-for list="{{ ar.fields }}" as="fd" hint-placeholder-count="6">
+                          <label style="display: flex; flex-direction: column; gap: 4px; grid-column: {{ fd.span }};"><span style="font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6;">{{ fd.label }}</span>
+                            <sc-if value="{{ fd.isText }}" hint-placeholder-val="{{ true }}"><input class="input" type="{{ fd.type }}" value="{{ fd.value }}" onInput="{{ fd.set }}" list="{{ fd.list }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"></sc-if>
+                            <sc-if value="{{ fd.isArea }}" hint-placeholder-val="{{ false }}"><textarea class="input" rows="3" value="{{ fd.value }}" onInput="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface); border-radius: 14px; resize: vertical;"></textarea></sc-if>
+                            <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}"><select class="input" value="{{ fd.value }}" onChange="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"><sc-for list="{{ fd.options }}" as="fo" hint-placeholder-count="3"><option value="{{ fo.v }}">{{ fo.l }}</option></sc-for></select></sc-if>
+                          </label>
+                        </sc-for>
+                      </div>
+                      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 12px; opacity: .6; margin-right: auto; font-family: ui-monospace, Menlo, monospace;">ID interne : {{ ar.id }}</span><button class="btn btn-ghost" onClick="{{ ar.cancelEdit }}" style="white-space: nowrap;">Annuler</button><button class="btn btn-primary" onClick="{{ ar.saveEdit }}" style="white-space: nowrap;">Enregistrer</button></div>
+                    </div>
+                  </sc-if>
                 </sc-for>
               </div>
               <sc-if value="{{ adEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 16px; opacity: .7;">Aucune donnée.</p></sc-if>
@@ -3230,24 +3244,34 @@ class Component extends DCLogic {
       cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Marque'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
       rows = a.prods.map(p => { const sacs = a.sachets.filter(x => x.prodId === p.id); const nl = sacs.reduce((t, x) => t + (logsBySac[x.id] || []).length, 0); const ts = this.idTs(p.id);
         return { id: p.id, v: { nom: p.nom || p.the, the: p.the + (p.variante ? ' · ' + p.variante : ''), fam: famName(p.the), marque: p.marque || '—', nSac: sacs.length, nLog: nl, who: creator('pid', p.id) || (sacs[0] || {}).owner || '—', date: ts },
+          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Marque / fournisseur'], ['ref', 'Référence'], ['boutique', 'Boutique'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
           open: () => this.openProd(p.id), delMsg: 'Supprimer « ' + (p.nom || p.the) + ' » ? ' + sacs.length + ' sachet(s) et ' + nl + ' dégustation(s) seront aussi supprimés.', delFn: delProds([p.id]) }; });
     } else if (kind === 'sachet') {
       cols = [['code', 'Code'], ['nom', 'Thé'], ['owner', 'Propriétaire'], ['qty', 'Quantité'], ['reste', 'Reste'], ['nLog', 'Dégust.'], ['etat', 'État'], ['date', 'Ajouté le']];
       rows = a.sachets.map(x => { const p = prodBy[x.prodId] || {}; const o = this.collection().find(c => c.id === x.id); const rm = o ? this.remainFor(o) : null; const nl = (logsBySac[x.id] || []).length; const ts = this.idTs(x.id);
         return { id: x.id, v: { code: x.code || '—', nom: p.nom || p.the || '?', owner: x.owner + ((x.shares || []).length ? ' (+' + x.shares.map(z => z.to).join(', ') + ')' : ''), qty: x.quantite ? x.quantite + (x.prixMode === 'unite' ? ' u' : ' g') : '—', reste: rm ? Math.round(rm.left) : null, nLog: nl, etat: o && this.isEmptySachet(o) ? 'Vide' : 'En cours', date: ts },
+          raw: x, fields: [['code', 'Code du sachet'], ['owner', 'Propriétaire', this.opts().users.map(u => [u, u])], ['prodId', 'Thé du commerce', a.prods.slice().sort((m, n2) => (m.nom || m.the).localeCompare(n2.nom || n2.the, 'fr')).map(pp => [pp.id, (pp.nom || pp.the) + (pp.marque ? ' · ' + pp.marque : '')])], ['achat', 'Date d’achat', 'date'], ['prodDate', 'Année de production'], ['lot', 'Lot'], ['quantite', 'Quantité'], ['prixMode', 'Unité', [['poids', 'grammes'], ['unite', 'unités']]], ['prixPaye', 'Prix payé (€)'], ['freq', 'Fréquence'], ['commentaire', 'Commentaire', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(z => z.id === x.id ? Object.assign({}, z, { code: d.code, owner: d.owner, prodId: d.prodId, achat: d.achat, prodDate: d.prodDate, lot: d.lot, quantite: d.quantite, prixMode: d.prixMode, prixPaye: d.prixPaye, freq: d.freq, commentaire: d.commentaire }, d.owner !== z.owner ? { history: (z.history || []).concat([{ from: z.owner, to: d.owner, date: new Date().toISOString().slice(0, 10), admin: true }]) } : {}) : z) })); },
           open: () => p.id && this.openProd(p.id), delMsg: 'Supprimer le sachet ' + (x.code || '') + ' de ' + x.owner + ' ? Ses ' + nl + ' dégustation(s) seront aussi supprimées.', delFn: delSacs([x.id]) }; });
     } else if (kind === 'log') {
       cols = [['date', 'Date'], ['nom', 'Thé'], ['author', 'Auteur'], ['note', 'Note'], ['qty', 'Qté'], ['avis', 'Avis']];
       rows = a.logs.map(l => { const sa = sacBy[l.lotId] || {}; const p = prodBy[sa.prodId] || {};
         return { id: l.id, v: { date: l.date || '', nom: p.nom || p.the || '?', author: (l.author || '?') + ((l.with || []).length ? ' + ' + l.with.join(', ') : ''), note: this.num(String(l.note || '').replace(/[A-Za-z]/g, '')) , qty: l.qty || '—', avis: String(l.avis || '').slice(0, 60) + (String(l.avis || '').length > 60 ? '…' : '') },
           disp: { date: l.date ? this.fmtDate(l.date) : '—', note: l.note || '—' },
+          raw: l, fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')'])], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Infusion'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(z => z.id === l.id ? Object.assign({}, z, { author: d.author, lotId: d.lotId, date: d.date, heure: d.heure, note: d.note, infusion: d.infusion, temps: d.temps, temperature: d.temperature, qty: d.qty, technique: d.technique, repas: d.repas, avis: d.avis }) : z) })); },
           open: () => p.id && this.openProd(p.id), delMsg: 'Supprimer la dégustation de ' + (l.author || '?') + ' du ' + (l.date ? this.fmtDate(l.date) : '?') + ' ?', delFn: delLogs([l.id]) }; });
     } else {
       cols = [['nom', 'Nom'], ['type', 'Type'], ['fam', 'Famille / parent'], ['used', 'Thés du commerce'], ['who', 'Ajouté par']];
       const catEv = n => { const e = evs.find(x => x.type === 'cat' && (x.variant || x.name) === n); return e ? e.who : '—'; };
       rows = a.teas.map((t, i) => ({ id: 't' + i, v: { nom: t.nom, type: 'Thé', fam: (this.families[t.famille] || {}).name || t.famille, used: a.prods.filter(p => this.norm(p.the) === this.norm(t.nom)).length, who: catEv(t.nom) },
+          raw: Object.assign({ id: 't' + i }, t), fields: [['nom', 'Nom'], ['famille', 'Famille', Object.keys(this.families).map(k => [k, this.families[k].name])], ['traduction', 'Traduction'], ['origine', 'Origine'], ['pays', 'Pays'], ['province', 'Province'], ['gout', 'Goût', 'area']],
+          save: d => { const b = this.getAdds(); const old = t.nom; this.setAdds(Object.assign({}, b, { teas: b.teas.map((z, k) => k === i ? Object.assign({}, z, { nom: d.nom, famille: d.famille, traduction: d.traduction, origine: d.origine, pays: d.pays, province: d.province, gout: d.gout }) : z), prods: old !== d.nom ? b.prods.map(pp => this.norm(pp.the) === this.norm(old) ? Object.assign({}, pp, { the: d.nom }) : pp) : b.prods, decl: old !== d.nom ? (b.decl || []).map(dd => dd.the === old ? Object.assign({}, dd, { the: d.nom }) : dd) : b.decl })); },
           open: () => this.openCatTea(t.nom), delMsg: 'Retirer « ' + t.nom + ' » du catalogue ? Les thés du commerce rattachés restent enregistrés.', delFn: delCat(['t' + i]) }))
         .concat((a.decl || []).map((d, i) => ({ id: 'd' + i, v: { nom: d.nom, type: 'Variante', fam: d.the, used: a.prods.filter(p => this.norm(p.variante || '') === this.norm(d.nom)).length, who: catEv(d.nom) },
+          raw: Object.assign({ id: 'd' + i }, d), fields: [['nom', 'Nom de la variante'], ['the', 'Thé parent', 'tea'], ['traduction', 'Traduction'], ['profil', 'Profil'], ['description', 'Description', 'area']],
+          save: dd => { const b = this.getAdds(); const old = d.nom; this.setAdds(Object.assign({}, b, { decl: (b.decl || []).map((z, k) => k === i ? Object.assign({}, z, { nom: dd.nom, the: dd.the, traduction: dd.traduction, profil: dd.profil, description: dd.description }) : z), prods: old !== dd.nom ? b.prods.map(pp => this.norm(pp.variante || '') === this.norm(old) && this.norm(pp.the) === this.norm(d.the) ? Object.assign({}, pp, { variante: dd.nom }) : pp) : b.prods })); },
           open: () => this.openCatTea(d.the), delMsg: 'Retirer la variante « ' + d.nom + ' » ?', delFn: delCat(['d' + i]) })));
     }
     const q = this.norm(this.state.adQ || '');
@@ -3266,10 +3290,18 @@ class Component extends DCLogic {
       adCount: list.length + ' ligne' + (list.length > 1 ? 's' : '') + (q ? ' sur ' + rows.length : ''),
       adMore: list.length > 500 ? 'Seules les 500 premières lignes sont affichées : affinez la recherche.' : '',
       adCols: cols.map(c => ({ label: c[1], arrow: sk === c[0] ? (sd === 'asc' ? ' ↑' : ' ↓') : '', sort: () => this.setState({ adSort: { kind: kind, key: c[0], dir: sk === c[0] && sd === 'desc' ? 'asc' : sk === c[0] ? 'desc' : (c[0] === 'nom' || c[0] === 'code' ? 'asc' : 'desc') } }) })),
-      adRows: shown.map(r => { const on = sel.indexOf(r.id) >= 0; return { cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
+      adRows: shown.map(r => { const on = sel.indexOf(r.id) >= 0; const ed = this.state.adEdit === kind + ':' + r.id; const draft = this.state.adDraft || {};
+        return { id: r.raw && r.raw.id ? r.raw.id : r.id, editing: ed,
+        edit: () => this.setState({ adEdit: ed ? null : kind + ':' + r.id, adDraft: ed ? {} : Object.assign({}, r.raw || {}) }),
+        cancelEdit: () => this.setState({ adEdit: null, adDraft: {} }),
+        saveEdit: () => { r.save(Object.assign({}, this.state.adDraft || {})); this.setState({ adEdit: null, adDraft: {} }); },
+        fields: ed ? (r.fields || []).map(f => ({ label: f[1], value: draft[f[0]] == null ? '' : String(draft[f[0]]), type: f[2] === 'date' ? 'date' : 'text', list: f[2] === 'tea' ? 'liste-thes' : '',
+          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' ? '1 / -1' : 'auto',
+          set: e => { const val = e.target.value; this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); } })) : [],
+        cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
         toggle: () => this.setState(s0 => { const cur = s0.adSel || []; return { adSel: cur.indexOf(r.id) >= 0 ? cur.filter(z => z !== r.id) : cur.concat([r.id]) }; }),
         open: r.open, del: () => { if (window.confirm(r.delMsg)) del(r.delFn); } }; }),
-      adGrid: '34px ' + cols.map(c => ['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 'minmax(150px, 2fr)' : c[0] === 'date' ? 'minmax(104px, 1fr)' : 'minmax(84px, 1fr)').join(' ') + ' 150px', adMinW: (34 + cols.reduce((t, c) => t + (['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 150 : c[0] === 'date' ? 104 : 84), 0) + 150) + 'px',
+      adGrid: '34px ' + cols.map(c => ['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 'minmax(150px, 2fr)' : c[0] === 'date' ? 'minmax(104px, 1fr)' : 'minmax(84px, 1fr)').join(' ') + ' 220px', adMinW: (34 + cols.reduce((t, c) => t + (['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 150 : c[0] === 'date' ? 104 : 84), 0) + 220) + 'px',
       adEmpty: !list.length, adAllSel: !!shown.length && shown.every(r => sel.indexOf(r.id) >= 0),
       adToggleAll: () => this.setState({ adSel: shown.every(r => sel.indexOf(r.id) >= 0) ? [] : shown.map(r => r.id) }),
       adHasSel: sel.length > 0, adSelTxt: sel.length + ' élément' + (sel.length > 1 ? 's' : '') + ' sélectionné' + (sel.length > 1 ? 's' : ''),
