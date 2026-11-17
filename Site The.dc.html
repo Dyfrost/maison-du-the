@@ -3101,6 +3101,12 @@ class Component extends DCLogic {
     }).catch(e => { this.setState({ spriteBusy: null }); window.alert('Le pixel art n’a pas pu être créé : ' + (e && e.message ? e.message : 'photo illisible')); });
   }
 
+  migrateGear3() {
+    const a = this.getAdds();
+    if (!this.isAdmin(this.sessionName()) || (a.options || {}).gearMig3) return;
+    this.setAdds(Object.assign({}, a, { logs: a.logs.map(l => this.cleanLogGear(l)), options: Object.assign({}, a.options, { gearMig3: true }) }));
+  }
+
   migrateGear2() {
     const a = this.getAdds();
     if (!this.isAdmin(this.sessionName()) || (a.options || {}).gearMig2) return;
@@ -3442,7 +3448,7 @@ class Component extends DCLogic {
 
   linkLogsToGear(logIds, gid, code) {
     const ids = new Set(logIds); const b = this.getAdds();
-    this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!ids.has(l.id)) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); if (cur.indexOf(gid) < 0) cur.push(gid); return Object.assign({}, l, { gearIds: cur, gearId: '' }); }) }));
+    this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!ids.has(l.id)) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); if (cur.indexOf(gid) < 0) cur.push(gid); return this.cleanLogGear(Object.assign({}, l, { gearIds: cur, gearId: '' })); }) }));
   }
 
   orphanGear() {
@@ -3475,7 +3481,7 @@ class Component extends DCLogic {
         list.forEach(g => { const sg = this.orphanSuggest(g.author, g.code); if (sg) g.logs.forEach(l => { (map[l.id] = map[l.id] || []).push(sg.id); }); });
         const n = Object.keys(map).length;
         if (!n) { window.alert('Aucune correspondance automatique trouvée.'); return; }
-        this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!map[l.id]) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); map[l.id].forEach(id => { if (cur.indexOf(id) < 0) cur.push(id); }); return Object.assign({}, l, { gearIds: cur, gearId: '' }); }) }));
+        this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!map[l.id]) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); map[l.id].forEach(id => { if (cur.indexOf(id) < 0) cur.push(id); }); return this.cleanLogGear(Object.assign({}, l, { gearIds: cur, gearId: '' })); }) }));
         this.setState({ orMsg: n + ' dégustation' + (n > 1 ? 's' : '') + ' rattachée' + (n > 1 ? 's' : '') + ' automatiquement.' });
       },
       orAutoN: String(list.filter(g => this.orphanSuggest(g.author, g.code)).reduce((t, g) => t + g.logs.length, 0)),
@@ -3618,9 +3624,28 @@ class Component extends DCLogic {
     });
     return out;
   }
+  tokResolves(tok, g) {
+    const t = this.norm(String(tok).replace(/\*$/, ''));
+    if (!t) return false;
+    if (this.norm(g.code || '') === t || this.norm(g.name) === t) return true;
+    const v = this.opts().vessels.find(x => this.norm(x.code || '') === t);
+    return !!v && this.norm(String(v.label || '').replace(/\s*\([^)]*\)\s*$/, '')) === this.norm(g.name);
+  }
   logGearRest(l) {
     const gs = this.logGears(l);
-    return String(l.infusion || '').split(/\s*[,+]\s*/).filter(Boolean).filter(x => { const t = this.norm(x.replace(/\*$/, '')); return !gs.some(g => this.norm(g.code || '') === t || this.norm(g.name) === t); }).join(', ');
+    return String(l.infusion || '').split(/\s*[,+]\s*/).filter(Boolean).filter(x => !gs.some(g => this.tokResolves(x, g))).join(', ');
+  }
+  cleanLogGear(l) {
+    // retire du texte « matériel » les anciens codes déjà rattachés à une pièce ; l'astérisque passe dans la technique
+    const ids = l.gearIds || (l.gearId ? [l.gearId] : []);
+    if (!ids.length || !l.infusion) return l;
+    const gs = (this.getAdds().gear || []).filter(g => ids.indexOf(g.id) >= 0);
+    let star = false;
+    const rest = String(l.infusion).split(/\s*[,+]\s*/).filter(Boolean).filter(x => { const hit = gs.some(g => this.tokResolves(x, g)); if (hit && /\*$/.test(x)) star = true; return !hit; });
+    const tech = String(l.technique || '');
+    const nt = star && !/(^|\+)\*($|\+)/.test(tech) ? (tech ? '*+' + tech : '*') : tech;
+    if (rest.join(', ') === String(l.infusion) && nt === tech) return l;
+    return Object.assign({}, l, { infusion: rest.join(', '), technique: nt });
   }
   logGearLinks(l, me) {
     const sal = this.salonOf(me); const mem = sal ? sal.members : [me];
@@ -4213,7 +4238,7 @@ class Component extends DCLogic {
       try { localStorage.setItem('the-ajouts', JSON.stringify(remote)); } catch (e) {}
     }
     this.ensureMember();
-    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} }
+    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} }
     this.setState({ syncAt: new Date(), syncErr: '' });
   }
 
