@@ -1025,7 +1025,7 @@
             <h2 style="font-size: 24px; margin: 0;">{{ gearFormTitle }}</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfNamePh }}" value="{{ gf.name }}" onInput="{{ setG.name }}"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}">{{ gt.l }}</option></sc-for></select></label><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Modèle</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.model }}" onChange="{{ setG.model }}"><option value="">—</option><sc-for list="{{ gearModelsOpts }}" as="gm" hint-placeholder-count="4"><option value="{{ gm }}">{{ gm }}</option></sc-for></select></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}">{{ gt.l }}</option></sc-for></select></label><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Modèle</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.model }}" onChange="{{ setG.model }}"><option value="">—</option><sc-for list="{{ gearModelGroups }}" as="mg" hint-placeholder-count="2"><optgroup label="{{ mg.label }}"><sc-for list="{{ mg.items }}" as="gm" hint-placeholder-count="4"><option value="{{ gm }}">{{ gm }}</option></sc-for></optgroup></sc-for></select></label>
               <sc-if value="{{ gfVol }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Contenance (ml)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 120" value="{{ gf.volume }}" onInput="{{ setG.volume }}"></label></sc-if>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matière</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfMatPh }}" value="{{ gf.material }}" onInput="{{ setG.material }}"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque / origine</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" value="{{ gf.origin }}" onInput="{{ setG.origin }}"></label>
@@ -3634,13 +3634,13 @@ class Component extends DCLogic {
   gearTypeList() { return [['theiere', '🫖', 'Théières'], ['tasse', '🍵', 'Tasses & bols'], ['bateau', '🛶', 'Bateaux & plateaux'], ['teapet', '🐸', 'Tea pets'], ['autre', '🧺', 'Autres ustensiles']]; }
   gearCatKey(t) { return ['theiere', 'gaiwan', 'kyusu'].indexOf(t) >= 0 ? 'theiere' : t === 'tasse' ? 'tasse' : t === 'bateau' ? 'bateau' : t === 'teapet' ? 'teapet' : 'autre'; }
   gearCat(g) { const k = this.gearCatKey(g.type); return this.gearTypeList().find(t => t[0] === k); }
-  gearModelOf(g) { if (g.model) return g.model; return { gaiwan: 'Gaiwan', kyusu: 'Kyusu', pichet: 'Pichet de partage', bouilloire: 'Bouilloire' }[g.type] || ''; }
+  gearModelOf(g) { return this.toolLabel(g.model || { gaiwan: 'Gaiwan', kyusu: 'Kyusu', pichet: 'Pichet de partage', bouilloire: 'Bouilloire' }[g.type] || ''); }
   gearModels(cat) {
     const titles = { theiere: ['Théières'], tasse: ['Tasses', 'Tasses & bols'], bateau: ['Bateaux & plateaux', 'Plateaux'], autre: ['Autres ustensiles'] }[cat] || [];
     const out = [];
-    Object.keys(this.toolGroups).forEach(gk => (this.toolGroups[gk].cats || []).forEach(c => { if (titles.indexOf(c.title) >= 0) (c.items || []).forEach(it => { if (it.name && out.indexOf(it.name) < 0) out.push(it.name); }); }));
-    if (cat === 'teapet') return ['Crapaud à trois pattes (Jinchan)', 'Pixiu', 'Bouddha rieur', 'Garçon pipi', 'Cochon', 'Dragon', 'Tortue', 'Poisson', 'Animal du zodiaque', 'Autre'];
-    if (cat === 'autre') ['Bouilloire', 'Pichet de partage', 'Filtre', 'Pince à tasses'].forEach(n => { if (out.indexOf(n) < 0) out.push(n); });
+    Object.keys(this.toolGroups).forEach(gk => (this.toolGroups[gk].cats || []).forEach(c => { if (titles.indexOf(c.title) >= 0) (c.items || []).forEach(it => { const lb = this.toolLabel(it.name); if (it.name && out.indexOf(lb) < 0) out.push(lb); }); }));
+    if (cat === 'teapet') return ['Jinchan (crapaud à trois pattes)', 'Pixiu (lion ailé)', 'Bouddha rieur', 'Garçon pipi', 'Cochon', 'Dragon', 'Tortue', 'Poisson', 'Animal du zodiaque', 'Autre'];
+    if (cat === 'autre') ['Bouilloire', 'Jiazi (pince à tasses)'].forEach(n => { if (out.indexOf(n) < 0) out.push(n); });
     return out;
   }
   lfGearIds() { const lf = this.state.lf || {}; return lf.gearIds || (lf.gearId ? [lf.gearId] : []); }
@@ -5102,17 +5102,19 @@ class Component extends DCLogic {
     }
   ];
 
+  toolLabel(n) { const s = String(n || ''); return Object.prototype.hasOwnProperty.call(this.toolLabels, s) ? this.toolLabels[s] : s; }
+  toolLabels = {"Gaiwan": "Gaiwan (bol à couvercle)", "Théière Yixing": "Zisha hu (théière Yixing)", "Théière Chaozhou": "Chaozhou hu (théière de Chaozhou)", "Théière Jianshui": "Jianshui hu (théière Jianshui)", "Théière Nixing": "Nixing hu (théière Nixing)", "Théière en verre": "Boli hu (théière en verre)", "Théière en porcelaine": "Ci hu (théière en porcelaine)", "Bateau à thé": "Chapan (bateau à thé)", "Plateau en bambou": "Zhu chapan (plateau en bambou)", "Soucoupe à théière": "Hu cheng (soucoupe de théière)", "Tasse de dégustation": "Pinming bei (tasse de dégustation)", "Tasse à sentir": "Wenxiang bei (tasse à sentir)", "Tasse du maître": "Zhuren bei (tasse de l’hôte)", "Tasse chapeau": "Douli bei (tasse évasée)", "Tasse cloche": "Lingdang bei (tasse cloche)", "Tasse pressée": "Yashou bei (tasse à bord droit)", "Tasse Luohan": "Luohan bei (tasse ventrue)", "Tasse sabot": "Mati bei (tasse à base large)", "Tasse à haut pied": "Gaozu bei (tasse à pied)", "Tasse aux poules": "Jigang bei (tasse aux poules)", "Porcelaine de Dehua": "Dehua baici (porcelaine blanche)", "Céladon de Longquan": "Longquan qingci (céladon)", "Ru yao": "Ru yao (porcelaine craquelée)", "Bol Jianzhan": "Jianzhan (bol noir)", "Tasse en zisha": "Zisha bei (tasse en terre Yixing)", "Pichet d'équité": "Gongdao bei (verseuse)", "Présentoir à feuilles": "Chahe (présentoir à feuilles)", "Les six gentilshommes": "Chadao liu junzi (set d’accessoires)", "Filtre": "Chalou (filtre)", "Figurine de thé": "Chachong (tea pet)", "Pain de thé & couteau": "Chadao (couteau à pu’er)", "Aiguille à pu'er": "Pu’er zhen (aiguille à pu’er)", "Bol à eaux usées": "Jianshui (bol à eaux usées)", "Boîte à thé": "Chaguan (boîte à thé)", "Bouilloire & réchaud": "Zhushui qi (bouilloire)", "Kyusu": "Kyusu (théière à manche)", "Tetsu-kyusu": "Tetsu-kyusu (théière en fonte)", "Mizudashi": "Mizudashi (carafe infusion à froid)", "Houhin": "Houhin (petite théière sans manche)", "Shiboridashi": "Shiboridashi (coupe à infuser)", "Dobin": "Dobin (théière à anse)", "Tetsubin": "Tetsubin (bouilloire en fonte)", "Chabon": "Chabon (plateau de service)", "Chataku": "Chataku (sous-tasse)", "Obon": "Obon (plateau)", "Yunomi": "Yunomi (tasse haute)", "Kumidashi": "Kumidashi (tasse à invités)", "Senchawan": "Senchawan (petite tasse à sencha)", "Katakuchi": "Katakuchi (bol à bec verseur)", "Chawan": "Chawan (bol à matcha)", "Tsutsu-chawan": "Tsutsu-chawan (bol à matcha d’hiver)", "Hira-chawan": "Hira-chawan (bol à matcha d’été)", "Tenmoku": "Tenmoku (bol conique)", "Raku": "Raku (bol en raku)", "Hagi": "Hagi (céramique de Hagi)", "Kyo-yaki": "Kyo-yaki (céramique de Kyoto)", "Asahi-yaki": "Asahi-yaki (céramique d’Uji)", "Shino": "Shino (céramique blanche)", "Chasen": "Chasen (fouet matcha)", "Chashaku": "Chashaku (cuillère à matcha)", "Natsume": "Natsume (boîte à matcha)", "Yuzamashi": "Yuzamashi (refroidisseur d’eau)", "Hishaku": "Hishaku (louche)", "Kensui": "Kensui (bol à eaux usées)", "Furui": "Furui (tamis à matcha)", "Fukusa": "Fukusa (étoffe de soie)", "Kusenaoshi": "Kusenaoshi (support de fouet)", "Chazutsu": "Chazutsu (boîte à thé)", "Chakoro": "Chakoro (brûle-thé)", "Chakoboshi": "Chakoboshi (bol à eaux usées)", "Pichet de partage": "Gongdao bei (verseuse)", "Crapaud à trois pattes (Jinchan)": "Jinchan (crapaud à trois pattes)", "Pixiu": "Pixiu (lion ailé)", "Bouilloire": "Bouilloire", "Pince à tasses": "Jiazi (pince à tasses)"};
   findToolExact(name) {
     const n = this.norm(name);
     for (const g of ['cn', 'jp']) {
       const cats = this.toolGroups[g].cats;
-      for (let ci = 0; ci < cats.length; ci++) for (let ii = 0; ii < cats[ci].items.length; ii++) if (this.norm(cats[ci].items[ii].name) === n) return { group: g, ci: ci, ii: ii };
+      for (let ci = 0; ci < cats.length; ci++) for (let ii = 0; ii < cats[ci].items.length; ii++) if (this.norm(cats[ci].items[ii].name) === n || this.norm(this.toolLabel(cats[ci].items[ii].name)) === n) return { group: g, ci: ci, ii: ii };
     }
     return null;
   }
 
   toolChips(names) {
-    return (names || []).map(nm => { const hit = this.findToolExact(nm); return { name: nm, link: !!hit, plain: !hit, open: () => { if (hit) this.setState({ view: 'tool', group: hit.group, ci: hit.ci, ii: hit.ii }); } }; });
+    return (names || []).map(nm => { const hit = this.findToolExact(nm); return { name: this.toolLabel(nm), link: !!hit, plain: !hit, open: () => { if (hit) this.setState({ view: 'tool', group: hit.group, ci: hit.ci, ii: hit.ii }); } }; });
   }
 
   findTool(text) {
@@ -5203,7 +5205,7 @@ class Component extends DCLogic {
         const G = this.toolGroups[g];
         G.cats.forEach((c, ci) => c.items.forEach((it, ii) => {
           const hay = this.norm([G.tag, c.title, it.kind, it.name, it.native, it.desc, (it.cmp || []).join(' '), (it.variants || []).map(x => x.name + ' ' + x.pour).join(' ')].join(' '));
-          if (tWords.every(w => hay.indexOf(w) >= 0)) toolResults.push({ name: it.name, meta: G.tag + ' · ' + c.title + (it.native ? ' · ' + it.native : ''), desc: it.desc, open: () => this.setState({ view: 'tool', group: g, ci: ci, ii: ii }) });
+          if (tWords.every(w => hay.indexOf(w) >= 0)) toolResults.push({ name: this.toolLabel(it.name), meta: G.tag + ' · ' + c.title + (it.native ? ' · ' + it.native : ''), desc: it.desc, open: () => this.setState({ view: 'tool', group: g, ci: ci, ii: ii }) });
         }));
       });
     }
@@ -5236,7 +5238,7 @@ class Component extends DCLogic {
         noteTitle: c.noteTitle,
         note: c.note,
         openCompare: () => this.setState({ view: 'compare', ci: ci, cmpSel: c.items.slice(0, 3).map((x, i) => i) }),
-        items: c.items.map((it, ii) => Object.assign({ photo: photos[it.name], slot: 'ust-' + this.state.group + '-' + ci + '-' + ii, open: () => this.setState({ view: 'tool', ci: ci, ii: ii }) }, it))
+        items: c.items.map((it, ii) => Object.assign({ photo: photos[it.name], slot: 'ust-' + this.state.group + '-' + ci + '-' + ii, open: () => this.setState({ view: 'tool', ci: ci, ii: ii }) }, it, { name: this.toolLabel(it.name) }))
       })),
       isCeremonies: v === 'ceremonies',
       isCer: v === 'cer',
@@ -5389,12 +5391,14 @@ class Component extends DCLogic {
         if (v !== 'gear') return { gearGroups: [], gearTypes: [] };
         const gf = this.state.gf || {};
         const set = {}; ['name', 'type', 'model', 'code', 'volume', 'material', 'origin', 'achat', 'prix', 'comment'].forEach(k => { set[k] = e => { const val = e.target.value; this.setState(s0 => ({ gf: Object.assign({}, s0.gf, { [k]: val }) })); }; });
+        set.model = e => { const val = e.target.value; const T = this.gearTypeList().find(t => this.gearModels(t[0]).indexOf(val) >= 0); this.setState(s0 => ({ gf: Object.assign({}, s0.gf, { model: val }, T && val ? { type: T[0] } : {}) })); };
         const open = !!this.state.gearEdit;
         const mineG = this.gearOf(me);
         return {
           gf: gf, setG: set, gearFormOpen: open, gearFormTitle: this.state.gearEdit === 'new' ? 'Nouveau matériel' : 'Modifier le matériel',
           gearTypes: this.gearTypeList().map(t => ({ v: t[0], l: t[1] + ' ' + t[2] })),
           gearModelsOpts: this.gearModels(this.gearCatKey(gf.type || 'theiere')),
+          gearModelGroups: (() => { const cur = this.gearCatKey(gf.type || 'theiere'); const T = this.gearTypeList(); return T.filter(t => t[0] === cur).concat(T.filter(t => t[0] !== cur)).map(t => ({ label: t[1] + ' ' + t[2], items: this.gearModels(t[0]) })).filter(g => g.items.length); })(),
           ...(() => { const c = this.gearCatKey(gf.type || 'theiere');
             const P = { theiere: ['ex : Zhuni de Maël, Gaiwan blanc', 'ex : argile zhuni, porcelaine', 'ex : Yixing, Jingdezhen'], tasse: ['ex : Tasse céladon', 'ex : céladon, porcelaine, verre', 'ex : Longquan, Dehua'], bateau: ['ex : Bateau en bambou', 'ex : bambou, céramique, pierre', 'ex : Fujian'], teapet: ['ex : Crapaud doré', 'ex : argile zisha, céramique', 'ex : Yixing'], autre: ['ex : Bouilloire Kamjove', 'ex : verre, inox, fonte', 'ex : Kamjove, Hario'] }[c];
             return { gfVol: ['theiere', 'tasse', 'autre'].indexOf(c) >= 0, gfNamePh: P[0], gfMatPh: P[1], gfOrigPh: P[2] }; })(),
@@ -5898,7 +5902,7 @@ class Component extends DCLogic {
       toolVariants: toolItem.variants || [],
       isTool: v === 'tool',
       isCompare: v === 'compare',
-      toolName: toolItem.name,
+      toolName: this.toolLabel(toolItem.name),
       toolNative: toolItem.native,
       toolDesc: toolItem.desc,
       toolCat: toolCatObj.title,
@@ -5906,14 +5910,14 @@ class Component extends DCLogic {
       cmpTitle: toolCatObj.title,
       cmpEmpty: sel.length === 0,
       cmpChips: (toolCatObj.items || []).map((it, ii) => ({
-        name: it.name, on: sel.indexOf(ii) >= 0, off: sel.indexOf(ii) < 0,
+        name: this.toolLabel(it.name), on: sel.indexOf(ii) >= 0, off: sel.indexOf(ii) < 0,
         toggle: () => this.setState(s => {
           const cur = s.cmpSel || [0, 1, 2];
           return { cmpSel: cur.indexOf(ii) >= 0 ? cur.filter(x => x !== ii) : cur.concat([ii]).sort((a, b) => a - b) };
         })
       })),
       cmpRows: (toolCatObj.items || []).map((it, ii) => ({ it: it, ii: ii })).filter(o => sel.indexOf(o.ii) >= 0).map(({ it, ii }) => ({
-        name: it.name, native: it.native, kind: it.kind || toolCatObj.title, photo: photos[it.name],
+        name: this.toolLabel(it.name), native: it.native, kind: it.kind || toolCatObj.title, photo: photos[it.name],
         slot: 'ust-' + this.state.group + '-' + this.state.ci + '-' + ii,
         matiere: (it.cmp || [])[0], contenance: (it.cmp || [])[1], thes: (it.cmp || [])[2], quand: (it.cmp || [])[3],
         open: () => this.setState({ view: 'tool', ii: ii })
