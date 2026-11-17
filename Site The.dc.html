@@ -2433,13 +2433,32 @@
               <sc-if value="{{ pv.variante }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">Variante : {{ pv.variante }}</span></sc-if>
               <button class="tag tag-accent-2" onClick="{{ pv.openFam }}" style="border: none; cursor: pointer; font-family: var(--font-body);">{{ pv.famName }} →</button>
             </div>
-            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1><button class="btn btn-secondary" onClick="{{ pv.share }}" style="white-space: nowrap;">↗ Partager</button></div>
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1><button class="btn btn-secondary" onClick="{{ pv.share }}" style="white-space: nowrap;">↗ Partager</button><sc-if value="{{ pv.canEditP }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.editP }}" style="white-space: nowrap;">✏️ Modifier le thé</button></sc-if></div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
               <span style="font-size: 15px; opacity: .8;">{{ pv.marque }}<sc-if value="{{ pv.ref }}" hint-placeholder-val="{{ false }}"> · réf. {{ pv.ref }}</sc-if></span>
             </div>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ pv.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent">{{ tg }}</span></sc-for></div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ pv.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent">{{ tg }}</span></sc-for><sc-if value="{{ pv.noTagsEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pv.editP }}" style="cursor: pointer; border: 1px dashed var(--color-divider); background: transparent; border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75;">＋ Ajouter des tags</button></sc-if></div>
           </div>
         </div>
+        <sc-if value="{{ pv.editingP }}" hint-placeholder-val="{{ false }}">
+        <section class="sac" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+          <h2 style="font-size: 22px; margin: 0;">✏️ Modifier « {{ pv.name }} »</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 14px;">
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Nom chez le fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.nom }}" onInput="{{ pe.set.nom }}" key="{{ pe.key }}-nom"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Marque / fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.marque }}" onInput="{{ pe.set.marque }}" key="{{ pe.key }}-marque"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ref }}" onInput="{{ pe.set.ref }}" key="{{ pe.key }}-ref"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.variante }}" onInput="{{ pe.set.variante }}" key="{{ pe.key }}-variante"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.boutique }}" onInput="{{ pe.set.boutique }}" key="{{ pe.key }}-boutique"></label>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Description<textarea class="input" rows="3" style="padding: 10px 12px; background: var(--color-bg); resize: vertical;" defaultValue="{{ pe.commentaire }}" onInput="{{ pe.set.commentaire }}" key="{{ pe.key }}-commentaire"></textarea></label>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 13px;">Tags <span style="opacity: .6;">· {{ pe.tagsCount }}</span></span>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ pe.chips }}" as="tc" hint-placeholder-count="6"><button onClick="{{ tc.toggle }}" aria-pressed="{{ tc.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13px; background: {{ tc.bg }}; color: {{ tc.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ tc.label }}</button></sc-for></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><input class="input" value="{{ pe.newTag }}" onInput="{{ pe.setNewTag }}" onKeyDown="{{ pe.newTagKey }}" placeholder="Nouveau tag (ex : fumé)" aria-label="Nouveau tag" style="flex: 0 1 240px; padding: 8px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ pe.addTag }}" style="white-space: nowrap; background: var(--color-bg);">＋ Créer et ajouter</button></div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ pe.save }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ pe.cancel }}" style="white-space: nowrap;">Annuler</button><span style="font-size: 12.5px; opacity: .65;">Ces infos sont communes à toute la maison : elles s’appliquent à tous les sachets de ce thé.</span></div>
+        </section>
+        </sc-if>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
 <sc-if value="{{ pv.member }}" hint-placeholder-val="{{ true }}">          <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Note moyenne</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ pv.avg }}</span><span style="font-size: 12px; opacity: .65;">{{ pv.avgSub }}</span></div></sc-if>
           <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix moyen</span><span style="font-family: var(--font-heading); font-size: 20px;">{{ pv.prix }}</span></div>
@@ -4959,7 +4978,11 @@ class Component extends DCLogic {
     const ls = a.logs.filter(l => ids.indexOf(l.lotId) >= 0).sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')));
     const mineS = sacs.filter(o => o.owner === me);
     const photo = (sacs.find(o => o.prodPhoto) || sacs.find(o => o.photo) || {});
-    return { member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
+    const canEditP = !!me && (!!this.state.session || !this.state.cloud);
+    const pe0 = this.state.prodEdit && this.state.prodEdit.id === pr.id ? this.state.prodEdit : null;
+    const startEdit = () => this.setState({ prodEdit: { id: pr.id, nom: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', variante: pr.variante || '', boutique: pr.boutique || '', commentaire: pr.commentaire || '', tags: (pr.tags || []).slice(), rev: Date.now() }, prodNewTag: '' });
+    return { canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
+      member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
       famName: fk ? this.families[fk].name : '—',
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
@@ -5194,6 +5217,23 @@ class Component extends DCLogic {
     if (Array.isArray(o.tagList)) return o.tagList.slice();
     const extra = (this.opts().tags || []).filter(t => this.keywords.indexOf(t) < 0);
     return this.keywords.concat(extra);
+  }
+
+  prodEditVals() {
+    const pe = this.state.prodEdit; if (!pe) return { set: {}, chips: [] };
+    const setD = (k, v) => { this._peDraft = Object.assign({}, this._peDraft, { [k]: v }); };
+    const merged = () => Object.assign({}, this.state.prodEdit, this._peDraft || {});
+    const addNew = () => { const t = String(this.state.prodNewTag || '').trim(); if (!t) return; const name = t.charAt(0).toUpperCase() + t.slice(1); const exist = this.allTags().find(x => this.norm(x) === this.norm(name)); const tag = exist || name; if (!exist) this.setTagList(this.allTags().concat([tag])); const m = merged(); this._peDraft = {}; this.setState({ prodNewTag: '', prodEdit: Object.assign({}, m, { tags: m.tags.indexOf(tag) >= 0 ? m.tags : m.tags.concat([tag]) }) }); };
+    const all = this.allTags(); const extra = pe.tags.filter(t => all.indexOf(t) < 0);
+    return { key: 'pe' + pe.rev, nom: pe.nom, marque: pe.marque, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
+      set: ['nom', 'marque', 'ref', 'variante', 'boutique', 'commentaire'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
+      tagsCount: pe.tags.length ? pe.tags.length + ' sélectionné' + (pe.tags.length > 1 ? 's' : '') : 'cliquez pour en choisir',
+      chips: all.concat(extra).map(t => { const on = pe.tags.indexOf(t) >= 0; return { label: (on ? '✓ ' : '') + t, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', toggle: () => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: on ? m.tags.filter(x => x !== t) : m.tags.concat([t]) }) }); } }; }),
+      newTag: this.state.prodNewTag || '', setNewTag: e => this.setState({ prodNewTag: e.target.value }), newTagKey: e => { if (e.key === 'Enter') { e.preventDefault(); addNew(); } }, addTag: addNew,
+      cancel: () => { this._peDraft = {}; this.setState({ prodEdit: null }); },
+      save: () => { const m = merged(); this._peDraft = {}; const a = this.getAdds(); const clean = v => String(v || '').trim();
+        this.setAdds(Object.assign({}, a, { prods: a.prods.map(x => x.id === m.id ? Object.assign({}, x, { nom: clean(m.nom), marque: clean(m.marque), ref: clean(m.ref), variante: clean(m.variante), boutique: clean(m.boutique), commentaire: clean(m.commentaire), tags: m.tags }) : x) }));
+        this.setState({ prodEdit: null }); } };
   }
 
   addTag2() {
@@ -5684,6 +5724,7 @@ class Component extends DCLogic {
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
       isStats: v === 'stats',
+      pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
       shareToast: this.state.shareToast || '',
       menuGear: () => this.setState({ menuOpen: false, view: 'gear', gearEdit: null, gearMsg: '' }),
