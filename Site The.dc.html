@@ -73,7 +73,7 @@
       <button onClick="{{ openAdd }}" class="nq" style-hover="background: var(--color-accent-100);">＋ Nouveau thé</button>
     </div>
     </sc-if>
-    <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; height: 42px; padding: 0 12px; border-radius: 999px; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;" style-hover="background: var(--color-accent-100);">{{ langBtn }}</button>
+    <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; width: 42px; height: 42px; padding: 0; border-radius: 50%; background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center;" style-hover="background: var(--color-accent-100);"><img src="{{ langFlag }}" alt="" width="24" height="16" style="width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); display: block;"></button>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div class="nav-bell" style="position: relative;">
         <button onClick="{{ toggleNotif }}" aria-haspopup="true" aria-expanded="{{ notifOpen }}" aria-label="{{ notifLabel }}" title="{{ notifLabel }}" style="position: relative; z-index: 42; cursor: pointer; border: none; width: 42px; height: 42px; border-radius: 50%; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 19px;" style-hover="background: var(--color-accent-100);">🔔<sc-if value="{{ hasNotifCount }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-body);">{{ notifCount }}</span></sc-if></button>
@@ -4862,7 +4862,7 @@ class Component extends DCLogic {
             go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } })) };
       })(),
       _noTr: (window.mdtNoTr = this.opts().users.slice()),
-      langBtn: window.mdtLang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN', langTitle: window.mdtLang === 'en' ? 'Repasser en français' : 'Switch to English (automatic translation)',
+      langFlag: window.mdtLang === 'en' ? 'flag-gb.svg' : 'flag-fr.svg', langTitle: window.mdtLang === 'en' ? 'English · cliquer pour repasser en français' : 'Français · switch to English (automatic translation)',
       toggleLang: () => window.mdtSetLang && window.mdtSetLang(window.mdtLang === 'en' ? 'fr' : 'en'),
       meSalon: (this.salonOf(me) || {}).name || '', meSalonC: this.salonColor(this.salonOf(me)),
       meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
