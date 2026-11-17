@@ -355,7 +355,7 @@
                       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
-                        <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
+                        <span style="font-size: 14px;">{{ sa.shareUnitLbl }}</span>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -427,7 +427,7 @@
                       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
-                        <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
+                        <span style="font-size: 14px;">{{ sa.shareUnitLbl }}</span>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -534,7 +534,7 @@
                       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
-                        <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
+                        <span style="font-size: 14px;">{{ sa.shareUnitLbl }}</span>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -630,7 +630,7 @@
                       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
-                        <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
+                        <span style="font-size: 14px;">{{ sa.shareUnitLbl }}</span>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -713,7 +713,7 @@
                       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
-                        <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
+                        <span style="font-size: 14px;">{{ sa.shareUnitLbl }}</span>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -2000,7 +2000,7 @@
                       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-accent-100); border-radius: 18px; padding: 10px 14px;">
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
-                        <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
+                        <span style="font-size: 14px;">{{ sa.shareUnitLbl }}</span>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -3960,11 +3960,11 @@ class Component extends DCLogic {
       shareToggle: () => this.setState(s => ({ shareId: s.shareId === o.id ? null : o.id, shareTo: shareTargets[0] || '', shareG: '', shareU: o.prixMode === 'unite' ? 'u' : 'g', sharePer: '' })),
       shareTo: this.state.shareTo || shareTargets[0] || '', setShareTo: e => this.setState({ shareTo: e.target.value }),
       shareG: sharing ? (this.state.shareG || '') : '', setShareG: e => this.setState({ shareG: e.target.value }),
-      shareUnits: ['g', 'u'].map(k => { const cur = this.state.shareU || (o.prixMode === 'unite' ? 'u' : 'g'); return { name: k === 'g' ? 'grammes' : 'unités', on: cur === k, bg: cur === k ? 'var(--color-text)' : 'transparent', fg: cur === k ? 'var(--color-bg)' : 'var(--color-text)', pick: () => this.setState({ shareU: k }) }; }),
+      shareUnitLbl: o.prixMode === 'unite' ? 'unités' : 'g',
       shareSave: () => {
         const to = this.state.shareTo || shareTargets[0]; const amt = this.num(this.state.shareG);
         if (!to) return;
-        const baseU = o.prixMode === 'unite' ? 'u' : 'g', unitC = this.state.shareU || baseU;
+        const baseU = o.prixMode === 'unite' ? 'u' : 'g', unitC = baseU;
         if (amt == null || amt <= 0) { window.alert('Indiquez une quantité à partager.'); return; }
         const g = unitC === baseU ? amt : 0;
         if (rm && g > rm.left + 0.001) { window.alert('Il ne vous reste qu’environ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + (baseU === 'u' ? ' unités' : ' g') + ' dans ce sachet.'); return; }
