@@ -1588,6 +1588,8 @@
           <section style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Matériel non lié</h2><p style="margin: 0; font-size: 14px; opacity: .72;">Les dégustations dont le texte « matériel » contient un code ou un nom qui ne correspond à aucune pièce de leur auteur. Choisissez la pièce à laquelle les rattacher.</p></div>
             <p style="margin: 0; font-size: 15px; font-weight: 600;">{{ orSummary }}</p>
+            <sc-if value="{{ orHas }}" hint-placeholder-val="{{ true }}"><div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ orAuto }}" style="white-space: nowrap;">⚡ Tout rattacher automatiquement ({{ orAutoN }})</button><span style="font-size: 13px; opacity: .7;">D’après les anciens codes (PGW, TMR…) et le nom des pièces. Les groupes sans correspondance restent à faire à la main.</span></div></sc-if>
+            <sc-if value="{{ orMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px; color: var(--color-accent-2-800);">{{ orMsg }}</p></sc-if>
             <sc-for list="{{ orGroups }}" as="og" hint-placeholder-count="3">
               <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border-radius: 18px; padding: 12px 14px;">
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -3429,6 +3431,20 @@ class Component extends DCLogic {
       } };
   }
 
+  orphanSuggest(author, code) {
+    const gear = this.getAdds().gear || [];
+    const n = this.norm(code);
+    const v = this.opts().vessels.find(x => this.norm(x.code || '') === n);
+    const label = v ? this.norm(String(v.label || '').replace(/\s*\([^)]*\)\s*$/, '')) : '';
+    const hit = g => this.norm(g.code || '') === n || this.norm(g.name) === n || (label && this.norm(g.name) === label);
+    return gear.find(g => g.owner === author && hit(g)) || gear.find(g => hit(g)) || null;
+  }
+
+  linkLogsToGear(logIds, gid, code) {
+    const ids = new Set(logIds); const b = this.getAdds();
+    this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!ids.has(l.id)) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); if (cur.indexOf(gid) < 0) cur.push(gid); return Object.assign({}, l, { gearIds: cur, gearId: '' }); }) }));
+  }
+
   orphanGear() {
     const a = this.getAdds();
     const gear = a.gear || [];
@@ -3442,7 +3458,9 @@ class Component extends DCLogic {
       const linkedG = gear.filter(g => ids.indexOf(g.id) >= 0);
       toks.forEach(t => {
         const n = this.norm(t);
-        const ok = linkedG.some(g => this.norm(g.code || '') === n || this.norm(g.name) === n) || gear.some(g => g.owner === l.author && (this.norm(g.code || '') === n || this.norm(g.name) === n));
+        const vl = (this.opts().vessels.find(x => this.norm(x.code || '') === n) || {}).label; const ln = vl ? this.norm(String(vl).replace(/\s*\([^)]*\)\s*$/, '')) : '';
+        const m = g => this.norm(g.code || '') === n || this.norm(g.name) === n || (ln && this.norm(g.name) === ln);
+        const ok = linkedG.some(m);
         if (ok) return;
         const k = (l.author || '?') + '|' + t.toUpperCase();
         (groups[k] = groups[k] || { author: l.author || '?', code: t, logs: [] }).logs.push(l);
@@ -3452,17 +3470,27 @@ class Component extends DCLogic {
     const total = list.reduce((t, g) => t + g.logs.length, 0);
     const sel = this.state.orSel || {}, open = this.state.orOpen || {};
     return {
-      orNone: !list.length, orSummary: list.length ? total + ' dégustation' + (total > 1 ? 's' : '') + ' à rattacher, en ' + list.length + ' groupe' + (list.length > 1 ? 's' : '') + '.' : '',
+      orAuto: () => {
+        const b = this.getAdds(); const map = {};
+        list.forEach(g => { const sg = this.orphanSuggest(g.author, g.code); if (sg) g.logs.forEach(l => { (map[l.id] = map[l.id] || []).push(sg.id); }); });
+        const n = Object.keys(map).length;
+        if (!n) { window.alert('Aucune correspondance automatique trouvée.'); return; }
+        this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!map[l.id]) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); map[l.id].forEach(id => { if (cur.indexOf(id) < 0) cur.push(id); }); return Object.assign({}, l, { gearIds: cur, gearId: '' }); }) }));
+        this.setState({ orMsg: n + ' dégustation' + (n > 1 ? 's' : '') + ' rattachée' + (n > 1 ? 's' : '') + ' automatiquement.' });
+      },
+      orAutoN: String(list.filter(g => this.orphanSuggest(g.author, g.code)).reduce((t, g) => t + g.logs.length, 0)),
+      orMsg: this.state.orMsg || '',
+      orHas: list.length > 0, orNone: !list.length, orSummary: list.length ? total + ' dégustation' + (total > 1 ? 's' : '') + ' à rattacher, en ' + list.length + ' groupe' + (list.length > 1 ? 's' : '') + '.' : '',
       orGroups: list.map(g => { const k = g.author + '|' + g.code.toUpperCase();
         const cand = gear.slice().sort((x, y) => ((x.owner !== g.author) - (y.owner !== g.author)) || String(x.owner).localeCompare(String(y.owner)) || String(x.name).localeCompare(String(y.name)));
+        const sug = this.orphanSuggest(g.author, g.code);
         return { code: g.code, author: g.author, n: g.logs.length + ' dégustation' + (g.logs.length > 1 ? 's' : ''), open: !!open[k], toggleTxt: open[k] ? 'masquer' : 'voir le détail',
           toggle: () => this.setState(st => ({ orOpen: Object.assign({}, st.orOpen, { [k]: !(st.orOpen || {})[k] }) })),
           logs: g.logs.slice(0, 50).map(l => (l.date ? this.fmtDate(l.date) : 'sans date') + ' · ' + prodName(l) + (l.note ? ' · ' + l.note + '/20' : '')),
           opts: cand.map(x => ({ v: x.id, l: x.name + (x.code ? ' (' + x.code + ')' : '') + ' · ' + x.owner })),
-          sel: sel[k] != null ? sel[k] : ((cand.find(x => this.norm(x.code || '') === this.norm(g.code)) || {}).id || ''), setSel: e => { const val = e.target.value; this.setState(st => ({ orSel: Object.assign({}, st.orSel, { [k]: val }) })); },
-          link: () => { const gid = (this.state.orSel || {})[k] != null ? (this.state.orSel || {})[k] : ((cand.find(x => this.norm(x.code || '') === this.norm(g.code)) || {}).id || ''); if (!gid) { window.alert('Choisissez une pièce de matériel.'); return; }
-            const ids = new Set(g.logs.map(l => l.id)); const b = this.getAdds();
-            this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => { if (!ids.has(l.id)) return l; const cur = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); if (cur.indexOf(gid) < 0) cur.push(gid); const tg = gear.find(x => x.id === gid) || {}; const inf = String(l.infusion || '').split(/\s*[,+]\s*/).filter(Boolean).map(x => { const star = /\*$/.test(x) ? '*' : ''; return this.norm(x.replace(/\*$/, '')) === this.norm(g.code) ? (tg.code ? tg.code + star : '') : x; }).filter(Boolean).join(', '); return Object.assign({}, l, { gearIds: cur, gearId: '', infusion: inf }); }) }));
+          sel: sel[k] != null ? sel[k] : (sug ? sug.id : ''), setSel: e => { const val = e.target.value; this.setState(st => ({ orSel: Object.assign({}, st.orSel, { [k]: val }) })); },
+          link: () => { const gid = (this.state.orSel || {})[k] != null ? (this.state.orSel || {})[k] : (sug ? sug.id : ''); if (!gid) { window.alert('Choisissez une pièce de matériel.'); return; }
+            this.linkLogsToGear(g.logs.map(l => l.id), gid, g.code);
           } };
       })
     };
