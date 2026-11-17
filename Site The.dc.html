@@ -76,14 +76,17 @@
         <sc-if value="{{ notifOpen }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ closeNotif }}" aria-label="Fermer les notifications" style="position: fixed; inset: 0; z-index: 40; background: transparent; border: none; cursor: default;"></button>
           <div role="dialog" aria-label="Notifications" style="position: absolute; right: 0; top: calc(100% + 10px); z-index: 41; width: min(360px, calc(100vw - 32px)); max-height: 70vh; overflow: auto; background: var(--color-bg); border-radius: 24px; box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,.18)); padding: 10px; display: flex; flex-direction: column; gap: 4px;">
-            <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; padding: 8px 10px 4px;">Notifications</span>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px 4px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Notifications</span><sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}"><button onClick="{{ readAll }}" style="cursor: pointer; border: none; background: transparent; padding: 4px 0; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700);">✓ Tout marquer comme lu</button></sc-if></div>
             <sc-if value="{{ notifEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 10px; font-size: 14px; opacity: .7;">Rien de neuf pour l’instant.</p></sc-if>
             <sc-for list="{{ notifs }}" as="nt" hint-placeholder-count="3">
-              <button onClick="{{ nt.go }}" style="cursor: pointer; text-align: left; border: none; display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 16px; background: {{ nt.bg }}; color: var(--color-text); font-family: var(--font-body);" style-hover="filter: brightness(.97);">
+              <div style="display: flex; align-items: stretch; border-radius: 16px; background: {{ nt.bg }};">
+              <button onClick="{{ nt.go }}" style="flex: 1; min-width: 0; cursor: pointer; text-align: left; border: none; display: flex; gap: 10px; align-items: flex-start; padding: 10px 4px 10px 12px; border-radius: 16px; background: transparent; color: var(--color-text); font-family: var(--font-body);" style-hover="filter: brightness(.97);">
                 <span aria-hidden="true" style="font-size: 18px; line-height: 1.2;">{{ nt.icon }}</span>
                 <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0;"><span style="font-size: 14px; line-height: 1.35; text-wrap: pretty;">{{ nt.txt }}</span><span style="font-size: 12px; opacity: .6;">{{ nt.when }}</span></span>
                 <span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{ nt.dot }}; margin-top: 6px; flex: none;"></span>
               </button>
+              <button onClick="{{ nt.del }}" aria-label="{{ nt.delLbl }}" title="Supprimer" style="flex: none; cursor: pointer; border: none; background: transparent; width: 34px; border-radius: 0 16px 16px 0; font-size: 16px; color: var(--color-text); opacity: .45;" style-hover="opacity: 1; color: var(--color-accent-800);">×</button>
+              </div>
             </sc-for>
           </div>
         </sc-if>
@@ -1418,6 +1421,21 @@
           </section>
         </sc-if>
 
+        <sc-if value="{{ tabNewOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Ajouts</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Le registre de tout ce qui entre dans la maison : nouveaux thés du catalogue et variantes, nouveaux thés du commerce, nouveaux sachets. Cliquez pour ouvrir.</p></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ nwKinds }}" as="nk" hint-placeholder-count="4"><button onClick="{{ nk.pick }}" aria-pressed="{{ nk.on }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: {{ nk.bg }}; color: {{ nk.fg }};">{{ nk.name }} · {{ nk.n }}</button></sc-for></div>
+            <input class="input" type="search" value="{{ nwQ }}" onInput="{{ setNwQ }}" placeholder="🔎 Un nom, une marque, une personne…" aria-label="Rechercher dans les ajouts">
+            <sc-if value="{{ nwEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun ajout enregistré pour l’instant : le registre se remplit à partir de maintenant.</p></sc-if>
+            <sc-for list="{{ nwList }}" as="nw" hint-placeholder-count="5">
+              <button onClick="{{ nw.open }}" style="cursor: pointer; text-align: left; border: none; display: flex; gap: 12px; align-items: center; background: var(--color-bg); border-radius: 18px; padding: 12px 14px; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);">
+                <span aria-hidden="true" style="font-size: 22px; flex: none;">{{ nw.icon }}</span>
+                <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ nw.title }}</span><span style="font-size: 13px; opacity: .7;">{{ nw.sub }}</span></span>
+                <span style="flex: none; font-size: 12px; opacity: .6; text-align: right;">{{ nw.who }}<br>{{ nw.when }}</span>
+              </button>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabUsrOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Utilisateurs et accès admin</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les admins voient les onglets Catalogue, Options, Gérer, Tags et Journal. Les autres peuvent seulement ajouter leurs thés, leurs sachets et leurs dégustations.</p></div>
@@ -3422,8 +3440,8 @@ class Component extends DCLogic {
     if (addP.length > 5 || addL.length > 10) {
       ev.push({ type: 'import', icon: '📦', text: 'a importé ' + addP.length + ' thés, ' + addS.length + ' sachets et ' + addL.length + ' dégustations' });
     } else {
-      addP.forEach(k => ev.push({ type: 'prod', icon: '🍵', text: 'a ajouté le thé « ' + pname(k) + ' »' }));
-      addS.forEach(k => { if (addP.indexOf(nS[k].prodId) < 0) ev.push({ type: 'sachet', icon: '🛍️', text: 'a ajouté un sachet de « ' + sname(k) + ' »' }); });
+      addP.forEach(k => { const sa = Object.keys(nS).find(z => !pS[z] && nS[z].prodId === k); ev.push({ type: 'prod', icon: '🍵', pid: k, sid: sa || null, name: pname(k), the: nP[k].the, marque: nP[k].marque || '', text: 'a ajouté le thé « ' + pname(k) + ' »' + (sa ? ' et son sachet' : '') }); });
+      addS.forEach(k => { if (addP.indexOf(nS[k].prodId) < 0) ev.push({ type: 'sachet', icon: '🛍️', pid: nS[k].prodId, sid: k, name: sname(k), code: nS[k].code || '', text: 'a ajouté un sachet de « ' + sname(k) + ' »' }); });
       addL.forEach(k => { const l = nL[k]; ev.push({ type: 'log', icon: '☕', text: 'a dégusté « ' + sname(l.lotId) + ' »' + (l.note ? ' (' + l.note + '/20)' : '') }); });
     }
     Object.keys(pP).filter(k => !nP[k]).forEach(k => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé le thé « ' + (pP[k].nom || pP[k].the) + ' »' }));
@@ -3447,9 +3465,9 @@ class Component extends DCLogic {
     });
     Object.keys(nP).filter(k => pP[k] && pP[k] !== nP[k] && JSON.stringify(pP[k]) !== JSON.stringify(nP[k])).forEach(k => ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le thé « ' + pname(k) + ' »' }));
     const pT = (prev.teas || []).length, nT = (next.teas || []).length;
-    if (nT > pT && !(addP.length > 5)) (next.teas || []).slice(pT).forEach(t => ev.push({ type: 'cat', icon: '📖', text: 'a ajouté « ' + t.nom + ' » au catalogue' }));
+    if (nT > pT && !(addP.length > 5)) (next.teas || []).slice(pT).forEach(t => ev.push({ type: 'cat', icon: '📖', name: t.nom, fam: t.famille, text: 'a ajouté « ' + t.nom + ' » au catalogue' }));
     const pD = (prev.decl || []).length, nD = (next.decl || []).length;
-    if (nD > pD && !(addP.length > 5)) (next.decl || []).slice(pD).forEach(d => ev.push({ type: 'cat', icon: '📖', text: 'a ajouté la variante « ' + d.nom + ' » de ' + d.the }));
+    if (nD > pD && !(addP.length > 5)) (next.decl || []).slice(pD).forEach(d => ev.push({ type: 'cat', icon: '📖', name: d.the, variant: d.nom, text: 'a ajouté la variante « ' + d.nom + ' » de ' + d.the }));
     const po = (prev.options || {}).friends || [], no = (next.options || {}).friends || [];
     no.filter(f => f.status === 'ok' && !po.some(x => x.from === f.from && x.to === f.to && x.status === 'ok')).forEach(f => ev.push({ type: 'friend', icon: '🤝', text: 'et ' + (f.from === who ? f.to : f.from) + ' sont maintenant amis' }));
     const pA = (prev.options || {}).admins, nA = (next.options || {}).admins;
@@ -3478,7 +3496,8 @@ class Component extends DCLogic {
     const a = this.getAdds();
     const prof = ((a.options || {}).profiles || {})[me] || {};
     const seen = prof.notifSeen ? new Date(prof.notifSeen).getTime() : 0;
-    const lowSeen = prof.lowSeen || [];
+    const lowSeen = (prof.lowSeen || []).concat(prof.notifRead || []);
+    const readK = prof.notifRead || [], hidden = prof.notifHidden || [];
     const items = [];
     const fmtW = ts => { const d = new Date(ts); return isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); };
     const sacById = {}; a.sachets.forEach(x => { sacById[x.id] = x; });
@@ -3486,7 +3505,7 @@ class Component extends DCLogic {
       if (e.to !== me || e.who === me || ['give', 'share', 'join'].indexOf(e.type) < 0) return;
       const t = new Date(e.ts).getTime();
       const txt = e.type === 'give' ? e.who + ' vous a donné un sachet' + (e.text.match(/« .* »/) ? ' de ' + e.text.match(/« .*? »/)[0] : '') : e.type === 'share' ? e.who + ' ' + e.text.replace(/ avec .*$/, '') + ' avec vous' : e.who + ' s’est ajouté à votre dégustation' + (e.text.match(/\(« .* »\)/) ? ' ' + e.text.match(/\(« .* »\)/)[0] : '');
-      items.push({ key: e.id, icon: e.icon, txt: txt, when: fmtW(e.ts), ts: t, unread: t > seen, sid: e.sid });
+      items.push({ key: e.id, icon: e.icon, txt: txt, when: fmtW(e.ts), ts: t, unread: t > seen && readK.indexOf(e.id) < 0, sid: e.sid });
     });
     // paquets presque vides (les miens et mes portions)
     this.collection().forEach(o => {
@@ -3501,21 +3520,21 @@ class Component extends DCLogic {
       if (pt && !pt.empty && pt.left < (pt.unit === 'u' ? 2 : 10)) items.push({ key: 'lowp:' + o.id, icon: '📉', txt: 'Votre portion de « ' + name + ' » est presque finie : il reste ≈ ' + (Math.round(pt.left * 10) / 10).toString().replace('.', ',') + (pt.unit === 'u' ? ' unité' + (pt.left >= 2 ? 's' : '') : ' g'), when: 'partagée par ' + o.owner, ts: Date.now(), unread: lowSeen.indexOf('lowp:' + o.id) < 0, sid: o.id, low: true });
     });
     // demandes en attente
-    ((a.options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).forEach(f => items.push({ key: 'fr:' + f.from, icon: '👥', txt: f.from + ' vous a envoyé une demande d’ami', when: f.ts ? fmtW(f.ts) : '', ts: f.ts ? new Date(f.ts).getTime() : Date.now(), unread: !f.ts || new Date(f.ts).getTime() > seen, friends: true }));
+    ((a.options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).forEach(f => items.push({ key: 'fr:' + f.from, icon: '👥', txt: f.from + ' vous a envoyé une demande d’ami', when: f.ts ? fmtW(f.ts) : '', ts: f.ts ? new Date(f.ts).getTime() : Date.now(), unread: (!f.ts || new Date(f.ts).getTime() > seen) && readK.indexOf('fr:' + f.from) < 0, friends: true }));
     this.salonInvitesFor(me).forEach(x => items.push({ key: 'sal:' + x.id, icon: '🏮', txt: x.chief + ' vous invite dans le salon « ' + x.name + ' »', when: '', ts: Date.now(), unread: lowSeen.indexOf('sal:' + x.id) < 0, salon: true }));
-    items.sort((x, y) => (y.unread - x.unread) || (y.ts - x.ts));
-    return { items: items.slice(0, 40), unread: items.filter(x => x.unread).length };
+    const vis = items.filter(x => hidden.indexOf(x.key) < 0);
+    vis.sort((x, y) => (y.unread - x.unread) || (y.ts - x.ts));
+    return { items: vis.slice(0, 40), unread: vis.filter(x => x.unread).length };
   }
 
-  markNotifsSeen(me, items) {
+  notifProf(me, fn) {
     const all = Object.assign({}, ((this.getAdds().options || {}).profiles) || {});
-    const cur = all[me] || {};
-    const lowIds = items.filter(x => x.low || x.salon).map(x => x.key);
-    const same = (cur.lowSeen || []).length === lowIds.length && lowIds.every(k => (cur.lowSeen || []).indexOf(k) >= 0);
-    if (!items.some(x => x.unread) && same) return;
-    all[me] = Object.assign({}, cur, { notifSeen: new Date().toISOString(), lowSeen: lowIds });
+    all[me] = fn(Object.assign({}, all[me] || {}));
     this.setOpt('profiles', all);
   }
+  markRead(me, keys) { this.notifProf(me, c => Object.assign(c, { notifRead: Array.from(new Set((c.notifRead || []).concat(keys))).slice(-400) })); }
+  hideNotif(me, key) { this.notifProf(me, c => Object.assign(c, { notifHidden: Array.from(new Set((c.notifHidden || []).concat([key]))).slice(-400) })); }
+
 
   jTypeLabels() {
     return { prod: '🍵 Thé ajouté', sachet: '🛍️ Sachet ajouté', log: '☕ Dégustation', edit: '✏️ Modification', del: '🗑️ Suppression', qty: '⚖️ Quantité', empty: '📭 Sachet vide', give: '🎁 Don', share: '🤲 Partage', join: '🫖 Dégustation à plusieurs', cat: '📖 Catalogue', import: '📦 Import', friend: '🤝 Amis', salon: '🏮 Salon', admin: '🛡️ Admin', account: '👋 Nouveau compte' };
@@ -4436,10 +4455,10 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = ['tea', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn'];
+    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn'];
       if (this.state.view === 'admin' && !this.isAdmin(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
-      if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'tea'; }
+      if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'new'; }
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
@@ -4639,10 +4658,34 @@ class Component extends DCLogic {
       isLore: v === 'lore',
       isAdd: v === 'add' || v === 'admin', isAdminView: v === 'admin', isAddView: v === 'add',
       addModes: [['lot', '🛍️', 'Un thé et son sachet', 'Ce que vous avez acheté'], ['tea', '📖', 'Un thé au catalogue', 'Nouveau type de thé ou nouvelle variante']].map(x => { const on = (this.state.addTab || 'lot') === x[0]; return { icon: x[1], name: x[2], sub: x[3], on: on, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
-      menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'tea', addMsg: '' }),
+      menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'new', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['tea', '➕', 'Ajouter au catalogue', 'Nouveau thé ou variante'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Données', 'Import et suppression'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🆕', 'Ajouts', 'Catalogue, thés, sachets'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Données', 'Import et suppression'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      tabNewOn: this.state.addTab === 'new',
+      ...(() => {
+        if (this.state.addTab !== 'new' || v !== 'admin') return { nwKinds: [], nwList: [] };
+        const evs = (this.getAdds().events || []).filter(e => ['cat', 'prod', 'sachet', 'import'].indexOf(e.type) >= 0).slice().reverse();
+        const kind = this.state.nwKind || 'all';
+        const K = [['all', 'Tout', null], ['cat', '📖 Catalogue', ['cat']], ['prod', '🍵 Thés du commerce', ['prod', 'import']], ['sachet', '🛍️ Sachets', ['sachet']]];
+        const q = this.norm(this.state.nwQ || '');
+        const a = this.getAdds();
+        const list = evs.filter(e => { const k = K.find(x => x[0] === kind); return !k[2] || k[2].indexOf(e.type) >= 0; }).filter(e => !q || this.norm([e.who, e.text, e.name, e.marque, e.code, e.the].join(' ')).indexOf(q) >= 0);
+        const fmtW = ts => { const d = new Date(ts); return isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) + ' · ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); };
+        return {
+          nwKinds: K.map(x => ({ name: x[1], n: x[2] ? evs.filter(e => x[2].indexOf(e.type) >= 0).length : evs.length, on: kind === x[0], bg: kind === x[0] ? 'var(--color-text)' : 'var(--color-bg)', fg: kind === x[0] ? 'var(--color-bg)' : 'var(--color-text)', pick: () => this.setState({ nwKind: x[0] }) })),
+          nwQ: this.state.nwQ || '', setNwQ: e => this.setState({ nwQ: e.target.value }),
+          nwEmpty: !list.length,
+          nwList: list.slice(0, 300).map(e => {
+            const famN = e.fam && this.families[e.fam] ? this.families[e.fam].name : (e.name && this.famOf(e.name) ? this.families[this.famOf(e.name)].name : '');
+            const prodOk = e.pid && a.prods.some(x => x.id === e.pid);
+            const title = e.type === 'cat' ? (e.variant ? e.variant + ' (variante de ' + e.name + ')' : e.name || e.text) : e.type === 'import' ? 'Import' : (e.name || e.text.replace(/^a ajouté /, ''));
+            const sub = e.type === 'cat' ? 'Catalogue' + (famN ? ' · ' + famN : '') : e.type === 'prod' ? 'Thé du commerce' + (e.the ? ' · ' + e.the : '') + (e.marque ? ' · ' + e.marque : '') + (e.sid ? ' · avec son sachet' : '') : e.type === 'sachet' ? 'Sachet' + (e.code ? ' ' + e.code : '') : e.text.replace(/^a /, '');
+            return { icon: e.icon, title: title, sub: sub + (e.type !== 'cat' && e.pid && !prodOk ? ' · supprimé depuis' : ''), who: e.who, when: fmtW(e.ts),
+              open: () => { if (e.type === 'cat' && e.name) this.openCatTea(e.name); else if (prodOk) this.openProd(e.pid); } };
+          })
+        };
+      })(),
       tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg',
       ...this.mergeVals(),
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
@@ -4674,10 +4717,12 @@ class Component extends DCLogic {
         const sacById = {}; this.getAdds().sachets.forEach(x => { sacById[x.id] = x; });
         return { notifCount: nf.unread, hasNotifCount: nf.unread > 0, notifOpen: open, notifEmpty: !nf.items.length,
           notifLabel: nf.unread ? nf.unread + ' notification' + (nf.unread > 1 ? 's' : '') + ' non lue' + (nf.unread > 1 ? 's' : '') : 'Notifications',
-          toggleNotif: () => { const willOpen = !this.state.notifOpen; this.setState({ notifOpen: willOpen, menuOpen: false }); if (!willOpen) this.markNotifsSeen(me, nf.items); },
-          closeNotif: () => { this.setState({ notifOpen: false }); this.markNotifsSeen(me, nf.items); },
+          toggleNotif: () => this.setState(st => ({ notifOpen: !st.notifOpen, menuOpen: false })),
+          closeNotif: () => this.setState({ notifOpen: false }),
+          hasUnread: nf.unread > 0, readAll: () => this.markRead(me, nf.items.filter(x => x.unread).map(x => x.key)),
           notifs: nf.items.map(x => ({ icon: x.icon, txt: x.txt.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'), when: x.when, dot: x.unread ? 'var(--color-accent)' : 'transparent', bg: x.unread ? 'var(--color-accent-100)' : 'transparent',
-            go: () => { this.setState({ notifOpen: false }); this.markNotifsSeen(me, nf.items); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } })) };
+            del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
+            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } })) };
       })(),
       meSalon: (this.salonOf(me) || {}).name || '', meSalonC: this.salonColor(this.salonOf(me)),
       meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
