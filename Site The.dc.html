@@ -5157,8 +5157,27 @@ class Component extends DCLogic {
             const fields = { name: String(d.name).trim(), type: this.gearCatKey(d.type || 'theiere'), model: d.model || this.gearModelOf(d), code: String(d.code || '').trim(), volume: d.volume || '', material: d.material || '', origin: d.origin || '', achat: d.achat || '', prix: d.prix || '', comment: d.comment || '', photo: photo };
             let id = this.state.gearEdit;
             if (id === 'new') { id = 'g' + Date.now().toString(36); list.push(Object.assign({ id: id, owner: me }, fields)); }
-            else { const i = list.findIndex(x => x.id === id); if (i >= 0) list[i] = Object.assign({}, list[i], fields); }
-            this.setAdds(Object.assign({}, b, { gear: list }));
+            let logs = b.logs;
+            if (id !== 'new') {
+              const i = list.findIndex(x => x.id === id);
+              if (i >= 0) {
+                const old = list[i];
+                const changed = this.norm(old.code || '') !== this.norm(fields.code || '') || old.name !== fields.name;
+                if (changed) {
+                  // on rattache explicitement les dégustations reconnues par l'ancien code, puis on remplace l'ancien code dans le texte
+                  const linked = new Set(this.gearLogs(old).map(l => l.id));
+                  const oc = this.norm(old.code || ''), on = this.norm(old.name || '');
+                  logs = b.logs.map(l => {
+                    if (!linked.has(l.id)) return l;
+                    const ids = (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(); if (ids.indexOf(old.id) < 0) ids.push(old.id);
+                    const parts = String(l.infusion || '').split(/\s*[,+]\s*/).filter(Boolean).map(x => { const star = /\*$/.test(x) ? '*' : ''; const n = this.norm(x.replace(/\*$/, '')); return (n === oc || n === on) ? (fields.code ? fields.code + star : '') : x; }).filter(Boolean);
+                    return Object.assign({}, l, { gearIds: ids, gearId: '', infusion: parts.join(', ') });
+                  });
+                }
+                list[i] = Object.assign({}, old, fields);
+              }
+            }
+            this.setAdds(Object.assign({}, b, { gear: list, logs: logs }));
             this.setState({ gearEdit: null, gearMsg: '' });
           },
           gearEmpty: !mineG.length,
