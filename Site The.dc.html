@@ -3553,6 +3553,28 @@ class Component extends DCLogic {
     const early = logs.filter(l => { const h = hourOf(l); return h != null && h < 8; }).length;
     const late = logs.filter(l => { const h = hourOf(l); return h != null && (h >= 22 || h < 3); }).length;
     const sal = this.salonOf(u);
+    // --- nouveaux succès
+    const evs = a.events || [];
+    const sharedOut = sacs.reduce((t, o) => t + (o.shares || []).length, 0);
+    const given = a.sachets.reduce((t, o) => t + (o.history || []).filter(h => h.from === u && !h.admin).length, 0);
+    const paysOf = n => { const fk = this.famOf(n); if (!fk) return ''; const t = this.listFor(fk, true).find(x => this.norm(x.name) === this.norm(n)); const o = String((t && (t.pays || t.origin)) || ''); return o.split(',').pop().trim(); };
+    const pays = new Set(logs.map(l => { const p = prodOf(l.lotId); return p ? paysOf(p.the) : ''; }).filter(Boolean)).size;
+    const perfect = logs.filter(l => { const n = noteN(l); return n != null && n >= 20; }).length;
+    const harsh = logs.filter(l => l.author === u && (() => { const n = noteN(l); return n != null && n <= 6; })()).length;
+    const writer = logs.filter(l => l.author === u && String(l.avis || '').trim().length >= 80).length;
+    const brands = new Set(sacs.map(o => this.norm((a.prods.find(p => p.id === o.prodId) || {}).marque || '')).filter(Boolean)).size;
+    const perTea = {}; logs.forEach(l => { const p = prodOf(l.lotId); if (p) perTea[p.id] = (perTea[p.id] || 0) + 1; });
+    const faithful = Math.max(0, ...Object.values(perTea));
+    const yearNow = new Date().getFullYear();
+    const oldest = Math.max(0, ...sacs.map(o => { const y = parseInt(String(o.prodDate || ''), 10); return y > 1900 && y <= yearNow ? yearNow - y : 0; }));
+    const dark = logs.filter(l => { const p = prodOf(l.lotId); return p && this.famOf(p.the) === 'sombre'; }).length;
+    const marathon = logs.filter(l => String(l.temps || '').split('/').filter(x => x.trim()).length >= 8).length;
+    const months = new Set(logs.map(l => String(l.date || '').slice(0, 7)).filter(m => /^\d{4}-\d{2}$/.test(m))).size;
+    const botanist = evs.filter(e => e.type === 'cat' && e.who === u).length;
+    const photos = sacs.filter(o => o.photo || o.photoThe).length;
+    const together = sal ? logs.filter(l => [l.author].concat(l.with || []).filter(x => x && sal.members.indexOf(x) >= 0).length >= 2).length : 0;
+    const famsAll = new Set(logs.map(l => { const p = prodOf(l.lotId); return p ? this.famOf(p.the) : null; }).filter(Boolean));
+    const herbal = ['tisane', 'rooibos', 'mate'].filter(k => famsAll.has(k)).length;
     const nf = this.friendsOf(u).length;
     const defs = [
       { key: 'col', v: sacs.length, unit: 'sachets', tiers: [[1, '🌱', 'Première feuille'], [10, '🫖', 'Collectionneur'], [25, '🏺', 'Cave à thé'], [50, '🏯', 'Maison de thé'], [100, '🐉', 'Dragon de jade']] },
@@ -3567,6 +3589,21 @@ class Component extends DCLogic {
       { key: 'early', v: early, unit: 'thés avant 8 h', tiers: [[1, '🌅', 'Lève-tôt'], [10, '🐓', 'Aube infusée']] },
       { key: 'late', v: late, unit: 'thés après 22 h', tiers: [[1, '🦉', 'Oiseau de nuit'], [10, '🌌', 'Veilleur']] },
       { key: 'social', v: nf, unit: 'amis', tiers: [[1, '🫂', 'Premier ami'], [5, '🏮', 'Bien entouré']] },
+      { key: 'perfect', v: perfect, unit: 'notes de 20/20', tiers: [[1, '🌟', 'Perfection'], [3, '🏅', 'Thé parfait'], [10, '🌠', 'Pluie d’étoiles']] },
+      { key: 'harsh', v: harsh, unit: 'notes ≤ 6/20', tiers: [[1, '🧂', 'Palais exigeant'], [5, '🧐', 'Critique redouté']] },
+      { key: 'writer', v: writer, unit: 'avis détaillés', tiers: [[5, '✍️', 'Plume'], [25, '📝', 'Chroniqueur'], [100, '📜', 'Encre de Chine']] },
+      { key: 'pays', v: pays, unit: 'pays d’origine goûtés', tiers: [[3, '🧳', 'Voyageur'], [6, '✈️', 'Grand voyageur'], [10, '🌐', 'Route du thé']] },
+      { key: 'brands', v: brands, unit: 'marques différentes', tiers: [[3, '🏪', 'Curieux des boutiques'], [8, '🛒', 'Chineur'], [15, '🗺️', 'Fin connaisseur']] },
+      { key: 'faithful', v: faithful, unit: 'dégustations d’un même thé', tiers: [[10, '💍', 'Fidèle'], [25, '❤️', 'Grand amour'], [50, '♾️', 'Pour la vie']] },
+      { key: 'dark', v: dark, unit: 'dégustations de thé sombre', tiers: [[5, '🖤', 'Ami du pu’er'], [20, '🌑', 'Côté sombre'], [50, '🐉', 'Maître du pu’er']] },
+      { key: 'old', v: oldest, unit: 'ans pour votre plus vieux thé', tiers: [[5, '⏳', 'Thé qui a vécu'], [10, '🏛️', 'Vieille cave'], [20, '🦕', 'Trésor ancien']] },
+      { key: 'marathon', v: marathon, unit: 'séances de 8 infusions ou plus', tiers: [[1, '🔁', 'Marathon gongfu'], [10, '🏃', 'Infatigable']] },
+      { key: 'months', v: months, unit: 'mois avec une dégustation', tiers: [[3, '📅', 'Régulier'], [6, '🗓️', 'Rituel'], [12, '🎂', 'Une année de thé']] },
+      { key: 'gift', v: given + sharedOut, unit: 'dons et partages', tiers: [[1, '🎁', 'Généreux'], [5, '🤲', 'Mécène'], [15, '😇', 'Cœur sur la main']] },
+      { key: 'botanist', v: botanist, unit: 'ajouts au catalogue', tiers: [[1, '🌿', 'Botaniste'], [5, '🔬', 'Taxonomiste']] },
+      { key: 'photo', v: photos, unit: 'sachets en photo', tiers: [[1, '📷', 'Photographe'], [10, '🖼️', 'Galerie']] },
+      { key: 'together', v: together, unit: 'dégustations en salon', tiers: [[1, '🫖', 'Thé à plusieurs'], [10, '🏮', 'Cercle du thé'], [30, '🎎', 'Confrérie']] },
+      { key: 'herbal', v: herbal, unit: 'familles sans théier goûtées', tiers: [[1, '🌼', 'Infusé'], [3, '🧉', 'Hors du théier']] },
       { key: 'salon', v: sal ? (sal.chief === u ? 2 : 1) : 0, unit: '', tiers: [[1, '🍶', 'Membre d’un salon'], [2, '👑', 'Chef de salon']], noProgress: true }
     ];
     return defs.map(d => {
