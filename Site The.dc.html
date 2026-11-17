@@ -1404,15 +1404,17 @@
                 <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" value="{{ lf.infusion }}" onChange="{{ setL.infusion }}">
               </div>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" value="{{ lf.temps }}" onChange="{{ setL.temps }}"></label>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" value="{{ lf.temperature }}" onChange="{{ setL.temperature }}"></label>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" value="{{ lf.qty }}" onChange="{{ setL.qty }}" inputMode="decimal"></label>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Technique</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="*+RV+RC" value="{{ lf.technique }}" onChange="{{ setL.technique }}"></label>
+              
             </div>
             <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; margin-top: -4px;">{{ logRemain }}</span></sc-if>
+            <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Technique</span>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.add }}" title="{{ t.label }}" style="cursor: pointer; border: none; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 12px; padding: 4px 10px; border-radius: 999px;" style-hover="background: var(--color-accent-2-100);"><b>{{ t.code }}</b> <span style="opacity: .7;">{{ t.label }}</span></button></sc-for>
+              <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.add }}" aria-pressed="{{ t.on }}" title="{{ t.label }}" style="cursor: pointer; border: 1.5px solid {{ t.border }}; background: {{ t.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ t.check }}<b>{{ t.code }}</b> <span style="opacity: .75;">{{ t.label }}</span></button></sc-for>
+              <input class="input" style="width: 150px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Technique (saisie libre)" value="{{ techExtra }}" onChange="{{ setTechExtra }}">
             </div>
           </section>
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
@@ -3450,7 +3452,7 @@ class Component extends DCLogic {
     const code = this.norm(g.code || ''); if (!code) return false;
     if (this.norm(String(l.infusion || '').replace(/\*$/, '')) !== code) return false;
     if (uniq == null) uniq = (this.getAdds().gear || []).filter(x => this.norm(x.code || '') === code).length <= 1;
-    return uniq || l.author === g.owner;
+    return l.author === g.owner;
   }
   gearLogs(g) {
     const code = this.norm(g.code || '');
@@ -5398,7 +5400,10 @@ class Component extends DCLogic {
       })(),
       vessels: this.opts().vessels,
       vesselHint: (() => { const c = String((this.state.lf || {}).infusion || '').replace(/\*$/, '').trim().toUpperCase(); const v = this.opts().vessels.find(x => String(x.code).toUpperCase() === c); return v ? v.label + (/\*$/.test((this.state.lf || {}).infusion || '') ? ' · avec préchauffe' : '') : 'PGW, GGW, KYU, VM, TMR, XSI, CHR… ou votre propre code'; })(),
-      techChips: this.opts().techs.filter(t => t.code).map(t => ({ code: t.code, label: t.label, add: () => this.setState(s => { const cur = String((s.lf || {}).technique || '').trim(); return { lf: Object.assign({}, s.lf, { technique: cur ? cur + '+' + t.code : t.code }) }; }) })),
+      techExtra: (() => { const known = this.opts().techs.map(t => String(t.code).toUpperCase()); return String((this.state.lf || {}).technique || '').split('+').map(x => x.trim()).filter(x => x && known.indexOf(x.toUpperCase()) < 0).join('+'); })(),
+      setTechExtra: e => { const val = String(e.target.value || ''); this.setState(s0 => { const known = this.opts().techs.map(t => String(t.code).toUpperCase()); const sel = String((s0.lf || {}).technique || '').split('+').map(x => x.trim()).filter(x => x && known.indexOf(x.toUpperCase()) >= 0); const extra = val.split('+').map(x => x.trim()).filter(Boolean); return { lf: Object.assign({}, s0.lf, { technique: sel.concat(extra).join('+') }) }; }); },
+      techChips: (() => { const parts = String((this.state.lf || {}).technique || '').split('+').map(x => x.trim()).filter(Boolean); return this.opts().techs.filter(t => t.code).map(t => { const on = parts.some(x => x.toUpperCase() === String(t.code).toUpperCase()); return { code: t.code, label: t.label, on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', border: on ? 'var(--color-accent-700)' : 'transparent', check: on ? '✓ ' : '',
+        add: () => this.setState(s0 => { const cur = String((s0.lf || {}).technique || '').split('+').map(x => x.trim()).filter(Boolean); const i = cur.findIndex(x => x.toUpperCase() === String(t.code).toUpperCase()); if (i >= 0) cur.splice(i, 1); else cur.push(t.code); return { lf: Object.assign({}, s0.lf, { technique: cur.join('+') }) }; }) }; }); })(),
       logNoteHint: (() => { const raw = String((this.state.lf || {}).note || ''); const n = this.num(raw.replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); const tag = /f/i.test(raw) ? ' · foiré' : /r/i.test(raw) ? ' · réglage' : ''; if (n == null) return '0–4 peut être jeté · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel · F foiré · R réglage'; return (n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? 'Correct, sans plus' : n <= 18 ? 'Vraiment bon' : 'Exceptionnel') + tag; })(),
       logMsg: this.state.logMsg || '',
       saveLog: () => {
