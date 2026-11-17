@@ -857,14 +857,14 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
               <sc-for list="{{ pf.ach }}" as="a" hint-placeholder-count="6">
                 <sc-if value="{{ a.got }}" hint-placeholder-val="{{ true }}">
-                <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;">
+                <div style="background: var(--color-surface); border-radius: 24px; padding: 16px 16px 14px; display: flex; gap: 12px; align-items: stretch; height: 100%; box-sizing: border-box;">
                   <span aria-hidden="true" style="font-size: 34px; line-height: 1; flex: none;">{{ a.emoji }}</span>
-                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1;">
+                  <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1;">
                     <span style="font-family: var(--font-heading); font-size: 17px; line-height: 1.15;">{{ a.name }}</span>
                     <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);">{{ a.level }}</span>
-                    <span style="font-size: 12px; opacity: .7; text-wrap: pretty;">{{ a.desc }}</span>
-                    <sc-if value="{{ a.hasNext }}" hint-placeholder-val="{{ true }}"><span style="height: 5px; border-radius: 999px; background: var(--color-bg); overflow: hidden; margin-top: 4px;"><span style="display: block; height: 100%; width: {{ a.pct }}%; background: var(--color-accent);"></span></span></sc-if>
-                    <sc-if value="{{ a.canShow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.toggleShow }}" aria-pressed="{{ a.shown }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 4px 0 0; font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--color-accent-700);">{{ a.showTxt }}</button></sc-if>
+                    <span style="font-size: 12px; line-height: 1.45; opacity: .7; text-wrap: pretty;">{{ a.desc }}</span>
+                    <sc-if value="{{ a.hasNext }}" hint-placeholder-val="{{ true }}"><span style="height: 5px; border-radius: 999px; background: var(--color-bg); overflow: hidden; margin: 4px 0 8px;"><span style="display: block; height: 100%; width: {{ a.pct }}%; background: var(--color-accent);"></span></span></sc-if>
+                    <sc-if value="{{ a.canShow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.toggleShow }}" aria-pressed="{{ a.shown }}" title="Afficher ce succès à côté de votre nom" style="cursor: pointer; align-self: flex-start; margin-top: auto; white-space: nowrap; text-align: left; border: none; background: {{ a.showBg }}; color: {{ a.showFg }}; padding: 5px 12px; border-radius: 999px; font-family: var(--font-body); font-size: 12px; font-weight: 600;" style-hover="filter: brightness(.96);">{{ a.showTxt }}</button></sc-if>
                   </div>
                 </div>
                 </sc-if>
@@ -3155,7 +3155,8 @@ class Component extends DCLogic {
       save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
       kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)),
       badge: this.badgeOf(u),
-      ach: this.achievementsFor(u).map(x => Object.assign(x, { canShow: isMe && x.got, shown: (prof.badge || '') === x.key, showTxt: (prof.badge || '') === x.key ? '✓ Affiché à côté du nom' : 'Afficher à côté du nom',
+      ach: this.achievementsFor(u).map(x => Object.assign(x, { canShow: isMe && x.got, shown: (prof.badge || '') === x.key, showTxt: (prof.badge || '') === x.key ? '📌 Épinglé au nom' : '📌 Épingler',
+        showBg: (prof.badge || '') === x.key ? 'var(--color-accent)' : 'var(--color-bg)', showFg: (prof.badge || '') === x.key ? 'var(--color-bg)' : 'var(--color-accent-700)',
         toggleShow: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { badge: (prof.badge || '') === x.key ? '' : x.key }); this.setOpt('profiles', all); } })), achCount: (() => { const l = this.achievementsFor(u); return l.filter(x => x.got).length + '/' + l.length + ' débloqués'; })() };
   }
 
