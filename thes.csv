@@ -85,3 +85,9 @@ aromatise;Thé à la rose (Mei Gui Hong Cha);Yunnan;Chine;Yunnan;;Rose, malté, 
 aromatise;Earl Grey;Darjeeling / Ceylan;Inde;;Thé noir parfumé à l'huile essentielle de bergamote, popularisé en Angleterre au XIXᵉ siècle.;Bergamote, agrumes, malté;;;;27.0;88.3;;;;;95
 aromatise;Masala chai;Assam;Inde;;;Cardamome, gingembre, cannelle, lait;;;;26.2;92.9;;;;;100
 aromatise;Genmaicha au matcha;Shizuoka;Japon;Shizuoka;;Riz grillé, végétal, doux;;;;34.95;138.45;;;;;85
+rooibos;Rooibos rouge;Cederberg;Afrique du Sud;;Récolté l'été, haché, mouillé puis oxydé au soleil en tas, ce qui lui donne sa couleur rouge.;Miel, vanille, bois doux;;;;-32.3;19.0;;;;;100
+rooibos;Rooibos vert;Cederberg;Afrique du Sud;;Séché aussitôt sans oxydation : plus végétal et frais.;Herbe sèche, foin, miel léger;;;;-32.4;19.1;;;;;95
+rooibos;Honeybush;Cap-Oriental;Afrique du Sud;;Cyclopia, cousin du rooibos, fermenté comme lui.;Miel, abricot, fleur;;;;-33.8;24.0;;;;;95
+mate;Yerba maté;Misiones;Argentine;;Feuilles de houx séchées au feu de bois, broyées et vieillies plusieurs mois.;Herbacé, amer, tabac;;;;-27.4;-55.0;;;;;75
+mate;Maté torréfié;Paraná;Brésil;;Feuilles torréfiées, plus douces et rondes.;Torréfié, cacao, noisette;;;;-25.4;-51.5;;;;;85
+mate;Maté du Paraguay;Itapúa;Paraguay;;Coupe épaisse avec tiges, fumée légère.;Fumé, boisé, amer;;;;-26.9;-55.9;;;;;75

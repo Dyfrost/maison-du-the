@@ -83,7 +83,9 @@ const FAMILIES = {
   noir:   { label: 'Noir (rouge)', color: '#9e3b2e' },
   sombre: { label: 'Sombre',       color: css('--color-accent-800') },
   aromatise: { label: 'Aromatisé', color: '#8b6aa7' },
-  tisane: { label: 'Tisane', color: '#b98a3e' }
+  tisane: { label: 'Tisane', color: '#b98a3e' },
+  rooibos: { label: 'Rooibos', color: '#b5452b' },
+  mate: { label: 'Maté', color: '#6f7d3a' }
 };
 
 const TEAS = [
@@ -169,7 +171,7 @@ const W = 1140, H = 640, PAD = 44;
 const tip = document.getElementById('tip');
 
 // Reprend les thés depuis le tableur (contenu.xlsx, feuille « Thes », sinon thes.csv).
-const PAYS_EN = { 'chine': 'China', 'japon': 'Japan', 'inde': 'India', 'sri lanka': 'Sri Lanka', 'taiwan': 'Taiwan', 'taïwan': 'Taiwan', 'kenya': 'Kenya' };
+const PAYS_EN = { 'chine': 'China', 'japon': 'Japan', 'inde': 'India', 'sri lanka': 'Sri Lanka', 'taiwan': 'Taiwan', 'taïwan': 'Taiwan', 'kenya': 'Kenya', 'afrique du sud': 'South Africa', 'argentine': 'Argentina', 'brésil': 'Brazil', 'paraguay': 'Paraguay' };
 async function loadSheetTeas() {
   if (!window.XLSX) return;
   const readCsv = (X, txt) => X.read(txt, { type: 'string', FS: (txt.split('\n')[0].split(';').length > txt.split('\n')[0].split(',').length) ? ';' : ',', raw: true });
