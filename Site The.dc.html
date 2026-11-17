@@ -936,6 +936,24 @@
               <sc-if value="{{ pf.isMe }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pf.edit }}" style="align-self: flex-start; white-space: nowrap;">Modifier la description</button></sc-if>
             </sc-if>
           </section>
+          <sc-if value="{{ pf.showGear }}" hint-placeholder-val="{{ false }}">
+          <section style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0;">Matériel en vitrine</h2><sc-if value="{{ pf.isMe }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ pf.gearPickToggle }}" style="white-space: nowrap; font-size: 14px;">{{ pf.gearPickBtn }}</button></sc-if></div>
+            <sc-if value="{{ pf.gearPicking }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; background: var(--color-surface); border-radius: 20px; padding: 12px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; width: 100%;">Choisissez jusqu’à 3 pièces</span><sc-for list="{{ pf.gearPick }}" as="gp" hint-placeholder-count="3"><button onClick="{{ gp.toggle }}" aria-pressed="{{ gp.on }}" style="cursor: pointer; border: 1.5px solid {{ gp.border }}; background: {{ gp.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; opacity: {{ gp.op }};">{{ gp.label }}</button></sc-for></div>
+            </sc-if>
+            <sc-if value="{{ pf.gearShowEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">{{ pf.gearShowEmptyTxt }}</p></sc-if>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+              <sc-for list="{{ pf.gearShown }}" as="g" hint-placeholder-count="3">
+                <button onClick="{{ g.open }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-surface); border-radius: 26px; padding: 12px; display: flex; flex-direction: column; gap: 10px; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);">
+                  <sc-if value="{{ g.photo }}" hint-placeholder-val="{{ false }}"><img src="{{ g.photo }}" alt="" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block;"></sc-if>
+                  <sc-if value="{{ g.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 100%; aspect-ratio: 4 / 3; border-radius: 18px; background: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 54px;">{{ g.icon }}</span></sc-if>
+                  <span style="display: flex; flex-direction: column; gap: 2px; padding: 0 4px 4px;"><span style="font-family: var(--font-heading); font-size: 18px;">{{ g.name }}</span><span style="font-size: 13px; opacity: .7;">{{ g.sub }}</span><span style="font-size: 13px; color: var(--color-accent-700); font-weight: 600;">{{ g.stat }}</span></span>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+          </sc-if>
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px;">
             <sc-for list="{{ pf.kpis }}" as="k" hint-placeholder-count="8">
               <sc-if value="{{ k.plain }}" hint-placeholder-val="{{ true }}">
@@ -1420,6 +1438,12 @@
                 <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
                 <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" value="{{ lf.infusion }}" onChange="{{ setL.infusion }}">
               </div>
+              <sc-if value="{{ hasSalonGear }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ toggleSalonGear }}" aria-pressed="{{ showSalonGear }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;">{{ salonGearBox }}</span>Afficher le matériel du salon</button>
+                <sc-if value="{{ showSalonGear }}" hint-placeholder-val="{{ false }}"><div role="group" aria-label="Matériel du salon" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 10px; border-radius: 18px; background: var(--color-bg);">
+                <sc-for list="{{ lfGearSalon }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
+                </div></sc-if>
+              </sc-if>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" value="{{ lf.temps }}" onChange="{{ setL.temps }}"></label>
@@ -3713,6 +3737,17 @@ class Component extends DCLogic {
       cancel: () => this.setState({ profEdit: false }),
       save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
       kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)),
+      ...(() => {
+        const gAll = (a.gear || []).filter(g => g.owner === u);
+        const ids = (prof.gearShow || []).filter(id => gAll.some(g => g.id === id)).slice(0, 3);
+        const shown = ids.map(id => gAll.find(g => g.id === id));
+        const card = g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? g.volume + ' ml' : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; };
+        const picking = isMe && !!this.state.gearPicking;
+        return { showGear: shown.length > 0 || (isMe && gAll.length > 0), gearShown: shown.map(card), gearShowEmpty: !shown.length, gearShowEmptyTxt: 'Choisissez jusqu’à 3 pièces de votre matériel à montrer ici.',
+          gearPicking: picking, gearPickBtn: picking ? 'Terminé' : '✎ Choisir', gearPickToggle: () => this.setState(st => ({ gearPicking: !st.gearPicking })),
+          gearPick: gAll.map(g => { const on = ids.indexOf(g.id) >= 0; const full = !on && ids.length >= 3; return { label: (on ? '✓ ' : '') + this.gearCat(g)[1] + ' ' + g.name, on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', border: on ? 'var(--color-accent-700)' : 'transparent', op: full ? '.45' : '1',
+            toggle: () => { if (full) return; const allP = Object.assign({}, (this.getAdds().options || {}).profiles || {}); const curIds = ((allP[u] || {}).gearShow || []).filter(x => gAll.some(g2 => g2.id === x)); allP[u] = Object.assign({}, allP[u], { gearShow: on ? curIds.filter(x => x !== g.id) : curIds.concat([g.id]).slice(0, 3) }); this.setOpt('profiles', allP); } }; }) };
+      })(),
       badge: this.badgeOf(u), badgeStatic: !isMe && !!this.badgeOf(u),
       slotTxt: this.badgeOf(u) || '＋ Choisir un badge', slotBorder: this.badgeOf(u) ? '1.5px solid var(--color-accent)' : '1.5px dashed var(--color-divider)',
       pickOpen: isMe && !!this.state.badgePick,
@@ -5133,10 +5168,19 @@ class Component extends DCLogic {
           gearGroups: this.gearTypeList().map(T => ({ icon: T[1], title: T[2], items: mineG.filter(g => this.gearCatKey(g.type) === T[0]) })).filter(G => G.items.length).map(G => ({ icon: G.icon, title: G.title, n: String(G.items.length), items: G.items.map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [this.gearModelOf(g), g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) }))
         };
       })(),
-      lfGearChips: this.gearUsable(me).slice().sort((x, y) => ((x.owner !== me) - (y.owner !== me)) || String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr')).map(g => { const T = this.gearCat(g); const cur = this.lfGearIds(); const on = cur.indexOf(g.id) >= 0;
-        return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
-          toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; }),
-      gearHint: this.gearUsable(me).length ? 'Votre matériel, puis celui des membres de votre salon (avec le nom du propriétaire).' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
+      ...(() => {
+        const cur = this.lfGearIds();
+        const chip = g => { const T = this.gearCat(g); const on = cur.indexOf(g.id) >= 0;
+          return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
+            toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; };
+        const ord = (x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr');
+        const all = this.gearUsable(me);
+        const mine = all.filter(g => g.owner === me).sort(ord), others = all.filter(g => g.owner !== me).sort(ord);
+        const show = !!this.state.showSalonGear || others.some(g => cur.indexOf(g.id) >= 0);
+        return { lfGearChips: mine.map(chip), lfGearSalon: others.map(chip), hasSalonGear: others.length > 0, showSalonGear: show, salonGearBox: show ? '✓' : '',
+          toggleSalonGear: () => this.setState(s0 => ({ showSalonGear: !show })) };
+      })(),
+      gearHint: this.gearUsable(me).length ? 'Touchez tout ce que vous utilisez. Le matériel du salon s’affiche avec la case ci-dessous.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
 
       menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frMsg: '' }),
       friendCount: ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length + this.salonInvitesFor(me).length,
