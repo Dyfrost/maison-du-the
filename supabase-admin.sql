@@ -1,6 +1,6 @@
 -- Maison du Thé — protection côté base (à coller une fois dans Supabase → SQL Editor → Run)
 -- 1) Chaque prénom est lié à un seul compte : impossible de se faire passer pour quelqu'un.
--- 2) Les non-admins ne peuvent pas toucher au catalogue, aux réglages ni aux admins,
+-- 2) Les non-admins peuvent ajouter au catalogue mais pas le modifier ; ils ne touchent ni aux réglages ni aux admins,
 --    ni supprimer les thés, sachets ou dégustations des autres.
 
 create table if not exists public.maison_members (
@@ -48,9 +48,10 @@ begin
 
   if adm ? me then return new; end if;  -- admin : tout est permis
 
-  -- Réservé aux admins
-  if (o->'teas') is distinct from (n->'teas') or (o->'decl') is distinct from (n->'decl') then
-    raise exception 'Seuls les admins peuvent modifier le catalogue.';
+  -- Catalogue : les non-admins peuvent seulement ajouter des thés et des variantes
+  if not (coalesce(n->'teas', '[]'::jsonb) @> coalesce(o->'teas', '[]'::jsonb))
+     or not (coalesce(n->'decl', '[]'::jsonb) @> coalesce(o->'decl', '[]'::jsonb)) then
+    raise exception 'Seuls les admins peuvent modifier ou retirer des thés du catalogue.';
   end if;
   foreach k in array array['admins', 'catalog', 'freqs', 'techs', 'vessels', 'importDone'] loop
     if (o->'options'->k) is distinct from (n->'options'->k) then
