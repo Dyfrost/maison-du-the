@@ -1584,27 +1584,6 @@
           </section>
         </sc-if>
 
-        <sc-if value="{{ tabOrphOn }}" hint-placeholder-val="{{ false }}">
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Matériel non lié</h2><p style="margin: 0; font-size: 14px; opacity: .72;">Les dégustations dont le texte « matériel » contient un code ou un nom qui ne correspond à aucune pièce de leur auteur. Choisissez la pièce à laquelle les rattacher.</p></div>
-            <p style="margin: 0; font-size: 15px; font-weight: 600;">{{ orSummary }}</p>
-            <sc-if value="{{ orHas }}" hint-placeholder-val="{{ true }}"><div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ orAuto }}" style="white-space: nowrap;">⚡ Tout rattacher automatiquement ({{ orAutoN }})</button><span style="font-size: 13px; opacity: .7;">D’après les anciens codes (PGW, TMR…) et le nom des pièces. Les groupes sans correspondance restent à faire à la main.</span></div></sc-if>
-            <sc-if value="{{ orMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px; color: var(--color-accent-2-800);">{{ orMsg }}</p></sc-if>
-            <sc-for list="{{ orGroups }}" as="og" hint-placeholder-count="3">
-              <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border-radius: 18px; padding: 12px 14px;">
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                  <span style="font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 16px;">{{ og.code }}</span>
-                  <span style="font-size: 14px;">chez <b>{{ og.author }}</b> · {{ og.n }}</span>
-                  <button onClick="{{ og.toggle }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 0; margin-right: auto;">{{ og.toggleTxt }}</button>
-                  <select class="input" value="{{ og.sel }}" onChange="{{ og.setSel }}" style="width: auto; max-width: 280px; padding: 8px 12px; font-size: 14px; background: var(--color-surface);"><option value="">Rattacher à…</option><sc-for list="{{ og.opts }}" as="oo" hint-placeholder-count="2"><option value="{{ oo.v }}">{{ oo.l }}</option></sc-for></select>
-                  <button class="btn btn-primary" onClick="{{ og.link }}" style="white-space: nowrap;">Lier</button>
-                </div>
-                <sc-if value="{{ og.open }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; opacity: .8;"><sc-for list="{{ og.logs }}" as="ol" hint-placeholder-count="2"><span>• {{ ol }}</span></sc-for></div></sc-if>
-              </div>
-            </sc-for>
-            <sc-if value="{{ orNone }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px;">✅ Tout est lié : aucune dégustation avec un matériel orphelin.</p></sc-if>
-          </section>
-        </sc-if>
         <sc-if value="{{ tabNewOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
@@ -3101,6 +3080,19 @@ class Component extends DCLogic {
     }).catch(e => { this.setState({ spriteBusy: null }); window.alert('Le pixel art n’a pas pu être créé : ' + (e && e.message ? e.message : 'photo illisible')); });
   }
 
+  migrateGear4() {
+    const a = this.getAdds();
+    if (!this.isAdmin(this.sessionName()) || (a.options || {}).gearMig4) return;
+    const logs = a.logs.map(l => {
+      if (!l.infusion) return l;
+      const star = /\*/.test(String(l.infusion));
+      const tech = String(l.technique || '');
+      const nt = star && !/(^|\+)\*($|\+)/.test(tech) ? (tech ? '*+' + tech : '*') : tech;
+      return Object.assign({}, l, { infusion: '', technique: nt });
+    });
+    this.setAdds(Object.assign({}, a, { logs: logs, options: Object.assign({}, a.options, { gearMig4: true }) }));
+  }
+
   migrateGear3() {
     const a = this.getAdds();
     if (!this.isAdmin(this.sessionName()) || (a.options || {}).gearMig3) return;
@@ -4238,7 +4230,7 @@ class Component extends DCLogic {
       try { localStorage.setItem('the-ajouts', JSON.stringify(remote)); } catch (e) {}
     }
     this.ensureMember();
-    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} }
+    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} try { this.migrateGear4(); } catch (e) {} }
     this.setState({ syncAt: new Date(), syncErr: '' });
   }
 
@@ -5063,7 +5055,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = ['orph', 'new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn'];
+    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn'];
       if (this.state.view === 'admin' && !this.isAdmin(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'new'; }
@@ -5270,7 +5262,7 @@ class Component extends DCLogic {
       menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'new', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['orph', '🔗', 'Matériel non lié', 'Page temporaire'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
