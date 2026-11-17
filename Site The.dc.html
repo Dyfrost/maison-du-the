@@ -3532,14 +3532,15 @@ class Component extends DCLogic {
     };
   }
 
-  gearTypeList() { return [['theiere', '🫖', 'Théières'], ['tasse', '🍵', 'Tasses & bols'], ['bateau', '🛶', 'Bateaux & plateaux'], ['autre', '🧺', 'Autres ustensiles']]; }
-  gearCatKey(t) { return ['theiere', 'gaiwan', 'kyusu'].indexOf(t) >= 0 ? 'theiere' : t === 'tasse' ? 'tasse' : t === 'bateau' ? 'bateau' : 'autre'; }
+  gearTypeList() { return [['theiere', '🫖', 'Théières'], ['tasse', '🍵', 'Tasses & bols'], ['bateau', '🛶', 'Bateaux & plateaux'], ['teapet', '🐸', 'Tea pets'], ['autre', '🧺', 'Autres ustensiles']]; }
+  gearCatKey(t) { return ['theiere', 'gaiwan', 'kyusu'].indexOf(t) >= 0 ? 'theiere' : t === 'tasse' ? 'tasse' : t === 'bateau' ? 'bateau' : t === 'teapet' ? 'teapet' : 'autre'; }
   gearCat(g) { const k = this.gearCatKey(g.type); return this.gearTypeList().find(t => t[0] === k); }
   gearModelOf(g) { if (g.model) return g.model; return { gaiwan: 'Gaiwan', kyusu: 'Kyusu', pichet: 'Pichet de partage', bouilloire: 'Bouilloire' }[g.type] || ''; }
   gearModels(cat) {
     const titles = { theiere: ['Théières'], tasse: ['Tasses', 'Tasses & bols'], bateau: ['Bateaux & plateaux', 'Plateaux'], autre: ['Autres ustensiles'] }[cat] || [];
     const out = [];
     Object.keys(this.toolGroups).forEach(gk => (this.toolGroups[gk].cats || []).forEach(c => { if (titles.indexOf(c.title) >= 0) (c.items || []).forEach(it => { if (it.name && out.indexOf(it.name) < 0) out.push(it.name); }); }));
+    if (cat === 'teapet') return ['Crapaud à trois pattes (Jinchan)', 'Pixiu', 'Bouddha rieur', 'Garçon pipi', 'Cochon', 'Dragon', 'Tortue', 'Poisson', 'Animal du zodiaque', 'Autre'];
     if (cat === 'autre') ['Bouilloire', 'Pichet de partage', 'Filtre', 'Pince à tasses'].forEach(n => { if (out.indexOf(n) < 0) out.push(n); });
     return out;
   }
