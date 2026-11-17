@@ -1329,6 +1329,7 @@
           <h1 style="font-size: 46px; margin: 0;">Ajouter un thé</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Ajoutez un sachet que vous avez acheté. Si le thé n'existe pas encore, sa référence est créée en même temps. Les familles, thés et variantes du catalogue s'ajoutent dans l'onglet « Catalogue ».</p>
         </div>
+        <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px; flex-wrap: wrap;">
           <sc-if value="{{ tabLotOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Un sachet</button></sc-if><sc-if value="{{ tabLotOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabLot }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Un sachet</button></sc-if>
           <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Catalogue</button></sc-if><sc-if value="{{ tabTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTea }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Catalogue</button></sc-if>
@@ -1337,6 +1338,7 @@
           <sc-if value="{{ tabTagOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Tags</button></sc-if><sc-if value="{{ tabTagOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabTag }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Tags</button></sc-if>
           <sc-if value="{{ tabJrnOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tabJrn }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Journal</button></sc-if><sc-if value="{{ tabJrnOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tabJrn }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Journal</button></sc-if>
         </div>
+        </sc-if>
 
         <datalist id="liste-thes">
           <sc-for list="{{ allTeaNames }}" as="n" hint-placeholder-count="0"><option value="{{ n }}"></option></sc-for>
@@ -1467,6 +1469,19 @@
         </sc-if>
 
         <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Utilisateurs et accès admin</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les admins voient les onglets Catalogue, Options, Gérer, Tags et Journal. Les autres peuvent seulement ajouter leurs thés, leurs sachets et leurs dégustations.</p></div>
+            <input class="input" type="search" value="{{ admQ }}" onInput="{{ setAdmQ }}" placeholder="🔎 Rechercher un utilisateur (prénom ou #0003)" aria-label="Rechercher un utilisateur">
+            <sc-if value="{{ admEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun utilisateur ne correspond.</p></sc-if>
+            <sc-for list="{{ admUsers }}" as="au" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
+                <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; flex: none;">{{ au.initial }}</span>
+                <div style="display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ au.tag }}</span><span style="font-size: 12px; opacity: .65;">{{ au.sub }}</span></div>
+                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if>
+                <sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.toggle }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if>
+              </div>
+            </sc-for>
+          </section>
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
               <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
@@ -3064,6 +3079,9 @@ class Component extends DCLogic {
 
   setFriends(list) { this.setOpt('friends', list); }
 
+  admins(o) { o = o || this.getAdds().options || {}; return Array.isArray(o.admins) ? o.admins : ['Raph', 'Maël']; }
+  isAdmin(u) { return !!u && this.admins().indexOf(u) >= 0; }
+
   salonColors() {
     return { terre: ['Terre', 'var(--color-accent-100)', 'var(--color-accent-800)'], jade: ['Jade', '#dcebd8', '#2f5b3a'], ciel: ['Ciel', '#d9e5f1', '#2c4a6b'], lavande: ['Lavande', '#e7def2', '#523d73'],
       rose: ['Rose', '#f6dbe2', '#7c2e45'], or: ['Or', '#f4e4bb', '#6b4e12'], ardoise: ['Ardoise', '#e0e3e7', '#34393f'], encre: ['Encre', '#2b2b2b', '#f5efe4'], rubis: ['Rubis', '#8f2f24', '#fff6ef'], foret: ['Forêt', '#3f5f3a', '#f1f6ec'] };
@@ -3366,6 +3384,12 @@ class Component extends DCLogic {
     if (nD > pD && !(addP.length > 5)) (next.decl || []).slice(pD).forEach(d => ev.push({ type: 'cat', icon: '📖', text: 'a ajouté la variante « ' + d.nom + ' » de ' + d.the }));
     const po = (prev.options || {}).friends || [], no = (next.options || {}).friends || [];
     no.filter(f => f.status === 'ok' && !po.some(x => x.from === f.from && x.to === f.to && x.status === 'ok')).forEach(f => ev.push({ type: 'friend', icon: '🤝', text: 'et ' + (f.from === who ? f.to : f.from) + ' sont maintenant amis' }));
+    const pA = (prev.options || {}).admins, nA = (next.options || {}).admins;
+    if (Array.isArray(nA) && JSON.stringify(pA) !== JSON.stringify(nA)) {
+      const before = Array.isArray(pA) ? pA : ['Raph', 'Maël'];
+      nA.filter(x => before.indexOf(x) < 0).forEach(x => ev.push({ type: 'admin', icon: '🛡️', text: 'a donné l’accès admin à ' + x }));
+      before.filter(x => nA.indexOf(x) < 0).forEach(x => ev.push({ type: 'admin', icon: '🛡️', text: 'a retiré l’accès admin à ' + x }));
+    }
     const pSal = (prev.options || {}).salons || [], nSal = (next.options || {}).salons || [];
     nSal.forEach(x => { const o = pSal.find(y => y.id === x.id);
       if (!o) ev.push({ type: 'salon', icon: '🏮', text: 'a créé le salon « ' + x.name + ' »' });
@@ -4259,6 +4283,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
+    { const me0 = this.me(); if (!this.isAdmin(me0) && ['tea', 'opt', 'man', 'tag', 'jrn'].indexOf(this.state.addTab) >= 0) this.state.addTab = 'lot'; }
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
@@ -4549,6 +4574,26 @@ class Component extends DCLogic {
       scopeMe: () => this.setState({ scope: 'me' }), scopeAll: () => this.setState({ scope: 'all' }),
       scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
+      isAdmin: this.isAdmin(me),
+      admQ: this.state.admQ || '', setAdmQ: e => this.setState({ admQ: e.target.value }),
+      ...(() => {
+        const q = this.norm(this.state.admQ || '').replace('#', '');
+        const ids = this.userIds();
+        const adm = this.admins();
+        const list = this.opts().users.filter(u => u && (!q || this.norm(u + ' ' + (ids[u] || '')).indexOf(q) >= 0 || (ids[u] || '').indexOf(q) >= 0))
+          .sort((x, y) => (ids[x] || '9999').localeCompare(ids[y] || '9999'));
+        return { admEmpty: !list.length, admUsers: list.map(u => {
+          const isAdm = adm.indexOf(u) >= 0;
+          const n = this.getAdds().sachets.filter(o => o.owner === u).length;
+          return { tag: this.userTag(u), initial: u.slice(0, 1).toUpperCase(), isAdm: isAdm, sub: n + (n > 1 ? ' sachets' : ' sachet') + (u === me ? ' · vous' : ''),
+            canToggle: !(isAdm && (u === me || adm.length <= 1)),
+            btnTxt: isAdm ? 'Retirer l’accès admin' : 'Donner l’accès admin', btnClass: isAdm ? 'btn btn-ghost' : 'btn btn-secondary',
+            toggle: () => {
+              if (isAdm && !window.confirm('Retirer l’accès admin à ' + u + ' ?')) return;
+              this.setOpt('admins', isAdm ? adm.filter(x => x !== u) : adm.concat([u]));
+            } };
+        }) };
+      })(),
       tabOptOn: this.state.addTab === 'opt', tabOptOff: this.state.addTab !== 'opt',
       tabMan: () => this.setState({ addTab: 'man', addMsg: '' }),
       impPick: e => {
