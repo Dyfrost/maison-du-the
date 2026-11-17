@@ -1015,6 +1015,18 @@
             <div style="display: flex; gap: 10px;"><button class="btn btn-primary" onClick="{{ gearSave }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ gearCancel }}" style="white-space: nowrap;">Annuler</button></div>
           </section>
         </sc-if>
+        <sc-if value="{{ gearLegacy }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 22px; margin: 0;">Reprendre l’ancienne vaisselle</h2><p style="margin: 0; font-size: 14px; opacity: .72;">Les codes utilisés jusqu’ici dans vos dégustations. Ajoutez ceux qui sont à vous : vos anciennes dégustations avec ce code leur seront rattachées.</p></div>
+            <sc-for list="{{ gearLegacyList }}" as="lv" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">
+                <span style="font-family: ui-monospace, Menlo, monospace; font-weight: 700; min-width: 44px;">{{ lv.code }}</span>
+                <span style="font-size: 15px; margin-right: auto;">{{ lv.label }} <span style="opacity: .6; font-size: 13px;">· {{ lv.uses }}</span></span>
+                <button class="btn btn-secondary" onClick="{{ lv.add }}" style="white-space: nowrap;">＋ C’est à moi</button>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ gearEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7; font-size: 16px;">Pas encore de matériel. Ajoutez votre première théière !</p></sc-if>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
           <sc-for list="{{ gearList }}" as="g" hint-placeholder-count="3">
@@ -1367,7 +1379,7 @@
               <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap;">
                 <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 7px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
               </div>
-              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Autre (saisie libre), ex : PGW" value="{{ lf.infusion }}" onChange="{{ setL.infusion }}" list="liste-contenants"><datalist id="liste-contenants"><sc-for list="{{ vessels }}" as="v" hint-placeholder-count="0"><option value="{{ v.code }}">{{ v.label }}</option></sc-for></datalist>
+              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Autre (saisie libre)" value="{{ lf.infusion }}" onChange="{{ setL.infusion }}">
               <span style="font-size: 12px; opacity: .6; padding-left: 6px;">{{ gearHint }}</span>
             </div>
               <label style="display: flex; flex-direction: column; gap: 6px;">
@@ -1703,22 +1715,6 @@
 
         <sc-if value="{{ tabOptOn }}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; flex-direction: column; gap: 16px;">
-            <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-              <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                <h2 style="font-size: 24px; margin: 0;">Vaisselle (type d'infusion)</h2>
-                <span style="font-size: 13px; opacity: .6;">Codes proposés dans « Nouvelle dégustation »</span>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <sc-for list="{{ vesselRows }}" as="r" hint-placeholder-count="3">
-                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                    <input class="input" value="{{ r.code }}" onChange="{{ r.setCode }}" placeholder="PGW" style="flex: 0 0 110px; box-sizing: border-box; font-size: 14px; padding: 9px 14px; font-family: ui-monospace, Menlo, monospace;">
-                    <input class="input" value="{{ r.label }}" onChange="{{ r.setLabel }}" placeholder="Petit gaiwan (12 cl)" style="flex: 1 1 240px; min-width: 0; box-sizing: border-box; font-size: 14px; padding: 9px 14px;">
-                    <button onClick="{{ r.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 6px 10px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Supprimer</button>
-                  </div>
-                </sc-for>
-              </div>
-              <button class="btn btn-secondary" onClick="{{ addVessel }}" style="align-self: flex-start; white-space: nowrap;">＋ Ajouter une ligne</button>
-            </section>
             <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
               <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                 <h2 style="font-size: 24px; margin: 0;">Techniques d'infusion</h2>
@@ -5062,6 +5058,17 @@ class Component extends DCLogic {
             this.setAdds(Object.assign({}, b, { gear: list }));
             this.setState({ gearEdit: null, gearMsg: '' });
           },
+          ...(() => {
+            const allG = this.getAdds().gear || [];
+            const taken = c => allG.some(g => this.norm(g.code || '') === this.norm(c));
+            const legacy = this.opts().vessels.filter(v => v.code && !taken(v.code));
+            const guessType = l => { const t = this.norm(l); return /gaiwan/.test(t) ? 'gaiwan' : /kyusu/.test(t) ? 'kyusu' : /tasse|bol/.test(t) ? 'tasse' : /verseuse|pichet|cha hai|chahai/.test(t) ? 'pichet' : /bouilloire/.test(t) ? 'bouilloire' : /theiere|chaozhou|xishi|yixing|shu yao/.test(t) ? 'theiere' : 'autre'; };
+            const vol = l => { const m = /(\d+(?:[.,]\d+)?)\s*(cl|ml|l)\b/i.exec(l); if (!m) return ''; const n = parseFloat(m[1].replace(',', '.')); return String(Math.round(m[2].toLowerCase() === 'cl' ? n * 10 : m[2].toLowerCase() === 'l' ? n * 1000 : n)); };
+            const uses = c => this.getAdds().logs.filter(l => l.author === me && this.norm(String(l.infusion || '').replace(/\*$/, '')) === this.norm(c)).length;
+            return { gearLegacy: legacy.length > 0, gearLegacyList: legacy.map(v => { const n = uses(v.code); return { code: v.code, label: v.label || v.code, uses: n ? (n > 1 ? n + ' de vos dégustations' : '1 de vos dégustations') : 'aucune de vos dégustations',
+              add: () => { const b = this.getAdds(); const name = String(v.label || v.code).replace(/\s*\([^)]*\)\s*$/, '').trim() || v.code; const extra = (/\(([^)]*)\)/.exec(v.label || '') || [])[1] || ''; const mat = extra.split(',').slice(1).join(',').trim();
+                this.setAdds(Object.assign({}, b, { gear: (b.gear || []).concat([{ id: 'g' + Date.now().toString(36), owner: me, name: name, type: guessType(v.label || ''), code: v.code, volume: vol(v.label || ''), material: mat, origin: '', achat: '', prix: '', comment: '', photo: '' }]) })); } }; }) };
+          })(),
           gearEmpty: !mineG.length,
           gearList: mineG.map(g => { const T = this.gearTypeList().find(t => t[0] === g.type) || this.gearTypeList()[6]; return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; })
         };
