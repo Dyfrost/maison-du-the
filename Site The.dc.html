@@ -79,6 +79,7 @@
     </div>
     </sc-if>
     <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; width: 42px; height: 42px; padding: 0; border-radius: 50%; background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center;" style-hover="background: var(--color-accent-100);"><img src="{{ langFlag }}" alt="" width="24" height="16" style="width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); display: block;"></button>
+    <sc-if value="{{ shareToast }}" hint-placeholder-val="{{ false }}"><div role="status" style="position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 80; background: var(--color-text); color: var(--color-bg); padding: 10px 18px; border-radius: 999px; font-family: var(--font-body); font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.2);">{{ shareToast }}</div></sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div class="nav-bell" style="position: relative;">
         <button onClick="{{ toggleNotif }}" aria-haspopup="true" aria-expanded="{{ notifOpen }}" aria-label="{{ notifLabel }}" title="{{ notifLabel }}" style="position: relative; z-index: 42; cursor: pointer; border: none; width: 42px; height: 42px; border-radius: 50%; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 19px;" style-hover="background: var(--color-accent-100);">🔔<sc-if value="{{ hasNotifCount }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-body);">{{ notifCount }}</span></sc-if></button>
@@ -427,7 +428,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -499,7 +500,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -605,7 +606,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -701,7 +702,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -785,7 +786,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -1128,6 +1129,25 @@
       </article>
     </sc-if>
 
+    <sc-if value="{{ isSharedLog }}" hint-placeholder-val="{{ false }}">
+      <article style="display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both; max-width: 760px;">
+        <span style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6;">Dégustation partagée</span>
+        <sc-if value="{{ sh.missing }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px;">Cette dégustation n’existe plus.</p></sc-if>
+        <sc-if value="{{ sh.ok }}" hint-placeholder-val="{{ true }}">
+          <div style="background: var(--color-surface); border-radius: 30px; padding: 24px; display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">
+            <span style="width: 92px; height: 92px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none;"><span style="font-family: var(--font-heading); font-size: 30px; line-height: 1;">{{ sh.note }}</span><span style="font-size: 12px; opacity: .85;">/ 20</span></span>
+            <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+              <button onClick="{{ sh.openTea }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 32px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ sh.name }} →</button>
+              <span style="font-size: 14px; opacity: .72;">{{ sh.meta }}</span>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ sh.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for></div>
+              <sc-if value="{{ sh.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; line-height: 1.65; border-left: 3px solid var(--color-accent); padding-left: 14px; white-space: pre-wrap;">{{ sh.avis }}</p></sc-if>
+              <button class="btn btn-secondary" onClick="{{ sh.share }}" style="align-self: flex-start; white-space: nowrap;">↗ Partager</button>
+            </div>
+          </div>
+        </sc-if>
+      </article>
+    </sc-if>
+
     <sc-if value="{{ isStats }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 22px; animation: fadeUp .45s ease both;">
         <div style="display: flex; flex-direction: column; gap: 8px; max-width: 760px;">
@@ -1369,7 +1389,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
+                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -1399,7 +1419,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
+                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
@@ -1624,11 +1644,12 @@
                     <div style="box-sizing: border-box; background: var(--color-accent-100); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--color-divider);">
                       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px;">
                         <sc-for list="{{ ar.fields }}" as="fd" hint-placeholder-count="6">
-                          <label style="display: flex; flex-direction: column; gap: 4px; grid-column: {{ fd.span }};"><span style="font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6;">{{ fd.label }}</span>
+                          <div style="display: flex; flex-direction: column; gap: 4px; grid-column: {{ fd.span }};"><span style="font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6;">{{ fd.label }}</span>
                             <sc-if value="{{ fd.isText }}" hint-placeholder-val="{{ true }}"><input class="input" type="{{ fd.type }}" value="{{ fd.value }}" onInput="{{ fd.set }}" list="{{ fd.list }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"></sc-if>
                             <sc-if value="{{ fd.isArea }}" hint-placeholder-val="{{ false }}"><textarea class="input" rows="3" value="{{ fd.value }}" onInput="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface); border-radius: 14px; resize: vertical;"></textarea></sc-if>
                             <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}"><select class="input" value="{{ fd.value }}" onChange="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"><sc-for list="{{ fd.options }}" as="fo" hint-placeholder-count="3"><option value="{{ fo.v }}">{{ fo.l }}</option></sc-for></select></sc-if>
-                          </label>
+                            <sc-if value="{{ fd.isGear }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-wrap: wrap; gap: 6px;"><sc-for list="{{ fd.chips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13px; background: {{ gc.bg }}; color: {{ gc.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ gc.label }}</button></sc-for><sc-if value="{{ fd.noChips }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6;">Aucun matériel enregistré.</span></sc-if></div></sc-if>
+                          </div>
                         </sc-for>
                       </div>
                       <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 12px; opacity: .6; margin-right: auto; font-family: ui-monospace, Menlo, monospace;">ID interne : {{ ar.id }}</span><button class="btn btn-ghost" onClick="{{ ar.cancelEdit }}" style="white-space: nowrap;">Annuler</button><button class="btn btn-primary" onClick="{{ ar.saveEdit }}" style="white-space: nowrap;">Enregistrer</button></div>
@@ -2224,7 +2245,7 @@
               <sc-if value="{{ pv.variante }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">Variante : {{ pv.variante }}</span></sc-if>
               <button class="tag tag-accent-2" onClick="{{ pv.openFam }}" style="border: none; cursor: pointer; font-family: var(--font-body);">Famille : {{ pv.famName }} →</button>
             </div>
-            <h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1>
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1><button class="btn btn-secondary" onClick="{{ pv.share }}" style="white-space: nowrap;">↗ Partager</button></div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
               <span class="tag tag-outline" style="font-family: ui-monospace, Menlo, monospace; font-size: 13px;">{{ pv.code }}</span>
               <span style="font-size: 15px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque :</span> {{ pv.marque }}</span>
@@ -2234,11 +2255,12 @@
           </div>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
-          <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Note moyenne</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ pv.avg }}</span><span style="font-size: 12px; opacity: .65;">{{ pv.avgSub }}</span></div>
+<sc-if value="{{ pv.member }}" hint-placeholder-val="{{ true }}">          <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Note moyenne</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ pv.avg }}</span><span style="font-size: 12px; opacity: .65;">{{ pv.avgSub }}</span></div></sc-if>
           <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix moyen</span><span style="font-family: var(--font-heading); font-size: 20px;">{{ pv.prix }}</span></div>
           <div style="background: var(--color-surface); border-radius: 24px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Sachets</span><span style="font-family: var(--font-heading); font-size: 24px;">{{ pv.nSac }}</span><span style="font-size: 12px; opacity: .65;">{{ pv.owners }}</span></div>
         </div>
         <sc-if value="{{ pv.comment }}" hint-placeholder-val="{{ false }}"><section style="display: flex; flex-direction: column; gap: 8px;"><h2 style="font-size: 26px; margin: 0;">À propos</h2><p style="font-size: 17px; line-height: 1.7; opacity: .88; margin: 0; text-wrap: pretty;">{{ pv.comment }}</p></section></sc-if>
+        <sc-if value="{{ pv.member }}" hint-placeholder-val="{{ true }}">
         <section style="display: flex; flex-direction: column; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0; margin-right: auto;">Les sachets</h2>
             <sc-if value="{{ pv.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.addSachet }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
@@ -2302,7 +2324,7 @@
                             <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
                           </div>
                         </sc-for>
@@ -2336,12 +2358,13 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
                   </div>
-                  <sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
+                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
               </article>
           </sc-for>
         </section>
+        </sc-if>
       </article>
     </sc-if>
 
@@ -2426,6 +2449,19 @@
           </section>
         </sc-if>
 
+        <sc-if value="{{ teaGuest }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <h2 style="font-size: 30px; margin: 0;">Les thés de la maison</h2>
+          <sc-if value="{{ teaGuestEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore de thé de ce type dans la maison.</p></sc-if>
+          <sc-for list="{{ teaGuestLots }}" as="gl" hint-placeholder-count="2">
+            <button onClick="{{ gl.open }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-bg); border-radius: 22px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);">
+              <span style="display: flex; flex-direction: column; gap: 3px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 19px;">{{ gl.name }} →</span><span style="font-size: 13px; opacity: .72;">{{ gl.sub }}</span></span>
+              <sc-if value="{{ gl.prix }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="white-space: nowrap;">{{ gl.prix }}</span></sc-if>
+            </button>
+          </sc-for>
+          <p style="margin: 0; font-size: 13px; opacity: .65;">Connectez-vous pour voir les notes et les dégustations.</p>
+        </section>
+        </sc-if>
         <sc-if value="{{ canAct }}" hint-placeholder-val="{{ true }}">
         <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 14px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
@@ -3131,6 +3167,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     window.__mdtApp = this;
+    window.addEventListener('hashchange', () => this.applyHash());
     this.initCloud();
     this.loadSheet();
     try { localStorage.removeItem('the-photos-v1'); } catch (e) {}
@@ -3531,8 +3568,8 @@ class Component extends DCLogic {
       rows = a.logs.map(l => { const sa = sacBy[l.lotId] || {}; const p = prodBy[sa.prodId] || {};
         return { id: l.id, v: { date: l.date || '', nom: p.nom || p.the || '?', author: (l.author || '?') + ((l.with || []).length ? ' + ' + l.with.join(', ') : ''), note: this.num(String(l.note || '').replace(/[A-Za-z]/g, '')) , qty: l.qty || '—', avis: String(l.avis || '').slice(0, 60) + (String(l.avis || '').length > 60 ? '…' : '') },
           disp: { date: l.date ? this.fmtDate(l.date) : '—', note: l.note || '—' },
-          raw: l, fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')'])], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Infusion'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
-          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(z => z.id === l.id ? Object.assign({}, z, { author: d.author, lotId: d.lotId, date: d.date, heure: d.heure, note: d.note, infusion: d.infusion, temps: d.temps, temperature: d.temperature, qty: d.qty, technique: d.technique, repas: d.repas, avis: d.avis }) : z) })); },
+          raw: Object.assign({}, l, { gearIds: this.logGears(l).map(g => g.id) }), fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')'])], ['gearIds', 'Matériel', 'gear'], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Matériel (texte libre)'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(z => z.id === l.id ? Object.assign({}, z, { gearIds: (d.gearIds || []).slice(), gearId: undefined, author: d.author, lotId: d.lotId, date: d.date, heure: d.heure, note: d.note, infusion: d.infusion, temps: d.temps, temperature: d.temperature, qty: d.qty, technique: d.technique, repas: d.repas, avis: d.avis }) : z) })); },
           open: () => p.id && this.openProd(p.id), delMsg: 'Supprimer la dégustation de ' + (l.author || '?') + ' du ' + (l.date ? this.fmtDate(l.date) : '?') + ' ?', delFn: delLogs([l.id]) }; });
     } else {
       cols = [['nom', 'Nom'], ['type', 'Type'], ['fam', 'Famille / parent'], ['used', 'Thés du commerce'], ['who', 'Ajouté par']];
@@ -3568,7 +3605,10 @@ class Component extends DCLogic {
         cancelEdit: () => this.setState({ adEdit: null, adDraft: {} }),
         saveEdit: () => { r.save(Object.assign({}, this.state.adDraft || {})); this.setState({ adEdit: null, adDraft: {} }); },
         fields: ed ? (r.fields || []).map(f => ({ label: f[1], value: draft[f[0]] == null ? '' : String(draft[f[0]]), type: f[2] === 'date' ? 'date' : 'text', list: f[2] === 'tea' ? 'liste-thes' : '',
-          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' ? '1 / -1' : 'auto',
+          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isGear: f[2] === 'gear',
+          ...(f[2] === 'gear' ? (() => { const cur = Array.isArray(draft.gearIds) ? draft.gearIds : (draft.gearId ? [draft.gearId] : []); const gs = (this.getAdds().gear || []).slice().sort((x, y) => (x.owner === draft.author ? 0 : 1) - (y.owner === draft.author ? 0 : 1) || String(x.owner).localeCompare(String(y.owner)) || x.name.localeCompare(y.name, 'fr'));
+            return { noChips: !gs.length, chips: gs.map(g => { const on = cur.indexOf(g.id) >= 0; return { label: (on ? '✓ ' : '') + this.gearCat(g)[1] + ' ' + g.name + ' · ' + g.owner, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)',
+              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' || f[2] === 'gear' ? '1 / -1' : 'auto',
           set: e => { const val = e.target.value; this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); } })) : [],
         cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
         toggle: () => this.setState(s0 => { const cur = s0.adSel || []; return { adSel: cur.indexOf(r.id) >= 0 ? cur.filter(z => z !== r.id) : cur.concat([r.id]) }; }),
@@ -4230,6 +4270,7 @@ class Component extends DCLogic {
       try { localStorage.setItem('the-ajouts', JSON.stringify(remote)); } catch (e) {}
     }
     this.ensureMember();
+    if (!this._hashDone) { this._hashDone = true; try { this.applyHash(); } catch (e) { console.warn(e); } }
     if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} try { this.migrateGear4(); } catch (e) {} }
     this.setState({ syncAt: new Date(), syncErr: '' });
   }
@@ -4421,13 +4462,43 @@ class Component extends DCLogic {
       toggleJoin: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === l.id ? Object.assign({}, x, { with: joined ? (x.with || []).filter(w => w !== me) : (x.with || []).concat([me]) }) : x) })); } };
   }
 
+  shareLink(kind, id, title, text) {
+    const url = location.origin + location.pathname + '#' + kind + '=' + id;
+    const done = msg => { this.setState({ shareToast: msg }); clearTimeout(this._toastT); this._toastT = setTimeout(() => this.setState({ shareToast: '' }), 2500); };
+    if (navigator.share) { navigator.share({ title: title, text: text, url: url }).catch(() => {}); return; }
+    const copy = () => { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done('Lien copié !'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(() => done('Lien copié !'), copy); else copy();
+  }
+
+  applyHash() {
+    const m = /^#(prod|log)=([\w-]+)$/.exec(location.hash || '');
+    if (!m) return;
+    const a = this.getAdds();
+    if (m[1] === 'prod' && a.prods.some(p => p.id === m[2])) this.setState({ view: 'prod', prodId: m[2], prodBack: 'home' });
+    if (m[1] === 'log') this.setState({ view: 'sharedLog', sharedLogId: m[2] });
+  }
+
+  sharedLogView(me) {
+    const a = this.getAdds();
+    const l = a.logs.find(x => x.id === this.state.sharedLogId);
+    if (!l) return { missing: true, ok: false, details: [] };
+    const sa = a.sachets.find(x => x.id === l.lotId) || {};
+    const p = a.prods.find(x => x.id === sa.prodId) || {};
+    const gear = this.logGears(l).map(g => g.name).concat(this.logGearRest(l) ? [this.logGearRest(l)] : []).join(', ');
+    const details = [['Matériel', gear], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] }));
+    return { ok: true, missing: false, note: l.note || '—', name: p.nom || p.the || 'Thé', avis: l.avis || '',
+      meta: [l.author ? 'par ' + l.author + ((l.with || []).length ? ' avec ' + l.with.join(', ') : '') : '', l.date ? 'le ' + this.fmtDate(l.date) : '', l.heure ? 'à ' + l.heure : '', p.the && p.the !== p.nom ? p.the : '', p.marque || ''].filter(Boolean).join(' · '),
+      details: details, openTea: () => { if (p.id) this.openProd(p.id); },
+      share: () => this.shareLink('log', l.id, 'Dégustation : ' + (p.nom || p.the), (p.nom || p.the) + ' — ' + (l.note || '?') + '/20') };
+  }
+
   stop(fn) { return e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); }; }
 
   startEditLog(l) {
-    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
+    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: (l.gearIds || (l.gearId ? [l.gearId] : [])).slice(), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), (o.nom || o.the || '') + ' — ' + (l.note || '?') + '/20'), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -4627,7 +4698,7 @@ class Component extends DCLogic {
     const ls = a.logs.filter(l => ids.indexOf(l.lotId) >= 0).sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || '')));
     const mineS = sacs.filter(o => o.owner === me);
     const photo = (sacs.find(o => o.prodPhoto) || sacs.find(o => o.photo) || {});
-    return { name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
+    return { member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, (pr.nom || pr.the) + ' — ' + (pr.marque || '') + ' · Maison du Thé'), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
       famName: fk ? this.families[fk].name : '—',
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
@@ -4817,7 +4888,7 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me),
+      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', (l.note || '?') + '/20'),
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
@@ -5195,6 +5266,14 @@ class Component extends DCLogic {
       teaHouseOpinion: tea.opinion || '',
       teaAvg: (() => { const ids = this.collection().filter(o => tea.name && this.norm(o.the) === this.norm(tea.name)).map(o => o.id); const st = this.statsMany(ids); return st.avg != null ? 'Moyenne des sachets : ' + this.avgTxt(st) + ' (' + st.n + ')' : ''; })(),
       canAct: !guest && !!me,
+      teaGuest: guest && v === 'tea',
+      ...(() => {
+        if (!(guest && v === 'tea')) return { teaGuestLots: [] };
+        const fk = this.state.key; const t = this.listFor(fk)[this.state.idx || 0] || {};
+        const a = this.getAdds();
+        const prods = a.prods.filter(p => this.norm(p.the) === this.norm(t.name || ''));
+        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Marque : ' + p.marque : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
+      })(),
       ...(() => {
         const a = this.getAdds();
         const prods = a.prods.filter(x => tea.name && this.norm(x.the) === this.norm(tea.name));
@@ -5289,6 +5368,8 @@ class Component extends DCLogic {
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
       isStats: v === 'stats',
+      isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
+      shareToast: this.state.shareToast || '',
       menuGear: () => this.setState({ menuOpen: false, view: 'gear', gearEdit: null, gearMsg: '' }),
       isGear: v === 'gear', isGearItem: v === 'gearItem',
       gi: v === 'gearItem' ? this.gearItemView(me) : {},
@@ -5357,7 +5438,7 @@ class Component extends DCLogic {
           return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
             toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; };
         const ord = (x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr');
-        const all = this.gearUsable(me);
+        const all = this.gearUsable(me).concat((this.getAdds().gear || []).filter(g => cur.indexOf(g.id) >= 0 && !this.gearUsable(me).some(x => x.id === g.id)));
         const mine = all.filter(g => g.owner === me).sort(ord), others = all.filter(g => g.owner !== me).sort(ord);
         const show = !!this.state.showSalonGear || others.some(g => cur.indexOf(g.id) >= 0);
         return { lfGearChips: mine.map(chip), lfGearSalon: others.map(chip), hasSalonGear: others.length > 0, showSalonGear: show, salonGearBox: show ? '✓' : '',
