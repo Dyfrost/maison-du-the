@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./i18n.js"></script>
 <script src="./support.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,7 +37,8 @@
     header.nav .nav-brand { font-size: 19px !important; }
     header.nav .nav-brand img { width: 36px !important; height: 36px !important; }
     header.nav .nav-quick { order: 6; width: 100%; }
-    header.nav .nav-bell { margin-left: auto; }
+    header.nav .nav-lang { margin-left: auto; }
+    .ad-table { min-width: var(--ad-min) !important; }
     .adm-nav { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
     header.nav .nav-quick .nq { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; font-size: 13px !important; padding: 6px 8px !important; text-align: center; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
     header.nav .nav-carte { order: 5; width: 100%; justify-content: flex-start; padding-left: 0 !important; font-size: 14px !important; }
@@ -71,6 +73,7 @@
       <button onClick="{{ openAdd }}" class="nq" style-hover="background: var(--color-accent-100);">＋ Nouveau thé</button>
     </div>
     </sc-if>
+    <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; height: 42px; padding: 0 12px; border-radius: 999px; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;" style-hover="background: var(--color-accent-100);">{{ langBtn }}</button>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div class="nav-bell" style="position: relative;">
         <button onClick="{{ toggleNotif }}" aria-haspopup="true" aria-expanded="{{ notifOpen }}" aria-label="{{ notifLabel }}" title="{{ notifLabel }}" style="position: relative; z-index: 42; cursor: pointer; border: none; width: 42px; height: 42px; border-radius: 50%; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 19px;" style-hover="background: var(--color-accent-100);">🔔<sc-if value="{{ hasNotifCount }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-body);">{{ notifCount }}</span></sc-if></button>
@@ -1446,7 +1449,7 @@
               </div>
             </sc-if>
             <div style="overflow: auto; max-height: 70vh; border-radius: 16px; background: var(--color-bg);">
-              <div role="table" style="min-width: {{ adMinW }}; font-family: var(--font-body); color: var(--color-text);">
+              <div role="table" class="ad-table" style="--ad-min: {{ adMinW }}; font-family: var(--font-body); color: var(--color-text);">
                 <div role="row" style="display: grid; grid-template-columns: {{ adGrid }}; align-items: center; position: sticky; top: 0; z-index: 1; background: var(--color-surface);">
                   <span role="columnheader" style="padding: 8px 10px;"><input type="checkbox" checked="{{ adAllSel }}" onChange="{{ adToggleAll }}" aria-label="Tout sélectionner"></span>
                   <sc-for list="{{ adCols }}" as="ac" hint-placeholder-count="5"><span role="columnheader" style="padding: 8px 10px;"><button onClick="{{ ac.sort }}" style="cursor: pointer; border: none; background: transparent; padding: 0; color: inherit; font-family: var(--font-body); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; text-align: left;">{{ ac.label }}{{ ac.arrow }}</button></span></sc-for>
@@ -1455,11 +1458,11 @@
                 <sc-for list="{{ adRows }}" as="ar" hint-placeholder-count="6">
                   <div role="row" style="display: grid; grid-template-columns: {{ adGrid }}; align-items: center; border-top: 1px solid var(--color-divider); background: {{ ar.bg }};">
                     <span role="cell" style="padding: 8px 10px;"><input type="checkbox" checked="{{ ar.sel }}" onChange="{{ ar.toggle }}" aria-label="Sélectionner"></span>
-                    <sc-for list="{{ ar.cells }}" as="cc" hint-placeholder-count="5"><span role="cell" style="padding: 8px 10px; font-size: 13.5px; min-width: 0; overflow-wrap: anywhere;">{{ cc }}</span></sc-for>
+                    <sc-for list="{{ ar.cells }}" as="cc" hint-placeholder-count="5"><span role="cell" style="padding: 8px 10px; font-size: 13.5px; min-width: 0; overflow-wrap: break-word;">{{ cc }}</span></sc-for>
                     <span role="cell" style="padding: 6px 10px; text-align: right; white-space: nowrap;"><button onClick="{{ ar.edit }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 4px 6px;">Modifier</button><button onClick="{{ ar.open }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 4px 6px;">Ouvrir</button><button onClick="{{ ar.del }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-800); padding: 4px 6px;">Supprimer</button></span>
                   </div>
                   <sc-if value="{{ ar.editing }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: sticky; left: 0; width: min(1036px, calc(100vw - 72px)); box-sizing: border-box; background: var(--color-accent-100); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--color-divider);">
+                    <div style="box-sizing: border-box; background: var(--color-accent-100); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--color-divider);">
                       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px;">
                         <sc-for list="{{ ar.fields }}" as="fd" hint-placeholder-count="6">
                           <label style="display: flex; flex-direction: column; gap: 4px; grid-column: {{ fd.span }};"><span style="font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6;">{{ fd.label }}</span>
@@ -2924,6 +2927,7 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    window.__mdtApp = this;
     this.initCloud();
     this.loadSheet();
     try { localStorage.removeItem('the-photos-v1'); } catch (e) {}
@@ -3301,7 +3305,7 @@ class Component extends DCLogic {
         cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
         toggle: () => this.setState(s0 => { const cur = s0.adSel || []; return { adSel: cur.indexOf(r.id) >= 0 ? cur.filter(z => z !== r.id) : cur.concat([r.id]) }; }),
         open: r.open, del: () => { if (window.confirm(r.delMsg)) del(r.delFn); } }; }),
-      adGrid: '34px ' + cols.map(c => ['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 'minmax(150px, 2fr)' : c[0] === 'date' ? 'minmax(104px, 1fr)' : 'minmax(84px, 1fr)').join(' ') + ' 220px', adMinW: (34 + cols.reduce((t, c) => t + (['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 150 : c[0] === 'date' ? 104 : 84), 0) + 220) + 'px',
+      adGrid: '30px ' + cols.map(c => ['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 'minmax(0, 1.6fr)' : c[0] === 'date' ? 'minmax(96px, 1fr)' : 'minmax(0, 1fr)').join(' ') + ' 208px', adMinW: (30 + cols.length * 92 + 208) + 'px',
       adEmpty: !list.length, adAllSel: !!shown.length && shown.every(r => sel.indexOf(r.id) >= 0),
       adToggleAll: () => this.setState({ adSel: shown.every(r => sel.indexOf(r.id) >= 0) ? [] : shown.map(r => r.id) }),
       adHasSel: sel.length > 0, adSelTxt: sel.length + ' élément' + (sel.length > 1 ? 's' : '') + ' sélectionné' + (sel.length > 1 ? 's' : ''),
@@ -4857,6 +4861,9 @@ class Component extends DCLogic {
             del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
             go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } })) };
       })(),
+      _noTr: (window.mdtNoTr = this.opts().users.slice()),
+      langBtn: window.mdtLang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN', langTitle: window.mdtLang === 'en' ? 'Repasser en français' : 'Switch to English (automatic translation)',
+      toggleLang: () => window.mdtSetLang && window.mdtSetLang(window.mdtLang === 'en' ? 'fr' : 'en'),
       meSalon: (this.salonOf(me) || {}).name || '', meSalonC: this.salonColor(this.salonOf(me)),
       meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
       friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n + this.salonInvitesFor(me).length; return m ? ' (' + m + ')' : ''; })(),
