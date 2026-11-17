@@ -34,6 +34,11 @@
   .exp-wrap > :not(.exp-btn) { padding-right: 54px !important; }
   @media (max-width: 720px) { .sort-lbl { display: none; } }
   .nq { cursor: pointer; white-space: nowrap; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: 999px; padding: 9px 16px; min-height: 36px; transition: background .15s ease; }
+  .tabbar { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; background: var(--color-bg); border-top: 1px solid var(--color-divider); padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)); justify-content: space-around; align-items: flex-end; box-shadow: 0 -6px 20px rgba(0,0,0,.06); }
+  .tabbar .tab { flex: 1 1 0; min-width: 0; cursor: pointer; border: none; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: var(--font-body); font-size: 11px; padding: 4px 2px; }
+  .tabbar .tab-main { color: var(--color-accent-700); font-weight: 700; }
+  .tabbar .tab-plus { width: 46px; height: 46px; margin-top: -22px; border-radius: 50%; background: var(--color-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+  .opt-photo:not(:has(image-slot[data-filled])) { display: none !important; }
   .thumb { display: block; object-fit: cover; border-radius: 18px; background: var(--color-neutral-200); flex: none; }
   @media (max-width: 720px) {
     header.nav { padding: 12px 16px !important; gap: 8px !important; }
@@ -56,6 +61,21 @@
     main.page .row-wrap > div { flex: 1 1 0 !important; min-width: 0 !important; }
     main.page .row-wrap > .acts, main.page .row-wrap > .side { flex: 1 1 100% !important; justify-content: flex-start !important; align-items: flex-start !important; text-align: left !important; flex-direction: row !important; gap: 8px !important; }
     main.page input, main.page select, main.page textarea { font-size: 16px !important; }
+    .tabbar { display: flex !important; }
+    header .ubtn { font-size: 0 !important; padding: 3px 8px 3px 3px !important; gap: 4px !important; }
+    header .ubtn > span:first-child { font-size: 12px !important; }
+    div[role="status"][style*="position: fixed"] { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
+    header.nav .nav-quick { display: none !important; }
+    main.page { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+    .lf-save { align-self: stretch !important; border-radius: 22px !important; bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important; justify-content: center; }
+    .lf-save .btn-primary { flex: 1 1 auto; justify-content: center; }
+    .dash h1 { font-size: 34px !important; }
+    .dash .btn-primary { flex: 1 1 100%; justify-content: center; }
+    .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
+    .kpi-grid > * { padding: 12px 14px !important; border-radius: 20px !important; min-width: 0; }
+    .kpi-grid [style*="font-size: 22px"] { font-size: 18px !important; overflow-wrap: anywhere; }
+    .kpi-grid [style*="font-size: 12px; letter-spacing"] { font-size: 10.5px !important; }
+    main.page .tag { max-width: 100%; overflow-wrap: anywhere; white-space: normal; }
     main.page [style*="minmax(140px, 1fr)"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
     main.page [style*="min-height: 280px"], main.page [style*="min-height: 260px"] { min-height: 180px !important; padding: 22px !important; }
   }
@@ -104,7 +124,7 @@
     </sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
-        <button onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
+        <button class="ubtn" onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
           <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}<sc-if value="{{ meSalon }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: {{ meSalonC.bg }}; color: {{ meSalonC.fg }};">{{ meSalon }}</span></sc-if><sc-if value="{{ meBadge }}" hint-placeholder-val="{{ false }}"><span class="nav-badge" title="{{ meBadge }}" style="font-size: 16px; line-height: 1;">{{ meBadgeEmoji }}</span></sc-if>
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
@@ -134,6 +154,14 @@
     </div>
     </sc-if>
   </header>
+  <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
+  <nav class="tabbar" aria-label="Navigation principale">
+    <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+      <sc-if value="{{ tb.plain }}" hint-placeholder-val="{{ true }}"><button onClick="{{ tb.go }}" aria-current="{{ tb.cur }}" class="tab" style="color: {{ tb.color }}; font-weight: {{ tb.weight }};"><span aria-hidden="true" style="font-size: 20px; line-height: 1;">{{ tb.icon }}</span><span>{{ tb.label }}</span></button></sc-if>
+      <sc-if value="{{ tb.main }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tb.go }}" aria-current="{{ tb.cur }}" aria-label="Nouvelle dégustation" class="tab tab-main"><span aria-hidden="true" class="tab-plus">＋</span><span>{{ tb.label }}</span></button></sc-if>
+    </sc-for>
+  </nav>
+  </sc-if>
 
   <main class="page" style="flex: 1; width: 100%; max-width: 1140px; margin: 0 auto; padding: 16px 40px 80px; display: flex; flex-direction: column;">
     <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
@@ -180,10 +208,40 @@
 
     <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
       <div style="animation: fadeUp .5s ease both; display: flex; flex-direction: column; gap: 36px; flex: 1; justify-content: center;">
+        <sc-if value="{{ dash }}" hint-placeholder-val="{{ false }}">
+        <section class="dash" style="display: flex; flex-direction: column; gap: 18px;">
+          <div><h1 style="font-size: 48px; margin: 0 0 6px;">{{ dashHello }}</h1><p style="font-size: 17px; opacity: .72; margin: 0;">{{ dashSub }}</p></div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; font-size: 16px; padding: 14px 22px;">☕ Nouvelle dégustation</button>
+            <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
+            <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; align-items: start;">
+            <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+              <h2 style="font-size: 20px; margin: 0;">☕ Dernières dégustations</h2>
+              <sc-if value="{{ dashNoLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">Aucune dégustation pour l’instant.</p></sc-if>
+              <sc-for list="{{ dashLogs }}" as="dl" hint-placeholder-count="3"><button onClick="{{ dl.open }}" style="cursor: pointer; display: flex; align-items: center; gap: 12px; text-align: left; border: none; background: var(--color-bg); border-radius: 18px; padding: 10px 12px; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);"><span style="flex: none; width: 46px; height: 46px; border-radius: 50%; background: {{ dl.noteBg }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 16px;">{{ dl.note }}</span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ dl.name }}</span><span style="font-size: 12.5px; opacity: .7;">{{ dl.meta }}</span></span></button></sc-for>
+            </div>
+            <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+              <h2 style="font-size: 20px; margin: 0;">📉 Bientôt vides</h2>
+              <sc-if value="{{ dashNoLow }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">Aucun sachet sous 25 % : la réserve est pleine.</p></sc-if>
+              <sc-for list="{{ dashLow }}" as="dw" hint-placeholder-count="2"><button onClick="{{ dw.open }}" style="cursor: pointer; display: flex; flex-direction: column; gap: 6px; text-align: left; border: none; background: var(--color-bg); border-radius: 18px; padding: 10px 14px; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);"><span style="display: flex; justify-content: space-between; gap: 10px;"><span style="font-size: 15px; font-weight: 600;">{{ dw.name }}</span><span style="font-size: 12.5px; opacity: .7; white-space: nowrap;">{{ dw.txt }}</span></span><span style="height: 6px; border-radius: 999px; background: var(--color-surface); overflow: hidden;"><span style="display: block; height: 100%; width: {{ dw.pct }}; background: var(--color-accent);"></span></span></button></sc-for>
+            </div>
+            <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+              <h2 style="font-size: 20px; margin: 0;">🔔 Nouveautés</h2>
+              <sc-if value="{{ dashNoNotif }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">Rien de neuf : tout est lu.</p></sc-if>
+              <sc-for list="{{ dashNotifs }}" as="dn" hint-placeholder-count="2"><button onClick="{{ dn.go }}" style="cursor: pointer; display: flex; gap: 10px; align-items: flex-start; text-align: left; border: none; background: var(--color-bg); border-radius: 18px; padding: 10px 12px; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);"><span aria-hidden="true" style="font-size: 18px;">{{ dn.icon }}</span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 14px; line-height: 1.35;">{{ dn.txt }}</span><span style="font-size: 12px; opacity: .6;">{{ dn.when }}</span></span></button></sc-for>
+            </div>
+          </div>
+        </section>
+        <h2 style="font-size: 30px; margin: 8px 0 -18px;">Explorer</h2>
+        </sc-if>
+        <sc-if value="{{ noDash }}" hint-placeholder-val="{{ true }}">
         <div style="max-width: 600px;">
           <h1 style="font-size: 58px; margin: 0 0 16px;">Par où commencer&nbsp;?</h1>
           <p style="font-size: 18px; opacity: .72; margin: 0; text-wrap: pretty;">Cinq portes d'entrée&nbsp;: la feuille, les objets qui la préparent, les cérémonies, le pas-à-pas et la carte des origines.</p>
         </div>
+        </sc-if>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
           <button onClick="{{ openTea }}" style="position: relative; overflow: hidden; text-align: left; cursor: pointer; border: none; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); border-radius: 40px; padding: 32px; min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; box-shadow: var(--shadow-sm); transition: transform .3s ease, box-shadow .3s ease;" style-hover="transform: translateY(-6px); box-shadow: var(--shadow-lg);">
             <span style="position: absolute; top: -56px; right: -40px; width: 210px; height: 210px; border-radius: 50%; background: var(--color-accent-2-300);"></span>
@@ -362,7 +420,7 @@
             <div role="button" tabindex="0" onClick="{{ sa.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
                 <button onClick="{{ sa.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
-                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sa.marque }} · {{ sa.code }} · {{ sa.owner }}<sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"> · {{ sa.remainShort }}</sc-if></span>
+                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sa.marque }} · {{ sa.owner }}<sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"> · {{ sa.remainShort }}</sc-if></span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ sa.avg }}</span>
               <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
@@ -425,11 +483,11 @@
                       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
                         <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
                           <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
-                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px; color: {{ l.noteBg }};">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                           </div>
                         </sc-for>
                       </div>
@@ -497,11 +555,11 @@
                       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
                         <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
                           <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
-                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px; color: {{ l.noteBg }};">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                           </div>
                         </sc-for>
                       </div>
@@ -522,7 +580,7 @@
                 <button onClick="{{ m.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ m.marque }} · <button onClick="{{ m.catOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 12px; color: inherit; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 2px;" style-hover="color: var(--color-accent-700);">{{ m.the }}</button> · {{ m.nSac }}</span>
               </div>
-              <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ m.avg }}</span>
+              <span style="flex: none; font-family: var(--font-heading); color: {{ m.avgColor }}; font-size: 16px;">{{ m.avg }}</span>
               <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
             </div>
             </sc-if>
@@ -536,7 +594,7 @@
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
-                    <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ m.code }}</span>
+                    
                   </div>
                   <button onClick="{{ m.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ m.the }} →</button>
                   <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px;">
@@ -546,7 +604,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                 </div>
                 <div class="side" style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
-                  <span style="font-family: var(--font-heading); font-size: 22px;">{{ m.avg }}</span>
+                  <span style="font-family: var(--font-heading); color: {{ m.avgColor }}; font-size: 22px;">{{ m.avg }}</span>
                   <span style="font-size: 12px; opacity: .65; white-space: nowrap;">{{ m.avgSub }}</span>
                 </div>
               </div>
@@ -603,11 +661,11 @@
                       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
                         <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
                           <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
-                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px; color: {{ l.noteBg }};">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                           </div>
                         </sc-for>
                       </div>
@@ -632,7 +690,7 @@
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
-                    <span class="tag tag-outline" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ m.code }}</span>
+                    
                   </div>
                   <button onClick="{{ m.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ m.the }} →</button>
                   <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px;">
@@ -642,7 +700,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
                 </div>
                 <div class="side" style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
-                  <span style="font-family: var(--font-heading); font-size: 22px;">{{ m.avg }}</span>
+                  <span style="font-family: var(--font-heading); color: {{ m.avgColor }}; font-size: 22px;">{{ m.avg }}</span>
                   <span style="font-size: 12px; opacity: .65; white-space: nowrap;">{{ m.avgSub }}</span>
                 </div>
               </div>
@@ -699,11 +757,11 @@
                       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
                         <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
                           <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
-                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px; color: {{ l.noteBg }};">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                           </div>
                         </sc-for>
                       </div>
@@ -783,11 +841,11 @@
                       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
                         <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
                           <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
-                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px; color: {{ l.noteBg }};">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                           </div>
                         </sc-for>
                       </div>
@@ -964,7 +1022,7 @@
             </div>
           </section>
           </sc-if>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px;">
+          <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px;">
             <sc-for list="{{ pf.kpis }}" as="k" hint-placeholder-count="8">
               <sc-if value="{{ k.plain }}" hint-placeholder-val="{{ true }}">
               <div style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
@@ -1154,7 +1212,7 @@
           <h1 style="font-size: 46px; margin: 0;">Stats pour les nerds</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0;">{{ st.tagline }}</p>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
+        <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
           <sc-for list="{{ st.kpis }}" as="k" hint-placeholder-count="8">
             <div style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
               <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ k.label }}</span>
@@ -1360,7 +1418,7 @@
           <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="3">
             <sc-if value="{{ l.col }}" hint-placeholder-val="{{ true }}">
             <div role="button" tabindex="0" onClick="{{ l.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 8px 14px;">
-              <span style="flex: none; min-width: 42px; text-align: center; font-family: var(--font-heading); font-size: 17px; color: var(--color-accent-700);">{{ l.note }}</span>
+              <span style="flex: none; min-width: 42px; text-align: center; font-family: var(--font-heading); font-size: 17px; color: {{ l.noteBg }};">{{ l.note }}</span>
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
                 <button onClick="{{ l.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 15px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ l.name }}</button>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ l.marque }} · {{ l.when }} · {{ l.author }} · {{ l.code }}</span>
@@ -1372,7 +1430,7 @@
             <div class="exp-wrap" style="position: relative; display: flex; flex-direction: column;">
               <button class="exp-btn" onClick="{{ l.toggleExp }}" aria-expanded="true" aria-label="Réduire" title="Réduire" style="position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--color-bg); color: var(--color-accent-700); padding: 0;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
               <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
@@ -1382,15 +1440,13 @@
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
-                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
-                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
-                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                    <span style="opacity: .7;">{{ l.author }} · {{ l.when }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);">{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;">{{ gl.name }}</span></sc-if></sc-for><sc-if value="{{ l.detailLine }}" hint-placeholder-val="{{ true }}"><span style="font-size: 13.5px; opacity: .85; align-self: center; line-height: 1.5;">{{ l.detailLine }}</span></sc-if>
                   </div>
-                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
+                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                 </div>
               </article>
             </div>
@@ -1402,7 +1458,7 @@
         <div style="display: flex; flex-direction: column; gap: 10px;">
             <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="2">
               <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
@@ -1412,15 +1468,13 @@
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
-                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
-                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
-                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                    <span style="opacity: .7;">{{ l.author }} · {{ l.when }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);">{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;">{{ gl.name }}</span></sc-if></sc-for><sc-if value="{{ l.detailLine }}" hint-placeholder-val="{{ true }}"><span style="font-size: 13.5px; opacity: .85; align-self: center; line-height: 1.5;">{{ l.detailLine }}</span></sc-if>
                   </div>
-                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
+                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                 </div>
               </article>
             </sc-for>
@@ -1444,7 +1498,8 @@
             </div>
           </section>
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
-            <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🕒</span>Quand, et avec qui</h2>
+            <button onClick="{{ toggleLfWhen }}" aria-expanded="{{ lfWhenOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--color-text); font-family: var(--font-body);"><span style="font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🕒</span>Quand, et avec qui</span><sc-if value="{{ lfWhenClosed }}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; opacity: .75;">{{ lfWhenSummary }}</span><span style="font-size: 13px; font-weight: 600; color: var(--color-accent-700);">Modifier ▾</span></sc-if><sc-if value="{{ lfWhenOpen }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; font-weight: 600; color: var(--color-accent-700);">Replier ▴</span></sc-if></button>
+            <sc-if value="{{ lfWhenOpen }}" hint-placeholder-val="{{ false }}">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.date }}" onChange="{{ setL.date }}"></label>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Heure</span><input class="input" type="time" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.heure }}" onChange="{{ setL.heure }}"></label>
@@ -1458,9 +1513,11 @@
               </sc-for>
               <sc-if value="{{ noOthers }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">Ajoutez des amis pour les inclure.</span></sc-if>
             </div>
+            </sc-if>
           </section>
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🫖</span>L’infusion</h2>
+            <sc-if value="{{ lfPrefilled }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; background: var(--color-accent-100); border-radius: 12px; padding: 6px 10px; align-self: flex-start;">✨ {{ lfPrefilled }}</span></sc-if>
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matériel</span>
               <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
@@ -1489,12 +1546,12 @@
           </section>
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">⭐</span>Note et avis</h2><span style="font-size: 12px; opacity: .6;">{{ logNoteHint }}</span></div>
-            <div style="display: grid; grid-template-columns: minmax(120px, 170px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
-              <input class="input" aria-label="Note sur 20" style="width: 100%; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 16px; text-align: center;" placeholder="16,5" value="{{ lf.note }}" onChange="{{ setL.note }}">
+            <div style="display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
+              <div style="display: flex; align-items: center; gap: 6px;"><button type="button" onClick="{{ noteDown }}" aria-label="Baisser la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">−</button><input class="input" aria-label="Note sur 20" style="width: 100%; min-width: 0; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 8px; text-align: center; color: {{ lfNoteColor }};" placeholder="16,5" value="{{ lf.note }}" onChange="{{ setL.note }}" inputMode="decimal"><button type="button" onClick="{{ noteUp }}" aria-label="Monter la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">+</button></div>
               <textarea class="input" rows="3" aria-label="Avis" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" value="{{ lf.avis }}" onChange="{{ setL.avis }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 16px; border-radius: 20px; resize: vertical;"></textarea>
             </div>
           </section>
-          <div style="position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 999px; padding: 8px; box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,.12)); align-self: flex-start;">
+          <div class="lf-save" style="position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 999px; padding: 8px; box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,.12)); align-self: flex-start;">
             <button class="btn btn-primary" onClick="{{ saveLog }}" style="white-space: nowrap;">{{ saveLogLabel }}</button><sc-if value="{{ editingLog }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ cancelLogEdit }}" style="white-space: nowrap;">Annuler</button></sc-if>
           </div>
           <sc-if value="{{ logMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ logMsg }}</span></sc-if>
@@ -1504,7 +1561,7 @@
             <h2 style="font-size: 26px; margin: 0;">Dernières dégustations</h2>
             <sc-for list="{{ recentLogs }}" as="l" hint-placeholder-count="2">
               <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
@@ -1514,12 +1571,10 @@
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
-                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
-                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
-                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                    <span style="opacity: .7;">{{ l.author }} · {{ l.when }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);">{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;">{{ gl.name }}</span></sc-if></sc-for><sc-if value="{{ l.detailLine }}" hint-placeholder-val="{{ true }}"><span style="font-size: 13.5px; opacity: .85; align-self: center; line-height: 1.5;">{{ l.detailLine }}</span></sc-if>
                   </div>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
                 </div>
@@ -2321,11 +2376,11 @@
                       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
                         <sc-for list="{{ sa.logs }}" as="l" hint-placeholder-count="1">
                           <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; padding: 8px 12px; border-radius: 14px; background: var(--color-surface);">
-                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px;">{{ l.note }}</span>
+                            <span style="font-family: var(--font-heading); font-size: 16px; min-width: 46px; color: {{ l.noteBg }};">{{ l.note }}</span>
                             <span class="tag tag-neutral" style="white-space: nowrap;">{{ l.author }}</span>
                             <span style="font-size: 13px; opacity: .75; flex: 1 1 220px;">{{ l.meta }}</span>
-                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                             <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; flex: 1 1 100%; opacity: .9; text-wrap: pretty;">{{ l.avis }}</span></sc-if>
+                            <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.editLog }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-text); padding: 2px 6px;">Modifier</button><button onClick="{{ l.remove }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 12px; color: var(--color-accent-700); padding: 2px 6px;">Supprimer</button></sc-if>
                           </div>
                         </sc-for>
                       </div>
@@ -2335,13 +2390,13 @@
         </section>
         <section style="display: flex; flex-direction: column; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0; margin-right: auto;">Dégustations</h2>
-            <sc-if value="{{ pv.hasLogs }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px;"><sc-for list="{{ pv.sortOpts }}" as="so" hint-placeholder-count="3"><button onClick="{{ so.pick }}" aria-pressed="{{ so.on }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: {{ so.bg }}; color: {{ so.fg }};">{{ so.name }}</button></sc-for></div></sc-if>
+            <sc-if value="{{ pv.hasLogs }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 2px; background: var(--color-surface); border-radius: 999px; padding: 3px; max-width: 100%; overflow-x: auto;"><sc-for list="{{ pv.sortOpts }}" as="so" hint-placeholder-count="3"><button onClick="{{ so.pick }}" aria-pressed="{{ so.on }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: {{ so.bg }}; color: {{ so.fg }};">{{ so.name }}</button></sc-for></div></sc-if>
           </div>
           <sc-if value="{{ pv.noLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore de dégustation pour ce thé.</p></sc-if>
           <sc-for list="{{ pv.logs }}" as="l" hint-placeholder-count="1">
               <sc-if value="{{ l.best }}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); margin-bottom: -6px;">🏆 Meilleure dégustation</span></sc-if>
               <article style="{{ l.bestBorder }}background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
@@ -2351,15 +2406,13 @@
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
                   </div>
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px;">
-                    <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Sachet n°</span>
-                    <span class="tag tag-accent-2" style="white-space: nowrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px;">{{ l.code }}</span>
-                    <span style="opacity: .7;">· {{ l.author }} · {{ l.when }}</span>
+                    <span style="opacity: .7;">{{ l.author }} · {{ l.when }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Matériel</span>{{ gl.name }}</span></sc-if></sc-for><sc-for list="{{ l.details }}" as="d" hint-placeholder-count="3"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;"><span style="font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span>{{ d.v }}</span></sc-for>
+                    <sc-for list="{{ l.gearLinks }}" as="gl" hint-placeholder-count="0"><sc-if value="{{ gl.can }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gl.open }}" title="Voir la fiche du matériel" style="cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text); border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px;" style-hover="background: var(--color-accent-100);">{{ gl.name }} →</button></sc-if><sc-if value="{{ gl.cannot }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: baseline; background: var(--color-bg); border-radius: 999px; padding: 4px 12px; font-size: 13px;">{{ gl.name }}</span></sc-if></sc-for><sc-if value="{{ l.detailLine }}" hint-placeholder-val="{{ true }}"><span style="font-size: 13.5px; opacity: .85; align-self: center; line-height: 1.5;">{{ l.detailLine }}</span></sc-if>
                   </div>
-                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                   <sc-if value="{{ l.avis }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; text-wrap: pretty; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">{{ l.avis }}</p></sc-if>
+                  <button onClick="{{ l.share }}" title="Partager cette dégustation" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 2px 8px 2px 0;">↗ Partager</button><sc-if value="{{ l.canJoin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ l.toggleJoin }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); padding: 2px 0;">{{ l.joinTxt }}</button></sc-if><sc-if value="{{ l.canDel }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 14px;"><button class="btn btn-ghost" onClick="{{ l.editLog }}" style="white-space: nowrap; padding-left: 0;">Modifier</button><button class="btn btn-ghost" onClick="{{ l.remove }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Supprimer</button></div></sc-if>
                 </div>
               </article>
           </sc-for>
@@ -2399,7 +2452,7 @@
           </button>
         </div>
 
-        <span class="washed" style="display: block; width: 100%; height: 380px; border-radius: 34px; overflow: hidden;">
+        <span class="washed opt-photo" style="display: block; width: 100%; height: 380px; border-radius: 34px; overflow: hidden;">
           <image-slot id="{{ teaSlot }}" shape="rounded" radius="34" placeholder="Photo du thé"></image-slot>
         </span>
 
@@ -2408,21 +2461,21 @@
             <span style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .55;">Profil général</span>
             <p style="font-size: 17px; line-height: 1.6; margin: 0; text-wrap: pretty;">{{ teaProfil }}</p>
           </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;">
+          <sc-if value="{{ teaRecolte }}" hint-placeholder-val="{{ true }}"><section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;">
             <span style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .55;">Récolte &amp; production</span>
             <p style="font-size: 17px; line-height: 1.6; margin: 0; text-wrap: pretty;">{{ teaRecolte }}</p>
-          </section>
+          </section></sc-if>
         </div>
 
-        <section style="display: flex; flex-direction: column; gap: 10px;">
+        <sc-if value="{{ teaLore }}" hint-placeholder-val="{{ true }}"><section style="display: flex; flex-direction: column; gap: 10px;">
           <h2 style="font-size: 30px; margin: 0;">Fabrication &amp; histoire</h2>
           <p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">{{ teaLore }}</p>
-        </section>
+        </section></sc-if>
 
-        <section style="display: flex; flex-direction: column; gap: 10px;">
+        <sc-if value="{{ teaTaste }}" hint-placeholder-val="{{ true }}"><section style="display: flex; flex-direction: column; gap: 10px;">
           <h2 style="font-size: 30px; margin: 0;">Le goût</h2>
           <p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">{{ teaTaste }}</p>
-        </section>
+        </section></sc-if>
 
         <sc-if value="{{ teaHasDecl }}" hint-placeholder-val="{{ false }}">
           <section style="display: flex; flex-direction: column; gap: 14px;">
@@ -2569,7 +2622,7 @@
           <h1 style="font-size: 52px; margin: 14px 0 0;">{{ subName }}</h1>
           <sc-if value="{{ subTr }}" hint-placeholder-val="{{ false }}"><p style="margin: 6px 0 0; font-size: 19px; font-style: italic; opacity: .7;">{{ subTr }}</p></sc-if>
         </div>
-        <span class="washed" style="display: block; width: 100%; height: 340px; border-radius: 34px; overflow: hidden;">
+        <span class="washed opt-photo" style="display: block; width: 100%; height: 340px; border-radius: 34px; overflow: hidden;">
           <image-slot id="{{ subSlot }}" shape="rounded" radius="34" placeholder="Photo de la déclinaison"></image-slot>
         </span>
         <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;">
@@ -2580,10 +2633,10 @@
           <h2 style="font-size: 30px; margin: 0;">Ce qui change</h2>
           <p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">{{ subDesc }}</p>
         </section>
-        <section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 10px;">
+<sc-if value="{{ subAvis }}" hint-placeholder-val="{{ true }}"><section style="background: var(--color-surface); border-radius: 34px; padding: 28px 30px; display: flex; flex-direction: column; gap: 10px;">
           <h2 style="font-size: 30px; margin: 0;">Mon avis</h2>
           <p style="font-size: 17px; line-height: 1.7; opacity: .85; margin: 0; text-wrap: pretty;">{{ subAvis }}</p>
-        </section>
+        </section></sc-if>
       </article>
     </sc-if>
 
@@ -2597,7 +2650,7 @@
           <h1 style="font-size: 52px; margin: 14px 0 6px;">{{ toolName }}</h1>
           <span style="font-size: 16px; letter-spacing: .06em; color: var(--color-accent-700);">{{ toolNative }}</span>
         </div>
-        <span class="washed" style="display: block; width: 100%; height: 380px; border-radius: 34px; overflow: hidden;">
+        <span class="washed opt-photo" style="display: block; width: 100%; height: 380px; border-radius: 34px; overflow: hidden;">
           <image-slot id="{{ toolSlot }}" shape="rounded" radius="34" placeholder="{{ toolName }}"></image-slot>
         </span>
         <p style="font-size: 19px; line-height: 1.6; margin: 0; text-wrap: pretty;">{{ toolDesc }}</p>
@@ -2661,7 +2714,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; align-items: start;">
           <sc-for list="{{ cmpRows }}" as="row" hint-placeholder-count="3">
             <div style="background: var(--color-surface); border-radius: 30px; padding: 14px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);">
-              <span class="washed" style="width: 100%; height: 150px; border-radius: 22px; overflow: hidden; display: block;">
+              <span class="washed opt-photo" style="width: 100%; height: 150px; border-radius: 22px; overflow: hidden; display: block;">
                 <image-slot id="{{ row.slot }}" shape="rounded" radius="22" placeholder="{{ row.name }}"></image-slot>
               </span>
               <button onClick="{{ row.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0 6px; text-align: left; display: flex; flex-direction: column; gap: 2px; font-family: var(--font-body); color: var(--color-text);" style-hover="color: var(--color-accent-700);">
@@ -2924,7 +2977,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px;">
               <sc-for list="{{ cat.items }}" as="it" hint-placeholder-count="3">
                 <article style="background: var(--color-surface); border-radius: 30px; padding: 14px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);">
-                  <span class="washed" style="width: 100%; height: 160px; border-radius: 22px; overflow: hidden; display: block;">
+                  <span class="washed opt-photo" style="width: 100%; height: 160px; border-radius: 22px; overflow: hidden; display: block;">
                     <image-slot id="{{ it.slot }}" shape="rounded" radius="22" placeholder="{{ it.name }}"></image-slot>
                   </span>
                   <button onClick="{{ it.open }}" style="text-align: left; cursor: pointer; border: none; background: transparent; font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 4px; padding: 0 6px 6px; transition: transform .22s ease;" style-hover="transform: translateX(4px);">
@@ -2950,7 +3003,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
 class Component extends DCLogic {
-  state = { view: 'home', key: null, idx: 0, vmode: (() => { try { return localStorage.getItem('the-vmode') || 'big'; } catch (e) { return 'big'; } })(), dvmode: (() => { try { return localStorage.getItem('the-dvmode') || 'big'; } catch (e) { return 'big'; } })() };
+  state = { view: 'home', key: null, idx: 0, vmode: (() => { try { return localStorage.getItem('the-vmode') || (window.innerWidth < 720 ? 'small' : 'big'); } catch (e) { return 'big'; } })(), dvmode: (() => { try { return localStorage.getItem('the-dvmode') || (window.innerWidth < 720 ? 'small' : 'big'); } catch (e) { return 'big'; } })() };
 
   ph = {
     recolte: "Une ligne : cueillette, saison, façonnage.",
@@ -4470,6 +4523,29 @@ class Component extends DCLogic {
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText((text ? text + '\n' : '') + url).then(() => done('Lien copié !'), copy); else copy();
   }
 
+  lfWithLot(lf, id) {
+    const out = Object.assign({}, lf, { lotId: id });
+    if (this.state.editLogId || !id) return out;
+    const a = this.getAdds(); const me = this.me();
+    const sa = a.sachets.find(x => x.id === id) || {};
+    const sameProd = a.sachets.filter(x => x.prodId && x.prodId === sa.prodId).map(x => x.id);
+    const key = l => String(l.date || '') + String(l.heure || '') + l.id;
+    const mineL = a.logs.filter(l => l.author === me || (l.with || []).indexOf(me) >= 0).sort((x, y) => key(y).localeCompare(key(x)));
+    const src = mineL.find(l => l.lotId === id) || mineL.find(l => sameProd.indexOf(l.lotId) >= 0) || a.logs.filter(l => l.lotId === id).sort((x, y) => key(y).localeCompare(key(x)))[0];
+    if (!src) { out.prefilled = ''; return out; }
+    const empty = k => !String(lf[k] || '').trim();
+    let n = 0;
+    ['temps', 'temperature', 'qty', 'technique', 'infusion'].forEach(k => { if (empty(k) && src[k] && !/^\s*[x-]\s*$/i.test(String(src[k]))) { out[k] = src[k]; n++; } });
+    const gids = this.logGears(src).filter(g => g.owner === me || this.gearUsable(me).some(x => x.id === g.id)).map(g => g.id);
+    if (!(lf.gearIds || []).length && gids.length) { out.gearIds = gids; out.gearId = ''; n++; }
+    out.prefilled = n ? 'Infusion préremplie d’après ' + (src.author === me ? 'ta' : 'la') + ' dégustation du ' + this.fmtDate(src.date) + (src.author !== me ? ' (' + src.author + ')' : '') + '. Modifie ce qui change.' : '';
+    return out;
+  }
+  noteColors(note) {
+    const n = parseFloat(String(note || '').replace(',', '.'));
+    if (!isFinite(n) || !/^\s*\d+([.,]\d+)?\s*$/.test(String(note || ''))) return { noteBg: 'var(--color-accent)' };
+    return { noteBg: n >= 16 ? '#5b7d4a' : n < 12 ? '#a8432e' : 'var(--color-accent)' };
+  }
   shareLogMsg(l) {
     const a = this.getAdds(); const sa = a.sachets.find(x => x.id === l.lotId) || {}; const p = a.prods.find(x => x.id === sa.prodId) || {};
     const name = p.nom || p.the || 'un thé'; const me = this.state.session ? this.me() : '';
@@ -4510,7 +4586,7 @@ class Component extends DCLogic {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), ...this.noteColors(l.note), detailLine: [['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -4715,7 +4791,7 @@ class Component extends DCLogic {
       famName: fk ? this.families[fk].name : '—',
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
       openFam: () => { if (fk) this.go('list', fk, 0); },
-      avg: this.avgTxt(st) || '—', avgSub: st.n ? 'sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
+      avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
       prix: this.avgPrice(sacs) || '—', nSac: String(sacs.length), owners: owners.length ? 'chez ' + owners.join(', ') : 'personne pour l’instant',
       iOwn: mineS.length > 0, iDontOwn: !mineS.length,
       addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
@@ -4900,12 +4976,12 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', this.shareLogMsg(l)),
+      logs: this.logsFor(o.id).map(l => ({ ...this.noteColors(l.note), author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', this.shareLogMsg(l)),
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
       nameOpen: this.stop(() => this.openProd(o.prodId)),
-      taste: () => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: o.id }) }),
+      taste: () => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf), o.id) }),
       edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
       remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); } };
   }
@@ -5219,6 +5295,23 @@ class Component extends DCLogic {
     return {
       famCards: Object.keys(this.families).map(k => ({ slot: 'fam-' + k, name: this.families[k].name, color: this.families[k].color, desc: this.families[k].desc, pick: pick[k] })),
       isHome: v === 'home',
+      ...(() => {
+        const on = v === 'home' && !!this.state.session && !!me;
+        if (!on) return { dash: false, noDash: true, dashLogs: [], dashLow: [] };
+        const a = this.getAdds();
+        const key = l => String(l.date || '') + String(l.heure || '') + l.id;
+        const sacBy = {}; coll.forEach(o => { sacBy[o.id] = o; });
+        const logs = a.logs.filter(l => sacBy[l.lotId]).sort((x, y) => key(y).localeCompare(key(x))).slice(0, 4);
+        const low = coll.filter(o => o.owner === me && !this.isEmptySachet(o)).map(o => ({ o: o, r: this.remainFor(o) })).filter(x => x.r && x.r.pct <= 25).sort((x, y) => x.r.pct - y.r.pct).slice(0, 4);
+        const h = new Date().getHours();
+        return { dash: true, noDash: false,
+          dashHello: (h < 5 || h >= 18 ? 'Bonsoir ' : 'Bonjour ') + me,
+          dashSub: 'Que boit-on aujourd’hui ?',
+          dashLogs: logs.map(l => { const o = sacBy[l.lotId]; return { ...this.noteColors(l.note), note: l.note || '—', name: o.nom || o.the, meta: [l.author + ((l.with || []).length ? ' & ' + l.with.join(', ') : ''), /^\d{4}-/.test(l.date || '') ? this.fmtDate(l.date) : ''].filter(Boolean).join(' · '), open: () => this.openProd(o.prodId) }; }),
+          dashNoLogs: !logs.length,
+          dashLow: low.map(x => ({ name: x.o.nom || x.o.the, txt: x.r.txt.replace(/^Reste ≈ /, ''), pct: x.r.pct + '%', open: () => this.openProd(x.o.prodId) })),
+          dashNoLow: !low.length };
+      })(),
       isTypes: v === 'types',
       isList: v === 'list',
       isTea: v === 'tea',
@@ -5259,8 +5352,8 @@ class Component extends DCLogic {
       teas: list.map((t, i) => ({
         name: t.name,
         origin: t.origin,
-        recolte: t.recolte ?? this.ph.recolte,
-        gout: t.gout ?? this.ph.gout,
+        recolte: t.recolte || '',
+        gout: t.gout || '',
         profil: t.gout || fam.profil,
         tr: this.trFor(t),
         expanded: !!(this.state.openDecl || {})[t.name],
@@ -5274,9 +5367,9 @@ class Component extends DCLogic {
       teaName: tea.name,
       teaOrigin: tea.origin,
       teaSlot: 'tea-' + this.state.key + '-' + this.state.idx,
-      teaLore: tea.lore ?? this.ph.lore,
-      teaTaste: tea.taste ?? this.ph.taste,
-      teaOpinion: tea.opinion ?? this.ph.opinion,
+      teaLore: tea.lore || '',
+      teaTaste: tea.taste || '',
+      teaOpinion: tea.opinion || '',
       teaHouseOpinion: tea.opinion || '',
       teaAvg: (() => { const ids = this.collection().filter(o => tea.name && this.norm(o.the) === this.norm(tea.name)).map(o => o.id); const st = this.statsMany(ids); return st.avg != null ? 'Moyenne des sachets : ' + this.avgTxt(st) + ' (' + st.n + ')' : ''; })(),
       canAct: !guest && !!me,
@@ -5294,7 +5387,7 @@ class Component extends DCLogic {
         const coll = this.collection();
         const prodIds = prods.map(x => x.id);
         const myLogs = a.logs.filter(l => this.inLog(l, me) && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
-        const taste = id => this.setState({ view: 'log', logMsg: '', lf: Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf, { lotId: id }) });
+        const taste = id => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: new Date().toISOString().slice(0, 10) }, this.state.lf), id) });
         const fill = pr => ({ prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
         const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, fill(pr)) }));
         const card = pr => {
@@ -5320,7 +5413,7 @@ class Component extends DCLogic {
       })(),
       teaTags: tTags,
       teaProfil: tea.gout || fam.profil,
-      teaRecolte: tea.recolte || this.ph.recolte,
+      teaRecolte: tea.recolte || '',
       teaHasDecl: teaDecl.length > 0,
       teaDeclCount: teaDecl.length + (teaDecl.length > 1 ? ' variantes' : ' variante'),
       teaTr: this.trFor(tea),
@@ -5332,7 +5425,7 @@ class Component extends DCLogic {
       subSlot: 'sub-' + this.state.key + '-' + this.state.idx + '-' + (this.state.sub || 0),
       subProfil: sub.profil || 'Profil à écrire — ce qui le distingue en tasse.',
       subDesc: sub.desc || "Paragraphe — terroir, cueillette, façonnage : ce qui différencie cette déclinaison du thé de base.",
-      subAvis: sub.avis || this.ph.opinion,
+      subAvis: sub.avis || '',
       backToParent: () => this.setState({ view: 'tea' }),
       q: this.state.q || '',
       onQ: e => this.setState({ q: e.target.value }),
@@ -5468,14 +5561,15 @@ class Component extends DCLogic {
         const nf = this.notifsFor(me);
         const open = !!this.state.notifOpen;
         const sacById = {}; this.getAdds().sachets.forEach(x => { sacById[x.id] = x; });
+        const NL = nf.items.map(x => ({ icon: x.icon, txt: x.txt.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'), when: x.when, dot: x.unread ? 'var(--color-accent)' : 'transparent', bg: x.unread ? 'var(--color-accent-100)' : 'transparent', unread: x.unread,
+            del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
+            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
         return { notifCount: nf.unread, hasNotifCount: nf.unread > 0, notifOpen: open, notifEmpty: !nf.items.length,
           notifLabel: nf.unread ? nf.unread + ' notification' + (nf.unread > 1 ? 's' : '') + ' non lue' + (nf.unread > 1 ? 's' : '') : 'Notifications',
           toggleNotif: () => this.setState(st => ({ notifOpen: !st.notifOpen, menuOpen: false })),
           closeNotif: () => this.setState({ notifOpen: false }),
           hasUnread: nf.unread > 0, readAll: () => this.markRead(me, nf.items.filter(x => x.unread).map(x => x.key)),
-          notifs: nf.items.map(x => ({ icon: x.icon, txt: x.txt.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'), when: x.when, dot: x.unread ? 'var(--color-accent)' : 'transparent', bg: x.unread ? 'var(--color-accent-100)' : 'transparent',
-            del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
-            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } })) };
+          notifs: NL, dashNotifs: NL.filter(x => x.unread).slice(0, 3), dashNoNotif: !NL.some(x => x.unread) };
       })(),
       _noTr: (window.mdtNoTr = this.opts().users.slice()),
       langFlag: window.mdtLang === 'en' ? 'flag-gb.svg' : 'flag-fr.svg', langTitle: window.mdtLang === 'en' ? 'English · cliquer pour repasser en français' : 'Français · switch to English (automatic translation)',
@@ -5546,6 +5640,7 @@ class Component extends DCLogic {
       })(),
       menuAdd: () => this.setState({ menuOpen: false, view: 'add', addMsg: '' }),
       cloudUser: !!this.state.session,
+      tabs: !this.state.session ? [] : [['home', '🏠', 'Accueil', () => this.setState({ view: 'home', menuOpen: false, notifOpen: false })], ['coll', '🍵', 'Mes thés', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: s0.collView || 'mine' }))], ['log', '＋', 'Dégustation', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s0.editLogId ? { lotId: '', with: [], date: new Date().toISOString().slice(0, 10) } : Object.assign({ date: new Date().toISOString().slice(0, 10) }, s0.lf) }))], ['gear', '🫖', 'Matériel', () => this.setState({ view: 'gear', gearEdit: null, gearMsg: '', menuOpen: false, notifOpen: false })], ['profile', '👤', 'Profil', () => this.setState({ menuOpen: false, notifOpen: false, view: 'profile', profUser: me, profEdit: false })]].map(t => { const act = t[0] === 'home' ? v === 'home' : t[0] === 'coll' ? (v === 'mine' || v === 'logs') : t[0] === 'log' ? v === 'log' : t[0] === 'gear' ? (v === 'gear' || v === 'gearItem') : (v === 'profile' && this.state.profUser === me); return { icon: t[1], label: t[2], go: t[3], main: t[0] === 'log', plain: t[0] !== 'log', color: act ? 'var(--color-accent-700)' : 'var(--color-text)', weight: act ? '700' : '500', cur: act ? 'page' : 'false' }; }),
       cloudGuest: guest,
       syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
@@ -5685,7 +5780,7 @@ class Component extends DCLogic {
           const ph = (allSacs.find(x => x.prodPhoto) || {}).prodPhoto || '';
           return { ...this.expFlags('p:' + pid), photo: ph, noPhoto: !ph, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
             marque: o.marque || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
-            avg: this.avgTxt(st) || '—', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
+            avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
             openTea: () => this.openProd(pid),
@@ -5717,7 +5812,13 @@ class Component extends DCLogic {
       qtyPh: pm === 'unite' ? 'ex : 10 (dragon balls, mini tuocha…)' : 'ex : 100',
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
-      setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
+      lfPrefilled: (this.state.lf || {}).prefilled || '',
+      lfWhenOpen: !!this.state.lfWhenOpen, lfWhenClosed: !this.state.lfWhenOpen, toggleLfWhen: () => this.setState(s0 => ({ lfWhenOpen: !s0.lfWhenOpen })),
+      lfWhenSummary: (() => { const lf = this.state.lf || {}; const today = new Date().toISOString().slice(0, 10); return [lf.date ? (lf.date === today ? 'Aujourd’hui' : 'le ' + this.fmtDate(lf.date)) : 'Date non précisée', lf.heure ? 'à ' + lf.heure : '', lf.repas || '', (lf.with || []).length ? 'avec ' + lf.with.join(', ') : 'seul·e'].filter(Boolean).join(' · '); })(),
+      noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
+      noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
+      lfNoteColor: this.noteColors((this.state.lf || {}).note).noteBg,
+      setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: k === 'lotId' ? this.lfWithLot(s.lf || {}, val) : Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
       lotOptions: (() => {
         const q = this.norm(this.state.lotQ || '').split(/\s+/).filter(Boolean);
         const cur = (this.state.lf || {}).lotId;
@@ -5732,7 +5833,7 @@ class Component extends DCLogic {
         const val = e.target.value;
         const q = this.norm(val).split(/\s+/).filter(Boolean);
         const hits = coll.filter(o => this.canTaste(o, me) && q.length && q.every(w => this.norm([o.nom, o.the, o.variante, o.marque, o.code].join(' ')).indexOf(w) >= 0));
-        this.setState(st => ({ lotQ: val, lf: hits.length === 1 ? Object.assign({}, st.lf, { lotId: hits[0].id }) : st.lf }));
+        this.setState(st => ({ lotQ: val, lf: hits.length === 1 && (st.lf || {}).lotId !== hits[0].id ? this.lfWithLot(st.lf || {}, hits[0].id) : st.lf }));
       },
       ...(() => {
         const o = coll.find(x => x.id === (this.state.lf || {}).lotId);
@@ -5752,7 +5853,7 @@ class Component extends DCLogic {
       logNoteHint: (() => { const raw = String((this.state.lf || {}).note || ''); const n = this.num(raw.replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); const tag = /f/i.test(raw) ? ' · foiré' : /r/i.test(raw) ? ' · réglage' : ''; if (n == null) return '0–4 peut être jeté · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel · F foiré · R réglage'; return (n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? 'Correct, sans plus' : n <= 18 ? 'Vraiment bon' : 'Exceptionnel') + tag; })(),
       logMsg: this.state.logMsg || '',
       saveLog: () => {
-        const l = this.state.lf || {};
+        const l = Object.assign({}, this.state.lf || {}); delete l.prefilled;
         if (!l.lotId) { this.setState({ logMsg: 'Choisissez le thé dégusté.' }); return; }
         if (!coll.some(x => x.id === l.lotId && this.canTaste(x, me))) { this.setState({ logMsg: 'Vous ne pouvez noter que vos sachets ou ceux qu’on vous a partagés.' }); return; }
         const a = this.getAdds();
