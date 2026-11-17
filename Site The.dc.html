@@ -26,6 +26,8 @@
   body { margin: 0; }
   a { color: var(--color-accent-700); text-underline-offset: 3px; }
   a:hover { color: var(--color-accent-800); }
+  @keyframes sheetUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
   @keyframes riseIn { 0% { opacity: 0; transform: translateY(40px) scale(.94); } 100% { opacity: 1; transform: none; } }
   .exp-wrap > :not(.exp-btn) { padding-right: 54px !important; }
@@ -42,7 +44,8 @@
     .adm-nav { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
     header.nav .nav-quick .nq { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; font-size: 13px !important; padding: 6px 8px !important; text-align: center; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
     header.nav .nav-carte { order: 5; width: 100%; justify-content: flex-start; padding-left: 0 !important; font-size: 14px !important; }
-    header .umenu { position: fixed !important; left: 16px !important; right: 16px !important; top: 64px !important; min-width: 0 !important; }
+    header .umenu, header .npanel { position: fixed !important; left: 12px !important; right: 12px !important; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important; width: auto !important; min-width: 0 !important; max-height: 75vh; overflow: auto; z-index: 61 !important; animation: sheetUp .22s ease both !important; border-radius: 26px !important; }
+    header .sheet-bd { background: rgba(30, 22, 15, .32) !important; z-index: 60 !important; animation: fadeIn .2s ease both; }
     main.page { padding: 8px 16px 64px !important; }
     main.page h1 { font-size: 34px !important; line-height: 1.1 !important; }
     main.page h2 { font-size: 23px !important; }
@@ -78,8 +81,8 @@
       <div class="nav-bell" style="position: relative;">
         <button onClick="{{ toggleNotif }}" aria-haspopup="true" aria-expanded="{{ notifOpen }}" aria-label="{{ notifLabel }}" title="{{ notifLabel }}" style="position: relative; z-index: 42; cursor: pointer; border: none; width: 42px; height: 42px; border-radius: 50%; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 19px;" style-hover="background: var(--color-accent-100);">🔔<sc-if value="{{ hasNotifCount }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-body);">{{ notifCount }}</span></sc-if></button>
         <sc-if value="{{ notifOpen }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ closeNotif }}" aria-label="Fermer les notifications" style="position: fixed; inset: 0; z-index: 40; background: transparent; border: none; cursor: default;"></button>
-          <div role="dialog" aria-label="Notifications" style="position: absolute; right: 0; top: calc(100% + 10px); z-index: 41; width: min(360px, calc(100vw - 32px)); max-height: 70vh; overflow: auto; background: var(--color-bg); border-radius: 24px; box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,.18)); padding: 10px; display: flex; flex-direction: column; gap: 4px;">
+          <button onClick="{{ closeNotif }}" aria-label="Fermer les notifications" class="sheet-bd" style="position: fixed; inset: 0; z-index: 40; background: transparent; border: none; cursor: default;"></button>
+          <div role="dialog" aria-label="Notifications" class="npanel" style="position: absolute; right: 0; top: calc(100% + 10px); z-index: 41; width: min(360px, calc(100vw - 32px)); max-height: 70vh; overflow: auto; background: var(--color-bg); border-radius: 24px; box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,.18)); padding: 10px; display: flex; flex-direction: column; gap: 4px;">
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px 4px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Notifications</span><sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}"><button onClick="{{ readAll }}" style="cursor: pointer; border: none; background: transparent; padding: 4px 0; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700);">✓ Tout marquer comme lu</button></sc-if></div>
             <sc-if value="{{ notifEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 10px; font-size: 14px; opacity: .7;">Rien de neuf pour l’instant.</p></sc-if>
             <sc-for list="{{ notifs }}" as="nt" hint-placeholder-count="3">
@@ -103,7 +106,7 @@
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
-          <button aria-label="Fermer le menu" onClick="{{ closeMenu }}" style="position: fixed; inset: 0; background: transparent; border: none; cursor: default; z-index: 40;"></button>
+          <button aria-label="Fermer le menu" class="sheet-bd" onClick="{{ closeMenu }}" style="position: fixed; inset: 0; background: transparent; border: none; cursor: default; z-index: 40;"></button>
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
