@@ -76,6 +76,12 @@
     .lf-save .btn-primary { flex: 1 1 auto; justify-content: center; }
     .dash h1 { font-size: 34px !important; }
     .dash .btn-primary { flex: 1 1 100%; justify-content: center; }
+    .lcard { display: grid !important; grid-template-columns: 58px minmax(0, 1fr); column-gap: 14px; row-gap: 8px; padding: 16px !important; }
+    .lcard > .lbub { grid-column: 1; grid-row: 1 / span 2; width: 58px !important; height: 58px !important; }
+    .lcard > .lbub > span:first-child { font-size: 21px !important; }
+    .lcard > .lbody { display: contents !important; }
+    .lcard > .lbody > * { grid-column: 1 / -1; }
+    .lcard > .lbody > :nth-child(1), .lcard > .lbody > :nth-child(2) { grid-column: 2; }
     .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
     .kpi-grid > * { padding: 12px 14px !important; border-radius: 20px !important; min-width: 0; }
     .kpi-grid [style*="font-size: 22px"] { font-size: 18px !important; overflow-wrap: anywhere; }
@@ -1402,12 +1408,12 @@
             <sc-if value="{{ l.exp }}" hint-placeholder-val="{{ false }}">
             <div class="exp-wrap" style="position: relative; display: flex; flex-direction: column;">
               <button class="exp-btn" onClick="{{ l.toggleExp }}" aria-expanded="true" aria-label="Réduire" title="Réduire" style="position: absolute; top: 12px; right: 12px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--color-bg); color: var(--color-accent-700); padding: 0;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
-              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+              <article class="lcard" style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div class="lbub" style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
-                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                <div class="lbody" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
@@ -1430,12 +1436,12 @@
         <sc-if value="{{ dvBigOn }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; flex-direction: column; gap: 10px;">
             <sc-for list="{{ dlogs }}" as="l" hint-placeholder-count="2">
-              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+              <article class="lcard" style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div class="lbub" style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
-                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                <div class="lbody" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
@@ -1533,12 +1539,12 @@
           <section style="display: flex; flex-direction: column; gap: 10px;">
             <h2 style="font-size: 26px; margin: 0;">Dernières dégustations</h2>
             <sc-for list="{{ recentLogs }}" as="l" hint-placeholder-count="2">
-              <article style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+              <article class="lcard" style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div class="lbub" style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
-                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                <div class="lbody" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
@@ -2356,12 +2362,12 @@
           <sc-if value="{{ pv.noLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore de dégustation pour ce thé.</p></sc-if>
           <sc-for list="{{ pv.logs }}" as="l" hint-placeholder-count="1">
               <sc-if value="{{ l.best }}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg); margin-bottom: -6px;">🏆 Meilleure dégustation</span></sc-if>
-              <article style="{{ l.bestBorder }}background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
-                <div style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+              <article class="lcard" style="{{ l.bestBorder }}background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start;">
+                <div class="lbub" style="flex: none; width: 74px; height: 74px; border-radius: 50%; background: {{ l.noteBg }}; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
                   <span style="font-family: var(--font-heading); font-size: 26px;">{{ l.note }}</span>
                   <span style="font-size: 11px; opacity: .85; margin-top: 2px;">{{ l.noteSub }}</span>
                 </div>
-                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                <div class="lbody" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <button onClick="{{ l.openP }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 20px; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ l.name }} →</button>
                     <sc-if value="{{ l.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ l.the }}</button></sc-if>
