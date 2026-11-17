@@ -216,6 +216,21 @@
             <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
             <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
           </div>
+          <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ true }}">
+          <div style="position: relative; overflow: hidden; background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
+            <span aria-hidden="true" style="position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: {{ sugColor }}; opacity: .35;"></span>
+            <div style="position: relative; flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6;">🎲 Suggestion du jour</span>
+              <button onClick="{{ sugOpen }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 30px; line-height: 1.1; color: var(--color-text);" style-hover="color: var(--color-accent-700);">{{ sugName }} →</button>
+              <span style="font-size: 14px; opacity: .75;">{{ sugMeta }}<sc-if value="{{ sugAvg }}" hint-placeholder-val="{{ true }}"> · <b style="color: {{ sugAvgColor }};">{{ sugAvg }}</b></sc-if></span>
+              <span style="font-size: 14px;">{{ sugWhy }}</span>
+            </div>
+            <div style="position: relative; display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-primary" onClick="{{ sugTaste }}" style="white-space: nowrap;">☕ Le déguster</button>
+              <sc-if value="{{ sugMany }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ sugOther }}" style="white-space: nowrap; background: var(--color-bg);">🎲 Un autre</button></sc-if>
+            </div>
+          </div>
+          </sc-if>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; align-items: start;">
             <div style="background: var(--color-surface); border-radius: 28px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
               <h2 style="font-size: 20px; margin: 0;">☕ Dernières dégustations</h2>
@@ -5304,7 +5319,23 @@ class Component extends DCLogic {
         const logs = a.logs.filter(l => sacBy[l.lotId]).sort((x, y) => key(y).localeCompare(key(x))).slice(0, 4);
         const low = coll.filter(o => o.owner === me && !this.isEmptySachet(o)).map(o => ({ o: o, r: this.remainFor(o) })).filter(x => x.r && x.r.pct <= 25).sort((x, y) => x.r.pct - y.r.pct).slice(0, 4);
         const h = new Date().getHours();
-        return { dash: true, noDash: false,
+        const pool = coll.filter(o => this.canTaste(o, me) && !this.isEmptySachet(o)).sort((x, y) => String(x.id).localeCompare(String(y.id)));
+        let sug = null;
+        if (pool.length) {
+          const day = new Date().toISOString().slice(0, 10);
+          let hsh = 0; (day + me).split('').forEach(c => { hsh = (hsh * 31 + c.charCodeAt(0)) >>> 0; });
+          sug = pool[(hsh + (this.state.sugShift || 0)) % pool.length];
+        }
+        const sugInfo = (() => { if (!sug) return {}; const st = this.statsFor(sug.id); const fk = this.famOf(sug.the); const ls = a.logs.filter(l => l.lotId === sug.id && /^\d{4}-/.test(l.date || '')).map(l => l.date).sort(); const last = ls.pop();
+          const days = last ? Math.round((Date.now() - new Date(last).getTime()) / 864e5) : null;
+          return { sugName: sug.nom || sug.the, sugColor: fk ? this.families[fk].color : 'var(--color-accent)',
+            sugMeta: [fk ? this.families[fk].name : '', sug.marque, sug.owner !== me ? 'partagé par ' + sug.owner : ''].filter(Boolean).join(' · '),
+            sugWhy: last ? (days > 30 ? 'Pas goûté depuis ' + days + ' jours, il t’attend !' : 'Dernière dégustation le ' + this.fmtDate(last) + '.') : 'Jamais dégusté : c’est le moment de le découvrir !',
+            sugAvg: this.avgTxt(st) || '', ...(() => { const c = this.noteColors(st.avg != null ? String(Math.round(st.avg * 10) / 10) : ''); return { sugAvgColor: c.noteBg }; })(),
+            sugTaste: () => this.setState(s0 => ({ view: 'log', logMsg: '', editLogId: null, lf: this.lfWithLot(Object.assign({ date: new Date().toISOString().slice(0, 10), with: [] }, s0.editLogId ? {} : s0.lf, { lotId: '' }), sug.id) })),
+            sugOpen: () => this.openProd(sug.prodId),
+            sugOther: () => this.setState(s0 => ({ sugShift: (s0.sugShift || 0) + 1 + Math.floor(Math.random() * Math.max(1, pool.length - 1)) })), sugMany: pool.length > 1 }; })();
+        return { dash: true, noDash: false, hasSug: !!sug, ...sugInfo,
           dashHello: (h < 5 || h >= 18 ? 'Bonsoir ' : 'Bonjour ') + me,
           dashSub: 'Que boit-on aujourd’hui ?',
           dashLogs: logs.map(l => { const o = sacBy[l.lotId]; return { ...this.noteColors(l.note), note: l.note || '—', name: o.nom || o.the, meta: [l.author + ((l.with || []).length ? ' & ' + l.with.join(', ') : ''), /^\d{4}-/.test(l.date || '') ? this.fmtDate(l.date) : ''].filter(Boolean).join(' · '), open: () => this.openProd(o.prodId) }; }),
