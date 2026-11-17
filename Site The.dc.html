@@ -356,7 +356,6 @@
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
                         <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
-                        <sc-if value="{{ sa.needPer }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">1 unité ≈</span><input class="input" inputmode="decimal" value="{{ sa.sharePer }}" onInput="{{ sa.setSharePer }}" placeholder="g" aria-label="Poids d’une unité en grammes" style="width: 64px; padding: 8px 10px; background: var(--color-bg);"><span style="font-size: 14px;">g</span></sc-if>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -429,7 +428,6 @@
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
                         <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
-                        <sc-if value="{{ sa.needPer }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">1 unité ≈</span><input class="input" inputmode="decimal" value="{{ sa.sharePer }}" onInput="{{ sa.setSharePer }}" placeholder="g" aria-label="Poids d’une unité en grammes" style="width: 64px; padding: 8px 10px; background: var(--color-bg);"><span style="font-size: 14px;">g</span></sc-if>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -537,7 +535,6 @@
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
                         <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
-                        <sc-if value="{{ sa.needPer }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">1 unité ≈</span><input class="input" inputmode="decimal" value="{{ sa.sharePer }}" onInput="{{ sa.setSharePer }}" placeholder="g" aria-label="Poids d’une unité en grammes" style="width: 64px; padding: 8px 10px; background: var(--color-bg);"><span style="font-size: 14px;">g</span></sc-if>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -634,7 +631,6 @@
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
                         <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
-                        <sc-if value="{{ sa.needPer }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">1 unité ≈</span><input class="input" inputmode="decimal" value="{{ sa.sharePer }}" onInput="{{ sa.setSharePer }}" placeholder="g" aria-label="Poids d’une unité en grammes" style="width: 64px; padding: 8px 10px; background: var(--color-bg);"><span style="font-size: 14px;">g</span></sc-if>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -718,7 +714,6 @@
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
                         <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
-                        <sc-if value="{{ sa.needPer }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">1 unité ≈</span><input class="input" inputmode="decimal" value="{{ sa.sharePer }}" onInput="{{ sa.setSharePer }}" placeholder="g" aria-label="Poids d’une unité en grammes" style="width: 64px; padding: 8px 10px; background: var(--color-bg);"><span style="font-size: 14px;">g</span></sc-if>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -2006,7 +2001,6 @@
                         <span style="font-size: 14px;">Partager</span>
                         <input class="input" inputmode="decimal" value="{{ sa.shareG }}" onInput="{{ sa.setShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 80px; padding: 8px 12px; background: var(--color-bg);">
                         <div role="radiogroup" aria-label="Unité" style="display: flex; gap: 2px; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-for list="{{ sa.shareUnits }}" as="su" hint-placeholder-count="2"><button role="radio" aria-checked="{{ su.on }}" onClick="{{ su.pick }}" style="cursor: pointer; border: none; white-space: nowrap; font-family: var(--font-body); font-size: 13px; padding: 5px 11px; border-radius: 999px; background: {{ su.bg }}; color: {{ su.fg }};">{{ su.name }}</button></sc-for></div>
-                        <sc-if value="{{ sa.needPer }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">1 unité ≈</span><input class="input" inputmode="decimal" value="{{ sa.sharePer }}" onInput="{{ sa.setSharePer }}" placeholder="g" aria-label="Poids d’une unité en grammes" style="width: 64px; padding: 8px 10px; background: var(--color-bg);"><span style="font-size: 14px;">g</span></sc-if>
                         <span style="font-size: 14px;">avec</span>
                         <sc-if value="{{ sa.noShareTarget }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">personne pour l’instant (ajoutez des amis).</span></sc-if>
                         <select class="input" value="{{ sa.shareTo }}" onChange="{{ sa.setShareTo }}" aria-label="Avec qui" style="width: auto; padding: 8px 12px; background: var(--color-bg);"><sc-for list="{{ sa.shareTargets }}" as="st" hint-placeholder-count="2"><option value="{{ st.value }}">{{ st.name }}</option></sc-for></select>
@@ -3601,7 +3595,7 @@ class Component extends DCLogic {
   portionsFor(o) {
     const by = {}, disp = {};
     const base = o.prixMode === 'unite' ? 'u' : 'g';
-    (o.shares || []).forEach(x => { by[x.to] = (by[x.to] || 0) + (this.num(x.grams) || 0); const last = disp[x.to]; if (!last || x.unit) disp[x.to] = { unit: x.unit || base, per: this.num(x.per) }; });
+    (o.shares || []).forEach(x => { by[x.to] = (by[x.to] || 0) + (this.num(x.amount != null ? x.amount : x.grams) || 0); disp[x.to] = { unit: x.unit || base }; });
     const fmt = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
     const lbl = (u, n) => u === 'u' ? (n > 1 ? ' unités' : ' unité') : ' g';
     return Object.keys(by).map(u => {
@@ -3611,8 +3605,8 @@ class Component extends DCLogic {
       const emptyP = !!(o.portionEmpty || {})[u];
       const left = emptyP ? 0 : adj ? Math.max(0, adj.left - ul.filter(l => this.logTs(l) > adj.ts).reduce((t, l) => t + (this.qtyNum(l.qty) || 0), 0)) : Math.max(0, by[u] - used);
       const d = disp[u] || { unit: base };
-      const conv = v => d.unit === base || !d.per ? v : (d.unit === 'u' ? v / d.per : v * d.per);
-      const shownU = d.unit === base || d.per ? d.unit : base;
+      const conv = v => v;
+      const shownU = d.unit;
       return { who: u, empty: emptyP, adjusted: !!adj, grams: by[u], used: used, left: left, unit: shownU, conv: conv, per: d.per, base: base, shownTotal: conv(by[u]), pct: Math.min(100, Math.round(left / (by[u] || 1) * 100)),
         txt: u + ' : ' + (emptyP ? 'portion vide' : 'reste ≈ ' + fmt(conv(left)) + lbl(shownU, conv(left))) + ' sur ' + fmt(conv(by[u])) + lbl(shownU, conv(by[u])) + (shownU === 'u' ? ' donnée' + (conv(by[u]) > 1 ? 's' : '') : ' donnés') + (adj && !emptyP ? ' · mis à jour le ' + new Date(adj.ts).toLocaleDateString('fr-FR') : '') };
     });
@@ -3967,19 +3961,15 @@ class Component extends DCLogic {
       shareTo: this.state.shareTo || shareTargets[0] || '', setShareTo: e => this.setState({ shareTo: e.target.value }),
       shareG: sharing ? (this.state.shareG || '') : '', setShareG: e => this.setState({ shareG: e.target.value }),
       shareUnits: ['g', 'u'].map(k => { const cur = this.state.shareU || (o.prixMode === 'unite' ? 'u' : 'g'); return { name: k === 'g' ? 'grammes' : 'unités', on: cur === k, bg: cur === k ? 'var(--color-text)' : 'transparent', fg: cur === k ? 'var(--color-bg)' : 'var(--color-text)', pick: () => this.setState({ shareU: k }) }; }),
-      needPer: (this.state.shareU || (o.prixMode === 'unite' ? 'u' : 'g')) !== (o.prixMode === 'unite' ? 'u' : 'g'),
-      sharePer: this.state.sharePer || '', setSharePer: e => this.setState({ sharePer: e.target.value }),
       shareSave: () => {
         const to = this.state.shareTo || shareTargets[0]; const amt = this.num(this.state.shareG);
         if (!to) return;
         const baseU = o.prixMode === 'unite' ? 'u' : 'g', unitC = this.state.shareU || baseU;
         if (amt == null || amt <= 0) { window.alert('Indiquez une quantité à partager.'); return; }
-        const per = this.num(this.state.sharePer);
-        if (unitC !== baseU && (per == null || per <= 0)) { window.alert('Indiquez combien de grammes pèse une unité.'); return; }
-        const g = unitC === baseU ? amt : (unitC === 'u' ? amt * per : amt / per);
+        const g = unitC === baseU ? amt : 0;
         if (rm && g > rm.left + 0.001) { window.alert('Il ne vous reste qu’environ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + (baseU === 'u' ? ' unités' : ' g') + ' dans ce sachet.'); return; }
         const a = this.getAdds();
-        this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { shares: (x.shares || []).concat([{ to: to, grams: g, amount: amt, unit: unitC, per: unitC !== baseU ? per : null, ts: Date.now(), date: new Date().toISOString().slice(0, 10) }]), adjust: x.adjust ? Object.assign({}, x.adjust, { left: Math.max(0, x.adjust.left - g) }) : x.adjust }) : x) }));
+        this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { shares: (x.shares || []).concat([{ to: to, grams: g, amount: amt, unit: unitC, ts: Date.now(), date: new Date().toISOString().slice(0, 10) }]), adjust: x.adjust ? Object.assign({}, x.adjust, { left: Math.max(0, x.adjust.left - g) }) : x.adjust }) : x) }));
         this.setState({ shareId: null, shareG: '' });
       },
       hasPortions: portions.length > 0, isGuest: o.owner !== me && portions.some(p => p.who === me),
@@ -3989,15 +3979,15 @@ class Component extends DCLogic {
           const uLbl = p.unit === 'u' ? 'unités' : 'g';
           const v = window.prompt('Combien vous reste-t-il (' + uLbl + ') ?', String(Math.round(p.conv(p.left) * 10) / 10).replace('.', ','));
           if (v == null) return; const n = this.num(v); if (n == null || n < 0) { window.alert('Indiquez une quantité valide.'); return; }
-          const baseV = p.unit === p.base || !p.per ? n : (p.unit === 'u' ? n * p.per : n / p.per);
+          const baseV = n;
           const a = this.getAdds();
           this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { portionAdj: Object.assign({}, x.portionAdj, { [me]: { left: baseV, ts: Date.now() } }), portionEmpty: Object.assign({}, x.portionEmpty, { [me]: baseV <= 0 }) }) : x) }));
         },
         toggleEmptyP: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { portionEmpty: Object.assign({}, x.portionEmpty, { [me]: !p.empty }) }) : x) })); },
         take: () => {
-          if (!window.confirm('Reprendre la portion de ' + p.who + ' ? Ce qu’il lui reste (' + (Math.round(p.left * 10) / 10).toString().replace('.', ',') + ' g) revient dans votre sachet.')) return;
+          if (!window.confirm('Reprendre la portion de ' + p.who + ' ? Ce qu’il lui reste (' + (Math.round(p.left * 10) / 10).toString().replace('.', ',') + (p.unit === 'u' ? ' u' : ' g') + ') ' + (p.unit === p.base ? 'revient dans votre sachet.' : 'ne sera plus affiché chez lui.'))) return;
           const a = this.getAdds();
-          this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { shares: (x.shares || []).filter(z => z.to !== p.who), quantite: String(Math.max(0, (this.num(x.quantite) || 0) - p.used)).replace('.', ','), adjust: x.adjust ? Object.assign({}, x.adjust, { left: x.adjust.left + p.left }) : x.adjust }) : x) }));
+          this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { shares: (x.shares || []).filter(z => z.to !== p.who), quantite: p.unit === p.base ? String(Math.max(0, (this.num(x.quantite) || 0) - p.used)).replace('.', ',') : x.quantite, adjust: x.adjust && p.unit === p.base ? Object.assign({}, x.adjust, { left: x.adjust.left + p.left }) : x.adjust }) : x) }));
         } }))
     };
     const adjOpen = this.state.adjId === o.id;
