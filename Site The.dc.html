@@ -4315,6 +4315,15 @@ class Component extends DCLogic {
       const txt = e.type === 'give' ? e.who + ' vous a donné un sachet' + (e.text.match(/« .* »/) ? ' de ' + e.text.match(/« .*? »/)[0] : '') : e.type === 'share' ? e.who + ' ' + e.text.replace(/ avec .*$/, '') + ' avec vous' : e.who + ' s’est ajouté à votre dégustation' + (e.text.match(/\(« .* »\)/) ? ' ' + e.text.match(/\(« .* »\)/)[0] : '');
       items.push({ key: e.id, icon: e.icon, txt: txt, when: fmtW(e.ts), ts: t, unread: t > seen && readK.indexOf(e.id) < 0, sid: e.sid });
     });
+    // on m'a ajouté à une dégustation
+    a.logs.forEach(l => {
+      if (!l.author || l.author === me || (l.with || []).indexOf(me) < 0) return;
+      const sa = sacById[l.lotId] || {}; const pr = a.prods.find(z => z.id === sa.prodId) || {};
+      const ts = this.logTs(l) || (l.date ? new Date(l.date + 'T' + (/^\d{1,2}:\d{2}$/.test(l.heure || '') ? l.heure.padStart(5, '0') : '12:00')).getTime() : 0);
+      if (!ts || Date.now() - ts > 60 * 864e5) return;
+      const k = 'with:' + l.id;
+      items.push({ key: k, icon: '🍵', txt: l.author + ' vous a ajouté à sa dégustation de « ' + (pr.nom || pr.the || sa.nom || 'thé') + ' »' + (l.note ? ' (' + l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') + ')' : ''), when: fmtW(ts), ts: ts, unread: ts > seen && readK.indexOf(k) < 0, logId: l.id });
+    });
     // paquets presque vides (les miens et mes portions)
     this.collection().forEach(o => {
       const unitU = o.prixMode === 'unite';
@@ -5763,7 +5772,7 @@ class Component extends DCLogic {
         const sacById = {}; this.getAdds().sachets.forEach(x => { sacById[x.id] = x; });
         const NL = nf.items.map(x => ({ icon: x.icon, txt: x.txt.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'), when: x.when, dot: x.unread ? 'var(--color-accent)' : 'transparent', bg: x.unread ? 'var(--color-accent-100)' : 'transparent', unread: x.unread,
             del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
-            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
+            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.logId) this.openLogDetail(x.logId); else if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
         return { notifCount: nf.unread, hasNotifCount: nf.unread > 0, notifOpen: open, notifEmpty: !nf.items.length,
           notifLabel: nf.unread ? nf.unread + ' notification' + (nf.unread > 1 ? 's' : '') + ' non lue' + (nf.unread > 1 ? 's' : '') : 'Notifications',
           toggleNotif: () => this.setState(st => ({ notifOpen: !st.notifOpen, menuOpen: false })),
