@@ -92,6 +92,29 @@
     .sac-score > span { max-width: 84px; }
     .sac-foot .sac-taste { flex: 1 1 auto; justify-content: center; }
   }
+  .tp-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: 14px; align-items: start; }
+  .tp-wrap > .tp-pen:only-child { grid-column: 1 / -1; }
+  .tp-team { display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 2px; }
+  .tp-card { cursor: pointer; display: flex; gap: 12px; align-items: center; background: #f6f1e2; border: 3px solid #4a3a2a; border-radius: 14px; padding: 8px 10px; box-shadow: 3px 3px 0 rgba(74,58,42,.25); font-family: var(--font-body); color: #2b2118; transition: transform .12s; }
+  .tp-card:hover { transform: translate(-1px, -1px); }
+  .tp-card-pic { flex: none; width: 54px; height: 54px; border-radius: 10px; background: #cfe3a8; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 2px rgba(74,58,42,.25); }
+  .tp-card-pic img { width: 48px; height: 48px; image-rendering: pixelated; display: block; }
+  .tp-card-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .tp-card-top { display: flex; align-items: baseline; gap: 6px; }
+  .tp-card-name { cursor: pointer; border: none; background: none; padding: 0; font-family: var(--font-heading); font-size: 16px; color: #2b2118; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tp-card-name:hover { color: var(--color-accent-700); }
+  .tp-card-lvl { margin-left: auto; font: 700 12px/1 ui-monospace, Menlo, monospace; white-space: nowrap; }
+  .tp-hp { display: flex; align-items: center; gap: 6px; }
+  .tp-hp-lbl { font: 800 10px/1 ui-monospace, Menlo, monospace; color: #d9a521; background: #4a3a2a; padding: 2px 4px; border-radius: 4px; }
+  .tp-hp-bar, .tp-xp-bar { flex: 1 1 auto; height: 7px; border-radius: 99px; background: #e2dccb; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(74,58,42,.35); }
+  .tp-hp-bar i, .tp-xp-bar i { display: block; height: 100%; border-radius: 99px; transition: width .4s; }
+  .tp-xp-bar { height: 4px; }
+  .tp-xp-bar i { background: #3f8fd0; }
+  .tp-hp-num { font: 700 11px/1 ui-monospace, Menlo, monospace; white-space: nowrap; min-width: 52px; text-align: right; }
+  .tp-xp { display: flex; align-items: center; gap: 6px; font: 600 10.5px/1 ui-monospace, Menlo, monospace; opacity: .8; }
+  .tp-card-sub { font-size: 11.5px; opacity: .72; line-height: 1.3; }
+  .tp-help { margin: 2px 2px 0; font-size: 11.5px; opacity: .6; line-height: 1.4; }
+  @media (max-width: 860px) { .tp-wrap { grid-template-columns: 1fr; } .tp-team { max-height: none; } }
   .glist { display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 3px; column-gap: 14px; width: 100%; font-size: 13.5px; line-height: 1.5; }
   .glist .gl { border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 13.5px; color: var(--color-text); white-space: nowrap; }
   .glist button.gl { cursor: pointer; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px; }
@@ -994,8 +1017,26 @@
             <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
             <section style="display: flex; flex-direction: column; gap: 12px;">
               <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0;">🐸 L’enclos des tea pets</h2><span style="font-size: 13px; opacity: .65;">{{ sl.petsTxt }}</span></div>
+              <div class="tp-wrap">
               <div class="tp-pen" data-pets="{{ sl.petsJson }}" role="img" aria-label="{{ sl.petsTxt }}">
                 <span class="tp-deco" style="left: 6%; top: 62%;">🪨</span><span class="tp-deco" style="left: 84%; top: 70%;">🌿</span><span class="tp-deco" style="left: 70%; top: 18%;">🍵</span><span class="tp-deco" style="left: 30%; top: 82%;">🌼</span><span class="tp-deco" style="left: 52%; top: 40%; opacity: .5;">🌱</span>
+              </div>
+              <sc-if value="{{ sl.hasPetCards }}" hint-placeholder-val="{{ false }}">
+              <div class="tp-team" aria-label="Équipe de tea pets">
+                <sc-for list="{{ sl.petCards }}" as="pc" hint-placeholder-count="3">
+                  <div class="tp-card" role="button" tabindex="0" onClick="{{ pc.ping }}" style="opacity: {{ pc.cardOp }};" title="Cliquer pour le retrouver dans l’enclos">
+                    <div class="tp-card-pic"><sc-if value="{{ pc.sprite }}" hint-placeholder-val="{{ false }}"><img src="{{ pc.sprite }}" alt=""></sc-if><sc-if value="{{ pc.noSprite }}" hint-placeholder-val="{{ true }}"><span style="font-size: 28px;">🐸</span></sc-if></div>
+                    <div class="tp-card-main">
+                      <div class="tp-card-top"><button class="tp-card-name" onClick="{{ pc.open }}">{{ pc.name }}</button><sc-if value="{{ pc.crown }}" hint-placeholder-val="{{ false }}"><span title="Chef de l’enclos">👑</span></sc-if><span class="tp-card-lvl">{{ pc.lvl }}</span></div>
+                      <div class="tp-hp"><span class="tp-hp-lbl">PV</span><span class="tp-hp-bar"><i style="width: {{ pc.hpPct }}; background: {{ pc.hpColor }};"></i></span><span class="tp-hp-num">{{ pc.hp }}</span></div>
+                      <div class="tp-xp"><span class="tp-xp-bar"><i style="width: {{ pc.xpPct }};"></i></span><span>{{ pc.xpTxt }}</span></div>
+                      <span class="tp-card-sub"><sc-if value="{{ pc.levelUp }}" hint-placeholder-val="{{ false }}"><b style="color: var(--color-accent-700);">✨ Niveau supérieur ! </b></sc-if>{{ pc.status }} · {{ pc.sub }} · à {{ pc.owner }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+                <p class="tp-help">Chaque dégustation avec un tea pet le nourrit (+40 PV, +10 XP, bonus si la note ≥ 16 ou à plusieurs). Sans thé, il perd de la vie chaque jour — moins vite quand il prend des niveaux.</p>
+              </div>
+              </sc-if>
               </div>
             </section>
             </sc-if>
@@ -3726,6 +3767,47 @@ class Component extends DCLogic {
     const keys = [this.norm(g.code || ''), this.norm(g.name || '')].filter(Boolean);
     return String(l.infusion || '').split(/\s*[,+]\s*/).some(x => keys.indexOf(this.norm(x.replace(/\*$/, ''))) >= 0);
   }
+  // ---------- Tea pets : vie, XP, niveau ----------
+  petLevel(xp) { let L = 1; while (15 * (L + 1) * L <= xp) L++; return L; }
+  petStats(g) {
+    const dkey = d => d.toISOString().slice(0, 10);
+    const today = new Date(); const tKey = dkey(today);
+    let h = 0; String(g.id).split('').forEach(c => { h = (h * 33 + c.charCodeAt(0)) >>> 0; });
+    const grace = 1 + (h % 3);                       // 1 à 3 jours de répit selon le caractère
+    const rate = 0.75 + ((h >> 3) % 56) / 100;       // 0,75 à 1,30 : certains ont plus soif que d'autres
+    const temper = ['gourmand', 'paresseux', 'curieux', 'grognon', 'joueur', 'zen', 'farceur'][(h >> 7) % 7];
+    const logs = this.gearLogs(g).filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || ''));
+    const byDay = {}; logs.forEach(l => { (byDay[l.date] = byDay[l.date] || []).push(l); });
+    const ownerDays = {}; this.getAdds().logs.forEach(l => { if (/^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && (l.author === g.owner || (l.with || []).indexOf(g.owner) >= 0)) ownerDays[l.date] = 1; });
+    const xpOf = l => { const n = parseFloat(String(l.note || '').replace(',', '.')); return 10 + (isFinite(n) && n >= 16 ? 5 : 0) + ((l.with || []).length ? 3 : 0); };
+    const created = this.idTs(g.id);
+    const days = Object.keys(byDay).sort();
+    let start = created ? new Date(created) : (days[0] ? new Date(days[0]) : today);
+    if (days[0] && new Date(days[0]) < start) start = new Date(days[0]);
+    const minStart = new Date(today.getTime() - 120 * 864e5);
+    let xp = 0; logs.forEach(l => { if (new Date(l.date) < minStart || new Date(l.date) < start) xp += xpOf(l); });
+    if (start < minStart) start = minStart;
+    let hp = 100, dry = 0, lvlBefore = 1;
+    for (let d = new Date(dkey(start)); dkey(d) <= tKey; d = new Date(d.getTime() + 864e5)) {
+      const k = dkey(d);
+      if (k === tKey) lvlBefore = this.petLevel(xp);
+      if (byDay[k]) { byDay[k].forEach(l => { xp += xpOf(l); }); hp = Math.min(100, hp + 40); dry = 0; }
+      else if (k !== tKey) {
+        dry++;
+        if (dry > grace) { const lvl = this.petLevel(xp); let loss = 9 * rate * (1 - Math.min(0.55, (lvl - 1) * 0.07)); if (ownerDays[k]) loss *= 0.5; hp = Math.max(0, hp - loss); }
+      }
+    }
+    hp = Math.round(hp);
+    const lvl = this.petLevel(xp), base = 15 * lvl * (lvl - 1), next = 15 * (lvl + 1) * lvl;
+    const last = days[days.length - 1];
+    const since = last ? Math.round((new Date(tKey) - new Date(last)) / 864e5) : null;
+    const ko = hp <= 0;
+    return { hp: hp, ko: ko, lvl: lvl, xp: xp, xpIn: xp - base, xpNeed: next - base, xpPct: Math.round((xp - base) / (next - base) * 100), temper: temper, today: since === 0, levelUp: since === 0 && lvl > lvlBefore, n: logs.length,
+      mood: ko ? '💤' : since === 0 ? '❤️' : hp < 35 ? '💧' : hp >= 75 ? '✨' : '',
+      status: ko ? 'KO… une tasse le réveillera' : since === 0 ? 'A bu du thé aujourd’hui' : hp < 35 ? 'Assoiffé' : hp < 65 ? 'Un peu sec' : 'En pleine forme',
+      lastTxt: since == null ? 'jamais arrosé' : since === 0 ? 'arrosé aujourd’hui' : since === 1 ? 'arrosé hier' : 'arrosé il y a ' + since + ' j',
+      hpColor: hp > 50 ? '#5b9a3c' : hp > 20 ? '#d9a521' : '#c4452e' };
+  }
   gearLogs(g) {
     const code = this.norm(g.code || '');
     const uniq = (this.getAdds().gear || []).filter(x => this.norm(x.code || '') === code).length <= 1;
@@ -3865,7 +3947,17 @@ class Component extends DCLogic {
     const sc = this.salonColor(mine);
     const pets = (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet' && mine.members.indexOf(g.owner) >= 0);
     return Object.assign(base, { tagBg: sc.bg, tagFg: sc.fg,
-      petsJson: JSON.stringify(pets.map(g => ({ id: g.id, name: g.name, owner: g.owner, sprite: g.sprite || '' }))),
+      ...(() => {
+        const ps = pets.map(g => ({ g: g, st: this.petStats(g) })).sort((x, y) => y.st.lvl - x.st.lvl || y.st.xp - x.st.xp || x.g.name.localeCompare(y.g.name, 'fr'));
+        const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
+        return {
+          petsJson: JSON.stringify(ps.map(x => ({ id: x.g.id, name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', hp: x.st.hp, ko: x.st.ko, mood: x.st.mood, lvl: x.st.lvl, crown: x.g.id === crown }))),
+          petCards: ps.map(x => ({ name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', noSprite: !x.g.sprite, lvl: 'Nv. ' + x.st.lvl, crown: x.g.id === crown,
+            hp: x.st.hp + ' / 100', hpPct: x.st.hp + '%', hpColor: x.st.hpColor, xpTxt: 'XP ' + x.st.xpIn + ' / ' + x.st.xpNeed, xpPct: x.st.xpPct + '%',
+            status: x.st.status, sub: x.st.lastTxt + ' · ' + x.st.temper, levelUp: x.st.levelUp, ko: x.st.ko, cardOp: x.st.ko ? '.7' : '1',
+            ping: () => { if (window.mdtPetPing) window.mdtPetPing(x.g.id); }, open: () => this.setState({ view: 'gearItem', gearId: x.g.id }) })),
+          hasPetCards: ps.length > 0 };
+      })(),
       petsTxt: pets.length ? pets.length + ' tea pet' + (pets.length > 1 ? 's' : '') + ' en balade · ajoutez-en avec une photo dans Mon matériel' : 'Aucun tea pet pour l’instant : ajoutez-en un avec une photo dans Mon matériel (catégorie Tea pets).',
       colors: Object.keys(this.salonColors()).map(k => { const c = this.salonColors()[k]; const on = (mine.color || 'terre') === k; return { name: c[0], bg: c[1], fg: c[2], on: on, ring: on ? '0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-text)' : 'inset 0 0 0 1px rgba(0,0,0,.12)', pick: () => upd(x => Object.assign(x, { color: k })) }; }),
       desc: mine.desc || '', descEditing: descEditing, descShow: !descEditing, canDesc: isChief,
