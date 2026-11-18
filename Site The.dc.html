@@ -6,6 +6,7 @@
 <script src="./i18n.js"></script>
 <script src="./support.js"></script>
 <script src="./teapets.js"></script>
+<script src="./savoir.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -124,6 +125,10 @@
   .sess-bar { width: 100%; max-width: 420px; height: 8px; border-radius: 99px; background: var(--color-neutral-300); overflow: hidden; }
   .sess-bar i { display: block; height: 100%; width: 0%; background: var(--color-accent); border-radius: 99px; transition: width .2s linear; }
   @media (max-width: 560px) { .sess-extra { grid-template-columns: 1fr 96px !important; } .sess-clock { font-size: 46px; } }
+  .sv-lbl { position: absolute; white-space: nowrap; pointer-events: none; line-height: 1; }
+  .sv-roue > div:first-child { container-type: inline-size; }
+  .sv-roue { display: grid; grid-template-columns: minmax(0, 560px) minmax(260px, 1fr); gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .sv-roue { grid-template-columns: 1fr; } }
   .glist { display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 3px; column-gap: 14px; width: 100%; font-size: 13.5px; line-height: 1.5; }
   .glist .gl { border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 13.5px; color: var(--color-text); white-space: nowrap; }
   .glist button.gl { cursor: pointer; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px; }
@@ -384,6 +389,12 @@
             <span style="position: absolute; top: 34px; right: 60px; width: 92px; height: 92px; border-radius: 50%; background: var(--color-neutral-600);"></span>
             <h2 style="font-size: 38px; margin: 0; position: relative;">Le tuto</h2>
             <p style="margin: 0; font-size: 15px; opacity: .75; position: relative;">Se servir des ustensiles, pas à pas.</p>
+          </button>
+          <button onClick="{{ openSavoir }}" style="position: relative; overflow: hidden; text-align: left; cursor: pointer; border: none; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); border-radius: 40px; padding: 32px; min-height: 260px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; box-shadow: var(--shadow-sm); transition: transform .3s ease, box-shadow .3s ease;" style-hover="transform: translateY(-6px); box-shadow: var(--shadow-lg);">
+            <span style="position: absolute; top: -56px; right: -40px; width: 210px; height: 210px; border-radius: 50%; background: #e8c9b0;"></span>
+            <span style="position: absolute; top: 34px; right: 60px; width: 92px; height: 92px; border-radius: 50%; background: #b5674a;"></span>
+            <h2 style="font-size: 38px; margin: 0; position: relative;">Apprendre</h2>
+            <p style="margin: 0; font-size: 15px; opacity: .75; position: relative;">Encyclopédie, défauts à reconnaître et roue des arômes.</p>
           </button>
           <a href="Carte.html" style="display: flex; flex-direction: column; text-decoration: none; box-sizing: border-box; position: relative; overflow: hidden; text-align: left; cursor: pointer; border: none; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); border-radius: 40px; padding: 32px; min-height: 260px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; box-shadow: var(--shadow-sm); transition: transform .3s ease, box-shadow .3s ease;" style-hover="transform: translateY(-6px); box-shadow: var(--shadow-lg);">
             <span style="position: absolute; top: -56px; right: -40px; width: 210px; height: 210px; border-radius: 50%; background: var(--color-accent-2-200);"></span>
@@ -1265,6 +1276,75 @@
           </section>
         </sc-if>
         <sc-if value="{{ gi.noLogs }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore de dégustation avec ce matériel. Choisissez-le dans « Matériel » en notant votre prochaine dégustation.</p></sc-if>
+      </article>
+    </sc-if>
+
+    <sc-if value="{{ isSavoir }}" hint-placeholder-val="{{ false }}">
+      <article style="display: flex; flex-direction: column; gap: 22px; animation: fadeUp .45s ease both;">
+        <div><h1 style="font-size: 46px; margin: 0 0 8px;">Apprendre</h1><p style="font-size: 17px; opacity: .72; margin: 0;">Les mots du thé, les défauts à reconnaître et une roue pour mettre un nom sur ce que l’on sent.</p></div>
+        <div style="display: flex; gap: 4px; flex-wrap: wrap; background: var(--color-surface); border-radius: 999px; padding: 4px; align-self: flex-start;"><sc-for list="{{ svTabs }}" as="tb" hint-placeholder-count="3"><button onClick="{{ tb.pick }}" aria-pressed="{{ tb.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 9px 18px; background: {{ tb.bg }}; color: {{ tb.fg }}; font-family: var(--font-body); font-size: 15px; font-weight: 600;">{{ tb.icon }} {{ tb.label }}</button></sc-for></div>
+
+        <sc-if value="{{ svEncy }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <input class="input" value="{{ svQ }}" onInput="{{ svSetQ }}" placeholder="Chercher un mot : hui gan, oxydation…" aria-label="Chercher dans l’encyclopédie" style="flex: 1 1 260px; max-width: 420px; padding: 11px 16px;">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ svCats }}" as="ct" hint-placeholder-count="4"><button onClick="{{ ct.pick }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; background: {{ ct.bg }}; color: {{ ct.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); font-size: 14px;">{{ ct.label }}</button></sc-for></div>
+            <span style="font-size: 13px; opacity: .6;">{{ svGloN }}</span>
+          </div>
+          <sc-if value="{{ svGloNone }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun terme ne correspond.</p></sc-if>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; align-items: start;">
+            <sc-for list="{{ svGlo }}" as="g" hint-placeholder-count="6">
+              <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">{{ g.t }}</b><sc-if value="{{ g.hasO }}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; opacity: .6;">{{ g.o }}</span></sc-if><span style="margin-left: auto; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ g.cat }}</span></div>
+                <p style="margin: 0; font-size: 14.5px; line-height: 1.55;">{{ g.d }}</p>
+                <sc-if value="{{ g.hasFams }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ g.fams }}" as="fm" hint-placeholder-count="1"><button class="tag tag-accent-2" onClick="{{ fm.go }}" style="border: none; cursor: pointer; font-family: var(--font-body);">{{ fm.name }} →</button></sc-for></div></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ svDefOn }}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; font-size: 15px; opacity: .75;">Un thé décevant n’est pas forcément un mauvais thé : la plupart des défauts viennent de la préparation et se corrigent à l’infusion suivante.</p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; align-items: start;">
+            <sc-for list="{{ svDef }}" as="d" hint-placeholder-count="4">
+              <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
+                <b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">{{ d.i }} {{ d.t }}</b>
+                <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Le reconnaître</span><span style="font-size: 14.5px; line-height: 1.5;">{{ d.sign }}</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">D’où ça vient</span><span style="font-size: 14.5px; line-height: 1.5;">{{ d.cause }}</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px; background: var(--color-accent-100); border-radius: 14px; padding: 8px 12px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Corriger</span><span style="font-size: 14.5px; line-height: 1.5;">{{ d.fix }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ svRoue }}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; font-size: 15px; opacity: .75;">Partez du centre : d’abord la grande famille d’arôme, puis l’arôme précis. Cliquez pour voir les thés de la maison où il a été noté.</p>
+          <div class="sv-roue">
+            <div style="position: relative; width: 100%; max-width: 560px;">
+            <svg viewBox="0 0 520 520" role="img" aria-label="Roue des arômes du thé" style="width: 100%; height: auto; display: block;">
+              <sc-for list="{{ svAro }}" as="s" hint-placeholder-count="20"><path d="{{ s.d }}" fill="{{ s.fill }}" fillOpacity="{{ s.op }}" stroke="#f6efe2" strokeWidth="1.2" onClick="{{ s.pick }}" style="cursor: pointer;"></path></sc-for>
+              <sc-for list="{{ svSeg }}" as="s" hint-placeholder-count="13"><path d="{{ s.d }}" fill="{{ s.fill }}" fillOpacity="{{ s.op }}" stroke="#f6efe2" strokeWidth="2" onClick="{{ s.pick }}" style="cursor: pointer;"></path></sc-for>
+              <circle cx="260" cy="260" r="60" fill="#f6efe2"></circle>
+              <text x="260" y="256" textAnchor="middle" style="font-family: var(--font-heading); font-size: 17px; fill: #2b2118;">Arômes</text>
+              <text x="260" y="276" textAnchor="middle" style="font-size: 11px; fill: #2b2118; opacity: .6;">du thé</text>
+            </svg>
+            <sc-for list="{{ svSeg }}" as="s" hint-placeholder-count="13"><span class="sv-lbl" style="left: {{ s.x }}%; top: {{ s.y }}%; transform: translate(-50%, -50%) rotate({{ s.deg }}deg); font-size: {{ s.fs }}; font-weight: 700; color: {{ s.fg }};">{{ s.txt }}</span></sc-for>
+            <sc-for list="{{ svAro }}" as="s" hint-placeholder-count="20"><span class="sv-lbl" style="left: {{ s.x }}%; top: {{ s.y }}%; transform: translate(-50%, -50%) rotate({{ s.deg }}deg); font-size: {{ s.fs }}; font-weight: {{ s.wt }}; color: #2b2118;">{{ s.txt }}</span></sc-for>
+            </div>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; align-self: start;">
+              <sc-if value="{{ svWNone }}" hint-placeholder-val="{{ true }}"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">Choisissez une couleur</b><p style="margin: 0; font-size: 14.5px; line-height: 1.55; opacity: .8;">Treize familles d’arômes, plus de 70 arômes précis. Astuce : sentez d’abord la grande famille (fleur ? fruit ? grillé ?), puis affinez.</p></sc-if>
+              <sc-if value="{{ svWOn }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ svW.cat }}</span>
+                <b style="font-family: var(--font-heading); font-weight: 400; font-size: 26px; color: {{ svW.color }};">{{ svW.name }}</b>
+                <p style="margin: 0; font-size: 14.5px; line-height: 1.55;">{{ svW.desc }}</p>
+                <sc-if value="{{ svW.hasHint }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .85;">{{ svW.hint }}</p></sc-if>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ svW.aromas }}" as="ar" hint-placeholder-count="5"><button onClick="{{ ar.pick }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 5px 12px; background: {{ ar.bg }}; color: {{ ar.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); font-size: 13px;">{{ ar.label }}</button></sc-for></div>
+                <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55; margin-top: 6px;">Dans la maison</span>
+                <sc-if value="{{ svW.noTeas }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">Pas encore noté dans vos avis ni vos tags.</span></sc-if>
+                <sc-for list="{{ svW.teas }}" as="tw" hint-placeholder-count="2"><button onClick="{{ tw.go }}" style="cursor: pointer; border: none; background: var(--color-bg); border-radius: 14px; padding: 8px 12px; display: flex; justify-content: space-between; gap: 10px; font-family: var(--font-body); font-size: 14px; color: var(--color-text); text-align: left;"><span>{{ tw.name }}</span><span style="opacity: .6; white-space: nowrap;">{{ tw.why }}</span></button></sc-for>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
       </article>
     </sc-if>
 
@@ -2476,6 +2556,33 @@
           </div>
         </div>
 
+        <sc-if value="{{ flOn }}" hint-placeholder-val="{{ false }}">
+        <section style="background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0;">Dans la maison</h2><span style="font-size: 13px; opacity: .65;">{{ flN }}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; align-items: start;">
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Vos 3 meilleurs</span>
+              <sc-if value="{{ flHasTop }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ flTop }}" as="ft" hint-placeholder-count="3"><button onClick="{{ ft.go }}" style="cursor: pointer; border: none; background: var(--color-bg); border-radius: 14px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-family: var(--font-body); color: var(--color-text); text-align: left;"><span style="font-size: 18px;">{{ ft.rank }}</span><span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column;"><span style="font-size: 14.5px; font-weight: 600;">{{ ft.name }}</span><span style="font-size: 12px; opacity: .65;">{{ ft.sub }} · {{ ft.n }}</span></span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 18px; color: {{ ft.c }};">{{ ft.avg }}</b></button></sc-for></sc-if>
+            </div>
+            <sc-if value="{{ flDisc }}" hint-placeholder-val="{{ true }}"><button onClick="{{ flDiscGo }}" style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; text-align: left; font-family: var(--font-body); color: var(--color-text);"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">🧭 À découvrir</span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">{{ flDiscName }} →</b><span style="font-size: 13.5px; opacity: .75;">{{ flDiscWhy }}</span></button></sc-if>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Vos notes, mois par mois</span>
+              <sc-if value="{{ flFewLine }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .7;">Il faut des notes sur au moins deux mois pour tracer la courbe.</span></sc-if>
+              <sc-if value="{{ flHasLine }}" hint-placeholder-val="{{ true }}">
+              <div style="position: relative; width: 100%;">
+                <svg viewBox="0 0 560 160" style="width: 100%; height: auto; display: block;" role="img" aria-label="Moyenne des notes par mois">
+                  <sc-for list="{{ flGrid }}" as="gl" hint-placeholder-count="3"><line x1="28" x2="550" y1="{{ gl.y }}" y2="{{ gl.y }}" stroke="#d8ccb6" strokeDasharray="3 4"></line></sc-for>
+                  <path d="{{ flLine }}" fill="none" stroke="#b5674a" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"></path>
+                  <sc-for list="{{ flDots }}" as="fd" hint-placeholder-count="4"><circle cx="{{ fd.cx }}" cy="{{ fd.cy }}" r="5" fill="{{ fd.c }}" stroke="#f6efe2" strokeWidth="2"></circle></sc-for>
+                </svg>
+                <sc-for list="{{ flGrid }}" as="gl" hint-placeholder-count="3"><span style="position: absolute; left: 0; top: {{ gl.yp }}%; transform: translateY(-50%); font-size: 10px; opacity: .55;">{{ gl.v }}</span></sc-for>
+                <sc-for list="{{ flMonths }}" as="fm" hint-placeholder-count="12"><span style="position: absolute; left: {{ fm.x }}%; bottom: 0; transform: translateX(-50%); font-size: 9.5px; opacity: .6;">{{ fm.lbl }}</span></sc-for>
+                <sc-for list="{{ flDots }}" as="fd" hint-placeholder-count="4"><span title="{{ fd.t }}" style="position: absolute; left: {{ fd.lx }}%; top: {{ fd.ly }}%; width: 18px; height: 18px; transform: translate(-50%, -50%); border-radius: 50%;"></span></sc-for>
+              </div>
+              </sc-if>
+            </div>
+          </div>
+        </section>
+        </sc-if>
+
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <sc-for list="{{ teas }}" as="tea" hint-placeholder-count="4">
             <div style="background: var(--color-surface); border-radius: 30px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;">
@@ -2755,6 +2862,14 @@
             <button class="btn btn-secondary" onClick="{{ teaBuy }}" style="white-space: nowrap; background: var(--color-bg);">＋ J'en ai acheté</button>
           </div>
           <sc-if value="{{ teaNoProds }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Personne n’en a encore dans la maison.</p></sc-if>
+          <sc-if value="{{ hsOn }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; align-items: start;">
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Moyenne de la maison</span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 34px; line-height: 1; color: {{ hsAvgColor }};">{{ hsAvg }}<span style="font-size: 15px; opacity: .6;"> /20</span></b><span style="font-size: 13px; opacity: .7;">{{ hsSub }}</span></div>
+            <sc-if value="{{ hsBest }}" hint-placeholder-val="{{ true }}"><button onClick="{{ hsBestOpen }}" style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; text-align: left; font-family: var(--font-body); color: var(--color-text);"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Meilleur paramétrage</span><span style="display: flex; gap: 10px; align-items: center;"><span style="flex: none; width: 42px; height: 42px; border-radius: 50%; background: {{ hsBestColor }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px;">{{ hsBestNote }}</span><span style="font-size: 14px; line-height: 1.45;">{{ hsBestTxt }}</span></span><span style="font-size: 12.5px; opacity: .65;">{{ hsBestWho }} · voir la dégustation →</span></button></sc-if>
+            <sc-if value="{{ hsHasAromas }}" hint-placeholder-val="{{ true }}"><div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Arômes les plus cités</span><div style="display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: baseline;"><sc-for list="{{ hsAromas }}" as="ha" hint-placeholder-count="5"><span title="{{ ha.n }} mention(s)" style="font-size: {{ ha.size }}; font-weight: 600; color: {{ ha.c }}; filter: brightness(.62) saturate(1.3);">{{ ha.w }}</span></sc-for></div></div></sc-if>
+          </div>
+          </sc-if>
+
           <sc-for list="{{ teaProds }}" as="lot" hint-placeholder-count="2">
             <button onClick="{{ lot.openP }}" style="cursor: pointer; text-align: left; border: none; background: var(--color-bg); border-radius: 20px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: var(--color-text); font-family: var(--font-body);" style-hover="background: var(--color-accent-100);">
               <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1 1 auto;">
@@ -5172,6 +5287,113 @@ class Component extends DCLogic {
       tkShowAvis: !!this.state.tkAvis, tkHideAvis: !this.state.tkAvis, tkToggleAvis: () => this.setState(s0 => ({ tkAvis: !s0.tkAvis })),
       tkGo: go });
   }
+  // ---------- Apprendre : encyclopédie, défauts, roue des arômes ----------
+  savoirView(me) {
+    const S = window.MDT_SAVOIR || { cats: [], glossary: [], defects: [], wheel: [] };
+    const tab = this.state.svTab || 'ency';
+    const tabs = [['ency', '📖', 'Encyclopédie'], ['def', '🩺', 'Défauts'], ['roue', '🎡', 'Roue des arômes']].map(t => ({ icon: t[1], label: t[2], on: t[0] === tab, bg: t[0] === tab ? 'var(--color-text)' : 'transparent', fg: t[0] === tab ? 'var(--color-bg)' : 'var(--color-text)', pick: () => this.setState({ svTab: t[0] }) }));
+    const out = { svTabs: tabs, svEncy: tab === 'ency', svDefOn: tab === 'def', svRoue: tab === 'roue', svCats: [], svGlo: [], svDef: [], svSeg: [], svAro: [] };
+    if (tab === 'ency') {
+      const q = this.norm(this.state.svQ || ''); const cat = this.state.svCat || '';
+      out.svQ = this.state.svQ || ''; out.svSetQ = e => this.setState({ svQ: e.target.value });
+      out.svCats = [['', '✨', 'Tout']].concat(S.cats).map(c => ({ label: c[1] + ' ' + c[2], bg: c[0] === cat ? 'var(--color-accent)' : 'var(--color-bg)', fg: c[0] === cat ? '#fff' : 'var(--color-text)', pick: () => this.setState({ svCat: c[0] }) }));
+      const catName = k => (S.cats.find(c => c[0] === k) || [])[2] || '';
+      out.svGlo = S.glossary.filter(g => (!cat || g.c === cat) && (!q || this.norm(g.t + ' ' + g.o + ' ' + g.d).indexOf(q) >= 0)).slice().sort((x, y) => x.t.localeCompare(y.t, 'fr'))
+        .map(g => ({ t: g.t, o: g.o || '', hasO: !!g.o, d: g.d, cat: catName(g.c), fams: (g.f || []).filter(k => this.families[k]).map(k => ({ name: this.families[k].name, go: () => this.openFamily(k) })), hasFams: (g.f || []).some(k => this.families[k]) }));
+      out.svGloN = out.svGlo.length + ' terme' + (out.svGlo.length > 1 ? 's' : ''); out.svGloNone = !out.svGlo.length;
+    }
+    if (tab === 'def') out.svDef = S.defects.map(d => ({ t: d.t, i: d.i, sign: d.sign, cause: d.cause, fix: d.fix }));
+    if (tab === 'roue') {
+      const W = S.wheel; const cx = 260, cy = 260, r0 = 62, r1 = 150, r2 = 250;
+      const pt = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+      const arc = (ri, ro, a0, a1) => { const big = a1 - a0 > Math.PI ? 1 : 0; const p1 = pt(ro, a0), p2 = pt(ro, a1), p3 = pt(ri, a1), p4 = pt(ri, a0);
+        return 'M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + ' A' + ro + ' ' + ro + ' 0 ' + big + ' 1 ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1) + ' L' + p3[0].toFixed(1) + ' ' + p3[1].toFixed(1) + ' A' + ri + ' ' + ri + ' 0 ' + big + ' 0 ' + p4[0].toFixed(1) + ' ' + p4[1].toFixed(1) + ' Z'; };
+      const total = W.reduce((t, w) => t + w.a.length, 0); const selC = this.state.svWc || ''; const selA = this.state.svWa || '';
+      let a = -Math.PI / 2; const segs = [], aros = [];
+      const lbl = (r, am, txt, size, wt) => { const p = pt(r, am); let deg = ((am * 180 / Math.PI) % 360 + 360) % 360; if (deg > 90 && deg < 270) deg -= 180; return { x: (p[0] / 520 * 100).toFixed(2), y: (p[1] / 520 * 100).toFixed(2), deg: deg.toFixed(1), txt: txt, fs: 'clamp(7px, ' + (parseFloat(size) / 5.2).toFixed(2) + 'cqw, ' + size + 'px)', wt: wt }; };
+      W.forEach(w => {
+        const span = 2 * Math.PI * w.a.length / total; const a0 = a, a1 = a + span; const dim = selC && selC !== w.k;
+        const lum = (h => { const n = parseInt(h.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; })(w.c);
+        segs.push(Object.assign({ fg: lum > 0.72 ? '#2b2118' : '#fff', d: arc(r0, r1, a0, a1), fill: w.c, op: dim ? '.35' : '1', pick: () => this.setState({ svWc: selC === w.k ? '' : w.k, svWa: '' }) }, lbl((r0 + r1) / 2, (a0 + a1) / 2, w.n, w.n.length > 11 ? '10.5' : '12', '700')));
+        w.a.forEach((x, k) => { const b0 = a0 + span * k / w.a.length, b1 = a0 + span * (k + 1) / w.a.length; const on = selA === x;
+          aros.push(Object.assign({ d: arc(r1, r2, b0, b1), fill: w.c, op: on ? '1' : dim ? '.25' : '.62', pick: () => this.setState({ svWc: w.k, svWa: x }) }, lbl((r1 + r2) / 2 + 4, (b0 + b1) / 2, x, x.length > 13 ? '9' : '10', on ? '700' : '500'))); });
+        a = a1;
+      });
+      out.svSeg = segs; out.svAro = aros;
+      const w = W.find(z => z.k === selC);
+      out.svWOn = !!w; out.svWNone = !w;
+      if (w) {
+        const target = selA || ''; const words = target ? [target] : w.a;
+        const a2 = this.getAdds(); const coll = this.collection();
+        const hits = {};
+        const add = (pid, why) => { if (!pid) return; hits[pid] = hits[pid] || { n: 0, why: {} }; hits[pid].n++; hits[pid].why[why] = 1; };
+        a2.prods.forEach(p => { (p.tags || []).forEach(t => { if (words.some(x => this.norm(x) === this.norm(t)) || this.norm(t) === this.norm(w.n)) add(p.id, 'tag'); }); });
+        a2.logs.forEach(l => { const av = this.norm((l.avis || '') + ' ' + (l.nez || '')); if (!av) return; if (words.some(x => av.indexOf(this.norm(x)) >= 0)) { const sa = coll.find(o => o.id === l.lotId); if (sa) add(sa.prodId, 'avis'); } });
+        const hint = target && this.tkHints ? (this.tkHints[this.norm(target)] || this.tkHints[target.toLowerCase()] || null) : null;
+        out.svW = { name: target || w.n, cat: w.n, color: w.c, desc: w.h, aromas: w.a.map(x => ({ label: x, on: x === target, bg: x === target ? w.c : 'var(--color-bg)', fg: x === target ? '#fff' : 'var(--color-text)', pick: () => this.setState({ svWa: x === target ? '' : x }) })),
+          hint: hint ? '💡 ' + hint[0] + ' ' + hint[1] : '', hasHint: !!hint,
+          teas: Object.keys(hits).map(pid => ({ p: a2.prods.find(x => x.id === pid), h: hits[pid] })).filter(x => x.p).sort((x, y) => y.h.n - x.h.n).slice(0, 8)
+            .map(x => ({ name: x.p.nom || x.p.the, why: (x.h.why.tag ? 'tag' : '') + (x.h.why.tag && x.h.why.avis ? ' + ' : '') + (x.h.why.avis ? x.h.n + ' avis' : ''), go: () => this.openProd(x.p.id) })) };
+        out.svW.hasTeas = out.svW.teas.length > 0; out.svW.noTeas = !out.svW.teas.length;
+      } else out.svW = { aromas: [], teas: [] };
+    }
+    return out;
+  }
+  // ---------- Contenu nourri par les dégustations ----------
+  noteNum(l) { const n = parseFloat(String((l && l.note) || '').replace(',', '.')); return /^\s*\d+([.,]\d+)?\s*$/.test(String((l && l.note) || '')) && isFinite(n) ? n : null; }
+  aromaCounts(logs, prods) {
+    const W = (window.MDT_SAVOIR || {}).wheel || []; const cnt = {};
+    const words = []; W.forEach(w => { words.push([w.n, w.c]); w.a.forEach(x => words.push([x, w.c])); });
+    const bump = (wd, c) => { cnt[wd] = cnt[wd] || { n: 0, c: c }; cnt[wd].n++; };
+    logs.forEach(l => { const t = this.norm((l.avis || '') + ' ' + (l.nez || '') + ' ' + this.infsOf(l).map(i => i.note || '').join(' ')); if (!t) return; words.forEach(w => { if (t.indexOf(this.norm(w[0])) >= 0) bump(w[0], w[1]); }); });
+    (prods || []).forEach(p => (p.tags || []).forEach(tg => { const w = words.find(x => this.norm(x[0]) === this.norm(tg)); bump(w ? w[0] : tg, w ? w[1] : 'var(--color-accent)'); }));
+    return Object.keys(cnt).map(k => ({ w: k, n: cnt[k].n, c: cnt[k].c })).sort((a, b) => b.n - a.n);
+  }
+  houseTeaStats(prods, me) {
+    const coll = this.collection(); const a = this.getAdds();
+    const sacIds = coll.filter(o => prods.some(p => p.id === o.prodId)).map(o => o.id);
+    const logs = a.logs.filter(l => sacIds.indexOf(l.lotId) >= 0);
+    const noted = logs.filter(l => this.noteNum(l) != null);
+    const avg = noted.length ? noted.reduce((t, l) => t + this.noteNum(l), 0) / noted.length : null;
+    const best = noted.slice().sort((x, y) => this.noteNum(y) - this.noteNum(x))[0];
+    const ar = this.aromaCounts(logs, prods).slice(0, 8); const max = ar.length ? ar[0].n : 1;
+    const people = logs.map(l => l.author).filter((x, i, arr) => x && arr.indexOf(x) === i);
+    return { hsOn: logs.length > 0, hsNone: !logs.length,
+      hsAvg: avg != null ? avg.toFixed(1).replace('.', ',') : '—', hsAvgColor: avg != null ? this.noteColors(String(Math.round(avg * 10) / 10)).noteBg : 'inherit',
+      hsSub: noted.length + ' note' + (noted.length > 1 ? 's' : '') + ' · ' + logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' · ' + people.length + ' dégustateur' + (people.length > 1 ? 's' : ''),
+      hsBest: !!best, hsBestNote: best ? best.note : '', hsBestColor: best ? this.noteColors(best.note).noteBg : '',
+      hsBestTxt: best ? [this.logGears(best).map(g => this.gearCat(g)[1] + ' ' + g.name).join(', ') || this.logGearRest(best), best.temperature ? best.temperature + (/^\d+$/.test(best.temperature) ? ' °C' : '') : '', best.qty ? best.qty + (/^\s*[\d.,]+\s*$/.test(String(best.qty)) ? ' g' : '') : '', best.temps, best.technique].filter(x => x && !/^\s*x\s*$/i.test(x)).join(' · ') || 'paramètres non notés' : '',
+      hsBestWho: best ? best.author + ' · ' + this.fmtDate(best.date) : '', hsBestOpen: () => { if (best) this.openLogDetail(best.id); },
+      hsAromas: ar.map(x => ({ w: x.w, n: String(x.n), c: x.c, size: (13 + Math.round(x.n / max * 7)) + 'px' })), hsHasAromas: ar.length > 0 };
+  }
+  familyLive(fk, me) {
+    const a = this.getAdds(); const coll = this.collection();
+    const prods = a.prods.filter(p => this.famOf(p.the) === fk);
+    const sacOf = {}; coll.forEach(o => { sacOf[o.id] = o; });
+    const logs = a.logs.filter(l => sacOf[l.lotId] && prods.some(p => p.id === sacOf[l.lotId].prodId));
+    const byProd = {}; logs.forEach(l => { const n = this.noteNum(l); if (n == null) return; const pid = sacOf[l.lotId].prodId; (byProd[pid] = byProd[pid] || []).push(n); });
+    const top = Object.keys(byProd).map(pid => ({ p: prods.find(x => x.id === pid), avg: byProd[pid].reduce((t, x) => t + x, 0) / byProd[pid].length, n: byProd[pid].length })).filter(x => x.p).sort((x, y) => y.avg - x.avg || y.n - x.n).slice(0, 3);
+    const tasted = {}; logs.forEach(l => { if (this.inLog(l, me)) tasted[sacOf[l.lotId].prodId] = 1; });
+    const cand = coll.filter(o => prods.some(p => p.id === o.prodId) && this.canTaste(o, me) && !this.emptyFor(o, me) && !tasted[o.prodId]);
+    const disc = cand[0] ? a.prods.find(p => p.id === cand[0].prodId) : prods.find(p => !tasted[p.id] && coll.some(o => o.prodId === p.id && !this.isEmptySachet(o)));
+    const discMine = !!cand[0];
+    // courbe : moyenne mensuelle sur 12 mois
+    const now = new Date(); const months = [];
+    for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push(mdtDayKey(d).slice(0, 7)); }
+    const pts = months.map(m => { const ns = logs.filter(l => String(l.date || '').slice(0, 7) === m).map(l => this.noteNum(l)).filter(x => x != null); return { m: m, avg: ns.length ? ns.reduce((t, x) => t + x, 0) / ns.length : null, n: ns.length }; });
+    const W = 560, H = 160, padL = 28, padB = 32, padT = 12; const ys = pts.filter(p => p.avg != null).map(p => p.avg);
+    const lo = ys.length ? Math.max(0, Math.floor(Math.min.apply(null, ys)) - 1) : 10, hi = ys.length ? Math.min(20, Math.ceil(Math.max.apply(null, ys)) + 1) : 20;
+    const X = i => padL + i * (W - padL - 10) / 11, Y = v => padT + (hi - v) / Math.max(1, hi - lo) * (H - padT - padB);
+    let line = ''; pts.forEach((p, i) => { if (p.avg == null) return; line += (line ? ' L' : 'M') + X(i).toFixed(1) + ' ' + Y(p.avg).toFixed(1); });
+    const mn = ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
+    return { flOn: logs.length > 0, flNone: !logs.length, flN: logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' de thés ' + this.families[fk].name.toLowerCase() + ' dans la maison',
+      flTop: top.map((x, i) => ({ rank: ['🥇', '🥈', '🥉'][i], name: x.p.nom || x.p.the, sub: x.p.marque || '', avg: x.avg.toFixed(1).replace('.', ','), c: this.noteColors(String(Math.round(x.avg * 10) / 10)).noteBg, n: x.n + ' note' + (x.n > 1 ? 's' : ''), go: () => this.openProd(x.p.id) })), flHasTop: top.length > 0,
+      flDisc: !!disc, flDiscName: disc ? (disc.nom || disc.the) : '', flDiscWhy: discMine ? 'Dans tes sachets, jamais dégusté par toi.' : 'Dans la maison, jamais dégusté par toi : demande une part !', flDiscGo: () => { if (disc) this.openProd(disc.id); },
+      flLine: line, flHasLine: ys.length >= 2, flFewLine: ys.length < 2,
+      flDots: pts.map((p, i) => p.avg == null ? null : { cx: X(i).toFixed(1), cy: Y(p.avg).toFixed(1), c: this.noteColors(String(Math.round(p.avg * 10) / 10)).noteBg, t: p.avg.toFixed(1).replace('.', ',') + ' (' + p.n + ')', lx: (X(i) / W * 100).toFixed(2), ly: (Y(p.avg) / H * 100).toFixed(2) }).filter(Boolean),
+      flMonths: months.map((m, i) => ({ lbl: mn[+m.slice(5, 7) - 1], x: (X(i) / W * 100).toFixed(2) })),
+      flGrid: [lo, Math.round((lo + hi) / 2), hi].map(v => ({ y: Y(v).toFixed(1), yp: (Y(v) / H * 100).toFixed(2), v: String(v) })) };
+  }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
@@ -5991,12 +6213,15 @@ class Component extends DCLogic {
       isTuto: v === 'tuto', ...(v === 'tuto' ? this.tkView(me) : { tkOn: false, tkOpts: [], tkSteps: [], tkGame: [], tkBest: [], tkTimes: [] }),
       openCeremonies: () => this.go('ceremonies'),
       openTuto: () => this.go('tuto'),
+      openSavoir: () => this.go('savoir'),
+      isSavoir: v === 'savoir', ...(v === 'savoir' ? this.savoirView(me) : { svTabs: [], svGlo: [], svCats: [], svDef: [], svSeg: [], svAro: [] }),
       notHome: v !== 'home',
       openTea: () => this.go('types', null, 0),
       openTools: () => this.go('tools'),
       goHome: () => this.go('home'),
       goBack: () => (v === 'sharedLog' && this.state.detailBack) ? this.setState({ view: this.state.detailBack, detailBack: null }) : (v === 'tea' && this.state.teaBack) ? this.setState({ view: this.state.teaBack, teaBack: null }) : (v === 'list' && this.state.famBack) ? this.setState({ view: this.state.famBack, famBack: null }) : v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'gearItem' ? 'gear' : v === 'profile' ? 'friends' : v === 'prod' ? (this.state.prodBack || 'mine') : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
       pick: pick,
+      ...(v === 'list' && me ? this.familyLive(this.state.key, me) : { flOn: false, flTop: [], flDots: [], flMonths: [], flGrid: [] }),
       currentName: fam.name,
       currentDesc: fam.desc,
       currentColor: fam.color,
@@ -6058,7 +6283,7 @@ class Component extends DCLogic {
         return {
           teaProds: mine.concat(others).map(pr => { const c = card(pr); const sacs = coll.filter(o => o.prodId === pr.id); const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i); const pst = this.statsMany(sacs.map(o => o.id));
             return Object.assign(c, { line: [pr.variante, pr.marque, owners.length ? 'chez ' + owners.join(', ') : ''].filter(Boolean).join(' · '), avgColor: pst.avg != null ? this.noteColors(String(Math.round(pst.avg * 10) / 10)).noteBg : 'inherit' }); }),
-          teaNoProds: !prods.length,
+          teaNoProds: !prods.length, ...this.houseTeaStats(prods, me),
           teaHasLogs: myLogs.length > 0, teaLogsLbl: '☕ Voir mes ' + myLogs.length + ' dégustation' + (myLogs.length > 1 ? 's' : '') + ' de ce thé →',
           teaLogsOpen: () => this.setState({ view: 'logs', collView: 'logs', dq: '', dTea: tea.name, ds: 'me' }),
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
