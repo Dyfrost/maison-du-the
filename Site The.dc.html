@@ -5728,7 +5728,14 @@ class Component extends DCLogic {
         const key = l => String(l.date || '') + String(l.heure || '') + l.id;
         const sacBy = {}; coll.forEach(o => { sacBy[o.id] = o; });
         const logs = a.logs.filter(l => sacBy[l.lotId]).sort((x, y) => key(y).localeCompare(key(x))).slice(0, 4);
-        const low = coll.filter(o => o.owner === me && !this.isEmptySachet(o)).map(o => ({ o: o, r: this.remainFor(o) })).filter(x => x.r && x.r.pct <= 25).sort((x, y) => x.r.pct - y.r.pct).slice(0, 4);
+        const low = [];
+        coll.forEach(o => {
+          const thr = o.prixMode === 'unite' ? 2 : 10;
+          if (o.owner === me && !this.isEmptySachet(o)) { const r = this.remainFor(o); if (r && (r.pct <= 25 || r.left < thr)) low.push({ o: o, r: r }); }
+          const pt = this.portionsFor(o).find(x => x.who === me);
+          if (pt && !pt.empty) { const pct = pt.pct != null ? +pt.pct : (pt.total ? pt.left / pt.total * 100 : 100); if (pct <= 25 || pt.left < (pt.unit === 'u' ? 2 : 10)) low.push({ o: o, r: { pct: Math.round(pct), left: pt.left, txt: 'ma part · ≈ ' + (Math.round(pt.left * 10) / 10).toString().replace('.', ',') + (pt.unit === 'u' ? ' u' : ' g') + ' (de ' + o.owner + ')' } }); }
+        });
+        low.sort((x, y) => x.r.pct - y.r.pct); low.splice(4);
         const h = new Date().getHours();
         const pool = coll.filter(o => this.canTaste(o, me) && !this.isEmptySachet(o)).sort((x, y) => String(x.id).localeCompare(String(y.id)));
         let sug = null;
