@@ -132,6 +132,8 @@
   .sv-ctr { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 21%; aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 2px; color: #2b2118; }
   .sv-ctr b { font-family: var(--font-heading); font-weight: 400; font-size: clamp(11px, 3.3cqw, 17px); line-height: 1.05; }
   .sv-ctr small { font-size: clamp(7px, 2cqw, 11px); opacity: .65; }
+  .sv-nav { cursor: pointer; border: none; width: 36px; height: 36px; flex: 0 0 auto; border-radius: 50%; background: var(--color-bg); color: var(--color-text); font-size: 22px; line-height: 1; box-shadow: inset 0 0 0 1px var(--color-divider); transition: transform .15s, background .15s; }
+  .sv-nav:hover { background: var(--color-accent-100); transform: scale(1.08); }
   .sv-src { margin: 0; font-size: 12.5px; line-height: 1.5; opacity: .7; max-width: 560px; }
   .sv-src a { color: inherit; }
   @keyframes svSpin { from { opacity: 0; transform: rotate(-25deg) scale(.85); } to { opacity: 1; transform: none; } }
@@ -1336,7 +1338,7 @@
               <sc-if value="{{ svWNone }}" hint-placeholder-val="{{ true }}"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">Choisissez une couleur</b><p style="margin: 0; font-size: 14.5px; line-height: 1.55; opacity: .8;">Quinze familles d’arômes, près de 80 arômes précis. Astuce : sentez d’abord la grande famille (fleur ? fruit ? grillé ?), puis affinez.</p></sc-if>
               <sc-if value="{{ svWOn }}" hint-placeholder-val="{{ false }}">
                 <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ svW.cat }}</span>
-                <b style="font-family: var(--font-heading); font-weight: 400; font-size: 26px; color: {{ svW.color }};">{{ svW.name }}</b>
+                <div style="display: flex; align-items: center; gap: 10px;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 26px; color: {{ svW.color }}; margin-right: auto;">{{ svW.name }}</b><button onClick="{{ svW.prev }}" aria-label="Famille précédente" title="Famille précédente" class="sv-nav">‹</button><button onClick="{{ svW.next }}" aria-label="Famille suivante" title="Famille suivante" class="sv-nav">›</button></div>
                 <p style="margin: 0; font-size: 14.5px; line-height: 1.55;">{{ svW.desc }}</p>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 12.5px;"><sc-if value="{{ svW.hasZh }}" hint-placeholder-val="{{ false }}"><span style="background: var(--color-bg); border-radius: 999px; padding: 3px 10px;">{{ svW.zh }}</span></sc-if><span style="opacity: .6;">Source : {{ svW.src }}</span></div>
                 <sc-if value="{{ svW.hasHint }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .85;">{{ svW.hint }}</p></sc-if>
@@ -5327,13 +5329,14 @@ class Component extends DCLogic {
         const add = (pid, why) => { if (!pid) return; hits[pid] = hits[pid] || { n: 0, why: {} }; hits[pid].n++; hits[pid].why[why] = 1; };
         a2.prods.forEach(p => { (p.tags || []).forEach(t => { if (words.some(x => this.norm(x) === this.norm(t)) || this.norm(t) === this.norm(w.n)) add(p.id, 'tag'); }); });
         a2.logs.forEach(l => { const av = this.norm((l.avis || '') + ' ' + (l.nez || '')); if (!av) return; if (words.some(x => av.indexOf(this.norm(x)) >= 0)) { const sa = coll.find(o => o.id === l.lotId); if (sa) add(sa.prodId, 'avis'); } });
-        const hint = target && this.tkHints ? (this.tkHints[this.norm(target)] || this.tkHints[target.toLowerCase()] || null) : null;
-        out.svW = { name: target || w.n, cat: w.n, color: w.c, desc: w.h, zh: w.z || '', hasZh: !!w.z, src: (w.s || 'M').split('').map(c => ((S.srcs || {})[c] || {}).n || c).join(' · '), aromas: w.a.map(x => ({ label: x, on: x === target, bg: x === target ? w.c : 'var(--color-bg)', fg: x === target ? '#fff' : 'var(--color-text)', pick: () => this.setState({ svWa: x === target ? '' : x }) })),
-          hint: hint ? '💡 ' + hint[0] + ' ' + hint[1] : '', hasHint: !!hint,
+        const smell = target ? ((S.smell || {})[target] || '') : ''; const hint = !smell && target && this.tkHints ? (this.tkHints[this.norm(target)] || this.tkHints[target.toLowerCase()] || null) : null;
+        const wi = W.indexOf(w), goF = d => this.setState({ svWc: W[(wi + d + W.length) % W.length].k, svWa: '' });
+        out.svW = { prev: () => goF(-1), next: () => goF(1), name: target || w.n, cat: w.n, color: w.c, desc: w.h, zh: w.z || '', hasZh: !!w.z, src: (w.s || 'M').split('').map(c => ((S.srcs || {})[c] || {}).n || c).join(' · '), aromas: w.a.map(x => ({ label: x, on: x === target, bg: x === target ? w.c : 'var(--color-bg)', fg: x === target ? '#fff' : 'var(--color-text)', pick: () => this.setState({ svWa: x === target ? '' : x }) })),
+          hint: smell ? '👃 ' + smell : hint ? '💡 ' + hint[0] + ' ' + hint[1] : '', hasHint: !!(smell || hint),
           teas: Object.keys(hits).map(pid => ({ p: a2.prods.find(x => x.id === pid), h: hits[pid] })).filter(x => x.p).sort((x, y) => y.h.n - x.h.n).slice(0, 8)
             .map(x => ({ name: x.p.nom || x.p.the, why: (x.h.why.tag ? 'tag' : '') + (x.h.why.tag && x.h.why.avis ? ' + ' : '') + (x.h.why.avis ? x.h.n + ' avis' : ''), go: () => this.openProd(x.p.id) })) };
         out.svW.hasTeas = out.svW.teas.length > 0; out.svW.noTeas = !out.svW.teas.length;
-      } else out.svW = { aromas: [], teas: [] };
+      } else out.svW = { aromas: [], teas: [], prev: () => {}, next: () => {} };
     }
     return out;
   }
