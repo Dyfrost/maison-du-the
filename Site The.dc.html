@@ -2560,11 +2560,11 @@
         <section style="background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
           <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0;">Dans la maison</h2><span style="font-size: 13px; opacity: .65;">{{ flN }}</span></div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; align-items: start;">
-            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Vos 3 meilleurs</span>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ flTopLbl }}</span>
               <sc-if value="{{ flHasTop }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ flTop }}" as="ft" hint-placeholder-count="3"><button onClick="{{ ft.go }}" style="cursor: pointer; border: none; background: var(--color-bg); border-radius: 14px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-family: var(--font-body); color: var(--color-text); text-align: left;"><span style="font-size: 18px;">{{ ft.rank }}</span><span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column;"><span style="font-size: 14.5px; font-weight: 600;">{{ ft.name }}</span><span style="font-size: 12px; opacity: .65;">{{ ft.sub }} · {{ ft.n }}</span></span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 18px; color: {{ ft.c }};">{{ ft.avg }}</b></button></sc-for></sc-if>
             </div>
             <sc-if value="{{ flDisc }}" hint-placeholder-val="{{ true }}"><button onClick="{{ flDiscGo }}" style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; text-align: left; font-family: var(--font-body); color: var(--color-text);"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">🧭 À découvrir</span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">{{ flDiscName }} →</b><span style="font-size: 13.5px; opacity: .75;">{{ flDiscWhy }}</span></button></sc-if>
-            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Vos notes, mois par mois</span>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ flCurveLbl }}</span>
               <sc-if value="{{ flFewLine }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .7;">Il faut des notes sur au moins deux mois pour tracer la courbe.</span></sc-if>
               <sc-if value="{{ flHasLine }}" hint-placeholder-val="{{ true }}">
               <div style="position: relative; width: 100%;">
@@ -2864,7 +2864,7 @@
           <sc-if value="{{ teaNoProds }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Personne n’en a encore dans la maison.</p></sc-if>
           <sc-if value="{{ hsOn }}" hint-placeholder-val="{{ false }}">
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; align-items: start;">
-            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Moyenne de la maison</span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 34px; line-height: 1; color: {{ hsAvgColor }};">{{ hsAvg }}<span style="font-size: 15px; opacity: .6;"> /20</span></b><span style="font-size: 13px; opacity: .7;">{{ hsSub }}</span></div>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ hsAvgLbl }}</span><b style="font-family: var(--font-heading); font-weight: 400; font-size: 34px; line-height: 1; color: {{ hsAvgColor }};">{{ hsAvg }}<span style="font-size: 15px; opacity: .6;"> /20</span></b><span style="font-size: 13px; opacity: .7;">{{ hsSub }}</span></div>
             <sc-if value="{{ hsBest }}" hint-placeholder-val="{{ true }}"><button onClick="{{ hsBestOpen }}" style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; text-align: left; font-family: var(--font-body); color: var(--color-text);"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Meilleur paramétrage</span><span style="display: flex; gap: 10px; align-items: center;"><span style="flex: none; width: 42px; height: 42px; border-radius: 50%; background: {{ hsBestColor }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px;">{{ hsBestNote }}</span><span style="font-size: 14px; line-height: 1.45;">{{ hsBestTxt }}</span></span><span style="font-size: 12.5px; opacity: .65;">{{ hsBestWho }} · voir la dégustation →</span></button></sc-if>
             <sc-if value="{{ hsHasAromas }}" hint-placeholder-val="{{ true }}"><div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Arômes les plus cités</span><div style="display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: baseline;"><sc-for list="{{ hsAromas }}" as="ha" hint-placeholder-count="5"><span title="{{ ha.n }} mention(s)" style="font-size: {{ ha.size }}; font-weight: 600; color: {{ ha.c }}; filter: brightness(.62) saturate(1.3);">{{ ha.w }}</span></sc-for></div></div></sc-if>
           </div>
@@ -5349,16 +5349,19 @@ class Component extends DCLogic {
     (prods || []).forEach(p => (p.tags || []).forEach(tg => { const w = words.find(x => this.norm(x[0]) === this.norm(tg)); bump(w ? w[0] : tg, w ? w[1] : 'var(--color-accent)'); }));
     return Object.keys(cnt).map(k => ({ w: k, n: cnt[k].n, c: cnt[k].c })).sort((a, b) => b.n - a.n);
   }
+  circleOf(me) { const sl = this.salonOf(me); return sl ? (sl.members || []).slice() : [me]; }
+  circleName(me) { const sl = this.salonOf(me); return sl ? 'du salon ' + sl.name : 'personnelle'; }
   houseTeaStats(prods, me) {
     const coll = this.collection(); const a = this.getAdds();
     const sacIds = coll.filter(o => prods.some(p => p.id === o.prodId)).map(o => o.id);
     const logs = a.logs.filter(l => sacIds.indexOf(l.lotId) >= 0);
-    const noted = logs.filter(l => this.noteNum(l) != null);
+    const circ = this.circleOf(me); const inC = l => circ.indexOf(l.author) >= 0 || (l.with || []).some(w => circ.indexOf(w) >= 0);
+    const noted = logs.filter(l => this.noteNum(l) != null && inC(l));
     const avg = noted.length ? noted.reduce((t, l) => t + this.noteNum(l), 0) / noted.length : null;
     const best = noted.slice().sort((x, y) => this.noteNum(y) - this.noteNum(x))[0];
     const ar = this.aromaCounts(logs, prods).slice(0, 8); const max = ar.length ? ar[0].n : 1;
     const people = logs.map(l => l.author).filter((x, i, arr) => x && arr.indexOf(x) === i);
-    return { hsOn: logs.length > 0, hsNone: !logs.length,
+    return { hsOn: logs.length > 0, hsNone: !logs.length, hsAvgLbl: 'Moyenne ' + this.circleName(me),
       hsAvg: avg != null ? avg.toFixed(1).replace('.', ',') : '—', hsAvgColor: avg != null ? this.noteColors(String(Math.round(avg * 10) / 10)).noteBg : 'inherit',
       hsSub: noted.length + ' note' + (noted.length > 1 ? 's' : '') + ' · ' + logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' · ' + people.length + ' dégustateur' + (people.length > 1 ? 's' : ''),
       hsBest: !!best, hsBestNote: best ? best.note : '', hsBestColor: best ? this.noteColors(best.note).noteBg : '',
@@ -5371,7 +5374,8 @@ class Component extends DCLogic {
     const prods = a.prods.filter(p => this.famOf(p.the) === fk);
     const sacOf = {}; coll.forEach(o => { sacOf[o.id] = o; });
     const logs = a.logs.filter(l => sacOf[l.lotId] && prods.some(p => p.id === sacOf[l.lotId].prodId));
-    const byProd = {}; logs.forEach(l => { const n = this.noteNum(l); if (n == null) return; const pid = sacOf[l.lotId].prodId; (byProd[pid] = byProd[pid] || []).push(n); });
+    const circ = this.circleOf(me); const inC = l => circ.indexOf(l.author) >= 0 || (l.with || []).some(w => circ.indexOf(w) >= 0);
+    const byProd = {}; logs.forEach(l => { const n = this.noteNum(l); if (n == null || !inC(l)) return; const pid = sacOf[l.lotId].prodId; (byProd[pid] = byProd[pid] || []).push(n); });
     const top = Object.keys(byProd).map(pid => ({ p: prods.find(x => x.id === pid), avg: byProd[pid].reduce((t, x) => t + x, 0) / byProd[pid].length, n: byProd[pid].length })).filter(x => x.p).sort((x, y) => y.avg - x.avg || y.n - x.n).slice(0, 3);
     const tasted = {}; logs.forEach(l => { if (this.inLog(l, me)) tasted[sacOf[l.lotId].prodId] = 1; });
     const cand = coll.filter(o => prods.some(p => p.id === o.prodId) && this.canTaste(o, me) && !this.emptyFor(o, me) && !tasted[o.prodId]);
@@ -5380,13 +5384,13 @@ class Component extends DCLogic {
     // courbe : moyenne mensuelle sur 12 mois
     const now = new Date(); const months = [];
     for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push(mdtDayKey(d).slice(0, 7)); }
-    const pts = months.map(m => { const ns = logs.filter(l => String(l.date || '').slice(0, 7) === m).map(l => this.noteNum(l)).filter(x => x != null); return { m: m, avg: ns.length ? ns.reduce((t, x) => t + x, 0) / ns.length : null, n: ns.length }; });
+    const pts = months.map(m => { const ns = logs.filter(l => inC(l) && String(l.date || '').slice(0, 7) === m).map(l => this.noteNum(l)).filter(x => x != null); return { m: m, avg: ns.length ? ns.reduce((t, x) => t + x, 0) / ns.length : null, n: ns.length }; });
     const W = 560, H = 160, padL = 28, padB = 32, padT = 12; const ys = pts.filter(p => p.avg != null).map(p => p.avg);
     const lo = ys.length ? Math.max(0, Math.floor(Math.min.apply(null, ys)) - 1) : 10, hi = ys.length ? Math.min(20, Math.ceil(Math.max.apply(null, ys)) + 1) : 20;
     const X = i => padL + i * (W - padL - 10) / 11, Y = v => padT + (hi - v) / Math.max(1, hi - lo) * (H - padT - padB);
     let line = ''; pts.forEach((p, i) => { if (p.avg == null) return; line += (line ? ' L' : 'M') + X(i).toFixed(1) + ' ' + Y(p.avg).toFixed(1); });
     const mn = ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
-    return { flOn: logs.length > 0, flNone: !logs.length, flN: logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' de thés ' + this.families[fk].name.toLowerCase() + ' dans la maison',
+    return { flTopLbl: this.salonOf(me) ? 'Les 3 meilleurs du salon' : 'Mes 3 meilleurs', flCurveLbl: this.salonOf(me) ? 'Notes du salon, mois par mois' : 'Mes notes, mois par mois', flOn: logs.length > 0, flNone: !logs.length, flN: logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' de thés ' + this.families[fk].name.toLowerCase() + ' dans la maison',
       flTop: top.map((x, i) => ({ rank: ['🥇', '🥈', '🥉'][i], name: x.p.nom || x.p.the, sub: x.p.marque || '', avg: x.avg.toFixed(1).replace('.', ','), c: this.noteColors(String(Math.round(x.avg * 10) / 10)).noteBg, n: x.n + ' note' + (x.n > 1 ? 's' : ''), go: () => this.openProd(x.p.id) })), flHasTop: top.length > 0,
       flDisc: !!disc, flDiscName: disc ? (disc.nom || disc.the) : '', flDiscWhy: discMine ? 'Dans tes sachets, jamais dégusté par toi.' : 'Dans la maison, jamais dégusté par toi : demande une part !', flDiscGo: () => { if (disc) this.openProd(disc.id); },
       flLine: line, flHasLine: ys.length >= 2, flFewLine: ys.length < 2,
