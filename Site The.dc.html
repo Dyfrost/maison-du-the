@@ -2991,6 +2991,57 @@
           <h1 style="font-size: 46px; margin: 0 0 12px;">Se servir des ustensiles</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">Le déroulé d'une infusion, étape par étape. Chaque étape attend sa photo et son texte définitif.</p>
         </div>
+        <section id="tokoname" style="background: var(--color-surface); border-radius: 34px; padding: 26px 28px; display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both;">
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <span aria-hidden="true" style="width: 64px; height: 64px; border-radius: 50%; background: #a8532e; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; flex: none;">🏺</span>
+            <div style="flex: 1 1 280px;"><h2 style="font-size: 34px; margin: 0;">Tokoname</h2><p style="margin: 2px 0 0; font-size: 15px; opacity: .75;">Votre assistant Gong Fu : choisissez un thé, Tokoname reprend ce qui a bien marché, vous guide pas à pas et vous aide à trouver ses arômes.</p></div>
+          </div>
+          <select class="input" value="{{ tkSel }}" onChange="{{ tkSet }}" aria-label="Thé pour Tokoname" style="max-width: 520px; padding: 12px 16px; font-size: 16px; background: var(--color-bg);"><option value="">Quel thé allez-vous boire ?</option><sc-for list="{{ tkOpts }}" as="to" hint-placeholder-count="3"><option value="{{ to.id }}">{{ to.label }}</option></sc-for></select>
+          <sc-if value="{{ tkOn }}" hint-placeholder-val="{{ false }}">
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h3 style="font-size: 24px; margin: 0;">{{ tkName }}</h3><span class="tag tag-accent-2">{{ tkFam }}</span></div>
+              <p style="margin: 0; font-size: 13.5px; opacity: .72;">{{ tkSrc }}</p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 16px;">
+                <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">🌡 Eau</span><span style="font-size: 18px; font-family: var(--font-heading);">{{ tkTemp }}</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">⚖️ Feuilles</span><span style="font-size: 18px; font-family: var(--font-heading);">{{ tkQty }}</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">🌀 Technique</span><span style="font-size: 18px; font-family: var(--font-heading);">{{ tkTech }}</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">🫖 Matériel</span><span style="font-size: 15px;">{{ tkGear }}</span></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">⏱ Schéma d’infusions</span><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ tkTimes }}" as="tt" hint-placeholder-count="6"><span style="border-radius: 999px; padding: 5px 12px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-size: 13.5px; font-weight: 600;">{{ tt.label }}</span></sc-for></div></div>
+              <button class="btn btn-primary" onClick="{{ tkGo }}" style="align-self: flex-start; white-space: nowrap;">▶ Préparer la séance avec ces paramètres</button>
+            </div>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+              <h3 style="font-size: 22px; margin: 0;">Les étapes</h3>
+              <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;"><sc-for list="{{ tkSteps }}" as="st" hint-placeholder-count="5"><li style="display: flex; gap: 12px; align-items: flex-start;"><span style="flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--color-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px;">{{ st.n }}</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">{{ st.title }}</b><span style="font-size: 14.5px; line-height: 1.5; opacity: .85;">{{ st.txt }}</span></span></li></sc-for></ol>
+            </div>
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+              <h3 style="font-size: 22px; margin: 0;">🔎 Le jeu des arômes</h3>
+              <p style="margin: 0; font-size: 14px; opacity: .75;">Cherchez d’abord par vous-même. Si rien ne vient, demandez un indice, puis un autre, et seulement en dernier la réponse.</p>
+              <sc-for list="{{ tkGame }}" as="gm" hint-placeholder-count="3">
+                <div style="background: var(--color-bg); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+                  <div style="display: flex; flex-direction: column; gap: 2px;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 18px;">{{ gm.icon }} {{ gm.title }}</b><span style="font-size: 14px; opacity: .8;">{{ gm.how }}</span></div>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px;">
+                    <sc-for list="{{ gm.items }}" as="it" hint-placeholder-count="2">
+                      <div style="border-radius: 16px; padding: 10px 12px; box-shadow: inset 0 0 0 1px var(--color-divider); display: flex; flex-direction: column; gap: 6px;">
+                        <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ it.q }}</span>
+                        <sc-if value="{{ it.showH1 }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">💡 {{ it.h1 }}</span></sc-if>
+                        <sc-if value="{{ it.showH2 }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px;">💡 {{ it.h2 }}</span></sc-if>
+                        <sc-if value="{{ it.showAns }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="align-self: flex-start; font-size: 14px;">✨ {{ it.ans }}</span></sc-if>
+                        <sc-if value="{{ it.hidden }}" hint-placeholder-val="{{ true }}"><button onClick="{{ it.next }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--color-accent-700);">{{ it.btn }} →</button></sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ tkHasBest }}" hint-placeholder-val="{{ false }}">
+            <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><h3 style="font-size: 22px; margin: 0; margin-right: auto;">Ce que la maison en a pensé</h3><button class="btn btn-secondary" onClick="{{ tkToggleAvis }}" style="white-space: nowrap; background: var(--color-bg);"><sc-if value="{{ tkHideAvis }}" hint-placeholder-val="{{ true }}">Voir les avis (après avoir cherché !)</sc-if><sc-if value="{{ tkShowAvis }}" hint-placeholder-val="{{ false }}">Masquer les avis</sc-if></button></div>
+              <sc-if value="{{ tkShowAvis }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ tkBest }}" as="bl" hint-placeholder-count="2"><button onClick="{{ bl.open }}" class="sac-lg"><span class="sac-lg-n" style="background: {{ bl.noteBg }};">{{ bl.note }}</span><span class="sac-lg-t"><span class="sac-lg-m">{{ bl.meta }}</span><sc-if value="{{ bl.avis }}" hint-placeholder-val="{{ false }}"><span class="sac-lg-a">{{ bl.avis }}</span></sc-if></span></button></sc-for></sc-if>
+            </div>
+            </sc-if>
+          </sc-if>
+        </section>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px;">
 
           <div style="animation: riseIn .5s cubic-bezier(.2,.8,.3,1) .05s both; background: var(--color-surface); border-radius: 34px; padding: 16px; display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow-sm);">
@@ -4977,6 +5028,124 @@ class Component extends DCLogic {
       finish: () => { const ta = document.querySelector('textarea[aria-label="Avis de la séance"]'); const av = ta ? ta.value : l.avis; const tn = document.querySelector('main textarea[aria-label="Premières impressions"]'); const nz = tn ? tn.value : l.nez; clearTimeout(this._avT); clearTimeout(this._nzT); this.stopTimer(true); const hm = this.state.sessEndHm; let endTs = Date.now(); if (/^\d{1,2}:\d{2}$/.test(hm || '')) { const d0 = new Date(l.startTs || Date.now()); const d = new Date(mdtDayKey(d0) + 'T' + hm.padStart(5, '0') + ':00').getTime(); endTs = d < (l.startTs || 0) ? d + 864e5 : d; } this.setState({ sessEndHm: '' }); this.sessUpdate(l.id, x => { x.avis = av; x.nez = nz; x.live = false; x.endTs = endTs; return x; }); this.setState({ detailBack: 'home' }); this.openLogDetail(l.id); },
       edit: () => this.startEditLog(l) };
   }
+  // ---------- Tokoname : assistant Gong Fu ----------
+  tkFam = {
+    blanc: { temp: 85, g: 5, rinse: 0, times: [20, 15, 20, 30, 40, 60, 90], nez: ['Foin', 'Miel'], bouche: ['Abricot', 'Fleurs blanches'], tasse: ['Miel', 'Vanille'], tip: 'Eau pas trop chaude : on veut garder la douceur et le duvet des bourgeons.' },
+    vert: { temp: 80, g: 4, rinse: 0, times: [15, 10, 15, 20, 30, 45], nez: ['Herbe coupée', 'Noisette'], bouche: ['Châtaigne', 'Iodé'], tasse: ['Beurre', 'Haricot vert'], tip: 'Couvercle entrouvert entre les infusions pour ne pas « cuire » les feuilles.' },
+    jaune: { temp: 80, g: 4, rinse: 0, times: [20, 15, 20, 30, 45], nez: ['Céréale', 'Noisette'], bouche: ['Maïs doux', 'Pain grillé'], tasse: ['Miel'], tip: 'Un thé rond et doux : infusions courtes au début, puis on allonge.' },
+    oolong: { temp: 95, g: 6, rinse: 1, times: [15, 10, 15, 20, 25, 35, 45, 60], nez: ['Floral', 'Orchidée'], bouche: ['Pêche', 'Beurre'], tasse: ['Lait', 'Caramel'], tip: 'Les feuilles roulées s’ouvrent peu à peu : la 2e et la 3e infusions sont souvent les meilleures.' },
+    noir: { temp: 95, g: 5, rinse: 0, times: [10, 15, 20, 30, 45, 60], nez: ['Malté', 'Cacao'], bouche: ['Miel', 'Fruits rouges'], tasse: ['Caramel', 'Pain d’épices'], tip: 'Le thé rouge chinois supporte l’eau très chaude mais devient vite tannique : restez court.' },
+    sombre: { temp: 100, g: 6, rinse: 2, times: [10, 10, 15, 20, 25, 30, 45, 60, 90], nez: ['Sous-bois', 'Terreux'], bouche: ['Boisé', 'Datte'], tasse: ['Camphre', 'Cacao'], tip: 'Deux rinçages rapides réveillent le thé et lavent la poussière du pressage.' },
+    aromatise: { temp: 90, g: 4, rinse: 0, times: [30, 30, 45, 60], nez: ['Agrumes', 'Floral'], bouche: ['Épicé'], tasse: ['Vanille'], tip: 'Les arômes ajoutés s’épuisent vite : 3 ou 4 infusions suffisent.' },
+    tisane: { temp: 100, g: 3, rinse: 0, times: [60, 90, 120], nez: ['Floral'], bouche: ['Plantes'], tasse: ['Miel'], tip: 'Pas de théine : on peut laisser infuser longtemps sans amertume.' },
+    rooibos: { temp: 100, g: 4, rinse: 0, times: [45, 60, 90], nez: ['Vanille', 'Miel'], bouche: ['Boisé'], tasse: ['Caramel'], tip: 'Eau bouillante et infusions longues : le rooibos ne devient jamais amer.' },
+    mate: { temp: 75, g: 6, rinse: 0, times: [10, 15, 20, 30, 45], nez: ['Herbe sèche', 'Fumé'], bouche: ['Tabac'], tasse: ['Amertume'], tip: 'Eau sous 80 °C, sinon l’amertume prend le dessus.' }
+  };
+  tkHints = {
+    'floral': ['Pense à un jardin au printemps.', 'Plutôt une fleur blanche ou une orchidée, légère et sucrée.'],
+    'jasmin': ['Une fleur blanche très parfumée.', 'On en met dans le thé vert chinois, et elle sent fort le soir.'],
+    'rose': ['Une fleur de jardin, classique.', 'Celle de la Saint-Valentin.'],
+    'bergamote': ['Un agrume.', 'Le parfum du Earl Grey.'],
+    'menthe': ['Fraîche, piquante.', 'Celle du thé à la marocaine.'],
+    'orchidée': ['Une fleur, mais pas une rose.', 'Exotique, délicate, on la trouve en pot dans les salons.'],
+    'fleurs blanches': ['Un parfum de fleur, doux et clair.', 'Jasmin, chèvrefeuille…'],
+    'fruité': ['Quelque chose qui pousse sur un arbre.', 'Un fruit mûr, plutôt à noyau ou à pépins.'],
+    'pêche': ['Un fruit d’été, duveteux.', 'Il a un gros noyau et une peau toute douce.'],
+    'abricot': ['Un fruit orange, souvent séché.', 'Petit cousin de la pêche.'],
+    'fruits rouges': ['Des petits fruits qu’on cueille dans les ronces ou au jardin.', 'Framboise, cerise, cassis…'],
+    'agrumes': ['Ça pique un peu le nez, c’est frais.', 'Citron, bergamote, orange…'],
+    'miel': ['Quelque chose de sucré et doré.', 'Fabriqué par des insectes.'],
+    'vanille': ['Une gousse qu’on met dans les desserts.', 'Douce, crémeuse, pâtissière.'],
+    'caramel': ['Du sucre qui a chauffé.', 'Pense au fond d’une crème brûlée.'],
+    'végétal': ['Ça sent la nature, le vert.', 'Herbe, feuille, légume frais.'],
+    'herbe coupée': ['Un samedi matin au jardin.', 'Juste après le passage de la tondeuse.'],
+    'herbe sèche': ['Un champ en plein été.', 'Comme du foin, mais plus vert.'],
+    'foin': ['Une grange à la campagne.', 'De l’herbe séchée au soleil.'],
+    'iodé': ['On pense à la mer.', 'Algue, embruns, huître…'],
+    'noisette': ['Un fruit à coque.', 'Les écureuils l’adorent.'],
+    'châtaigne': ['Un fruit d’automne qu’on fait griller.', 'On le ramasse en forêt, dans une bogue qui pique.'],
+    'beurre': ['Gras, rond, laitier.', 'On l’étale sur une tartine.'],
+    'lait': ['Doux et laiteux.', 'Le « milky » des oolongs de Taïwan.'],
+    'céréale': ['Le petit-déjeuner.', 'Blé, orge, riz grillé…'],
+    'maïs doux': ['Un légume jaune et sucré.', 'En épi ou en boîte, l’été au barbecue.'],
+    'pain grillé': ['Le matin, à la sortie du grille-pain.', 'Une croûte bien dorée.'],
+    'torréfié': ['Ça a vu le feu.', 'Grillé, comme un café ou des noisettes torréfiées.'],
+    'boisé': ['Une promenade en forêt.', 'Du bois, de l’écorce, un vieux meuble.'],
+    'sous-bois': ['La forêt après la pluie.', 'Feuilles mortes, mousse, champignon.'],
+    'terreux': ['Le sol, la cave.', 'Terre humide, betterave, champignon.'],
+    'camphre': ['Frais comme une pommade.', 'Une note médicinale, un peu mentholée.'],
+    'cacao': ['Le goûter.', 'Du chocolat noir, presque amer.'],
+    'malté': ['Une boisson du matin à base de céréales.', 'Pense au malt d’une bière ou de l’Ovomaltine.'],
+    'datte': ['Un fruit sec très sucré.', 'On le mange pendant le ramadan, il vient du palmier.'],
+    'fumé': ['Un feu de cheminée.', 'Bois brûlé, lard fumé, feu de camp.'],
+    'épicé': ['Le placard à épices.', 'Cannelle, poivre, clou de girofle…'],
+    'tabac': ['Une vieille pipe.', 'Feuilles séchées, un peu fumées.'],
+    'pain d’épices': ['Un gâteau de Noël.', 'Miel et épices.'],
+    'plantes': ['Une balade dans les herbes.', 'Menthe, verveine, tilleul…'],
+    'haricot vert': ['Un légume.', 'Vert, croquant, cuit à la vapeur.'],
+    'amertume': ['Une saveur, pas un arôme.', 'Comme le café noir ou l’endive.'],
+    'doux': ['Pas un arôme, une sensation.', 'Rond, sans aspérité, presque sucré.']
+  };
+  tkView(me) {
+    const coll = this.collection(); const a = this.getAdds();
+    const opts = coll.filter(o => this.canTaste(o, me)).map(o => ({ o: o, empty: this.isEmptySachet(o) })).sort((x, y) => (x.empty - y.empty) || (x.o.nom || x.o.the).localeCompare(y.o.nom || y.o.the, 'fr'));
+    const id = this.state.tkSac || '';
+    const base = { tkOpts: opts.map(x => ({ id: x.o.id, label: (x.o.nom || x.o.the) + (x.o.owner !== me ? ' (part de ' + x.o.owner + ')' : '') + (x.empty ? ' (vide)' : '') })), tkSel: id, tkSet: e => this.setState({ tkSac: e.target.value, tkRev: {} }), tkOn: false, tkSteps: [], tkGame: [], tkBest: [], tkTimes: [] };
+    const o = coll.find(x => x.id === id); if (!o) return base;
+    const p = a.prods.find(x => x.id === o.prodId) || {};
+    const fk = this.famOf(o.the) || 'oolong'; const F = this.tkFam[fk] || this.tkFam.oolong;
+    const cat = this.listFor(fk).find(t => this.norm(t.name) === this.norm(o.the || '')) || {};
+    const sacIds = coll.filter(x => x.prodId === o.prodId).map(x => x.id);
+    const num = l => { const n = parseFloat(String(l.note || '').replace(',', '.')); return isFinite(n) ? n : null; };
+    const logs = a.logs.filter(l => sacIds.indexOf(l.lotId) >= 0 && num(l) != null).sort((x, y) => num(y) - num(x));
+    const best = logs.find(l => num(l) >= 15) || null;
+    const parseTimes = t => String(t || '').split('/').map(x => { x = x.trim(); const m = /^(\d+(?:[.,]\d+)?)\s*(m|min)?$/i.exec(x); return m ? Math.round(parseFloat(m[1].replace(',', '.')) * (m[2] ? 60 : 1)) : null; }).filter(x => x > 0);
+    const bTimes = best ? (Array.isArray(best.infusions) && best.infusions.length ? best.infusions.map(i => i.t) : parseTimes(best.temps)) : [];
+    const times = bTimes.length >= 3 ? bTimes : F.times;
+    const temp = best && /^\d+$/.test(String(best.temperature || '').trim()) ? +best.temperature : F.temp;
+    const qty = best && this.qtyNum(best.qty) ? this.qtyNum(best.qty) : F.g;
+    const usable = this.gearUsable(me);
+    const bGear = best ? this.logGears(best).filter(g => usable.some(u => u.id === g.id)) : [];
+    const myVessel = usable.find(g => g.owner === me && this.gearCatKey(g.type) === 'theiere');
+    const gear = bGear.length ? bGear : (myVessel ? [myVessel] : []);
+    const tech = best && best.technique && !/^x$/i.test(best.technique) ? best.technique : (F.rinse ? '*+RV' : '*');
+    const src = best ? 'D’après la dégustation de ' + best.author + ' du ' + this.fmtDate(best.date) + ' (' + best.note + '/20), la mieux notée de ce thé.' : (logs.length ? 'Aucune dégustation à 15/20 ou plus : on part des repères habituels d’un thé ' + this.families[fk].name.toLowerCase() + '.' : 'Pas encore de dégustation : on part des repères habituels d’un thé ' + this.families[fk].name.toLowerCase() + '.');
+    // arômes à chercher
+    const dictKeys = Object.keys(this.tkHints);
+    const text = this.norm([p.nom, o.nom, cat.gout, cat.profil, p.commentaire, o.commentaire].filter(Boolean).join(' '));
+    const fromText = dictKeys.filter(k => text.indexOf(this.norm(k)) >= 0).map(k => k.charAt(0).toUpperCase() + k.slice(1));
+    const tags = (p.tags || []).slice();
+    const nezCats = ['floral', 'fumé', 'miel', 'iodé', 'végétal', 'terreux', 'camphre', 'torréfié', 'herbe coupée', 'foin', 'sous-bois'];
+    const uniq = arr => { const seen = {}; return arr.filter(x => { const k = this.norm(x); if (!x || seen[k]) return false; seen[k] = 1; return true; }); };
+    const nezT = uniq(tags.filter(t => nezCats.indexOf(this.norm(t)) >= 0).concat(F.nez)).slice(0, 2);
+    const bouT = uniq(tags.filter(t => nezCats.indexOf(this.norm(t)) < 0).concat(fromText, F.bouche)).filter(t => nezT.map(x => this.norm(x)).indexOf(this.norm(t)) < 0).slice(0, 3);
+    const tasT = uniq(F.tasse).filter(t => nezT.concat(bouT).map(x => this.norm(x)).indexOf(this.norm(t)) < 0).slice(0, 2);
+    const rev = this.state.tkRev || {};
+    const hintsFor = w => { const h = this.tkHints[this.norm(w)] || this.tkHints[String(w).toLowerCase()]; return h || ['Ça commence par « ' + String(w).charAt(0).toUpperCase() + ' ».', 'Un mot de ' + String(w).length + ' lettres.']; };
+    const game = [['nez', '👃', 'Avant de boire', 'Approchez la tasse pleine du nez, inspirez doucement par petites bouffées.', nezT], ['bouche', '👅', 'En bouche', 'Aspirez une petite gorgée avec un peu d’air, faites-la rouler sur la langue, puis avalez et expirez par le nez.', bouT], ['tasse', '🍵', 'La tasse vide', 'Une fois la tasse bue, sentez le fond : les arômes sucrés et profonds restent accrochés à la porcelaine.', tasT]]
+      .map(g => ({ icon: g[1], title: g[2], how: g[3], items: g[4].map((w, k) => { const key = g[0] + k; const lv = rev[key] || 0; const h = hintsFor(w);
+        return { q: 'Arôme n° ' + (k + 1), h1: h[0], h2: h[1], showH1: lv >= 1, showH2: lv >= 2, ans: w, showAns: lv >= 3, hidden: lv < 3, btn: lv === 0 ? 'Indice' : lv === 1 ? 'Autre indice' : 'Révéler',
+          next: () => this.setState(s0 => ({ tkRev: Object.assign({}, s0.tkRev, { [key]: Math.min(3, ((s0.tkRev || {})[key] || 0) + 1) }) })) }; }), has: g[4].length > 0 })).filter(g => g.has);
+    const rinse = /RV|rinç|reveil|réveil/i.test(tech) ? Math.max(1, F.rinse) : F.rinse;
+    const vessel = gear.find(g => this.gearCatKey(g.type) === 'theiere');
+    const steps = [
+      ['Chauffer l’eau', 'Visez ' + temp + ' °C' + (temp >= 100 ? ' : eau frémissante, juste à ébullition.' : temp >= 90 ? ' : laissez reposer l’eau bouillie une minute.' : ' : laissez refroidir l’eau bouillie 3 à 5 minutes, ou ajoutez un peu d’eau froide.')],
+      ['Réchauffer la vaisselle', 'Versez de l’eau chaude dans ' + (vessel ? vessel.name : 'le gaiwan ou la théière') + ', le pichet et les tasses, puis videz. Un ustensile chaud garde la température et réveille mieux les arômes.'],
+      ['Peser et sentir les feuilles sèches', 'Mettez ' + String(qty).replace('.', ',') + ' g de feuilles (pour environ 100 ml). Avant tout, sentez-les : c’est le premier nez, souvent discret.'],
+      [rinse ? 'Rincer' + (rinse > 1 ? ' deux fois' : '') + ' (Quick flush)' : 'Pas de rinçage', rinse ? 'Couvrez d’eau puis videz aussitôt (5 s)' + (rinse > 1 ? ', deux fois de suite' : '') + '. Ça réveille les feuilles ; cette eau ne se boit pas.' : 'Ce thé délicat n’a pas besoin d’être rincé : on passe directement aux infusions.'],
+      ['Sentir les feuilles réchauffées', 'Soulevez le couvercle et respirez dedans : les feuilles chaudes et humides livrent leur parfum le plus intense. Notez-le dans « Premières impressions ».'],
+      ['Enchaîner les infusions', 'Suivez le schéma ci-dessous. Versez entièrement à chaque fois, sans laisser d’eau sur les feuilles. ' + F.tip],
+      ['À chaque tasse', 'Sentez la liqueur, goûtez, puis sentez la tasse vide. Utilisez le jeu des arômes plus bas pour vous guider.']
+    ].map((x, k) => ({ n: String(k + 1), title: x[0], txt: x[1] }));
+    const go = () => { try { localStorage.setItem('mdt-lfmode', 'gong'); } catch (e) {}
+      this.setState({ view: 'log', editLogId: null, lfMode: 'gong', logMsg: '', lf: { lotId: o.id, date: mdtToday(), with: [], temperature: String(temp), qty: String(qty), technique: tech, gearIds: gear.map(g => g.id), gearId: '', heure: '', note: '', avis: '', temps: '', infusion: '', repas: '', nez: '', prefilled: 'Paramètres proposés par Tokoname. Ajustez si besoin, puis lancez la séance.' } }); try { window.scrollTo(0, 0); } catch (e) {} };
+    return Object.assign(base, { tkOn: true, tkName: p.nom || o.the, tkFam: this.families[fk].name, tkSrc: src,
+      tkTemp: temp + ' °C', tkQty: String(qty).replace('.', ',') + ' g', tkGear: gear.map(g => this.gearCat(g)[1] + ' ' + g.name).join(' · ') || 'Gaiwan ou petite théière (~100 ml)', tkTech: tech,
+      tkTimes: times.map((t, k) => ({ label: '#' + (k + 1) + ' · ' + this.fmtSec(t) })), tkSteps: steps, tkGame: game,
+      tkBest: logs.slice(0, 3).map(l => ({ note: l.note, ...this.noteColors(l.note), meta: l.author + ' · ' + this.fmtDate(l.date) + (l.temps ? ' · ' + l.temps : ''), avis: l.avis || '', open: () => this.openLogDetail(l.id) })), tkHasBest: logs.length > 0,
+      tkShowAvis: !!this.state.tkAvis, tkHideAvis: !this.state.tkAvis, tkToggleAvis: () => this.setState(s0 => ({ tkAvis: !s0.tkAvis })),
+      tkGo: go });
+  }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
@@ -5793,7 +5962,7 @@ class Component extends DCLogic {
       isCer: v === 'cer',
       ...[0, 1, 2, 3].reduce((o, i) => { o['cerOpen' + i] = () => this.setState({ view: 'cer', cerIdx: i }); return o; }, {}),
       cer: (() => { const c = this.ceremonyData[this.state.cerIdx || 0]; return Object.assign({}, c, { tools: this.toolChips(c.tools), variants: c.variants.map(x => Object.assign({}, x, { tools: this.toolChips(x.tools) })) }); })(),
-      isTuto: v === 'tuto',
+      isTuto: v === 'tuto', ...(v === 'tuto' ? this.tkView(me) : { tkOn: false, tkOpts: [], tkSteps: [], tkGame: [], tkBest: [], tkTimes: [] }),
       openCeremonies: () => this.go('ceremonies'),
       openTuto: () => this.go('tuto'),
       notHome: v !== 'home',
