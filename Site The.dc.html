@@ -2018,6 +2018,7 @@
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Fusionner des thés du catalogue</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Quand un même thé existe sous deux noms (« Le Bai Mu Dan » et « Bai Mu Dan »), rattachez le doublon au bon nom : ses thés du commerce et ses variantes passent sur le thé gardé, puis le doublon disparaît du catalogue.</p></div>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Doublon à fusionner</span>
               <select class="input" value="{{ mgSrc }}" onChange="{{ setMgSrc }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé en double…</option><sc-for list="{{ mgTeas }}" as="mt" hint-placeholder-count="3"><option value="{{ mt.key }}">{{ mt.label }}</option></sc-for></select></label>
+            <button onClick="{{ mgSwap }}" title="Inverser les deux sélections" style="align-self: center; cursor: pointer; border: none; border-radius: 999px; padding: 6px 16px; font-family: var(--font-body); font-size: 14px; background: var(--color-bg); color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-divider);">⇅ Inverser</button>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Le garder sous le nom de</span>
               <select class="input" value="{{ mgTgt }}" onChange="{{ setMgTgt }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé à garder…</option><sc-for list="{{ mgTeas }}" as="mt" hint-placeholder-count="3"><option value="{{ mt.key }}">{{ mt.label }}</option></sc-for></select></label>
             <sc-if value="{{ mgPreview }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 18px; padding: 12px 16px;">{{ mgPreview }}</p></sc-if>
@@ -2031,6 +2032,7 @@
             </div>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Doublon à fusionner (sera supprimé)</span>
               <select class="input" value="{{ mpSrc }}" onChange="{{ setMpSrc }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé en double…</option><sc-for list="{{ mpProds }}" as="mp" hint-placeholder-count="3"><option value="{{ mp.id }}">{{ mp.label }}</option></sc-for></select></label>
+            <button onClick="{{ mpSwap }}" title="Inverser les deux sélections" style="align-self: center; cursor: pointer; border: none; border-radius: 999px; padding: 6px 16px; font-family: var(--font-body); font-size: 14px; background: var(--color-bg); color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-divider);">⇅ Inverser</button>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé à garder</span>
               <select class="input" value="{{ mpTgt }}" onChange="{{ setMpTgt }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé à garder…</option><sc-for list="{{ mpProds }}" as="mp" hint-placeholder-count="3"><option value="{{ mp.id }}">{{ mp.label }}</option></sc-for></select></label>
             <sc-if value="{{ mpPreview }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 18px; padding: 12px 16px;">{{ mpPreview }}</p></sc-if>
@@ -2044,6 +2046,7 @@
             </div>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Sachet en double (sera supprimé)</span>
               <select class="input" value="{{ msSrc }}" onChange="{{ setMsSrc }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le sachet en double…</option><sc-for list="{{ msSacs }}" as="sz" hint-placeholder-count="3"><option value="{{ sz.id }}">{{ sz.label }}</option></sc-for></select></label>
+            <button onClick="{{ msSwap }}" title="Inverser les deux sélections" style="align-self: center; cursor: pointer; border: none; border-radius: 999px; padding: 6px 16px; font-family: var(--font-body); font-size: 14px; background: var(--color-bg); color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-divider);">⇅ Inverser</button>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Sachet à garder</span>
               <select class="input" value="{{ msTgt }}" onChange="{{ setMsTgt }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le sachet à garder…</option><sc-for list="{{ msSacs }}" as="sz" hint-placeholder-count="3"><option value="{{ sz.id }}">{{ sz.label }}</option></sc-for></select></label>
             <button onClick="{{ toggleMsSum }}" aria-pressed="{{ msSum }}" style="align-self: flex-start; cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ msSumBg }}; color: {{ msSumFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">➕ Additionner les quantités (deux vrais sachets réunis)</button>
@@ -3898,6 +3901,7 @@ class Component extends DCLogic {
     if (src && tgt) preview = src.key === tgt.key ? 'Choisissez deux thés différents.' : cnt(src.name) + ' thé(s) du commerce et ' + (dAll[src.name] || []).length + ' variante(s) de « ' + src.name + ' » seront rattachés à « ' + tgt.name + ' » (' + this.families[tgt.fam].name + '). « ' + src.name + ' » sera retiré du catalogue.';
     return { mgTeas: all.map(x => ({ key: x.key, label: x.name + ' — ' + this.families[x.fam].name + ' · ' + cnt(x.name) + ' thé(s) du commerce' })),
       mgSrc: this.state.mgSrc || '', mgTgt: this.state.mgTgt || '', setMgSrc: e => this.setState({ mgSrc: e.target.value, mgMsg: '' }), setMgTgt: e => this.setState({ mgTgt: e.target.value, mgMsg: '' }),
+      mgSwap: () => this.setState(st => ({ mgSrc: st.mgTgt || '', mgTgt: st.mgSrc || '', mgMsg: '' })),
       mgPreview: preview, mgMsg: this.state.mgMsg || '',
       mgRun: () => {
         if (!src || !tgt || src.key === tgt.key) { this.setState({ mgMsg: 'Choisissez le doublon et le thé à garder.' }); return; }
@@ -3936,6 +3940,7 @@ class Component extends DCLogic {
     return { msSacs: sacs.map(o => ({ id: o.id, label: lbl(o) })), msSrc: this.state.msSrc || '', msTgt: this.state.msTgt || '',
       setMsSrc: e => this.setState({ msSrc: e.target.value, msMsg: '' }), setMsTgt: e => this.setState({ msTgt: e.target.value, msMsg: '' }),
       msSum: sum, msSumBg: sum ? 'var(--color-accent)' : 'var(--color-bg)', msSumFg: sum ? '#fff' : 'var(--color-text)', toggleMsSum: () => this.setState({ msSum: !sum }),
+      msSwap: () => this.setState(st => ({ msSrc: st.msTgt || '', msTgt: st.msSrc || '', msMsg: '' })),
       msPreview: preview, msMsg: this.state.msMsg || '', msSugg: sugg, msHasSugg: sugg.length > 0, msNoSugg: !sugg.length,
       msRun: () => {
         if (!src || !tgt || src.id === tgt.id) { this.setState({ msMsg: 'Choisissez le doublon et le sachet à garder.' }); return; }
@@ -3977,6 +3982,7 @@ class Component extends DCLogic {
     if (src && tgt) preview = src.id === tgt.id ? 'Choisissez deux thés différents.' : sacN(src.id) + ' sachet(s) de « ' + (src.nom || src.the) + ' » (et leurs dégustations) passeront sur « ' + (tgt.nom || tgt.the) + ' ». Les tags sont réunis, les infos vides de celui gardé sont complétées, puis le doublon est supprimé.';
     return { mpProds: prods.map(p => ({ id: p.id, label: lbl(p) })), mpSrc: this.state.mpSrc || '', mpTgt: this.state.mpTgt || '',
       setMpSrc: e => this.setState({ mpSrc: e.target.value, mpMsg: '' }), setMpTgt: e => this.setState({ mpTgt: e.target.value, mpMsg: '' }),
+      mpSwap: () => this.setState(st => ({ mpSrc: st.mpTgt || '', mpTgt: st.mpSrc || '', mpMsg: '' })),
       mpPreview: preview, mpMsg: this.state.mpMsg || '', mpSugg: sugg, mpHasSugg: sugg.length > 0, mpNoSugg: !sugg.length,
       mpRun: () => {
         if (!src || !tgt || src.id === tgt.id) { this.setState({ mpMsg: 'Choisissez le doublon et le thé à garder.' }); return; }
