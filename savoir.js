@@ -195,7 +195,7 @@ window.MDT_SAVOIR = {
     // garde le centre de la famille choisie à sa place : elle s'ouvre des deux côtés
     let start = base[si].a0 + base[si].sp / 2 - sp[si] / 2; for (let i = 0; i < si; i++) start -= sp[i];
     let b = start;
-    return W.map((w, i) => { const o = { a0: b, sp: sp[i], e: i === si ? 10 : 0, r1: i === si ? R1 + 8 : R1 - 4, r2: i === si ? R2 + 16 : R2 - 8, op: i === si ? 1 : .38, aop: w.a.map(x => i !== si ? .22 : (!selA || x === selA) ? (x === selA ? 1 : .72) : .45), big: i === si ? 1 : 0 }; b += sp[i]; return o; });
+    return W.map((w, i) => { const o = { a0: b, sp: sp[i], e: i === si ? 10 : 0, r1: i === si ? R1 + 8 : R1 - 4, r2: i === si ? R2 + 16 : R2 - 8, op: i === si ? 1 : .5, aop: w.a.map(x => i !== si ? .3 : (!selA || x === selA) ? (x === selA ? 1 : .72) : .45), big: i === si ? 1 : 0 }; b += sp[i]; return o; });
   }
   const lerp = (x, y, t) => x + (y - x) * t;
   function mix(A, B, t) { return A.map((p, i) => { const q = B[i]; return { a0: lerp(p.a0, q.a0, t), sp: lerp(p.sp, q.sp, t), e: lerp(p.e, q.e, t), r1: lerp(p.r1, q.r1, t), r2: lerp(p.r2, q.r2, t), op: lerp(p.op, q.op, t), aop: p.aop.map((v, k) => lerp(v, q.aop[k], t)), big: lerp(p.big, q.big, t) }; }); }
@@ -204,7 +204,7 @@ window.MDT_SAVOIR = {
     const p = pt(r, ang, e, m); let deg = ((ang * 180 / Math.PI) % 360 + 360) % 360; if (deg > 90 && deg < 270) deg -= 180;
     span.style.left = (p[0] / 5.2).toFixed(2) + '%'; span.style.top = (p[1] / 5.2).toFixed(2) + '%';
     span.style.transform = 'translate(-50%,-50%) rotate(' + deg.toFixed(1) + 'deg)';
-    span.style.fontSize = 'clamp(6.5px,' + (size / 5.2).toFixed(2) + 'cqw,' + size + 'px)';
+    span.style.fontSize = 'clamp(7px,' + (size / 5.2).toFixed(2) + 'cqw,' + (size * 1.4).toFixed(1) + 'px)';
     span.style.opacity = show; if (txt != null && span.textContent !== txt) span.textContent = txt;
   }
   function paint(st, L) {
@@ -213,13 +213,14 @@ window.MDT_SAVOIR = {
       const l = L[i], m = l.a0 + l.sp / 2, el = st.fam[i];
       el.p.setAttribute('d', arc(R0, l.r1, l.a0, l.a0 + l.sp, l.e)); el.p.setAttribute('fill-opacity', l.op.toFixed(2));
       const fs = 11.5 + 2.5 * l.big, need = fs * (w.n.length > 12 ? 1.0 : 1.15);
-      place(el.t, (R0 + l.r1) / 2, m, l.e, m, w.n.length > 12 ? fs - 1.5 : fs, null, l.sp * (R0 + l.r1) / 2 > need ? Math.max(.35, l.op) : 0);
+      place(el.t, (R0 + l.r1) / 2, m, l.e, m, w.n.length > 12 ? fs - 1.5 : fs, null, l.sp * (R0 + l.r1) / 2 > need ? (l.op < .75 ? .8 : 1) : 0); el.t.style.color = l.op < .75 ? '#2b2118' : el.fg;
       w.a.forEach((x, k) => {
         const b0 = l.a0 + l.sp * k / w.a.length, b1 = l.a0 + l.sp * (k + 1) / w.a.length, ae = el.a[k];
         ae.p.setAttribute('d', arc(l.r1, l.r2, b0, b1, l.e)); ae.p.setAttribute('fill-opacity', l.aop[k].toFixed(2));
         const r = (l.r1 + l.r2) / 2 + 3, s = (x.length > 12 ? 9 : 10) + 2 * l.big;
-        place(ae.t, r, (b0 + b1) / 2, l.e, m, s, null, (b1 - b0) * r > s * 1.05 ? (l.op < .6 ? .45 : 1) : 0);
+        place(ae.t, r, (b0 + b1) / 2, l.e, m, s, null, (b1 - b0) * r > s * 1.05 ? (l.op < .75 ? .7 : 1) : 0);
         ae.t.style.fontWeight = x === st.selA ? '800' : l.big > .5 ? '600' : '500';
+        ae.t.style.color = l.aop[k] > .9 && lum(w.c) < .6 ? '#fff' : '#2b2118';
       });
     });
   }
@@ -241,7 +242,7 @@ window.MDT_SAVOIR = {
         const t = mk(w.n, 'sv-lf'); t.style.color = fg; t.style.fontWeight = '700';
         const a = w.a.map(x => { const q = document.createElementNS(NS, 'path'); q.setAttribute('fill', w.c); q.setAttribute('stroke', '#f6efe2'); q.setAttribute('stroke-width', '1.2'); q.setAttribute('class', 'sv-p');
           q.addEventListener('click', () => st.o.onAro(w.k, x)); gA.appendChild(q); const tt = mk(x, 'sv-la'); tt.style.color = '#2b2118'; return { p: q, t: tt }; });
-        st.fam.push({ p: p, t: t, a: a });
+        st.fam.push({ p: p, t: t, a: a, fg: fg });
       });
       const cz = document.createElement('div'); cz.className = 'sv-ctr'; cz.addEventListener('click', () => st.o.onCenter()); el.appendChild(cz); st.cz = cz;
       ctr.addEventListener('click', () => st.o.onCenter());
