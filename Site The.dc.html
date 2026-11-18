@@ -2036,6 +2036,20 @@
             <sc-if value="{{ mpPreview }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 18px; padding: 12px 16px;">{{ mpPreview }}</p></sc-if>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ mpRun }}" style="white-space: nowrap;">🔀 Fusionner</button><sc-if value="{{ mpMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ mpMsg }}</span></sc-if></div>
           </section>
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Fusionner des sachets</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Un sachet saisi deux fois, ou deux sachets du même thé versés dans la même boîte. Les dégustations passent sur le sachet gardé.</p></div>
+            <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Doublons probables (même thé, même propriétaire)</span>
+              <sc-if value="{{ msHasSugg }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ msSugg }}" as="mz" hint-placeholder-count="2"><button onClick="{{ mz.pick }}" style="cursor: pointer; border: none; background: var(--color-bg); border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-divider); text-align: left;">🔀 {{ mz.txt }}</button></sc-for></div></sc-if>
+              <sc-if value="{{ msNoSugg }}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; opacity: .7;">Aucun doublon évident détecté.</span></sc-if>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Sachet en double (sera supprimé)</span>
+              <select class="input" value="{{ msSrc }}" onChange="{{ setMsSrc }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le sachet en double…</option><sc-for list="{{ msSacs }}" as="sz" hint-placeholder-count="3"><option value="{{ sz.id }}">{{ sz.label }}</option></sc-for></select></label>
+            <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Sachet à garder</span>
+              <select class="input" value="{{ msTgt }}" onChange="{{ setMsTgt }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le sachet à garder…</option><sc-for list="{{ msSacs }}" as="sz" hint-placeholder-count="3"><option value="{{ sz.id }}">{{ sz.label }}</option></sc-for></select></label>
+            <button onClick="{{ toggleMsSum }}" aria-pressed="{{ msSum }}" style="align-self: flex-start; cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ msSumBg }}; color: {{ msSumFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">➕ Additionner les quantités (deux vrais sachets réunis)</button>
+            <sc-if value="{{ msPreview }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 18px; padding: 12px 16px;">{{ msPreview }}</p></sc-if>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ msRun }}" style="white-space: nowrap;">🔀 Fusionner les sachets</button><sc-if value="{{ msMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ msMsg }}</span></sc-if></div>
+          </section>
         </sc-if>
         <sc-if value="{{ tabInfOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
@@ -3872,7 +3886,7 @@ class Component extends DCLogic {
   setFriends(list) { this.setOpt('friends', list); }
 
   mergeVals() {
-    if (this.state.addTab !== 'mrg') return { mgTeas: [], mpProds: [], mpSugg: [] };
+    if (this.state.addTab !== 'mrg') return { mgTeas: [], mpProds: [], mpSugg: [], msSacs: [], msSugg: [] };
     const all = [];
     Object.keys(this.families).forEach(k => this.listFor(k, true).forEach(t => all.push({ fam: k, name: t.name, orig: t.orig || t.name, key: k + '|' + (t.orig || t.name) })));
     const a = this.getAdds();
@@ -3896,7 +3910,49 @@ class Component extends DCLogic {
           teas: isAdded ? b.teas.filter(t => !(this.norm(t.nom) === this.norm(src.orig) && t.famille === src.fam)) : b.teas
         }));
         this.setState({ mgSrc: '', mgTgt: '', mgMsg: '« ' + src.name + ' » fusionné dans « ' + tgt.name + ' » (' + n + ' thé(s) du commerce déplacés).' });
-      }, ...this.mergeProdVals() };
+      }, ...this.mergeProdVals(), ...this.mergeSacVals() };
+  }
+
+  // Fusion de deux sachets (saisi deux fois, ou deux sachets du même thé réunis)
+  mergeSacVals() {
+    const a = this.getAdds(); const prodOf = o => a.prods.find(p => p.id === o.prodId) || {};
+    const logN = id => a.logs.filter(l => l.lotId === id).length;
+    const lbl = o => { const p = prodOf(o); return (p.nom || p.the || '?') + ' · ' + (o.owner || '?') + (o.code ? ' · ' + o.code : '') + (o.quantite ? ' · ' + o.quantite + ' g' : '') + (o.achat ? ' · acheté ' + o.achat : '') + ' · ' + logN(o.id) + ' dégust.'; };
+    const sacs = a.sachets.slice().sort((x, y) => lbl(x).localeCompare(lbl(y), 'fr', { sensitivity: 'base' }));
+    const src = a.sachets.find(o => o.id === this.state.msSrc), tgt = a.sachets.find(o => o.id === this.state.msTgt);
+    const sugg = [];
+    for (let i = 0; i < a.sachets.length; i++) for (let j = i + 1; j < a.sachets.length; j++) {
+      const x = a.sachets[i], y = a.sachets[j];
+      if (x.prodId !== y.prodId || x.owner !== y.owner) continue;
+      if (x.lot && y.lot && this.norm(x.lot) !== this.norm(y.lot)) continue;
+      if (x.prodDate && y.prodDate && String(x.prodDate) !== String(y.prodDate)) continue;
+      const keep = logN(y.id) > logN(x.id) ? y : x, drop = keep === x ? y : x;
+      sugg.push({ txt: lbl(drop) + '  →  ' + (keep.code || 'l’autre (' + logN(keep.id) + ' dégust.)'), pick: () => this.setState({ msSrc: drop.id, msTgt: keep.id, msMsg: '' }) });
+    }
+    const sum = !!this.state.msSum;
+    let preview = '';
+    if (src && tgt) preview = src.id === tgt.id ? 'Choisissez deux sachets différents.' : src.prodId !== tgt.prodId ? 'Attention : ce ne sont pas le même thé. ' : '';
+    if (src && tgt && src.id !== tgt.id) preview += logN(src.id) + ' dégustation(s) passeront sur le sachet gardé. ' + (sum ? 'Les quantités sont additionnées (' + ((+src.quantite || 0) + (+tgt.quantite || 0)) + ' g).' : 'La quantité du sachet gardé est conservée (doublon de saisie).') + ' Parts données et historique réunis, infos vides complétées, puis le doublon est supprimé.';
+    return { msSacs: sacs.map(o => ({ id: o.id, label: lbl(o) })), msSrc: this.state.msSrc || '', msTgt: this.state.msTgt || '',
+      setMsSrc: e => this.setState({ msSrc: e.target.value, msMsg: '' }), setMsTgt: e => this.setState({ msTgt: e.target.value, msMsg: '' }),
+      msSum: sum, msSumBg: sum ? 'var(--color-accent)' : 'var(--color-bg)', msSumFg: sum ? '#fff' : 'var(--color-text)', toggleMsSum: () => this.setState({ msSum: !sum }),
+      msPreview: preview, msMsg: this.state.msMsg || '', msSugg: sugg, msHasSugg: sugg.length > 0, msNoSugg: !sugg.length,
+      msRun: () => {
+        if (!src || !tgt || src.id === tgt.id) { this.setState({ msMsg: 'Choisissez le doublon et le sachet à garder.' }); return; }
+        if (!window.confirm('Fusionner ce sachet dans l’autre ? Le doublon sera supprimé.')) return;
+        const b = this.getAdds(); const n = b.logs.filter(l => l.lotId === src.id).length;
+        const empty = v => v == null || v === '' || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
+        const m = Object.assign({}, tgt);
+        Object.keys(src).forEach(k => { if (k !== 'id' && empty(m[k]) && !empty(src[k])) m[k] = src[k]; });
+        m.shares = (tgt.shares || []).concat(src.shares || []);
+        m.history = (tgt.history || []).concat(src.history || []);
+        if (sum) m.quantite = String((+String(src.quantite || 0).replace(',', '.') || 0) + (+String(tgt.quantite || 0).replace(',', '.') || 0));
+        if (tgt.empty && !src.empty) m.empty = false;
+        this.setAdds(Object.assign({}, b, {
+          sachets: b.sachets.filter(o => o.id !== src.id).map(o => o.id === tgt.id ? m : o),
+          logs: b.logs.map(l => l.lotId === src.id ? Object.assign({}, l, { lotId: tgt.id }) : l) }));
+        this.setState({ msSrc: '', msTgt: '', msSum: false, msMsg: 'Sachets fusionnés (' + n + ' dégustation(s) déplacée(s)).' });
+      } };
   }
 
   // Fusion de deux thés du commerce (produits) : sachets, tags et infos réunis sur celui qu'on garde
