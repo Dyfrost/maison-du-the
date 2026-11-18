@@ -1275,6 +1275,7 @@
             <span style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6;"><span class="live-dot" aria-hidden="true" style="display: inline-block; margin-right: 6px;"></span>Séance Gong Fu en cours</span>
             <button onClick="{{ ss.openTea }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; color: var(--color-text);">{{ ss.name }}</button>
             <span style="font-size: 14px; opacity: .8;">{{ ss.setup }}</span>
+            <sc-if value="{{ ss.nez }}" hint-placeholder-val="{{ false }}"><p style="margin: 4px 0 0; font-size: 14.5px; line-height: 1.55; border-left: 3px solid var(--color-accent-300); padding-left: 12px;">👃 {{ ss.nez }}</p></sc-if>
             <span style="font-size: 13px; opacity: .65;">{{ ss.who }} · <button onClick="{{ ss.edit }}" style="cursor: pointer; border: none; background: none; padding: 0; font: inherit; color: var(--color-accent-700); text-decoration: underline;">modifier le setup</button></span>
           </div>
           <section class="sess-card">
@@ -1341,6 +1342,7 @@
           </div>
           <sc-if value="{{ sh.live }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sh.resume }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours</b></span><span style="font-weight: 600; color: var(--color-accent-700);">Reprendre →</span></button></sc-if>
           <sc-if value="{{ sh.hasInfs }}" hint-placeholder-val="{{ false }}"><section class="sess-card"><div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 22px; margin: 0;">⏱ Les infusions</h2><span style="font-size: 13px; opacity: .7;">{{ sh.infsTxt }}</span></div><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ sh.infs }}" as="pl" hint-placeholder-count="3"><span style="border-radius: 14px; padding: 6px 12px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-size: 13.5px; display: flex; flex-direction: column; gap: 1px; max-width: 240px;"><b style="font-weight: 600;">{{ pl.label }}</b><sc-if value="{{ pl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .8;">{{ pl.sub }}</span></sc-if></span></sc-for></div></section></sc-if>
+          <sc-if value="{{ sh.nez }}" hint-placeholder-val="{{ false }}"><section class="sess-card"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">👃 Premières impressions</span><p style="margin: 0; font-size: 16px; line-height: 1.65; white-space: pre-wrap;">{{ sh.nez }}</p></section></sc-if>
           <sc-if value="{{ sh.avis }}" hint-placeholder-val="{{ true }}"><section style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Avis</span><p style="margin: 0; font-size: 18px; line-height: 1.7; white-space: pre-wrap; text-wrap: pretty;">{{ sh.avis }}</p></section></sc-if>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; align-items: start;">
             <section style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
@@ -1706,6 +1708,13 @@
               <input class="input" style="width: 150px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Technique (saisie libre)" value="{{ techExtra }}" onChange="{{ setTechExtra }}">
             </div>
           </section>
+<sc-if value="{{ lfShowNez }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">👃</span>Premières impressions <span style="font-family: var(--font-body); font-size: 13px; opacity: .6;">· facultatif</span></h2>
+            <textarea class="input" rows="3" aria-label="Premières impressions" placeholder="Le nez des feuilles sèches, puis des feuilles réchauffées dans la théière…" defaultValue="{{ lf.nez }}" onInput="{{ setLz.nez }}" key="{{ lfKey }}-nez" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 14px; resize: vertical;"></textarea>
+          </section>
+          </sc-if>
+          <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">⭐</span>Note et avis</h2><span style="font-size: 12px; opacity: .6;">{{ logNoteHint }}</span></div>
             <div style="display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
@@ -1713,6 +1722,7 @@
               <textarea class="input" rows="3" aria-label="Avis" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" defaultValue="{{ lf.avis }}" onInput="{{ setLz.avis }}" key="{{ lfKey }}-avis" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 16px; border-radius: 20px; resize: vertical;"></textarea>
             </div>
           </section>
+          </sc-if>
           <div class="lf-save" style="position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 999px; padding: 8px; box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,.12)); align-self: flex-start;">
             <button class="btn btn-primary" onClick="{{ saveLog }}" style="white-space: nowrap;">{{ saveLogLabel }}</button><sc-if value="{{ editingLog }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ cancelLogEdit }}" style="white-space: nowrap;">Annuler</button></sc-if>
           </div>
@@ -4823,7 +4833,7 @@ class Component extends DCLogic {
     const join = me ? this.joinInfo(l, me) : {};
     const canEdit = !!me && !!this.state.session && this.canEditLog(l, me); const canDel = canEdit && this.norm(l.author || '') === this.norm(me);
     const infs = this.infsOf(l); const totalS = infs.reduce((x, i) => x + (+i.t || 0), 0);
-    return { live: !!l.live, resume: () => this.openSession(l.id), hasInfs: infs.length > 0,
+    return { nez: l.nez || '', live: !!l.live, resume: () => this.openSession(l.id), hasInfs: infs.length > 0,
       infs: infs.map((i, k) => ({ label: '#' + (k + 1) + ' · ' + this.fmtSec(i.t) + (i.temp ? ' · ' + i.temp + (/^\d+$/.test(i.temp) ? '°' : '') : ''), sub: i.note || '', hasSub: !!i.note })),
       infsTxt: infs.length ? infs.length + ' infusion' + (infs.length > 1 ? 's' : '') + ' · ' + this.fmtSec(totalS) + ' d’infusion' + (l.startTs && l.endTs ? ' · séance de ' + this.fmtDur(l.endTs - l.startTs) : '') : '',
       ok: true, missing: false, kicker: l.live ? 'Séance en cours' : kicker, note: l.note || '—', noteFs: String(l.note || '—').length > 3 ? '28px' : '36px', noteSub: isNum, ...this.noteColors(l.note), name: p.nom || p.the || 'Thé', avis: l.avis || '',
@@ -4919,7 +4929,7 @@ class Component extends DCLogic {
       add: commit, addLbl: editIdx != null ? '✓ Mettre à jour l’infusion n° ' + (editIdx + 1) : '＋ Ajouter l’infusion (' + this.fmtSec(sel) + ')',
       delInf: () => { if (editIdx == null) return; this.sessUpdate(l.id, x => { x.infusions = this.infsOf(x).filter((_, k) => k !== editIdx); return x; }); this.setState({ sessEdit: null, sessSel: null, sessNote: '' }); },
       cancelEdit: () => this.setState({ sessEdit: null, sessSel: null, sessNote: '', sessTemp: null }),
-      note: l.note || '', noteColor: this.noteColors(l.note).noteBg,
+      nez: l.nez || '', note: l.note || '', noteColor: this.noteColors(l.note).noteBg,
       setNote: e => { const v = e.target.value; this.sessUpdate(l.id, x => { x.note = v; return x; }); },
       noteDown: () => this.sessUpdate(l.id, x => { const n = parseFloat(String(x.note || '').replace(',', '.')); x.note = String(Math.max(0, (isFinite(n) ? n : 15.5) - 0.5)).replace('.', ','); return x; }),
       noteUp: () => this.sessUpdate(l.id, x => { const n = parseFloat(String(x.note || '').replace(',', '.')); x.note = String(Math.min(20, (isFinite(n) ? n : 14.5) + 0.5)).replace('.', ','); return x; }),
@@ -4932,7 +4942,7 @@ class Component extends DCLogic {
   }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
-    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
+    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
   logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
@@ -6174,6 +6184,7 @@ class Component extends DCLogic {
       resetOpts: () => { if (!window.confirm('Remettre vaisselle, techniques et fréquences par défaut ? (Les comptes sont conservés.)')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { options: { users: this.opts().users } })); },
       isLog: v === 'log',
       isSession: v === 'session', ss: v === 'session' ? this.sessionView(me) : { pills: [], presets: [] },
+      lfShowNez: ((this.state.lfMode || 'full') === 'gong' && !this.state.editLogId) || (!!this.state.editLogId && !!(this.state.lf || {}).nez),
       lfFull: (this.state.lfMode || 'full') === 'full' || !!this.state.editLogId, lfGong: (this.state.lfMode || 'full') === 'gong' && !this.state.editLogId, lfNew: !this.state.editLogId,
       lfModes: [['gong', '🍵', 'Séance Gong Fu', 'Je note le setup, puis chaque infusion au fil de l’eau (minuteur inclus).'], ['full', '📝', 'Dégustation terminée', 'Je saisis tout d’un coup, après coup.']].map(m => { const on = (this.state.lfMode || 'full') === m[0]; return { icon: m[1], label: m[2], desc: m[3], on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', bd: on ? 'var(--color-accent)' : 'var(--color-divider)', pick: () => { try { localStorage.setItem('mdt-lfmode', m[0]); } catch (e) {} this.setState({ lfMode: m[0] }); } }; }),
       liveList: this.liveLogs(me).map(l => { const sa = coll.find(x => x.id === l.lotId) || {}; const n = this.infsOf(l).length; return { name: sa.nom || sa.the || 'Thé', meta: (n ? n + ' infusion' + (n > 1 ? 's' : '') : 'pas encore d’infusion') + (l.startTs ? ' · depuis ' + this.fmtDur(Date.now() - l.startTs) : ''), go: () => this.openSession(l.id) }; }),
@@ -6233,7 +6244,7 @@ class Component extends DCLogic {
       noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
       noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
       lfNoteColor: this.noteColors((this.state.lf || {}).note).noteBg,
-      setLz: ['temps', 'temperature', 'qty', 'repas', 'avis', 'infusion'].reduce((o, k) => { o[k] = this.lazySet('lf', k); return o; }, {}),
+      setLz: ['temps', 'temperature', 'qty', 'repas', 'avis', 'infusion', 'nez'].reduce((o, k) => { o[k] = this.lazySet('lf', k); return o; }, {}),
       setFz: ['prodComment', 'variante', 'nomFour', 'marque', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'lot', 'boutique', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'vNom', 'vTrad', 'vProfil', 'vDesc', 'prodDate', 'annee', 'format'].reduce((o, k) => { o[k] = this.lazySet('form', k); return o; }, {}),
       lfKey: 'lf' + (this.state.lfRev || 0),
       formKey: 'f' + (this.state.formRev || 0),
@@ -6287,7 +6298,7 @@ class Component extends DCLogic {
         }
         const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || mdtToday() });
         if ((this.state.lfMode || 'full') === 'gong') {
-          const now = new Date(); Object.assign(entry, { live: true, infusions: [], temps: '', startTs: Date.now(), heure: entry.heure || (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')) });
+          delete entry.note; delete entry.avis; const now = new Date(); Object.assign(entry, { live: true, infusions: [], temps: '', startTs: Date.now(), heure: entry.heure || (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')) });
           this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
           this.setState({ lotQ: '', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
           this.openSession(entry.id); return;
