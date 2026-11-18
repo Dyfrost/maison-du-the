@@ -73,19 +73,120 @@ window.MDT_SAVOIR = {
   ],
 
   // ---------------------------------------------------------------- Roue des arômes
+  // Inspirée de : T = roues sensorielles du TRES (Taïwan, 2020 ; Su et al., Foods 2021),
+  // G = norme chinoise GB/T 14487-2017 (terminologie de l'évaluation sensorielle du thé),
+  // K = Lee & Chambers (2007), lexique des arômes du thé vert (Kansas State University),
+  // M = vocabulaire courant des dégustateurs (pas de source formelle).
+  srcs: {
+    T: { n: 'TRES (Taïwan)', u: 'https://www.mdpi.com/2304-8158/10/4/836/htm' },
+    G: { n: 'GB/T 14487 (Chine)', u: 'https://www.chinesestandard.net/PDF/English.aspx/GBT14487-2017' },
+    K: { n: 'Lee & Chambers (KSU)', u: 'https://bohrium.dp.tech/paper/arxiv/812655149087457280' },
+    M: { n: 'usage des dégustateurs', u: '' }
+  },
   wheel: [
-    { k: 'floral', n: 'Floral', c: '#d9849b', a: ['Jasmin', 'Orchidée', 'Rose', 'Osmanthus', 'Fleur d’oranger', 'Chèvrefeuille'], h: 'Fleurs blanches, sucrées ou capiteuses. Oolongs légers, thés blancs, dan cong.' },
-    { k: 'fruitfrais', n: 'Fruit frais', c: '#e8a35a', a: ['Pêche', 'Abricot', 'Pomme', 'Poire', 'Agrumes', 'Litchi'], h: 'Fruits juteux. Oolongs de Taïwan, Darjeeling first flush, thés blancs.' },
-    { k: 'fruitsec', n: 'Fruit mûr & sec', c: '#b5674a', a: ['Raisin sec', 'Datte', 'Figue', 'Pruneau', 'Muscat', 'Fruits rouges'], h: 'Fruits confits, cuits ou séchés. Thés noirs, vieux oolongs, shou.' },
-    { k: 'vegetal', n: 'Végétal', c: '#7fa85a', a: ['Herbe coupée', 'Épinard', 'Haricot vert', 'Petits pois', 'Foin', 'Feuille de vigne'], h: 'Vert, frais, herbacé. Thés verts, blancs jeunes, sheng jeune.' },
-    { k: 'marin', n: 'Marin', c: '#5f9ea0', a: ['Iodé', 'Algue', 'Embruns', 'Huître'], h: 'L’océan. Thés verts japonais à la vapeur (sencha, gyokuro).' },
-    { k: 'grille', n: 'Grillé', c: '#a87a4a', a: ['Pain grillé', 'Noisette', 'Châtaigne', 'Riz grillé', 'Café', 'Caramel'], h: 'Ce qui a vu le feu. Yan cha, hojicha, thés jaunes, oolongs torréfiés.' },
-    { k: 'boise', n: 'Boisé', c: '#8a6a4a', a: ['Bois de santal', 'Cèdre', 'Écorce', 'Bois humide', 'Arec'], h: 'Bois sec ou mouillé. Thés sombres, liu bao, vieux sheng.' },
-    { k: 'terreux', n: 'Terreux', c: '#6b5444', a: ['Sous-bois', 'Terre humide', 'Champignon', 'Betterave', 'Cave'], h: 'La forêt après la pluie. Pu’er shou, thés sombres.' },
-    { k: 'sucre', n: 'Sucré', c: '#d9b25a', a: ['Miel', 'Vanille', 'Sucre brun', 'Malt', 'Sirop d’érable'], h: 'Douceurs pâtissières. Thés noirs, thés blancs vieillis, fond de tasse.' },
-    { k: 'lacte', n: 'Lacté', c: '#e6d3a8', a: ['Beurre', 'Lait', 'Crème', 'Maïs doux'], h: 'Rond et gras. Oolongs « milky », thés jaunes.' },
-    { k: 'epice', n: 'Épicé', c: '#c0583e', a: ['Cannelle', 'Poivre', 'Clou de girofle', 'Réglisse', 'Gingembre'], h: 'Le placard à épices. Rou gui, thés noirs, vieux thés.' },
-    { k: 'fume', n: 'Fumé', c: '#5a5450', a: ['Feu de bois', 'Tabac', 'Cuir', 'Encens'], h: 'Fumée et cuir. Lapsang souchong, certains sheng, vieux oolongs.' },
-    { k: 'mineral', n: 'Minéral & frais', c: '#8fa3b0', a: ['Pierre mouillée', 'Camphre', 'Menthol', 'Silex'], h: 'Fraîcheur minérale ou médicinale. Yan cha (yan yun), vieux pu’er (camphre).' }
+    { k: 'floral', n: 'Floral', c: '#d9849b', s: 'TGK', z: '花香 huāxiāng', a: ['Jasmin', 'Orchidée', 'Rose', 'Osmanthus', 'Fleur d’oranger', 'Chèvrefeuille'], h: 'Fleurs blanches, sucrées ou capiteuses. Oolongs légers, Baozhong, thés blancs, dan cong.' },
+    { k: 'fruitfrais', n: 'Fruit frais', c: '#e8a35a', s: 'TGK', z: '果香 guǒxiāng', a: ['Pêche', 'Abricot', 'Pomme', 'Poire', 'Agrumes', 'Litchi'], h: 'Fruits juteux, à peine mûrs. Oolongs de Taïwan, Darjeeling first flush, thés blancs.' },
+    { k: 'fruitmur', n: 'Fruit mûr', c: '#b5674a', s: 'TG', z: '熟果香 · 枣香 zǎoxiāng', a: ['Raisin sec', 'Jujube', 'Figue', 'Pruneau', 'Muscat', 'Fruits rouges'], h: 'Fruits cuits, confits ou séchés. Monte avec l’oxydation : Oriental Beauty, thés noirs, vieux oolongs.' },
+    { k: 'sucre', n: 'Sucré & miel', c: '#d9b25a', s: 'TG', z: '甜香 · 蜜香 mìxiāng', a: ['Miel', 'Caramel', 'Sucre brun', 'Vanille', 'Malt', 'Sirop d’érable'], h: 'Douceurs pâtissières. Le « miel » d’Oriental Beauty, les thés noirs, le fond de tasse.' },
+    { k: 'lacte', n: 'Lacté', c: '#e6d3a8', s: 'M', z: '奶香 nǎixiāng', a: ['Beurre', 'Lait', 'Crème', 'Maïs doux'], h: 'Rond et gras. Oolongs « milky » (jin xuan), thés jaunes.' },
+    { k: 'noix', n: 'Noix & châtaigne', c: '#c28e55', s: 'TGK', z: '栗香 lìxiāng', a: ['Châtaigne', 'Noisette', 'Amande', 'Noix', 'Patate douce'], h: 'Fruits à coque et racines. Thés verts chinois poêlés (栗香), oolongs mi-torréfiés.' },
+    { k: 'grille', n: 'Grillé', c: '#a87a4a', s: 'TGK', z: '火香 · 焦香 jiāoxiāng', a: ['Pain grillé', 'Riz grillé', 'Torréfié', 'Café', 'Cacao', 'Charbon de bois'], h: 'Ce qui a vu le feu. Yan cha, hojicha, oolongs fortement torréfiés.' },
+    { k: 'epice', n: 'Épicé', c: '#c0583e', s: 'T', z: '辛香 xīnxiāng', a: ['Cannelle', 'Poivre', 'Clou de girofle', 'Réglisse', 'Gingembre'], h: 'Le placard à épices. Rou gui, Baozhong, thés noirs, vieux thés.' },
+    { k: 'boise', n: 'Boisé', c: '#8a6a4a', s: 'TGK', z: '木香 · 槟榔香', a: ['Bois sec', 'Cèdre', 'Santal', 'Écorce', 'Arec', 'Bois humide'], h: 'Bois sec ou mouillé. Liu bao (槟榔香, l’arec), vieux sheng, thés sombres.' },
+    { k: 'fume', n: 'Fumé & cuir', c: '#5a5450', s: 'GK', z: '松烟香 sōngyānxiāng', a: ['Fumée de pin', 'Feu de bois', 'Tabac', 'Cuir', 'Encens'], h: 'Fumée et cuir. Lapsang souchong (fumé au pin), certains sheng, vieux oolongs.' },
+    { k: 'vieilli', n: 'Vieilli & terreux', c: '#6b5444', s: 'GK', z: '陈香 · 菌花香 · 樟香', a: ['Sous-bois', 'Terre humide', 'Champignon', 'Cave', 'Fleur dorée', 'Camphre'], h: 'Le temps qui passe. Pu’er shou et vieux sheng (陈香, 樟香 camphre), briques de Fu (菌花香, la « fleur dorée »).' },
+    { k: 'mineral', n: 'Minéral', c: '#8fa3b0', s: 'M', z: '岩韵 yányùn', a: ['Pierre mouillée', 'Silex', 'Menthol'], h: 'Fraîcheur de roche. Le « yan yun » des thés de rocher du Wuyi.' },
+    { k: 'marin', n: 'Marin', c: '#5f9ea0', s: 'GK', z: '海藻香 hǎizǎoxiāng', a: ['Algue', 'Nori', 'Iodé', 'Embruns'], h: 'L’océan. Thés verts à la vapeur : sencha, gyokuro, enshi yulu.' },
+    { k: 'vegetal', n: 'Végétal', c: '#7fa85a', s: 'TK', z: '青香 · 豆香 dòuxiāng', a: ['Herbe coupée', 'Épinard', 'Haricot vert', 'Asperge', 'Petits pois', 'Foin', 'Persil'], h: 'Vert, herbacé, légumineux. Thés verts, blancs jeunes, sheng jeune.' },
+    { k: 'tendre', n: 'Tendre & frais', c: '#b3c77a', s: 'G', z: '毫香 · 嫩香 · 清香', a: ['Bourgeon', 'Pousse tendre', 'Fraîcheur'], h: 'Le parfum des bourgeons duveteux (毫香) et des jeunes pousses (嫩香). Bai hao yin zhen, grands verts printaniers.' }
   ]
 };
+
+// Roue animée (dessinée à la main dans #mdt-wheel, hors moteur de template).
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const C = 260, R0 = 58, R1 = 138, R2 = 232;
+  const lum = h => { const n = parseInt(h.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+  const pt = (r, a, e, m) => [C + r * Math.cos(a) + e * Math.cos(m), C + r * Math.sin(a) + e * Math.sin(m)];
+  function arc(ri, ro, a0, a1, e) {
+    const m = (a0 + a1) / 2, big = a1 - a0 > Math.PI ? 1 : 0, f = v => v.toFixed(1);
+    const p1 = pt(ro, a0, e, m), p2 = pt(ro, a1, e, m), p3 = pt(ri, a1, e, m), p4 = pt(ri, a0, e, m);
+    return 'M' + f(p1[0]) + ' ' + f(p1[1]) + ' A' + ro + ' ' + ro + ' 0 ' + big + ' 1 ' + f(p2[0]) + ' ' + f(p2[1]) + ' L' + f(p3[0]) + ' ' + f(p3[1]) + ' A' + ri + ' ' + ri + ' 0 ' + big + ' 0 ' + f(p4[0]) + ' ' + f(p4[1]) + ' Z';
+  }
+  function layout(W, sel, selA) {
+    const tot = W.reduce((t, w) => t + w.a.length, 0); const base = []; let a = -Math.PI / 2;
+    W.forEach(w => { const sp = 2 * Math.PI * w.a.length / tot; base.push({ a0: a, sp: sp }); a += sp; });
+    const si = W.findIndex(w => w.k === sel);
+    if (si < 0) return W.map((w, i) => ({ a0: base[i].a0, sp: base[i].sp, e: 0, r1: R1, r2: R2, op: 1, aop: w.a.map(() => .62), big: 0 }));
+    const F = 0.36, others = tot - W[si].a.length, ws = F / (1 - F) * others;
+    const tot2 = others + ws; const sp = W.map((w, i) => 2 * Math.PI * (i === si ? ws : w.a.length) / tot2);
+    // garde le centre de la famille choisie à sa place : elle s'ouvre des deux côtés
+    let start = base[si].a0 + base[si].sp / 2 - sp[si] / 2; for (let i = 0; i < si; i++) start -= sp[i];
+    let b = start;
+    return W.map((w, i) => { const o = { a0: b, sp: sp[i], e: i === si ? 10 : 0, r1: i === si ? R1 + 8 : R1 - 4, r2: i === si ? R2 + 16 : R2 - 8, op: i === si ? 1 : .38, aop: w.a.map(x => i !== si ? .22 : (!selA || x === selA) ? (x === selA ? 1 : .72) : .45), big: i === si ? 1 : 0 }; b += sp[i]; return o; });
+  }
+  const lerp = (x, y, t) => x + (y - x) * t;
+  function mix(A, B, t) { return A.map((p, i) => { const q = B[i]; return { a0: lerp(p.a0, q.a0, t), sp: lerp(p.sp, q.sp, t), e: lerp(p.e, q.e, t), r1: lerp(p.r1, q.r1, t), r2: lerp(p.r2, q.r2, t), op: lerp(p.op, q.op, t), aop: p.aop.map((v, k) => lerp(v, q.aop[k], t)), big: lerp(p.big, q.big, t) }; }); }
+  const ease = t => { const c1 = 1.25, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
+  function place(span, r, ang, e, m, size, txt, show) {
+    const p = pt(r, ang, e, m); let deg = ((ang * 180 / Math.PI) % 360 + 360) % 360; if (deg > 90 && deg < 270) deg -= 180;
+    span.style.left = (p[0] / 5.2).toFixed(2) + '%'; span.style.top = (p[1] / 5.2).toFixed(2) + '%';
+    span.style.transform = 'translate(-50%,-50%) rotate(' + deg.toFixed(1) + 'deg)';
+    span.style.fontSize = 'clamp(6.5px,' + (size / 5.2).toFixed(2) + 'cqw,' + size + 'px)';
+    span.style.opacity = show; if (txt != null && span.textContent !== txt) span.textContent = txt;
+  }
+  function paint(st, L) {
+    const W = st.W;
+    W.forEach((w, i) => {
+      const l = L[i], m = l.a0 + l.sp / 2, el = st.fam[i];
+      el.p.setAttribute('d', arc(R0, l.r1, l.a0, l.a0 + l.sp, l.e)); el.p.setAttribute('fill-opacity', l.op.toFixed(2));
+      const fs = 11.5 + 2.5 * l.big, need = fs * (w.n.length > 12 ? 1.0 : 1.15);
+      place(el.t, (R0 + l.r1) / 2, m, l.e, m, w.n.length > 12 ? fs - 1.5 : fs, null, l.sp * (R0 + l.r1) / 2 > need ? Math.max(.35, l.op) : 0);
+      w.a.forEach((x, k) => {
+        const b0 = l.a0 + l.sp * k / w.a.length, b1 = l.a0 + l.sp * (k + 1) / w.a.length, ae = el.a[k];
+        ae.p.setAttribute('d', arc(l.r1, l.r2, b0, b1, l.e)); ae.p.setAttribute('fill-opacity', l.aop[k].toFixed(2));
+        const r = (l.r1 + l.r2) / 2 + 3, s = (x.length > 12 ? 9 : 10) + 2 * l.big;
+        place(ae.t, r, (b0 + b1) / 2, l.e, m, s, null, (b1 - b0) * r > s * 1.05 ? (l.op < .6 ? .45 : 1) : 0);
+        ae.t.style.fontWeight = x === st.selA ? '800' : l.big > .5 ? '600' : '500';
+      });
+    });
+  }
+  window.mdtWheel = function (el, o) {
+    if (!el) return; const W = (window.MDT_SAVOIR || {}).wheel || [];
+    let st = el._mdtw;
+    if (!st || st.W !== W) {
+      el.innerHTML = ''; const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', '0 0 520 520'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Roue des arômes du thé');
+      svg.style.cssText = 'width:100%;height:auto;display:block;overflow:visible;';
+      const gA = document.createElementNS(NS, 'g'), gF = document.createElementNS(NS, 'g'); svg.appendChild(gA); svg.appendChild(gF);
+      const ctr = document.createElementNS(NS, 'circle'); ctr.setAttribute('cx', C); ctr.setAttribute('cy', C); ctr.setAttribute('r', R0 - 2); ctr.setAttribute('fill', '#f6efe2'); ctr.style.cursor = 'pointer'; svg.appendChild(ctr);
+      el.appendChild(svg);
+      st = el._mdtw = { W: W, fam: [], sel: null, selA: null, L: null, o: o };
+      const mk = (txt, cls) => { const s = document.createElement('span'); s.className = 'sv-lbl ' + cls; s.textContent = txt; el.appendChild(s); return s; };
+      W.forEach((w, i) => {
+        const fg = lum(w.c) > .72 ? '#2b2118' : '#fff';
+        const p = document.createElementNS(NS, 'path'); p.setAttribute('fill', w.c); p.setAttribute('stroke', '#f6efe2'); p.setAttribute('stroke-width', '2'); p.setAttribute('class', 'sv-p');
+        p.addEventListener('click', () => st.o.onFam(w.k)); gF.appendChild(p);
+        const t = mk(w.n, 'sv-lf'); t.style.color = fg; t.style.fontWeight = '700';
+        const a = w.a.map(x => { const q = document.createElementNS(NS, 'path'); q.setAttribute('fill', w.c); q.setAttribute('stroke', '#f6efe2'); q.setAttribute('stroke-width', '1.2'); q.setAttribute('class', 'sv-p');
+          q.addEventListener('click', () => st.o.onAro(w.k, x)); gA.appendChild(q); const tt = mk(x, 'sv-la'); tt.style.color = '#2b2118'; return { p: q, t: tt }; });
+        st.fam.push({ p: p, t: t, a: a });
+      });
+      const cz = document.createElement('div'); cz.className = 'sv-ctr'; cz.addEventListener('click', () => st.o.onCenter()); el.appendChild(cz); st.cz = cz;
+      ctr.addEventListener('click', () => st.o.onCenter());
+    }
+    st.o = o;
+    const sel = o.sel || '', selA = o.selA || '';
+    const w = W.find(z => z.k === sel);
+    const html = w ? '<b style="color:' + w.c + '">' + w.n + '</b><small>' + (w.z || '') + '</small>' : '<b>Arômes</b><small>du thé</small>';
+    if (st.cz.innerHTML !== html) st.cz.innerHTML = html;
+    st.cz.style.cursor = w ? 'pointer' : 'default';
+    if (st.L && st.sel === sel && st.selA === selA) return;
+    const target = layout(W, sel, selA); const from = st.L || layout(W, '', '');
+    st.sel = sel; st.selA = selA; cancelAnimationFrame(st.raf);
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!st.L || reduce) { st.L = target; paint(st, target); return; }
+    const t0 = performance.now(), D = 560;
+    const step = now => { const t = Math.min(1, (now - t0) / D); st.L = mix(from, target, ease(t)); paint(st, st.L); if (t < 1) st.raf = requestAnimationFrame(step); else st.L = target; };
+    st.raf = requestAnimationFrame(step);
+  };
+})();
