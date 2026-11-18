@@ -115,6 +115,15 @@
   .tp-card-sub { font-size: 11.5px; opacity: .72; line-height: 1.3; }
   .tp-help { margin: 2px 2px 0; font-size: 11.5px; opacity: .6; line-height: 1.4; }
   @media (max-width: 860px) { .tp-wrap { grid-template-columns: 1fr; } .tp-team { max-height: none; } }
+  .live-banner { cursor: pointer; display: flex; align-items: center; gap: 12px; text-align: left; border: 2px solid var(--color-accent); background: var(--color-accent-100); border-radius: 20px; padding: 12px 16px; color: var(--color-text); font-family: var(--font-body); }
+  .live-dot { width: 10px; height: 10px; border-radius: 50%; background: #c4452e; flex: none; animation: livePulse 1.4s ease-in-out infinite; }
+  @keyframes livePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(196,69,46,.5); } 50% { box-shadow: 0 0 0 6px rgba(196,69,46,0); } }
+  .sess-card { background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .sess-timer { display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--color-bg); border-radius: 22px; padding: 16px; }
+  .sess-clock { font-family: ui-monospace, Menlo, monospace; font-size: 54px; font-weight: 700; letter-spacing: .02em; line-height: 1; }
+  .sess-bar { width: 100%; max-width: 420px; height: 8px; border-radius: 99px; background: var(--color-neutral-300); overflow: hidden; }
+  .sess-bar i { display: block; height: 100%; width: 0%; background: var(--color-accent); border-radius: 99px; transition: width .2s linear; }
+  @media (max-width: 560px) { .sess-extra { grid-template-columns: 1fr 96px !important; } .sess-clock { font-size: 46px; } }
   .glist { display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 3px; column-gap: 14px; width: 100%; font-size: 13.5px; line-height: 1.5; }
   .glist .gl { border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 13.5px; color: var(--color-text); white-space: nowrap; }
   .glist button.gl { cursor: pointer; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px; }
@@ -303,6 +312,7 @@
         <sc-if value="{{ dash }}" hint-placeholder-val="{{ false }}">
         <section class="dash" style="display: flex; flex-direction: column; gap: 18px;">
           <div><h1 style="font-size: 48px; margin: 0 0 6px;">{{ dashHello }}</h1><p style="font-size: 17px; opacity: .72; margin: 0;">{{ dashSub }}</p></div>
+          <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{ liveList }}" as="lv" hint-placeholder-count="1"><button onClick="{{ lv.go }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours : {{ lv.name }}</b><span style="font-size: 13px; opacity: .75;">{{ lv.meta }}</span></span><span style="font-weight: 600; white-space: nowrap; color: var(--color-accent-700);">Reprendre →</span></button></sc-for></div></sc-if>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; font-size: 16px; padding: 14px 22px;">☕ Nouvelle dégustation</button>
             <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
@@ -1257,6 +1267,57 @@
       </article>
     </sc-if>
 
+    <sc-if value="{{ isSession }}" hint-placeholder-val="{{ false }}">
+      <article style="display: flex; flex-direction: column; gap: 16px; animation: fadeUp .45s ease both;">
+        <sc-if value="{{ ss.missing }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px;">Cette séance n’existe plus.</p></sc-if>
+        <sc-if value="{{ ss.ok }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6;"><span class="live-dot" aria-hidden="true" style="display: inline-block; margin-right: 6px;"></span>Séance Gong Fu en cours</span>
+            <button onClick="{{ ss.openTea }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; color: var(--color-text);">{{ ss.name }}</button>
+            <span style="font-size: 14px; opacity: .8;">{{ ss.setup }}</span>
+            <span style="font-size: 13px; opacity: .65;">{{ ss.who }} · <button onClick="{{ ss.edit }}" style="cursor: pointer; border: none; background: none; padding: 0; font: inherit; color: var(--color-accent-700); text-decoration: underline;">modifier le setup</button></span>
+          </div>
+          <section class="sess-card">
+            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 22px; margin: 0;">Infusions</h2><span style="font-size: 13px; opacity: .7;">{{ ss.totalTxt }}</span></div>
+            <sc-if value="{{ ss.hasPills }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ ss.pills }}" as="pl" hint-placeholder-count="3"><button onClick="{{ pl.pick }}" title="Cliquer pour modifier" style="cursor: pointer; border: none; border-radius: 14px; padding: 6px 12px; background: {{ pl.bg }}; color: {{ pl.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); font-size: 13.5px; text-align: left; display: flex; flex-direction: column; gap: 1px; max-width: 220px;"><b style="font-weight: 600;">{{ pl.label }}</b><sc-if value="{{ pl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ pl.sub }}</span></sc-if></button></sc-for></div></sc-if>
+          </section>
+          <section class="sess-card">
+            <h2 style="font-size: 22px; margin: 0;">{{ ss.num }}</h2>
+            <sc-if value="{{ ss.hasSugg }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ ss.suggPick }}" style="align-self: flex-start; white-space: nowrap; background: var(--color-bg);">{{ ss.suggLbl }}</button></sc-if>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ ss.presets }}" as="pr" hint-placeholder-count="8"><button onClick="{{ pr.pick }}" aria-pressed="{{ pr.on }}" style="cursor: pointer; min-width: 58px; border: none; border-radius: 999px; padding: 8px 12px; background: {{ pr.bg }}; color: {{ pr.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); font-size: 14px; font-weight: 600;">{{ pr.label }}</button></sc-for>
+              <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px;"><input class="input" inputMode="numeric" value="{{ ss.custom }}" onInput="{{ ss.setCustom }}" placeholder="perso" aria-label="Temps personnalisé en secondes" style="width: 84px; padding: 8px 12px; background: var(--color-bg);">s</label></div>
+            <div class="sess-timer">
+              <span id="mdt-timer-txt" class="sess-clock" aria-live="polite"></span>
+              <div class="sess-bar"><i id="mdt-timer-bar"></i></div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                <sc-if value="{{ ss.tmIdle }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ ss.start }}" style="white-space: nowrap; background: var(--color-bg);">{{ ss.startLbl }}</button></sc-if>
+                <sc-if value="{{ ss.tmRun }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ ss.pause }}" style="white-space: nowrap; background: var(--color-bg);">⏸ Pause</button></sc-if>
+                <sc-if value="{{ ss.tmPaused }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ ss.reset }}" style="white-space: nowrap;">↺ Remettre à zéro</button></sc-if>
+                <sc-if value="{{ ss.tmRun }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ ss.reset }}" style="white-space: nowrap;">↺ Arrêter</button></sc-if>
+              </div>
+              <sc-if value="{{ ss.tmDone }}" hint-placeholder-val="{{ false }}"><span style="font-weight: 600; color: var(--color-accent-700);">⏰ C’est infusé ! Versez, puis ajoutez l’infusion.</span></sc-if>
+            </div>
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) 130px; gap: 10px;" class="sess-extra">
+              <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Note rapide sur cette infusion (facultatif)<input class="input" value="{{ ss.infNote }}" onInput="{{ ss.setInfNote }}" placeholder="ex : plus fruité, un peu astringent" style="padding: 9px 12px; background: var(--color-bg);"></label>
+              <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Température<input class="input" value="{{ ss.infTemp }}" onInput="{{ ss.setInfTemp }}" inputMode="numeric" placeholder="°C" style="padding: 9px 12px; background: var(--color-bg);"></label>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <button class="btn btn-primary" onClick="{{ ss.add }}" style="white-space: nowrap;">{{ ss.addLbl }}</button>
+              <sc-if value="{{ ss.editing }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ ss.cancelEdit }}" style="white-space: nowrap;">Annuler</button><button class="btn btn-ghost" onClick="{{ ss.delInf }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer cette infusion</button></sc-if>
+            </div>
+          </section>
+          <section class="sess-card">
+            <h2 style="font-size: 22px; margin: 0;">Note et avis <span style="font-size: 13px; font-family: var(--font-body); opacity: .6;">· modifiables à tout moment</span></h2>
+            <div style="display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
+              <div style="display: flex; align-items: center; gap: 6px;"><button type="button" onClick="{{ ss.noteDown }}" aria-label="Baisser la note" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">−</button><input class="input" aria-label="Note sur 20" value="{{ ss.note }}" onChange="{{ ss.setNote }}" inputMode="decimal" placeholder="—" style="width: 100%; min-width: 0; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 8px; text-align: center; color: {{ ss.noteColor }}; background: var(--color-bg);"><button type="button" onClick="{{ ss.noteUp }}" aria-label="Monter la note" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">+</button></div>
+              <textarea class="input" rows="4" aria-label="Avis de la séance" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" defaultValue="{{ ss.avis }}" onInput="{{ ss.setAvis }}" onBlur="{{ ss.flushAvis }}" key="{{ ss.avisKey }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 14px; background: var(--color-bg); resize: vertical;"></textarea>
+            </div>
+          </section>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ ss.finish }}" style="white-space: nowrap;">✓ Terminer la dégustation</button><span style="font-size: 13px; opacity: .65; align-self: center;">Tout est déjà enregistré au fur et à mesure : vous pouvez quitter et revenir via « Reprendre ».</span></div>
+        </sc-if>
+      </article>
+    </sc-if>
+
     <sc-if value="{{ isSharedLog }}" hint-placeholder-val="{{ false }}">
       <article style="display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both;">
         <span style="font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .6;">{{ sh.kicker }}</span>
@@ -1278,6 +1339,8 @@
             <sc-if value="{{ sh.canEdit }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sh.edit }}" style="white-space: nowrap;">Modifier</button></sc-if><sc-if value="{{ sh.canDel }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sh.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></sc-if>
             <sc-if value="{{ sh.canJoin }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sh.toggleJoin }}" style="white-space: nowrap;">{{ sh.joinTxt }}</button></sc-if>
           </div>
+          <sc-if value="{{ sh.live }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sh.resume }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours</b></span><span style="font-weight: 600; color: var(--color-accent-700);">Reprendre →</span></button></sc-if>
+          <sc-if value="{{ sh.hasInfs }}" hint-placeholder-val="{{ false }}"><section class="sess-card"><div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 22px; margin: 0;">⏱ Les infusions</h2><span style="font-size: 13px; opacity: .7;">{{ sh.infsTxt }}</span></div><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ sh.infs }}" as="pl" hint-placeholder-count="3"><span style="border-radius: 14px; padding: 6px 12px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-size: 13.5px; display: flex; flex-direction: column; gap: 1px; max-width: 240px;"><b style="font-weight: 600;">{{ pl.label }}</b><sc-if value="{{ pl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .8;">{{ pl.sub }}</span></sc-if></span></sc-for></div></section></sc-if>
           <sc-if value="{{ sh.avis }}" hint-placeholder-val="{{ true }}"><section style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Avis</span><p style="margin: 0; font-size: 18px; line-height: 1.7; white-space: pre-wrap; text-wrap: pretty;">{{ sh.avis }}</p></section></sc-if>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; align-items: start;">
             <section style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
@@ -1585,7 +1648,8 @@
       <div style="display: flex; flex-direction: column; gap: 24px; animation: fadeUp .45s ease both;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <h1 style="font-size: 46px; margin: 0;">{{ logTitle }}</h1>
-          
+          <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{ liveList }}" as="lv" hint-placeholder-count="1"><button onClick="{{ lv.go }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours : {{ lv.name }}</b><span style="font-size: 13px; opacity: .75;">{{ lv.meta }}</span></span><span style="font-weight: 600; white-space: nowrap; color: var(--color-accent-700);">Reprendre →</span></button></sc-for></div></sc-if>
+          <sc-if value="{{ lfNew }}" hint-placeholder-val="{{ true }}"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;"><sc-for list="{{ lfModes }}" as="md" hint-placeholder-count="2"><button onClick="{{ md.pick }}" aria-pressed="{{ md.on }}" style="cursor: pointer; text-align: left; border: 2px solid {{ md.bd }}; background: {{ md.bg }}; border-radius: 20px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; color: var(--color-text); font-family: var(--font-body);"><span aria-hidden="true" style="font-size: 26px;">{{ md.icon }}</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">{{ md.label }}</b><span style="font-size: 13px; opacity: .75;">{{ md.desc }}</span></span></button></sc-for></div></sc-if>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
@@ -1630,7 +1694,7 @@
               </sc-if>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" defaultValue="{{ lf.temps }}" onInput="{{ setLz.temps }}" key="{{ lfKey }}-temps"></label>
+              <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" defaultValue="{{ lf.temps }}" onInput="{{ setLz.temps }}" key="{{ lfKey }}-temps"></label></sc-if>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" defaultValue="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature"></label>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" defaultValue="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal"></label>
               
@@ -3282,6 +3346,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     window.__mdtApp = this;
+    try { const lm = localStorage.getItem('mdt-lfmode'); if (lm) this.setState({ lfMode: lm }); } catch (e) {}
     const origSet = this.setState.bind(this);
     this.setState = (u, cb) => origSet(prev => {
       const dr = this._draft;
@@ -4757,7 +4822,11 @@ class Component extends DCLogic {
     const tea = [['Thé du catalogue', p.the], ['Variante', p.variante], ['Famille', fk ? this.families[fk].name : ''], ['Origine', cat ? (cat.origin || cat.pays || '') : ''], ['Moyenne de ce thé', pst.n ? this.avgTxt(pst) + ' (' + pst.n + ')' : '']].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const join = me ? this.joinInfo(l, me) : {};
     const canEdit = !!me && !!this.state.session && this.canEditLog(l, me); const canDel = canEdit && this.norm(l.author || '') === this.norm(me);
-    return { ok: true, missing: false, kicker: kicker, note: l.note || '—', noteFs: String(l.note || '—').length > 3 ? '28px' : '36px', noteSub: isNum, ...this.noteColors(l.note), name: p.nom || p.the || 'Thé', avis: l.avis || '',
+    const infs = this.infsOf(l); const totalS = infs.reduce((x, i) => x + (+i.t || 0), 0);
+    return { live: !!l.live, resume: () => this.openSession(l.id), hasInfs: infs.length > 0,
+      infs: infs.map((i, k) => ({ label: '#' + (k + 1) + ' · ' + this.fmtSec(i.t) + (i.temp ? ' · ' + i.temp + (/^\d+$/.test(i.temp) ? '°' : '') : ''), sub: i.note || '', hasSub: !!i.note })),
+      infsTxt: infs.length ? infs.length + ' infusion' + (infs.length > 1 ? 's' : '') + ' · ' + this.fmtSec(totalS) + ' d’infusion' + (l.startTs && l.endTs ? ' · séance de ' + this.fmtDur(l.endTs - l.startTs) : '') : '',
+      ok: true, missing: false, kicker: l.live ? 'Séance en cours' : kicker, note: l.note || '—', noteFs: String(l.note || '—').length > 3 ? '28px' : '36px', noteSub: isNum, ...this.noteColors(l.note), name: p.nom || p.the || 'Thé', avis: l.avis || '',
       cat: p.the || '', fam: fk ? this.families[fk].name : '',
       openCat: () => { if (p.the) this.openCatTea(p.the); }, openFam: () => { if (fk) this.openFamily(fk); },
       meta: [l.author ? (l.author + ((l.with || []).length ? ' avec ' + l.with.join(', ') : '')) : '', l.date ? 'le ' + this.fmtDate(l.date) : '', l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' · '),
@@ -4774,12 +4843,99 @@ class Component extends DCLogic {
 
   stop(fn) { return e => { if (e && e.stopPropagation) e.stopPropagation(); fn(); }; }
 
+  // ---------- Séances Gong Fu (dégustation en direct) ----------
+  fmtSec(sec) { sec = Math.max(0, Math.round(+sec || 0)); if (sec < 60) return sec + ' s'; const m = Math.floor(sec / 60), r = sec % 60; return m + ' min' + (r ? ' ' + String(r).padStart(2, '0') : ''); }
+  fmtDur(ms) { const m = Math.round(ms / 60000); if (m < 60) return m + ' min'; return Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0'); }
+  infsOf(l) { return Array.isArray(l.infusions) ? l.infusions : []; }
+  liveLogs(me) { return me ? this.getAdds().logs.filter(l => l.live && (l.author === me || (l.with || []).indexOf(me) >= 0)) : []; }
+  openSession(id) { if (this.state.sessionId === id && this._tm) { this.setState({ view: 'session' }); return; } this.stopTimer(true); this.setState({ view: 'session', sessionId: id, sessSel: null, sessCustom: '', sessEdit: null, sessNote: '', sessTemp: null, tmDone: false, tmRun: false }); try { window.scrollTo(0, 0); } catch (e) {} }
+  sessUpdate(id, fn) { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => { if (x.id !== id) return x; const y = fn(Object.assign({}, x)); if (Array.isArray(y.infusions)) y.temps = y.infusions.map(i => i.t).join('/'); return y; }) })); }
+  beep() {
+    try { const C = window.AudioContext || window.webkitAudioContext; const ctx = this._actx || (this._actx = new C());
+      [0, 0.28, 0.56].forEach(t0 => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = 880; o.connect(g); g.connect(ctx.destination); const t = ctx.currentTime + t0; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.35, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22); o.start(t); o.stop(t + 0.25); });
+    } catch (e) {}
+    try { if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]); } catch (e) {}
+  }
+  paintTimer() {
+    const tm = this._tm; const el = document.getElementById('mdt-timer-txt'); const bar = document.getElementById('mdt-timer-bar');
+    if (!tm) { if (el) el.textContent = this.fmtClock(this.state.sessSelCur || 0); if (bar) bar.style.width = '0%'; return; }
+    const left = tm.running ? Math.max(0, (tm.endAt - Date.now()) / 1000) : tm.left;
+    if (el) el.textContent = this.fmtClock(Math.ceil(left));
+    if (bar) bar.style.width = (100 - left / tm.dur * 100) + '%';
+    if (tm.running && left <= 0) { tm.running = false; tm.left = 0; clearInterval(this._tmI); this.beep(); this.releaseWake(); this.setState({ tmDone: true, tmRun: false }); }
+  }
+  fmtClock(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+  startTimer(sec) {
+    if (!(sec > 0)) return;
+    const tm = this._tm && !this._tm.running && this._tm.left > 0 && this._tm.dur === sec ? this._tm : { dur: sec, left: sec };
+    tm.running = true; tm.endAt = Date.now() + tm.left * 1000; this._tm = tm;
+    clearInterval(this._tmI); this._tmI = setInterval(() => this.paintTimer(), 200);
+    try { if (navigator.wakeLock && !this._wake) navigator.wakeLock.request('screen').then(w => { this._wake = w; }).catch(() => {}); } catch (e) {}
+    try { const C = window.AudioContext || window.webkitAudioContext; this._actx = this._actx || new C(); if (this._actx.state === 'suspended') this._actx.resume(); } catch (e) {}
+    this.setState({ tmRun: true, tmDone: false }); setTimeout(() => this.paintTimer(), 0);
+  }
+  pauseTimer() { const tm = this._tm; if (!tm || !tm.running) return; tm.left = Math.max(0, (tm.endAt - Date.now()) / 1000); tm.running = false; clearInterval(this._tmI); this.releaseWake(); this.setState({ tmRun: false }); setTimeout(() => this.paintTimer(), 0); }
+  stopTimer(silent) { clearInterval(this._tmI); this._tm = null; this.releaseWake(); if (!silent) { this.setState({ tmRun: false, tmDone: false }); setTimeout(() => this.paintTimer(), 0); } }
+  releaseWake() { try { if (this._wake) { this._wake.release(); this._wake = null; } } catch (e) {} }
+  sessionView(me) {
+    const a = this.getAdds(); const l = a.logs.find(x => x.id === this.state.sessionId);
+    if (!l) return { ok: false, missing: true, pills: [], presets: [] };
+    const sa = this.collection().find(x => x.id === l.lotId) || {}; const p = a.prods.find(x => x.id === sa.prodId) || {};
+    const infs = this.infsOf(l); const last = infs[infs.length - 1];
+    const sugg = last ? last.t + 5 : 10;
+    const editIdx = this.state.sessEdit;
+    const sel = this.state.sessSel != null ? this.state.sessSel : (editIdx != null && infs[editIdx] ? infs[editIdx].t : sugg);
+    this.state.sessSelCur = sel; requestAnimationFrame(() => this.paintTimer());
+    const pick = t => { if (this._tm && !this._tm.running) this._tm = null; this.setState({ sessSel: t, sessCustom: '', tmDone: false }); setTimeout(() => this.paintTimer(), 0); };
+    const baseTemp = l.temperature || '';
+    const curTemp = this.state.sessTemp != null ? this.state.sessTemp : (editIdx != null && infs[editIdx] ? (infs[editIdx].temp || baseTemp) : (last && last.temp ? last.temp : baseTemp));
+    const total = infs.reduce((x, i) => x + (+i.t || 0), 0);
+    const canEdit = this.canEditLog(l, me);
+    const gearTxt = this.logGears(l).map(g => this.gearCat(g)[1] + ' ' + g.name).concat(this.logGearRest(l) ? [this.logGearRest(l)] : []).join(' · ');
+    const commit = () => {
+      const t = Math.round(sel); if (!(t > 0)) return;
+      const note = String(this.state.sessNote || '').trim(); const tp = String(curTemp || '').trim();
+      const inf = { t: t, ts: Date.now() }; if (note) inf.note = note; if (tp && tp !== String(baseTemp)) inf.temp = tp;
+      this.sessUpdate(l.id, x => { const arr = this.infsOf(x).slice(); if (editIdx != null && arr[editIdx]) arr[editIdx] = Object.assign({}, arr[editIdx], inf, { ts: arr[editIdx].ts }); else arr.push(inf); x.infusions = arr; return x; });
+      this.stopTimer(true); this.setState({ sessSel: null, sessCustom: '', sessNote: '', sessTemp: null, sessEdit: null, tmDone: false, tmRun: false }); setTimeout(() => this.paintTimer(), 0);
+    };
+    return { ok: true, missing: false, canEdit: canEdit, name: p.nom || p.the || 'Thé', openTea: () => { if (p.id) this.openProd(p.id); },
+      setup: [gearTxt, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty ? l.qty + (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? ' g' : '') : '', l.technique].filter(Boolean).join(' · ') || 'Pas de setup noté',
+      who: [l.author + ((l.with || []).length ? ' avec ' + l.with.join(', ') : ''), l.startTs ? 'depuis ' + this.fmtDur(Date.now() - l.startTs) : ''].filter(Boolean).join(' · '),
+      num: editIdx != null ? 'Modifier l’infusion n° ' + (editIdx + 1) : 'Infusion n° ' + (infs.length + 1),
+      hasPills: infs.length > 0, totalTxt: infs.length ? infs.length + ' infusion' + (infs.length > 1 ? 's' : '') + ' · ' + this.fmtSec(total) + ' au total' : 'Aucune infusion pour l’instant',
+      pills: infs.map((i, k) => ({ label: '#' + (k + 1) + ' · ' + this.fmtSec(i.t) + (i.temp ? ' · ' + i.temp + (/^\d+$/.test(i.temp) ? '°' : '') : ''), sub: i.note || '', hasSub: !!i.note, bg: k === editIdx ? 'var(--color-accent)' : 'var(--color-bg)', fg: k === editIdx ? '#fff' : 'var(--color-text)',
+        pick: () => { if (!canEdit) return; this.stopTimer(true); this.setState({ sessEdit: k === editIdx ? null : k, sessSel: null, sessNote: k === editIdx ? '' : (i.note || ''), sessTemp: null, tmDone: false }); setTimeout(() => this.paintTimer(), 0); } })),
+      presets: [5, 10, 15, 20, 25, 30, 40, 50, 60, 90, 120, 180].map(t => ({ label: this.fmtSec(t), on: t === sel, bg: t === sel ? 'var(--color-accent)' : 'var(--color-bg)', fg: t === sel ? '#fff' : 'var(--color-text)', pick: () => pick(t) })),
+      hasSugg: !!last && editIdx == null, suggLbl: '↻ Comme la dernière +5 s (' + this.fmtSec(sugg) + ')', suggPick: () => pick(sugg),
+      custom: this.state.sessCustom || '', setCustom: e => { const v = e.target.value.replace(/[^\d]/g, ''); this.setState({ sessCustom: v, sessSel: v ? +v : null, tmDone: false }); if (this._tm && !this._tm.running) this._tm = null; setTimeout(() => this.paintTimer(), 0); },
+      selTxt: this.fmtSec(sel), clock: this.fmtClock(this._tm ? (this._tm.running ? (this._tm.endAt - Date.now()) / 1000 : this._tm.left) : sel),
+      tmRun: !!this.state.tmRun, tmIdle: !this.state.tmRun, tmDone: !!this.state.tmDone, tmPaused: !this.state.tmRun && !!this._tm && this._tm.left > 0 && this._tm.left < this._tm.dur,
+      start: () => this.startTimer(sel), pause: () => this.pauseTimer(), reset: () => this.stopTimer(),
+      startLbl: this._tm && !this.state.tmRun && this._tm.left > 0 && this._tm.left < this._tm.dur ? '▶ Reprendre' : '▶ Lancer le minuteur (' + this.fmtSec(sel) + ')',
+      infNote: this.state.sessNote || '', setInfNote: e => this.setState({ sessNote: e.target.value }),
+      infTemp: curTemp, setInfTemp: e => this.setState({ sessTemp: e.target.value }),
+      editing: editIdx != null, notEditing: editIdx == null,
+      add: commit, addLbl: editIdx != null ? '✓ Mettre à jour l’infusion n° ' + (editIdx + 1) : '＋ Ajouter l’infusion (' + this.fmtSec(sel) + ')',
+      delInf: () => { if (editIdx == null) return; this.sessUpdate(l.id, x => { x.infusions = this.infsOf(x).filter((_, k) => k !== editIdx); return x; }); this.setState({ sessEdit: null, sessSel: null, sessNote: '' }); },
+      cancelEdit: () => this.setState({ sessEdit: null, sessSel: null, sessNote: '', sessTemp: null }),
+      note: l.note || '', noteColor: this.noteColors(l.note).noteBg,
+      setNote: e => { const v = e.target.value; this.sessUpdate(l.id, x => { x.note = v; return x; }); },
+      noteDown: () => this.sessUpdate(l.id, x => { const n = parseFloat(String(x.note || '').replace(',', '.')); x.note = String(Math.max(0, (isFinite(n) ? n : 15.5) - 0.5)).replace('.', ','); return x; }),
+      noteUp: () => this.sessUpdate(l.id, x => { const n = parseFloat(String(x.note || '').replace(',', '.')); x.note = String(Math.min(20, (isFinite(n) ? n : 14.5) + 0.5)).replace('.', ','); return x; }),
+      avis: l.avis || '', avisKey: 'av-' + l.id,
+      setAvis: e => { const v = e.target.value; clearTimeout(this._avT); this._avT = setTimeout(() => this.sessUpdate(l.id, x => { x.avis = v; return x; }), 700); },
+      flushAvis: e => { const v = e.target.value; clearTimeout(this._avT); if (v !== (l.avis || '')) this.sessUpdate(l.id, x => { x.avis = v; return x; }); },
+      live: !!l.live,
+      finish: () => { const ta = document.querySelector('textarea[aria-label="Avis de la séance"]'); const av = ta ? ta.value : l.avis; clearTimeout(this._avT); this.stopTimer(true); this.sessUpdate(l.id, x => { x.avis = av; x.live = false; x.endTs = Date.now(); return x; }); this.setState({ detailBack: 'home' }); this.openLogDetail(l.id); },
+      edit: () => this.startEditLog(l) };
+  }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     const a = this.getAdds();
@@ -5453,7 +5609,7 @@ class Component extends DCLogic {
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
-    const v = (guest && ['mine', 'log', 'add', 'friends', 'profile'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
+    const v = (guest && ['mine', 'log', 'add', 'friends', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -5870,7 +6026,7 @@ class Component extends DCLogic {
       })(),
       st: v === 'stats' ? this.computeStats(coll.filter(o => !this.isEmptySachet(o)), me) : {},
       isLogs: v === 'logs',
-      saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : 'Enregistrer la dégustation',
+      saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : ((this.state.lfMode || 'full') === 'gong' ? '▶ Commencer la séance' : 'Enregistrer la dégustation'),
       editingLog: !!this.state.editLogId,
       logTitle: this.state.editLogId ? 'Modifier la dégustation' : 'Nouvelle dégustation',
       cancelLogEdit: () => this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', lf: { lotId: '', with: [], date: mdtToday() } })),
@@ -6017,6 +6173,11 @@ class Component extends DCLogic {
       addFreq: () => this.setOpt('freqs', this.opts().freqs.concat([{ code: String(this.opts().freqs.length + 1), label: '' }])),
       resetOpts: () => { if (!window.confirm('Remettre vaisselle, techniques et fréquences par défaut ? (Les comptes sont conservés.)')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { options: { users: this.opts().users } })); },
       isLog: v === 'log',
+      isSession: v === 'session', ss: v === 'session' ? this.sessionView(me) : { pills: [], presets: [] },
+      lfFull: (this.state.lfMode || 'full') === 'full' || !!this.state.editLogId, lfGong: (this.state.lfMode || 'full') === 'gong' && !this.state.editLogId, lfNew: !this.state.editLogId,
+      lfModes: [['gong', '🍵', 'Séance Gong Fu', 'Je note le setup, puis chaque infusion au fil de l’eau (minuteur inclus).'], ['full', '📝', 'Dégustation terminée', 'Je saisis tout d’un coup, après coup.']].map(m => { const on = (this.state.lfMode || 'full') === m[0]; return { icon: m[1], label: m[2], desc: m[3], on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', bd: on ? 'var(--color-accent)' : 'var(--color-divider)', pick: () => { try { localStorage.setItem('mdt-lfmode', m[0]); } catch (e) {} this.setState({ lfMode: m[0] }); } }; }),
+      liveList: this.liveLogs(me).map(l => { const sa = coll.find(x => x.id === l.lotId) || {}; const n = this.infsOf(l).length; return { name: sa.nom || sa.the || 'Thé', meta: (n ? n + ' infusion' + (n > 1 ? 's' : '') : 'pas encore d’infusion') + (l.startTs ? ' · depuis ' + this.fmtDur(Date.now() - l.startTs) : ''), go: () => this.openSession(l.id) }; }),
+      hasLive: this.liveLogs(me).length > 0,
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
       newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
@@ -6118,11 +6279,19 @@ class Component extends DCLogic {
         const a = this.getAdds();
         if (this.state.editLogId) {
           const id = this.state.editLogId;
-          this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === id ? Object.assign({}, x, l, { id: x.id, author: x.author, with: (l.with || []).filter(w => w !== x.author) }) : x) }));
+          this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => { if (x.id !== id) return x; const y = Object.assign({}, x, l, { id: x.id, author: x.author, with: (l.with || []).filter(w => w !== x.author) });
+            if (Array.isArray(x.infusions) && String(l.temps || '') !== x.infusions.map(i => i.t).join('/')) { const ts = String(l.temps || '').split('/').map(t => parseInt(t, 10)).filter(t => t > 0); y.infusions = ts.map((t, k) => Object.assign({}, x.infusions[k] || {}, { t: t })); }
+            return y; }) }));
           this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } }));
           return;
         }
         const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || mdtToday() });
+        if ((this.state.lfMode || 'full') === 'gong') {
+          const now = new Date(); Object.assign(entry, { live: true, infusions: [], temps: '', startTs: Date.now(), heure: entry.heure || (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')) });
+          this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
+          this.setState({ lotQ: '', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
+          this.openSession(entry.id); return;
+        }
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
         const o = coll.find(x => x.id === l.lotId);
         this.setState({ lotQ: '', logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
