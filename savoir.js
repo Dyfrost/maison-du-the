@@ -90,7 +90,10 @@ window.MDT_SAVOIR = {
     'Fleur d’oranger': 'L’eau de fleur d’oranger des madeleines et des cornes de gazelle : fleur blanche, un peu savonneuse.',
     'Chèvrefeuille': 'La haie fleurie d’un chemin de campagne en juin : sucré, mielleux, une fleur qui sent surtout le soir.',
     'Litchi': 'Le fruit pelé, pas la boisson : une rose sucrée et juteuse, un peu muscatée.',
-    'Agrumes': 'Le zeste qu’on presse entre les doigts : citron, pamplemousse, bergamote. Frais, vif, un peu amer.',
+    'Citron': 'Un zeste de citron qu’on presse entre les doigts : vif, acidulé, frais. Souvent dans les oolongs légers et certains thés verts.',
+    'Bergamote': 'L’odeur de l’Earl Grey : un agrume parfumé, entre l’orange amère et la fleur. Certains thés en ont naturellement une touche.',
+    'Pamplemousse': 'Un pamplemousse rose qu’on épluche : agrume amer et juteux, un peu soufré.',
+    'Yuzu': 'Un agrume japonais : entre le citron, la mandarine et le pamplemousse, très parfumé. Pense au yuzu des desserts ou des sauces ponzu.',
     'Raisin sec': 'Un paquet de raisins secs qu’on ouvre : sucré, cuit, légèrement vineux.',
     'Jujube': 'La « datte rouge » chinoise séchée (枣) : entre la datte et la pomme cuite, caramélisé.',
     'Figue': 'La figue sèche, pas fraîche : sucre brun, graines, un côté confiture épaisse.',
@@ -155,9 +158,31 @@ window.MDT_SAVOIR = {
     'Pousse tendre': 'Une feuille de printemps qu’on froisse entre les doigts : vert tendre, frais, un peu sucré (嫩香).',
     'Fraîcheur': 'Pas un arôme précis : la sensation d’air pur et propre, d’un matin de printemps (清香). Un thé « net », sans rien de lourd.'
   },
+  // Intensité : un seul niveau par thé, pour savoir à quoi s'attendre
+  intens: [
+    { t: 'Subtil', d: 'Tout en finesse : il faut tendre le nez et boire concentré, sans rien à côté.' },
+    { t: 'Équilibré', d: 'Présent sans forcer : arômes nets, corps moyen. Facile à aborder.' },
+    { t: 'Corsé', d: 'De la mâche et du caractère : corps épais, astringence ou torréfaction marquées.' },
+    { t: 'Puissant', d: 'Ça tabasse : arômes qui envahissent la bouche, longue persistance. À doser avec prudence.' }
+  ],
+  // Mots qui comptent pour un arôme quand on les écrit dans un avis (en plus du nom de l'arôme)
+  syn: {
+    'Jasmin': ['jasmine'], 'Orchidée': ['orchid'], 'Fleur d’oranger': ['oranger', 'neroli'], 'Rose': ['rosé'],
+    'Pêche': ['peach', 'nectarine', 'brugnon'], 'Pomme': ['apple'], 'Citron': ['citronn', 'lemon', 'citron vert'], 'Bergamote': ['earl grey'], 'Pamplemousse': ['grapefruit'],
+    'Fruits rouges': ['framboise', 'cassis', 'cerise', 'fraise', 'groseille', 'mûre'], 'Raisin sec': ['raisin'], 'Pruneau': ['prune'], 'Jujube': ['datte'],
+    'Miel': ['miell', 'honey'], 'Caramel': ['caramélis'], 'Malt': ['malté', 'maltée'], 'Sucre brun': ['cassonade', 'mélasse'],
+    'Crème': ['crémeu'], 'Lait': ['lacté', 'laiteu', 'milky'], 'Beurre': ['beurré'],
+    'Noisette': ['noisetté'], 'Torréfié': ['torréfaction', 'roasted'], 'Cacao': ['chocolat'], 'Charbon de bois': ['charbon', 'braise'],
+    'Poivre': ['poivré'], 'Réglisse': ['anis'], 'Bois sec': ['bois'], 'Fumée de pin': ['lapsang'], 'Feu de bois': ['fumé', 'fumée'],
+    'Sous-bois': ['feuilles mortes', 'mousse'], 'Terre humide': ['terre', 'terreu'], 'Champignon': ['champi'], 'Camphre': ['camphré'],
+    'Pierre mouillée': ['minéral', 'pierre', 'roche'], 'Menthol': ['menthe', 'mentholé'], 'Algue': ['algues'], 'Iodé': ['iode', 'marin', 'marine'],
+    'Herbe coupée': ['herbe', 'herbacé', 'gazon'], 'Épinard': ['épinards'], 'Petits pois': ['petit pois', 'edamame'], 'Haricot vert': ['haricot'], 'Asperge': ['asperges'], 'Foin': ['paille']
+  },
+  // Anciens tags → tags de la roue
+  oldTags: { 'fruite': 'Fruit frais', 'malte': 'Malt', 'terreux': 'Vieilli & terreux', 'doux': 'Subtil', 'agrumes': 'Citron', 'fume': 'Fumé & cuir', 'sucre': 'Sucré & miel', 'grille': 'Grillé', 'mineral': 'Minéral', 'noix': 'Noix', 'vieilli': 'Vieilli & terreux', 'epice': 'Épicé', 'leger': 'Subtil', 'delicat': 'Subtil', 'fort': 'Puissant', 'puissant': 'Puissant', 'corse': 'Corsé' },
   wheel: [
     { k: 'floral', n: 'Floral', c: '#d9849b', s: 'TGK', z: '花香 huāxiāng', a: ['Jasmin', 'Orchidée', 'Rose', 'Osmanthus', 'Fleur d’oranger', 'Chèvrefeuille'], h: 'Fleurs blanches, sucrées ou capiteuses. Oolongs légers, Baozhong, thés blancs, dan cong.' },
-    { k: 'fruitfrais', n: 'Fruit frais', c: '#e8a35a', s: 'TGK', z: '果香 guǒxiāng', a: ['Pêche', 'Abricot', 'Pomme', 'Poire', 'Agrumes', 'Litchi'], h: 'Fruits juteux, à peine mûrs. Oolongs de Taïwan, Darjeeling first flush, thés blancs.' },
+    { k: 'fruitfrais', n: 'Fruit frais', c: '#e8a35a', s: 'TGK', z: '果香 guǒxiāng', a: ['Pêche', 'Abricot', 'Pomme', 'Poire', 'Litchi', 'Citron', 'Bergamote', 'Pamplemousse', 'Yuzu'], h: 'Fruits juteux, à peine mûrs, et agrumes. Oolongs de Taïwan, Darjeeling first flush, thés blancs.' },
     { k: 'fruitmur', n: 'Fruit mûr', c: '#b5674a', s: 'TG', z: '熟果香 · 枣香 zǎoxiāng', a: ['Raisin sec', 'Jujube', 'Figue', 'Pruneau', 'Muscat', 'Fruits rouges'], h: 'Fruits cuits, confits ou séchés. Monte avec l’oxydation : Oriental Beauty, thés noirs, vieux oolongs.' },
     { k: 'sucre', n: 'Sucré & miel', c: '#d9b25a', s: 'TG', z: '甜香 · 蜜香 mìxiāng', a: ['Miel', 'Caramel', 'Sucre brun', 'Vanille', 'Malt', 'Sirop d’érable'], h: 'Douceurs pâtissières. Le « miel » d’Oriental Beauty, les thés noirs, le fond de tasse.' },
     { k: 'lacte', n: 'Lacté', c: '#e6d3a8', s: 'M', z: '奶香 nǎixiāng', a: ['Beurre', 'Lait', 'Crème', 'Maïs doux'], h: 'Rond et gras. Oolongs « milky » (jin xuan), thés jaunes.' },

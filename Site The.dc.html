@@ -134,6 +134,14 @@
   .sv-ctr small { font-size: clamp(7px, 2cqw, 11px); opacity: .65; }
   .sv-nav { cursor: pointer; border: none; width: 36px; height: 36px; flex: 0 0 auto; border-radius: 50%; background: var(--color-bg); color: var(--color-text); font-size: 22px; line-height: 1; box-shadow: inset 0 0 0 1px var(--color-divider); transition: transform .15s, background .15s; }
   .sv-nav:hover { background: var(--color-accent-100); transform: scale(1.08); }
+  .tp { display: flex; flex-direction: column; gap: 8px; }
+  .tp-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .tp-lbl { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px; }
+  .tp-hint { font-size: 13px; opacity: .7; }
+  .tp-chip, .tp-fam { cursor: pointer; border: none; border-radius: 999px; padding: 6px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); transition: transform .12s, background .15s; }
+  .tp-chip:hover, .tp-fam:hover { transform: translateY(-1px); }
+  .tp-fam small { opacity: .6; font-size: 10px; }
+  .tp-panel { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px; border-radius: 18px; border: 2px solid; background: color-mix(in srgb, var(--color-bg) 60%, transparent); animation: fadeUp .25s ease both; }
   .sv-src { margin: 0; font-size: 12.5px; line-height: 1.5; opacity: .7; max-width: 760px; }
   .sv-src a { color: inherit; }
   @keyframes svSpin { from { opacity: 0; transform: rotate(-25deg) scale(.85); } to { opacity: 1; transform: none; } }
@@ -2075,20 +2083,10 @@
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <h2 style="font-size: 26px; margin: 0;">Tags de profil</h2>
-              <p style="margin: 0; font-size: 14px; opacity: .7;">Renommer un tag le change sur tous les thés. Le supprimer le retire de tous les thés.</p>
+              <p style="margin: 0; font-size: 14px; opacity: .7;">Les tags viennent maintenant de la roue des arômes (familles et arômes), plus quatre niveaux d’intensité : Subtil, Équilibré, Corsé, Puissant. Les anciens tags ont été convertis automatiquement.</p>
             </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-              <input class="input" aria-label="Nouveau tag" placeholder="Nouveau tag…" value="{{ newTag }}" onChange="{{ onNewTag }}" onKeyDown="{{ newTagKey2 }}" style="width: 220px; font-size: 15px; padding: 10px 16px;">
-              <button class="btn btn-primary" onClick="{{ addTag2 }}" style="white-space: nowrap;">＋ Ajouter le tag</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ tagRows }}" as="t" hint-placeholder-count="4">
-                <div class="row-wrap" style="display: flex; align-items: center; gap: 10px; background: var(--color-bg); border-radius: 18px; padding: 8px 10px 8px 14px;">
-                  <input class="input" aria-label="Nom du tag" value="{{ t.draft }}" onChange="{{ t.edit }}" onBlur="{{ t.rename }}" onKeyDown="{{ t.key }}" style="flex: 1 1 200px; min-width: 0; font-size: 15px; padding: 8px 14px;">
-                  <span style="font-size: 13px; opacity: .65; white-space: nowrap;">{{ t.count }}</span>
-                  <div class="acts" style="flex: none; display: flex;"><button class="btn btn-ghost" onClick="{{ t.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer</button></div>
-                </div>
-              </sc-for>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <sc-for list="{{ tagRows }}" as="t" hint-placeholder-count="4"><span style="background: var(--color-bg); border-radius: 999px; padding: 6px 12px; font-size: 14px;">{{ t.name }} <span style="opacity: .55;">· {{ t.count }}</span></span></sc-for>
             </div>
           </section>
         </sc-if>
@@ -2316,15 +2314,14 @@
               </div>
               <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <sc-for list="{{ tagChips }}" as="k" hint-placeholder-count="6">
-                    <sc-if value="{{ k.on }}" hint-placeholder-val="{{ false }}"><button onClick="{{ k.toggle }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-accent); background: var(--color-accent); color: var(--color-bg);">{{ k.name }}</button></sc-if>
-                    <sc-if value="{{ k.off }}" hint-placeholder-val="{{ true }}"><button onClick="{{ k.toggle }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--color-divider); background: var(--color-bg); color: var(--color-text);" style-hover="background: var(--color-accent-100);">{{ k.name }}</button></sc-if>
-                  </sc-for>
-                  <span style="display: inline-flex; gap: 6px; align-items: center;">
-                    <input class="input" aria-label="Nouveau tag" placeholder="Nouveau tag…" value="{{ newTag }}" onChange="{{ onNewTag }}" onKeyDown="{{ newTagKey }}" style="width: 160px; font-size: 14px; padding: 7px 14px; min-height: 0;">
-                    <button class="btn btn-secondary" onClick="{{ addTag }}" style="white-space: nowrap; padding: 7px 14px;">＋ Ajouter</button>
-                  </span>
+                <div class="tp">
+                  <div class="tp-row"><span class="tp-lbl">Intensité</span><sc-for list="{{ formTP.intens }}" as="c" hint-placeholder-count="4"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div>
+                  <span class="tp-hint">{{ formTP.intHint }}</span>
+                  <span class="tp-lbl" style="margin-top: 4px;">Arômes (familles de la roue)</span>
+                  <div class="tp-row"><sc-for list="{{ formTP.fams }}" as="f" hint-placeholder-count="15"><button type="button" class="tp-fam" onClick="{{ f.open }}" style="background: {{ f.bg }}; color: {{ f.fg }}; box-shadow: inset 0 0 0 {{ f.ring }} {{ f.c }};">{{ f.label }} <small>{{ f.arrow }}</small></button></sc-for></div>
+                  <sc-if value="{{ formTP.hasOpen }}" hint-placeholder-val="{{ false }}"><div class="tp-panel" style="border-color: {{ formTP.openC }};"><sc-for list="{{ formTP.openChips }}" as="c" hint-placeholder-count="6"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div></sc-if>
+                  <sc-if value="{{ formTP.hasOthers }}" hint-placeholder-val="{{ false }}"><div class="tp-row"><span class="tp-lbl">Hors roue (cliquer pour retirer)</span><sc-for list="{{ formTP.others }}" as="c" hint-placeholder-count="1"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" style="background: var(--color-bg); opacity: .7;">{{ c.label }}</button></sc-for></div></sc-if>
+                  <span class="tp-hint">✓ {{ formTP.summary }}</span>
                 </div>
               </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
@@ -2661,8 +2658,15 @@
           <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Description<textarea class="input" rows="3" style="padding: 10px 12px; background: var(--color-bg); resize: vertical;" defaultValue="{{ pe.commentaire }}" onInput="{{ pe.set.commentaire }}" key="{{ pe.key }}-commentaire"></textarea></label>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <span style="font-size: 13px;">Tags <span style="opacity: .6;">· {{ pe.tagsCount }}</span></span>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ pe.chips }}" as="tc" hint-placeholder-count="6"><button onClick="{{ tc.toggle }}" aria-pressed="{{ tc.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13px; background: {{ tc.bg }}; color: {{ tc.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ tc.label }}</button></sc-for></div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><input class="input" value="{{ pe.newTag }}" onInput="{{ pe.setNewTag }}" onKeyDown="{{ pe.newTagKey }}" placeholder="Nouveau tag (ex : fumé)" aria-label="Nouveau tag" style="flex: 0 1 240px; padding: 8px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ pe.addTag }}" style="white-space: nowrap; background: var(--color-bg);">＋ Créer et ajouter</button></div>
+            <div class="tp">
+                  <div class="tp-row"><span class="tp-lbl">Intensité</span><sc-for list="{{ pe.tp.intens }}" as="c" hint-placeholder-count="4"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div>
+                  <span class="tp-hint">{{ pe.tp.intHint }}</span>
+                  <span class="tp-lbl" style="margin-top: 4px;">Arômes (familles de la roue)</span>
+                  <div class="tp-row"><sc-for list="{{ pe.tp.fams }}" as="f" hint-placeholder-count="15"><button type="button" class="tp-fam" onClick="{{ f.open }}" style="background: {{ f.bg }}; color: {{ f.fg }}; box-shadow: inset 0 0 0 {{ f.ring }} {{ f.c }};">{{ f.label }} <small>{{ f.arrow }}</small></button></sc-for></div>
+                  <sc-if value="{{ pe.tp.hasOpen }}" hint-placeholder-val="{{ false }}"><div class="tp-panel" style="border-color: {{ pe.tp.openC }};"><sc-for list="{{ pe.tp.openChips }}" as="c" hint-placeholder-count="6"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div></sc-if>
+                  <sc-if value="{{ pe.tp.hasOthers }}" hint-placeholder-val="{{ false }}"><div class="tp-row"><span class="tp-lbl">Hors roue (cliquer pour retirer)</span><sc-for list="{{ pe.tp.others }}" as="c" hint-placeholder-count="1"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" style="background: var(--color-bg); opacity: .7;">{{ c.label }}</button></sc-for></div></sc-if>
+                  <span class="tp-hint">✓ {{ pe.tp.summary }}</span>
+                </div>
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ pe.save }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ pe.cancel }}" style="white-space: nowrap;">Annuler</button><span style="font-size: 12.5px; opacity: .65;">Ces infos sont communes à toute la maison : elles s’appliquent à tous les sachets de ce thé.</span></div>
         </section>
@@ -4777,7 +4781,7 @@ class Component extends DCLogic {
     }
     this.ensureMember();
     if (!this._hashDone) { this._hashDone = true; try { this.applyHash(); } catch (e) { console.warn(e); } }
-    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} try { this.migrateGear4(); } catch (e) {} }
+    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} try { this.migrateGear4(); } catch (e) {} try { this.migrateTags2(); } catch (e) { console.warn(e); } }
     this.setState({ syncAt: new Date(), syncErr: '' });
   }
 
@@ -5323,12 +5327,12 @@ class Component extends DCLogic {
       const w = W.find(z => z.k === selC);
       out.svWOn = !!w; out.svWNone = !w;
       if (w) {
-        const target = selA || ''; const words = target ? [target] : w.a;
+        const target = selA || ''; const words = target ? [target] : w.a; const SY = S.syn || {}; const mw = words.concat(target ? [] : [w.n]).reduce((o, x) => o.concat([x], SY[x] || []), []).map(x => new RegExp('(^|[^a-z0-9])' + this.norm(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
         const a2 = this.getAdds(); const coll = this.collection();
         const hits = {};
         const add = (pid, why) => { if (!pid) return; hits[pid] = hits[pid] || { n: 0, why: {} }; hits[pid].n++; hits[pid].why[why] = 1; };
-        a2.prods.forEach(p => { (p.tags || []).forEach(t => { if (words.some(x => this.norm(x) === this.norm(t)) || this.norm(t) === this.norm(w.n)) add(p.id, 'tag'); }); });
-        a2.logs.forEach(l => { const av = this.norm((l.avis || '') + ' ' + (l.nez || '')); if (!av) return; if (words.some(x => av.indexOf(this.norm(x)) >= 0)) { const sa = coll.find(o => o.id === l.lotId); if (sa) add(sa.prodId, 'avis'); } });
+        a2.prods.forEach(p => { (p.tags || []).forEach(t => { const c = this.canonTag(t); if (c && (words.indexOf(c) >= 0 || (!target && c === w.n))) add(p.id, 'tag'); }); });
+        a2.logs.forEach(l => { const av = this.norm((l.avis || '') + ' ' + (l.nez || '')); if (!av) return; if (mw.some(x => x.test(av))) { const sa = coll.find(o => o.id === l.lotId); if (sa) add(sa.prodId, 'avis'); } });
         const smell = target ? ((S.smell || {})[target] || '') : ''; const hint = !smell && target && this.tkHints ? (this.tkHints[this.norm(target)] || this.tkHints[target.toLowerCase()] || null) : null;
         const wi = W.indexOf(w), goF = d => this.setState({ svWc: W[(wi + d + W.length) % W.length].k, svWa: '' });
         out.svW = { prev: () => goF(-1), next: () => goF(1), name: target || w.n, cat: w.n, color: w.c, desc: w.h, zh: w.z || '', hasZh: !!w.z, src: (w.s || 'M').split('').map(c => ((S.srcs || {})[c] || {}).n || c).join(' · '), aromas: w.a.map(x => ({ label: x, on: x === target, bg: x === target ? w.c : 'var(--color-bg)', fg: x === target ? '#fff' : 'var(--color-text)', pick: () => this.setState({ svWa: x === target ? '' : x }) })),
@@ -5343,12 +5347,12 @@ class Component extends DCLogic {
   // ---------- Contenu nourri par les dégustations ----------
   noteNum(l) { const n = parseFloat(String((l && l.note) || '').replace(',', '.')); return /^\s*\d+([.,]\d+)?\s*$/.test(String((l && l.note) || '')) && isFinite(n) ? n : null; }
   aromaCounts(logs, prods) {
-    const W = (window.MDT_SAVOIR || {}).wheel || []; const cnt = {};
-    const words = []; W.forEach(w => { words.push([w.n, w.c]); w.a.forEach(x => words.push([x, w.c])); });
-    const bump = (wd, c) => { cnt[wd] = cnt[wd] || { n: 0, c: c }; cnt[wd].n++; };
-    logs.forEach(l => { const t = this.norm((l.avis || '') + ' ' + (l.nez || '') + ' ' + this.infsOf(l).map(i => i.note || '').join(' ')); if (!t) return; words.forEach(w => { if (t.indexOf(this.norm(w[0])) >= 0) bump(w[0], w[1]); }); });
-    (prods || []).forEach(p => (p.tags || []).forEach(tg => { const w = words.find(x => this.norm(x[0]) === this.norm(tg)); bump(w ? w[0] : tg, w ? w[1] : 'var(--color-accent)'); }));
-    return Object.keys(cnt).map(k => ({ w: k, n: cnt[k].n, c: cnt[k].c })).sort((a, b) => b.n - a.n);
+    const rx = x => new RegExp('(^|[^a-z0-9])' + x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const words = this.aromaWords().map(w => [rx(this.norm(w[0])), w[1], w[2]]); const col = {}; words.forEach(w => { col[w[1]] = w[2]; }); const cnt = {};
+    const bump = k => { cnt[k] = (cnt[k] || 0) + 1; };
+    logs.forEach(l => { const t = this.norm((l.avis || '') + ' ' + (l.nez || '') + ' ' + this.infsOf(l).map(i => i.note || '').join(' ')); if (!t) return; const seen = {}; words.forEach(w => { if (!seen[w[1]] && w[0].test(t)) { seen[w[1]] = 1; bump(w[1]); } }); });
+    (prods || []).forEach(p => (p.tags || []).forEach(tg => { const c = this.canonTag(tg); if (c && col[c]) bump(c); }));
+    return Object.keys(cnt).map(k => ({ w: k, n: cnt[k], c: col[k] })).sort((a, b) => b.n - a.n);
   }
   circleOf(me) { const sl = this.salonOf(me); return sl ? (sl.members || []).slice() : [me]; }
   circleName(me) { const sl = this.salonOf(me); return sl ? 'du salon ' + sl.name : 'personnelle'; }
@@ -5838,20 +5842,47 @@ class Component extends DCLogic {
   }
   num(v) { const n = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isNaN(n) ? null : n; }
 
-  allTags() {
-    const o = this.getAdds().options || {};
-    if (Array.isArray(o.tagList)) return o.tagList.slice();
-    const extra = (this.opts().tags || []).filter(t => this.keywords.indexOf(t) < 0);
-    return this.keywords.concat(extra);
+  allTags() { return this.canonTags(); }
+  canonTags() { const S = window.MDT_SAVOIR || {}; const out = (S.intens || []).map(x => x.t); (S.wheel || []).forEach(w => { out.push(w.n); w.a.forEach(x => out.push(x)); }); return out; }
+  canonTag(t) {
+    const S = window.MDT_SAVOIR || {}; const n = this.norm(String(t || '').trim()); if (!n) return null;
+    const ex = this.canonTags().find(x => this.norm(x) === n); if (ex) return ex;
+    const o = (S.oldTags || {})[n]; if (o) return o;
+    const syn = S.syn || {}; for (const k in syn) if (syn[k].some(w => this.norm(w) === n)) return k;
+    return null;
+  }
+  aromaWords() { const S = window.MDT_SAVOIR || {}; const out = []; (S.wheel || []).forEach(w => { out.push([w.n, w.n, w.c]); w.a.forEach(x => { out.push([x, x, w.c]); ((S.syn || {})[x] || []).forEach(y => out.push([y, x, w.c])); }); }); return out; }
+  tagPicker(cur, apply, openKey) {
+    const S = window.MDT_SAVOIR || {}; cur = cur || []; const has = t => cur.indexOf(t) >= 0;
+    const tog = t => apply(has(t) ? cur.filter(x => x !== t) : cur.concat([t]));
+    const dark = h => { const n = parseInt(String(h).slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255 < .6; };
+    const open = this.state[openKey] || ''; const intN = (S.intens || []).map(x => x.t); const all = this.canonTags();
+    const intens = (S.intens || []).map(x => { const on = has(x.t); return { label: x.t, on: on, bg: on ? 'var(--color-text)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', toggle: () => apply(on ? cur.filter(y => y !== x.t) : cur.filter(y => intN.indexOf(y) < 0).concat([x.t])) }; });
+    const curInt = (S.intens || []).find(x => has(x.t));
+    const fams = (S.wheel || []).map(w => { const n = [w.n].concat(w.a).filter(has).length; const isO = open === w.k;
+      return { label: w.n + (n ? ' · ' + n : ''), c: w.c, bg: n ? w.c : isO ? 'color-mix(in srgb, ' + w.c + ' 28%, var(--color-bg))' : 'var(--color-bg)', fg: n ? (dark(w.c) ? '#fff' : '#2b2118') : 'var(--color-text)', ring: isO ? '2.5px' : '1.5px', arrow: isO ? '▾' : '▸', open: () => this.setState({ [openKey]: isO ? '' : w.k }) }; });
+    const ow = (S.wheel || []).find(w => w.k === open);
+    const chip = (t, label) => { const on = has(t); return { label: (on ? '✓ ' : '') + label, on: on, bg: on ? ow.c : 'var(--color-bg)', fg: on ? (dark(ow.c) ? '#fff' : '#2b2118') : 'var(--color-text)', toggle: () => tog(t) }; };
+    const others = cur.filter(t => all.indexOf(t) < 0).map(t => ({ label: t + ' ✕', toggle: () => tog(t) }));
+    const picked = cur.filter(t => intN.indexOf(t) < 0 && all.indexOf(t) >= 0);
+    return { intens: intens, intHint: curInt ? curInt.d : 'De « Subtil » (tout en finesse) à « Puissant » (ça tabasse).', fams: fams, hasOpen: !!ow, openC: ow ? ow.c : 'transparent', openName: ow ? ow.n : '',
+      openChips: ow ? [chip(ow.n, 'Toute la famille')].concat(ow.a.map(x => chip(x, x))) : [], others: others, hasOthers: others.length > 0,
+      summary: picked.length ? picked.join(' · ') : 'Aucun arôme choisi : ouvre une famille pour préciser.' };
+  }
+  migrateTags2() {
+    const a = this.getAdds(); if (!this.isAdmin(this.sessionName()) || ((a.options || {}).tagVer || 0) >= 2) return;
+    const prods = a.prods.map(p => { if (!p.tags || !p.tags.length) return p; const t = []; p.tags.forEach(x => { const c = this.canonTag(x); if (c && t.indexOf(c) < 0) t.push(c); }); return Object.assign({}, p, { tags: t }); });
+    this.setAdds(Object.assign({}, a, { prods: prods, options: Object.assign({}, a.options, { tagList: this.canonTags(), tagVer: 2 }) }));
   }
 
   prodEditVals() {
-    const pe = this.state.prodEdit; if (!pe) return { set: {}, chips: [] };
+    const pe = this.state.prodEdit; if (!pe) return { set: {}, chips: [], tp: { intens: [], fams: [], openChips: [], others: [] } };
     const setD = (k, v) => { this._peDraft = Object.assign({}, this._peDraft, { [k]: v }); };
     const merged = () => Object.assign({}, this.state.prodEdit, this._peDraft || {});
     const addNew = () => { const t = String(this.state.prodNewTag || '').trim(); if (!t) return; const name = t.charAt(0).toUpperCase() + t.slice(1); const exist = this.allTags().find(x => this.norm(x) === this.norm(name)); const tag = exist || name; if (!exist) this.setTagList(this.allTags().concat([tag])); const m = merged(); this._peDraft = {}; this.setState({ prodNewTag: '', prodEdit: Object.assign({}, m, { tags: m.tags.indexOf(tag) >= 0 ? m.tags : m.tags.concat([tag]) }) }); };
     const all = this.allTags(); const extra = pe.tags.filter(t => all.indexOf(t) < 0);
-    return { key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
+    const tp = this.tagPicker(merged().tags, tags => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: tags }) }); }, 'tpOpenP');
+    return { tp: tp, key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
       set: ['nom', 'marque', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
       tagsCount: pe.tags.length ? pe.tags.length + ' sélectionné' + (pe.tags.length > 1 ? 's' : '') : 'cliquez pour en choisir',
       chips: all.concat(extra).map(t => { const on = pe.tags.indexOf(t) >= 0; return { label: (on ? '✓ ' : '') + t, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', toggle: () => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: on ? m.tags.filter(x => x !== t) : m.tags.concat([t]) }) }); } }; }),
@@ -6592,7 +6623,7 @@ class Component extends DCLogic {
       newTagKey2: e => { if (e.key === 'Enter') { e.preventDefault(); this.addTag2(); } },
       addTag2: () => this.addTag2(),
       resetTags: () => { if (!window.confirm('Remettre la liste de tags par défaut ? Les tags déjà posés sur les thés restent.')) return; this.setTagList(this.keywords.slice()); },
-      tagRows: this.allTags().map(t => {
+      tagRows: this.allTags().filter(t => this.getAdds().prods.some(p => (p.tags || []).indexOf(t) >= 0)).map(t => {
         const n = this.getAdds().prods.filter(p => (p.tags || []).indexOf(t) >= 0).length;
         return { name: t, count: n ? n + (n > 1 ? ' thés' : ' thé') : 'non utilisé',
           draft: (this.state.tagDraft || {})[t] != null ? this.state.tagDraft[t] : t,
@@ -6634,6 +6665,7 @@ class Component extends DCLogic {
       prodPhotoBtn: (this.state.form || {}).prodPhoto ? 'Changer la photo' : 'Ajouter une photo',
       sachetPhotoBtn: (this.state.form || {}).sachetPhoto ? 'Changer la photo' : 'Ajouter une photo',
       prodPhotoMsg: this.state.prodPhotoMsg || '', sachetPhotoMsg: this.state.sachetPhotoMsg || '',
+      formTP: this.tagPicker((this.state.form || {}).tags, tags => this.setState(s => ({ form: Object.assign({}, s.form, { tags: tags }) })), 'tpOpenF'),
       tagChips: this.allTags().map(k => { const cur = (this.state.form || {}).tags || []; const on = cur.indexOf(k) >= 0; return { name: k, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.form || {}).tags || []; return { form: Object.assign({}, s.form, { tags: on ? c.filter(x => x !== k) : c.concat([k]) }) }; }) }; }),
       formIOwn: ((this.state.form || {}).owners || [me]).indexOf(me) >= 0,
       formIDontOwn: ((this.state.form || {}).owners || [me]).indexOf(me) < 0,
