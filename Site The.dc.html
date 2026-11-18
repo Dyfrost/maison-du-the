@@ -134,6 +134,10 @@
   .sv-ctr small { font-size: clamp(7px, 2cqw, 11px); opacity: .65; }
   .sv-nav { cursor: pointer; border: none; width: 36px; height: 36px; flex: 0 0 auto; border-radius: 50%; background: var(--color-bg); color: var(--color-text); font-size: 22px; line-height: 1; box-shadow: inset 0 0 0 1px var(--color-divider); transition: transform .15s, background .15s; }
   .sv-nav:hover { background: var(--color-accent-100); transform: scale(1.08); }
+  .mdt-tip { position: fixed; z-index: 9999; display: none; flex-direction: column; gap: 4px; max-width: 300px; padding: 10px 13px; border-radius: 14px; background: #fbf6ec; color: #2b2118; box-shadow: 0 8px 28px rgba(43,33,24,.18), 0 0 0 1px rgba(43,33,24,.08); font-size: 13.5px; line-height: 1.45; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .15s, transform .15s; }
+  .mdt-tip.on { opacity: 1; transform: none; }
+  .mdt-tip b { font-size: 12px; letter-spacing: .04em; }
+  .tag-accent { cursor: help; }
   .tp { display: flex; flex-direction: column; gap: 8px; }
   .tp-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .tp-lbl { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px; }
@@ -5870,7 +5874,7 @@ class Component extends DCLogic {
     const others = cur.filter(t => all.indexOf(t) < 0).map(t => ({ label: t + ' ✕', toggle: () => tog(t) }));
     const picked = cur.filter(t => intN.indexOf(t) < 0 && all.indexOf(t) >= 0);
     return { intens: intens, intHint: curInt ? curInt.d : 'De « Subtil » (tout en finesse) à « Puissant » (ça tabasse).', fams: fams, hasOpen: !!ow, openC: ow ? ow.c : 'transparent', openName: ow ? ow.n : '',
-      openChips: ow ? [chip(ow.n, 'Toute la famille')].concat(ow.a.map(x => chip(x, x))) : [], others: others, hasOthers: others.length > 0,
+      openChips: ow ? [chip(ow.n, ow.n)].concat(ow.a.map(x => chip(x, x))) : [], others: others, hasOthers: others.length > 0,
       summary: picked.length ? picked.join(' · ') : 'Aucun arôme choisi : ouvre une famille pour préciser.' };
   }
   migrateTags2() {

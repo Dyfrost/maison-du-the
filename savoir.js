@@ -85,6 +85,15 @@ window.MDT_SAVOIR = {
   },
   // « À quoi ça sent » : un repère concret pour les arômes qui ne parlent pas d'eux-mêmes
   smell: {
+    'Jasmin': 'Le thé au jasmin ou une haie de jasmin un soir d’été : fleur blanche sucrée, entêtante.',
+    'Rose': 'Une rose de jardin ou un loukoum : floral, sucré, un peu fruité.',
+    'Pêche': 'Une pêche blanche bien mûre : juteuse, sucrée, duveteuse.',
+    'Abricot': 'Un abricot mûr ou sec : sucré, légèrement acidulé.',
+    'Pomme': 'Une pomme qu’on croque, plutôt verte et fraîche.',
+    'Poire': 'Une poire Williams bien juteuse : sucrée, florale.',
+    'Miel': 'Un pot de miel de fleurs qu’on ouvre : sucré, floral, chaud.',
+    'Vanille': 'Une gousse de vanille ou une crème pâtissière : doux, crémeux.',
+    'Herbe coupée': 'Une pelouse juste tondue : vert, frais, vif.',
     'Gardénia': 'Une fleur blanche épaisse et crémeuse, plus capiteuse que le jasmin, presque beurrée. Typique de certains dan cong (« huang zhi xiang »).',
     'Lys': 'Un bouquet de lys dans une pièce fermée : floral puissant, sucré, un peu poivré.',
     'Anis étoilé': 'La badiane du pho ou du vin chaud : anisé, chaud, plus doux que la réglisse.',
@@ -314,4 +323,34 @@ window.MDT_SAVOIR = {
     const step = now => { const t = Math.min(1, (now - t0) / D); st.L = mix(from, target, ease(t)); paint(st, st.L); if (t < 1) st.raf = requestAnimationFrame(step); else st.L = target; };
     st.raf = requestAnimationFrame(step);
   };
+})();
+
+// Description d'un tag (survol) + infobulle globale sur les tags
+(function () {
+  window.mdtTagDesc = function (raw) {
+    const S = window.MDT_SAVOIR || {}; const t = String(raw || '').replace(/[✓▸▾✕]/g, '').replace(/\s·\s\d+\s*$/, '').trim(); if (!t) return null;
+    const n = x => String(x).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const it = (S.intens || []).find(x => n(x.t) === n(t)); if (it) return { t: 'Intensité · ' + it.t, d: it.d, c: '#2b2118' };
+    for (const w of (S.wheel || [])) {
+      if (n(w.n) === n(t)) return { t: 'Famille · ' + w.n, d: w.h, c: w.c, z: w.z };
+      const a = w.a.find(x => n(x) === n(t)); if (a) return { t: a + ' · ' + w.n, d: (S.smell || {})[a] || w.h, c: w.c };
+    }
+    return null;
+  };
+  let tip = null, cur = null, hideT = null;
+  const show = el => {
+    const info = window.mdtTagDesc(el.textContent); if (!info) return;
+    if (!tip) { tip = document.createElement('div'); tip.className = 'mdt-tip'; document.body.appendChild(tip); }
+    tip.innerHTML = ''; const h = document.createElement('b'); h.textContent = info.t; h.style.color = 'color-mix(in srgb, ' + info.c + ' 65%, #2b2118)'; const d = document.createElement('span'); d.textContent = info.d;
+    tip.appendChild(h); tip.appendChild(d);
+    const r = el.getBoundingClientRect(); tip.style.display = 'flex'; const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = r.left + r.width / 2 - tw / 2; x = Math.max(8, Math.min(window.innerWidth - tw - 8, x));
+    let y = r.top - th - 8; if (y < 8) y = r.bottom + 8;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.classList.add('on'); cur = el;
+  };
+  const hide = () => { if (tip) { tip.classList.remove('on'); tip.style.display = 'none'; } cur = null; };
+  const SEL = '.tag, .tp-chip, .tp-fam';
+  document.addEventListener('mouseover', e => { const el = e.target.closest && e.target.closest(SEL); if (el === cur) return; if (el) show(el); else hide(); });
+  document.addEventListener('pointerdown', e => { if (e.pointerType !== 'touch') return; const el = e.target.closest && e.target.closest('.tag'); clearTimeout(hideT); if (el) { show(el); hideT = setTimeout(hide, 3500); } else hide(); });
+  window.addEventListener('scroll', hide, true);
 })();
