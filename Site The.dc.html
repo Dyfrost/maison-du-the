@@ -1854,6 +1854,12 @@
                 <button class="btn btn-ghost" onClick="{{ adClearSel }}" style="white-space: nowrap;">Désélectionner</button>
                 <button class="btn btn-primary" onClick="{{ adDelSel }}" style="white-space: nowrap; background: var(--color-accent-800);">🗑 Supprimer la sélection</button>
               </div>
+              <sc-if value="{{ adSacOps }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-surface); border-radius: 14px; padding: 10px 12px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🎁 Offrir {{ adSacWhat }} à</span><select class="input" value="{{ adGiveTo }}" onChange="{{ adSetGiveTo }}" aria-label="Nouveau propriétaire" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adUsers }}" as="u" hint-placeholder-count="2"><option value="{{ u }}">{{ u }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adGive }}" style="white-space: nowrap; background: var(--color-bg);">Offrir</button><span style="font-size: 12.5px; opacity: .65;">Le sachet change de propriétaire (historique conservé).</span></div>
+                <sc-if value="{{ adOneSac }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🤝 Partager</span><input class="input" inputMode="decimal" value="{{ adShareG }}" onInput="{{ adSetShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 84px; padding: 7px 12px; background: var(--color-bg);"><span style="font-size: 14px;">{{ adShareUnit }} avec</span><select class="input" value="{{ adShareTo }}" onChange="{{ adSetShareTo }}" aria-label="Avec qui" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adShareUsers }}" as="u" hint-placeholder-count="2"><option value="{{ u }}">{{ u }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adShare }}" style="white-space: nowrap; background: var(--color-bg);">Partager</button><span style="font-size: 12.5px; opacity: .65;">{{ adShareInfo }}</span></div></sc-if>
+              </div>
+              </sc-if>
             </sc-if>
             <div style="overflow: auto; max-height: 70vh; border-radius: 16px; background: var(--color-bg);">
               <div role="table" class="ad-table" style="--ad-min: {{ adMinW }}; font-family: var(--font-body); color: var(--color-text);">
@@ -3824,6 +3830,29 @@ class Component extends DCLogic {
       adToggleAll: () => this.setState({ adSel: shown.every(r => sel.indexOf(r.id) >= 0) ? [] : shown.map(r => r.id) }),
       adHasSel: sel.length > 0, adSelTxt: sel.length + ' élément' + (sel.length > 1 ? 's' : '') + ' sélectionné' + (sel.length > 1 ? 's' : ''),
       adClearSel: () => this.setState({ adSel: [] }),
+      ...(() => {
+        if (kind !== 'sachet' || !sel.length) return { adSacOps: false, adOneSac: false, adUsers: [], adShareUsers: [] };
+        const all = this.opts().users.filter(Boolean);
+        const one = sel.length === 1 ? this.collection().find(c => c.id === sel[0]) : null;
+        const users = one ? all.filter(u => u !== one.owner) : all;
+        const giveTo = users.indexOf(this.state.adGiveTo) >= 0 ? this.state.adGiveTo : users[0];
+        const shareAll = all;
+        const shareUsers = one ? shareAll.filter(u => u !== one.owner) : [];
+        const shareTo = shareUsers.indexOf(this.state.adShareTo) >= 0 ? this.state.adShareTo : shareUsers[0];
+        const rm = one ? this.remainFor(one) : null;
+        const unit = one && one.prixMode === 'unite' ? 'u' : 'g';
+        return { adSacOps: true, adOneSac: !!one && shareUsers.length > 0, adUsers: users, adGiveTo: giveTo || '', adSetGiveTo: e => this.setState({ adGiveTo: e.target.value }),
+          adSacWhat: sel.length > 1 ? 'les ' + sel.length + ' sachets' : 'ce sachet' + (one ? ' (' + one.owner + ')' : ''),
+          adGive: () => { if (!giveTo) return; if (!window.confirm('Offrir ' + (sel.length > 1 ? sel.length + ' sachets' : 'ce sachet') + ' à ' + giveTo + ' ?')) return;
+            const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(x => sel.indexOf(x.id) >= 0 && x.owner !== giveTo ? Object.assign({}, x, { owner: giveTo, history: (x.history || []).concat([{ from: x.owner, to: giveTo, date: mdtToday() }]) }) : x) })); this.setState({ adSel: [] }); },
+          adShareUsers: shareUsers, adShareTo: shareTo || '', adSetShareTo: e => this.setState({ adShareTo: e.target.value }),
+          adShareG: this.state.adShareG || '', adSetShareG: e => this.setState({ adShareG: e.target.value }), adShareUnit: unit === 'u' ? 'unités' : 'g',
+          adShareInfo: rm ? 'reste ≈ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + (unit === 'u' ? 'u' : 'g') : '',
+          adShare: () => { const amt = this.num(this.state.adShareG); if (!one || !shareTo) return; if (amt == null || amt <= 0) { window.alert('Indiquez une quantité à partager.'); return; }
+            if (rm && amt > rm.left + 0.001 && !window.confirm('Il ne reste qu’environ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + unit + '. Partager quand même ?')) return;
+            const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(x => x.id === one.id ? Object.assign({}, x, { shares: (x.shares || []).concat([{ to: shareTo, grams: amt, amount: amt, unit: unit, ts: Date.now(), date: mdtToday() }]), adjust: x.adjust ? Object.assign({}, x.adjust, { left: Math.max(0, x.adjust.left - amt) }) : x.adjust }) : x) }));
+            this.setState({ adShareG: '', adSel: [] }); } };
+      })(),
       adDelSel: () => {
         if (!window.confirm('Supprimer ' + sel.length + ' élément(s) ?' + (kind === 'prod' ? ' Leurs sachets et dégustations seront aussi supprimés.' : kind === 'sachet' ? ' Leurs dégustations seront aussi supprimées.' : ''))) return;
         del(kind === 'prod' ? delProds(sel) : kind === 'sachet' ? delSacs(sel) : kind === 'log' ? delLogs(sel) : delCat(sel));
