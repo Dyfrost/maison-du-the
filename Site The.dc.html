@@ -132,6 +132,7 @@
   .tabbar .tab { flex: 1 1 0; min-width: 0; cursor: pointer; border: none; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: var(--font-body); font-size: 11px; padding: 4px 2px; }
   .tabbar .tab-main { color: var(--color-accent-700); font-weight: 700; }
   .tabbar .tab-plus { width: 46px; height: 46px; margin-top: -22px; border-radius: 50%; background: var(--color-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+  textarea.input { border-radius: 20px !important; padding: 14px 18px !important; line-height: 1.55; }
   .opt-photo:not(:has(image-slot[data-filled])) { display: none !important; }
   .thumb { display: block; object-fit: cover; border-radius: 18px; background: var(--color-neutral-200); flex: none; }
   @media (max-width: 720px) {
@@ -1662,7 +1663,7 @@
             </div>
           </section>
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
-            <button onClick="{{ toggleLfWhen }}" aria-expanded="{{ lfWhenOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--color-text); font-family: var(--font-body);"><span style="font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🕒</span>Quand, et avec qui</span><sc-if value="{{ lfWhenClosed }}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; opacity: .75;">{{ lfWhenSummary }}</span><span style="font-size: 13px; font-weight: 600; color: var(--color-accent-700);">Modifier ▾</span></sc-if><sc-if value="{{ lfWhenOpen }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; font-weight: 600; color: var(--color-accent-700);">Replier ▴</span></sc-if></button>
+            <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🕒</span>Quand, et avec qui</h2>
             <sc-if value="{{ lfWhenOpen }}" hint-placeholder-val="{{ false }}">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.date }}" onChange="{{ setL.date }}"></label>
@@ -6239,7 +6240,7 @@ class Component extends DCLogic {
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
       lfPrefilled: (this.state.lf || {}).prefilled || '',
-      lfWhenOpen: !!this.state.lfWhenOpen, lfWhenClosed: !this.state.lfWhenOpen, toggleLfWhen: () => this.setState(s0 => ({ lfWhenOpen: !s0.lfWhenOpen })),
+      lfWhenOpen: true, lfWhenClosed: false, toggleLfWhen: () => this.setState(s0 => ({ lfWhenOpen: !s0.lfWhenOpen })),
       lfWhenSummary: (() => { const lf = this.state.lf || {}; const today = mdtToday(); return [lf.date ? (lf.date === today ? 'Aujourd’hui' : 'le ' + this.fmtDate(lf.date)) : 'Date non précisée', lf.heure ? 'à ' + lf.heure : '', lf.repas || '', (lf.with || []).length ? 'avec ' + lf.with.join(', ') : 'seul·e'].filter(Boolean).join(' · '); })(),
       noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
       noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
