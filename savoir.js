@@ -85,6 +85,29 @@ window.MDT_SAVOIR = {
   },
   // « À quoi ça sent » : un repère concret pour les arômes qui ne parlent pas d'eux-mêmes
   smell: {
+    'Gardénia': 'Une fleur blanche épaisse et crémeuse, plus capiteuse que le jasmin, presque beurrée. Typique de certains dan cong (« huang zhi xiang »).',
+    'Lys': 'Un bouquet de lys dans une pièce fermée : floral puissant, sucré, un peu poivré.',
+    'Anis étoilé': 'La badiane du pho ou du vin chaud : anisé, chaud, plus doux que la réglisse.',
+    'Cardamome': 'Le chaï indien : épice fraîche, citronnée, un peu camphrée.',
+    'Mangue': 'Une mangue bien mûre qu’on coupe : très sucrée, un peu résineuse.',
+    'Ananas': 'Un ananas qu’on vient d’ouvrir : sucré, acidulé, juteux.',
+    'Fruit de la passion': 'Le jus d’un fruit de la passion : acidulé, exotique, très parfumé.',
+    'Banane': 'Une banane bien mûre ou un bonbon banane : sucré, crémeux.',
+    'Melon': 'Un melon charentais en été : sucré, aqueux, un peu musqué.',
+    'Orge': 'Le mugicha (thé d’orge japonais) ou un café d’orge : céréale grillée, douce.',
+    'Céréales': 'Un bol de céréales du petit-déjeuner ou une galette de riz : grain cuit, doux.',
+    'Biscuit': 'Un petit-beurre ou un sablé qui sort du four : farine, beurre, sucre.',
+    'Brioche': 'Une brioche tiède : pâte levée, beurre, un peu de sucre.',
+    'Pain d’épices': 'Une tranche de pain d’épices : miel, cannelle, anis. Fréquent dans les vieux thés blancs.',
+    'Bouillon': 'Un bouillon de légumes ou de poule qui mijote : salé, rond, réconfortant.',
+    'Umami': 'La « cinquième saveur » : celle d’un parmesan, d’une sauce soja ou d’un dashi. Ça remplit la bouche et donne envie d’y revenir.',
+    'Kombu': 'L’algue du dashi japonais : marin, mais surtout savoureux et doux.',
+    'Edamame': 'Les fèves de soja cuites à l’eau salée : vert, sucré, légumineux.',
+    'Menthe': 'Une feuille de menthe fraîche qu’on froisse : plus végétale et douce que le menthol.',
+    'Thym': 'Une branche de thym sec ou la garrigue en été : herbe chaude, un peu résineuse.',
+    'Basilic': 'Une feuille de basilic frais : vert, anisé, un peu poivré.',
+    'Verveine': 'Une infusion de verveine citronnelle : herbe fraîche et citronnée.',
+    'Eucalyptus': 'Une pastille pour la gorge ou un bain d’eucalyptus : frais, camphré, très net.',
     'Orchidée': 'Peu de gens ont senti une orchidée : pense à un parfum floral léger, frais, un peu vanillé, moins sucré que le jasmin. Le Tie Guan Yin jeune en est l’exemple type.',
     'Osmanthus': 'Une petite fleur jaune d’Asie : l’odeur mêle l’abricot sec et la fleur, très douce. On la retrouve dans les confiseries chinoises « 桂花 ».',
     'Fleur d’oranger': 'L’eau de fleur d’oranger des madeleines et des cornes de gazelle : fleur blanche, un peu savonneuse.',
@@ -173,28 +196,32 @@ window.MDT_SAVOIR = {
     'Miel': ['miell', 'honey'], 'Caramel': ['caramélis'], 'Malt': ['malté', 'maltée'], 'Sucre brun': ['cassonade', 'mélasse'],
     'Crème': ['crémeu'], 'Lait': ['lacté', 'laiteu', 'milky'], 'Beurre': ['beurré'],
     'Noisette': ['noisetté'], 'Torréfié': ['torréfaction', 'roasted'], 'Cacao': ['chocolat'], 'Charbon de bois': ['charbon', 'braise'],
-    'Poivre': ['poivré'], 'Réglisse': ['anis'], 'Bois sec': ['bois'], 'Fumée de pin': ['lapsang'], 'Feu de bois': ['fumé', 'fumée'],
+    'Poivre': ['poivré'], 'Anis étoilé': ['badiane', 'anisé'], 'Bois sec': ['bois'], 'Fumée de pin': ['lapsang'], 'Feu de bois': ['fumé', 'fumée'],
     'Sous-bois': ['feuilles mortes', 'mousse'], 'Terre humide': ['terre', 'terreu'], 'Champignon': ['champi'], 'Camphre': ['camphré'],
-    'Pierre mouillée': ['minéral', 'pierre', 'roche'], 'Menthol': ['menthe', 'mentholé'], 'Algue': ['algues'], 'Iodé': ['iode', 'marin', 'marine'],
-    'Herbe coupée': ['herbe', 'herbacé', 'gazon'], 'Épinard': ['épinards'], 'Petits pois': ['petit pois', 'edamame'], 'Haricot vert': ['haricot'], 'Asperge': ['asperges'], 'Foin': ['paille']
+    'Pierre mouillée': ['minéral', 'pierre', 'roche'], 'Menthol': ['mentholé'], 'Menthe': ['mint'], 'Mangue': ['mango'], 'Fruit de la passion': ['passion', 'maracuja'], 'Pain d’épices': ['pain d epice'], 'Bouillon': ['brothy'], 'Umami': ['savoureux'], 'Biscuit': ['biscuité', 'sablé'], 'Céréales': ['céréale', 'grain'], 'Algue': ['algues'], 'Iodé': ['iode', 'marin', 'marine'],
+    'Herbe coupée': ['herbe', 'herbacé', 'gazon'], 'Épinard': ['épinards'], 'Petits pois': ['petit pois'], 'Haricot vert': ['haricot'], 'Asperge': ['asperges'], 'Foin': ['paille']
   },
   // Anciens tags → tags de la roue
-  oldTags: { 'fruite': 'Fruit frais', 'malte': 'Malt', 'terreux': 'Vieilli & terreux', 'doux': 'Subtil', 'agrumes': 'Citron', 'fume': 'Fumé & cuir', 'sucre': 'Sucré & miel', 'grille': 'Grillé', 'mineral': 'Minéral', 'noix': 'Noix', 'vieilli': 'Vieilli & terreux', 'epice': 'Épicé', 'leger': 'Subtil', 'delicat': 'Subtil', 'fort': 'Puissant', 'puissant': 'Puissant', 'corse': 'Corsé' },
+  oldTags: { 'fruite': 'Fruit frais', 'malte': 'Malt', 'terreux': 'Vieilli & terreux', 'doux': 'Subtil', 'agrumes': 'Citron', 'fume': 'Fumé & cuir', 'sucre': 'Sucré & miel', 'grille': 'Grillé', 'mineral': 'Minéral', 'noix': 'Noix', 'cereale': 'Céréales', 'tropical': 'Fruits tropicaux', 'herbace': 'Herbe coupée', 'plantes': 'Herbes aromatiques', 'vieilli': 'Vieilli & terreux', 'epice': 'Épicé', 'leger': 'Subtil', 'delicat': 'Subtil', 'fort': 'Puissant', 'puissant': 'Puissant', 'corse': 'Corsé' },
   wheel: [
-    { k: 'floral', n: 'Floral', c: '#d9849b', s: 'TGK', z: '花香 huāxiāng', a: ['Jasmin', 'Orchidée', 'Rose', 'Osmanthus', 'Fleur d’oranger', 'Chèvrefeuille'], h: 'Fleurs blanches, sucrées ou capiteuses. Oolongs légers, Baozhong, thés blancs, dan cong.' },
+    { k: 'floral', n: 'Floral', c: '#d9849b', s: 'TGK', z: '花香 huāxiāng', a: ['Jasmin', 'Orchidée', 'Rose', 'Osmanthus', 'Fleur d’oranger', 'Chèvrefeuille', 'Gardénia', 'Lys'], h: 'Fleurs blanches, sucrées ou capiteuses. Oolongs légers, Baozhong, thés blancs, dan cong.' },
     { k: 'fruitfrais', n: 'Fruit frais', c: '#e8a35a', s: 'TGK', z: '果香 guǒxiāng', a: ['Pêche', 'Abricot', 'Pomme', 'Poire', 'Litchi', 'Citron', 'Bergamote', 'Pamplemousse', 'Yuzu'], h: 'Fruits juteux, à peine mûrs, et agrumes. Oolongs de Taïwan, Darjeeling first flush, thés blancs.' },
+    { k: 'tropical', n: 'Fruits tropicaux', c: '#efb843', s: 'M', z: '热带果香 rèdài guǒxiāng', a: ['Mangue', 'Ananas', 'Fruit de la passion', 'Banane', 'Melon'], h: 'Fruits exotiques bien mûrs. Darjeeling d’été, oolongs très oxydés, certains thés noirs de Taïwan.' },
     { k: 'fruitmur', n: 'Fruit mûr', c: '#b5674a', s: 'TG', z: '熟果香 · 枣香 zǎoxiāng', a: ['Raisin sec', 'Jujube', 'Figue', 'Pruneau', 'Muscat', 'Fruits rouges'], h: 'Fruits cuits, confits ou séchés. Monte avec l’oxydation : Oriental Beauty, thés noirs, vieux oolongs.' },
     { k: 'sucre', n: 'Sucré & miel', c: '#d9b25a', s: 'TG', z: '甜香 · 蜜香 mìxiāng', a: ['Miel', 'Caramel', 'Sucre brun', 'Vanille', 'Malt', 'Sirop d’érable'], h: 'Douceurs pâtissières. Le « miel » d’Oriental Beauty, les thés noirs, le fond de tasse.' },
     { k: 'lacte', n: 'Lacté', c: '#e6d3a8', s: 'M', z: '奶香 nǎixiāng', a: ['Beurre', 'Lait', 'Crème', 'Maïs doux'], h: 'Rond et gras. Oolongs « milky » (jin xuan), thés jaunes.' },
     { k: 'noix', n: 'Noix & châtaigne', c: '#c28e55', s: 'TGK', z: '栗香 lìxiāng', a: ['Châtaigne', 'Noisette', 'Amande', 'Noix', 'Patate douce'], h: 'Fruits à coque et racines. Thés verts chinois poêlés (栗香), oolongs mi-torréfiés.' },
+    { k: 'cereale', n: 'Céréales & pâtisserie', c: '#c9a46a', s: 'M', z: '谷物香 gǔwùxiāng', a: ['Orge', 'Céréales', 'Biscuit', 'Brioche', 'Pain d’épices'], h: 'Le petit-déjeuner et la boulangerie. Thés noirs du Yunnan, thés jaunes, genmaicha, vieux thés blancs.' },
     { k: 'grille', n: 'Grillé', c: '#a87a4a', s: 'TGK', z: '火香 · 焦香 jiāoxiāng', a: ['Pain grillé', 'Riz grillé', 'Torréfié', 'Café', 'Cacao', 'Charbon de bois'], h: 'Ce qui a vu le feu. Yan cha, hojicha, oolongs fortement torréfiés.' },
-    { k: 'epice', n: 'Épicé', c: '#c0583e', s: 'T', z: '辛香 xīnxiāng', a: ['Cannelle', 'Poivre', 'Clou de girofle', 'Réglisse', 'Gingembre'], h: 'Le placard à épices. Rou gui, Baozhong, thés noirs, vieux thés.' },
+    { k: 'epice', n: 'Épicé', c: '#c0583e', s: 'T', z: '辛香 xīnxiāng', a: ['Cannelle', 'Poivre', 'Clou de girofle', 'Réglisse', 'Gingembre', 'Anis étoilé', 'Cardamome'], h: 'Le placard à épices. Rou gui, Baozhong, thés noirs, vieux thés.' },
     { k: 'boise', n: 'Boisé', c: '#8a6a4a', s: 'TGK', z: '木香 · 槟榔香', a: ['Bois sec', 'Cèdre', 'Santal', 'Écorce', 'Arec', 'Bois humide'], h: 'Bois sec ou mouillé. Liu bao (槟榔香, l’arec), vieux sheng, thés sombres.' },
     { k: 'fume', n: 'Fumé & cuir', c: '#5a5450', s: 'GK', z: '松烟香 sōngyānxiāng', a: ['Fumée de pin', 'Feu de bois', 'Tabac', 'Cuir', 'Encens'], h: 'Fumée et cuir. Lapsang souchong (fumé au pin), certains sheng, vieux oolongs.' },
     { k: 'vieilli', n: 'Vieilli & terreux', c: '#6b5444', s: 'GK', z: '陈香 · 菌花香 · 樟香', a: ['Sous-bois', 'Terre humide', 'Champignon', 'Cave', 'Fleur dorée', 'Camphre'], h: 'Le temps qui passe. Pu’er shou et vieux sheng (陈香, 樟香 camphre), briques de Fu (菌花香, la « fleur dorée »).' },
     { k: 'mineral', n: 'Minéral', c: '#8fa3b0', s: 'M', z: '岩韵 yányùn', a: ['Pierre mouillée', 'Silex', 'Menthol'], h: 'Fraîcheur de roche. Le « yan yun » des thés de rocher du Wuyi.' },
     { k: 'marin', n: 'Marin', c: '#5f9ea0', s: 'GK', z: '海藻香 hǎizǎoxiāng', a: ['Algue', 'Nori', 'Iodé', 'Embruns'], h: 'L’océan. Thés verts à la vapeur : sencha, gyokuro, enshi yulu.' },
+    { k: 'umami', n: 'Umami & bouillon', c: '#7f8c55', s: 'M', z: '鲜味 xiānwèi', a: ['Bouillon', 'Umami', 'Kombu', 'Edamame'], h: 'Savoureux, presque salé. Gyokuro, sencha ombragés, matcha de qualité.' },
     { k: 'vegetal', n: 'Végétal', c: '#7fa85a', s: 'TK', z: '青香 · 豆香 dòuxiāng', a: ['Herbe coupée', 'Épinard', 'Haricot vert', 'Asperge', 'Petits pois', 'Foin', 'Persil'], h: 'Vert, herbacé, légumineux. Thés verts, blancs jeunes, sheng jeune.' },
+    { k: 'herbes', n: 'Herbes aromatiques', c: '#6fa37a', s: 'K', z: '草本香 cǎoběnxiāng', a: ['Menthe', 'Thym', 'Basilic', 'Verveine', 'Eucalyptus'], h: 'Le jardin d’herbes. Certains sheng jeunes, oolongs verts, thés de montagne.' },
     { k: 'tendre', n: 'Tendre & frais', c: '#b3c77a', s: 'G', z: '毫香 · 嫩香 · 清香', a: ['Bourgeon', 'Pousse tendre', 'Fraîcheur'], h: 'Le parfum des bourgeons duveteux (毫香) et des jeunes pousses (嫩香). Bai hao yin zhen, grands verts printaniers.' }
   ]
 };
@@ -237,8 +264,8 @@ window.MDT_SAVOIR = {
     W.forEach((w, i) => {
       const l = L[i], m = l.a0 + l.sp / 2, el = st.fam[i];
       el.p.setAttribute('d', arc(R0, l.r1, l.a0, l.a0 + l.sp, l.e)); el.p.setAttribute('fill-opacity', l.op.toFixed(2));
-      const fs = 11.5 + 2.5 * l.big, need = fs * (w.n.length > 12 ? 1.0 : 1.15);
-      place(el.t, (R0 + l.r1) / 2, m, l.e, m, w.n.length > 12 ? fs - 1.5 : fs, null, l.sp * (R0 + l.r1) / 2 > need ? (l.op < .75 ? .8 : 1) : 0); el.t.style.color = l.op < .75 ? '#2b2118' : el.fg;
+      const fs = 11.5 + 2.5 * l.big, need = Math.min(fs, (l.r1 - R0 - 8) / (0.56 * w.n.length)) * 1.1;
+      const fsF = Math.min(fs, (l.r1 - R0 - 8) / (0.56 * w.n.length)); place(el.t, (R0 + l.r1) / 2, m, l.e, m, fsF, null, l.sp * (R0 + l.r1) / 2 > need ? (l.op < .75 ? .8 : 1) : 0); el.t.style.color = l.op < .75 ? '#2b2118' : el.fg;
       w.a.forEach((x, k) => {
         const b0 = l.a0 + l.sp * k / w.a.length, b1 = l.a0 + l.sp * (k + 1) / w.a.length, ae = el.a[k];
         ae.p.setAttribute('d', arc(l.r1, l.r2, b0, b1, l.e)); ae.p.setAttribute('fill-opacity', l.aop[k].toFixed(2));

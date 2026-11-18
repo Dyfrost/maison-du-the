@@ -1340,10 +1340,10 @@
           <div class="sv-roue">
             <div style="display: flex; flex-direction: column; gap: 10px; min-width: 0;">
               <div id="mdt-wheel" class="sv-wheel"></div>
-              <p class="sv-src">Roue inspirée des roues sensorielles du <a href="https://www.mdpi.com/2304-8158/10/4/836/htm" target="_blank" rel="noopener">TRES de Taïwan</a> (2020 ; Su et al., <i>Foods</i> 2021), de la norme chinoise <a href="https://www.chinesestandard.net/PDF/English.aspx/GBT14487-2017" target="_blank" rel="noopener">GB/T 14487-2017</a> (vocabulaire officiel de la dégustation du thé) et du lexique de <a href="https://bohrium.dp.tech/paper/arxiv/812655149087457280" target="_blank" rel="noopener">Lee &amp; Chambers</a> (Kansas State University, <i>Journal of Sensory Studies</i>, 2007). Les familles « Lacté » et « Minéral » viennent de l’usage des dégustateurs.</p>
+              <p class="sv-src">Roue inspirée des roues sensorielles du <a href="https://www.mdpi.com/2304-8158/10/4/836/htm" target="_blank" rel="noopener">TRES de Taïwan</a> (2020 ; Su et al., <i>Foods</i> 2021), de la norme chinoise <a href="https://www.chinesestandard.net/PDF/English.aspx/GBT14487-2017" target="_blank" rel="noopener">GB/T 14487-2017</a> (vocabulaire officiel de la dégustation du thé) et du lexique de <a href="https://bohrium.dp.tech/paper/arxiv/812655149087457280" target="_blank" rel="noopener">Lee &amp; Chambers</a> (Kansas State University, <i>Journal of Sensory Studies</i>, 2007). Les familles « Fruits tropicaux », « Céréales &amp; pâtisserie », « Lacté », « Minéral » et « Umami &amp; bouillon » viennent de l’usage des dégustateurs.</p>
             </div>
             <div style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 24px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; align-self: start;">
-              <sc-if value="{{ svWNone }}" hint-placeholder-val="{{ true }}"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">Choisissez une couleur</b><p style="margin: 0; font-size: 14.5px; line-height: 1.55; opacity: .8;">Quinze familles d’arômes, près de 80 arômes précis. Astuce : sentez d’abord la grande famille (fleur ? fruit ? grillé ?), puis affinez.</p></sc-if>
+              <sc-if value="{{ svWNone }}" hint-placeholder-val="{{ true }}"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 20px;">Choisissez une couleur</b><p style="margin: 0; font-size: 14.5px; line-height: 1.55; opacity: .8;">Dix-neuf familles d’arômes, plus de 100 arômes précis. Astuce : sentez d’abord la grande famille (fleur ? fruit ? grillé ?), puis affinez.</p></sc-if>
               <sc-if value="{{ svWOn }}" hint-placeholder-val="{{ false }}">
                 <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ svW.cat }}</span>
                 <div style="display: flex; align-items: center; gap: 10px;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 26px; color: {{ svW.color }}; margin-right: auto;">{{ svW.name }}</b><button onClick="{{ svW.prev }}" aria-label="Famille précédente" title="Famille précédente" class="sv-nav">‹</button><button onClick="{{ svW.next }}" aria-label="Famille suivante" title="Famille suivante" class="sv-nav">›</button></div>
@@ -2088,6 +2088,10 @@
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
               <sc-for list="{{ tagRows }}" as="t" hint-placeholder-count="4"><span style="background: var(--color-bg); border-radius: 999px; padding: 6px 12px; font-size: 14px;">{{ t.name }} <span style="opacity: .55;">· {{ t.count }}</span></span></sc-for>
             </div>
+            <h3 style="font-size: 20px; margin: 8px 0 0;">Tags retirés à la conversion</h3>
+            <sc-if value="{{ hasTagDrop }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">Ces tags ne correspondaient à aucun arôme de la roue. Si l’un d’eux manque vraiment, dites-le à Claude pour l’ajouter à la roue.</p>
+              <div style="display: flex; flex-direction: column; gap: 6px;"><sc-for list="{{ tagDrop }}" as="d" hint-placeholder-count="2"><div style="background: var(--color-bg); border-radius: 14px; padding: 8px 12px; font-size: 14px;"><b>{{ d.name }}</b> <span style="opacity: .6;">· {{ d.teas }}</span></div></sc-for></div></sc-if>
+            <sc-if value="{{ noTagDrop }}" hint-placeholder-val="{{ true }}"><p style="margin: 0; font-size: 14px; opacity: .7;">Aucun tag retiré enregistré (la conversion a peut-être eu lieu avant la mise en place de cette liste).</p></sc-if>
           </section>
         </sc-if>
 
@@ -5870,9 +5874,10 @@ class Component extends DCLogic {
       summary: picked.length ? picked.join(' · ') : 'Aucun arôme choisi : ouvre une famille pour préciser.' };
   }
   migrateTags2() {
-    const a = this.getAdds(); if (!this.isAdmin(this.sessionName()) || ((a.options || {}).tagVer || 0) >= 2) return;
-    const prods = a.prods.map(p => { if (!p.tags || !p.tags.length) return p; const t = []; p.tags.forEach(x => { const c = this.canonTag(x); if (c && t.indexOf(c) < 0) t.push(c); }); return Object.assign({}, p, { tags: t }); });
-    this.setAdds(Object.assign({}, a, { prods: prods, options: Object.assign({}, a.options, { tagList: this.canonTags(), tagVer: 2 }) }));
+    const a = this.getAdds(); if (!this.isAdmin(this.sessionName()) || ((a.options || {}).tagVer || 0) >= 3) return;
+    const dropped = Object.assign({}, (a.options || {}).tagDropped || {});
+    const prods = a.prods.map(p => { if (!p.tags || !p.tags.length) return p; const t = []; p.tags.forEach(x => { const c = this.canonTag(x); if (c) { if (t.indexOf(c) < 0) t.push(c); } else { const k = String(x).trim(); (dropped[k] = dropped[k] || []).indexOf(p.nom || p.the) < 0 && dropped[k].push(p.nom || p.the); } }); return Object.assign({}, p, { tags: t }); });
+    this.setAdds(Object.assign({}, a, { prods: prods, options: Object.assign({}, a.options, { tagList: this.canonTags(), tagVer: 3, tagDropped: dropped }) }));
   }
 
   prodEditVals() {
@@ -6623,6 +6628,9 @@ class Component extends DCLogic {
       newTagKey2: e => { if (e.key === 'Enter') { e.preventDefault(); this.addTag2(); } },
       addTag2: () => this.addTag2(),
       resetTags: () => { if (!window.confirm('Remettre la liste de tags par défaut ? Les tags déjà posés sur les thés restent.')) return; this.setTagList(this.keywords.slice()); },
+      tagDrop: Object.keys((this.getAdds().options || {}).tagDropped || {}).map(t => ({ name: t, teas: ((this.getAdds().options || {}).tagDropped[t] || []).join(', ') })),
+      noTagDrop: !Object.keys((this.getAdds().options || {}).tagDropped || {}).length,
+      hasTagDrop: Object.keys((this.getAdds().options || {}).tagDropped || {}).length > 0,
       tagRows: this.allTags().filter(t => this.getAdds().prods.some(p => (p.tags || []).indexOf(t) >= 0)).map(t => {
         const n = this.getAdds().prods.filter(p => (p.tags || []).indexOf(t) >= 0).length;
         return { name: t, count: n ? n + (n > 1 ? ' thés' : ' thé') : 'non utilisé',
