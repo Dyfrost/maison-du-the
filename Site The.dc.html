@@ -1702,7 +1702,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" defaultValue="{{ lf.temps }}" onInput="{{ setLz.temps }}" key="{{ lfKey }}-temps"></label></sc-if>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" defaultValue="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature"></label>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" defaultValue="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ma quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" defaultValue="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal"></label>
               
             </div>
             <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; margin-top: -4px;">{{ logRemain }}</span></sc-if>
@@ -6500,7 +6500,11 @@ class Component extends DCLogic {
         const r = o ? this.remainFor(o) : null;
         const cur = (this.state.lf || {}).with || [];
         const others = this.friendsOf(me).filter(u => u && u !== me).concat(cur.filter(u => u !== me && this.friendsOf(me).indexOf(u) < 0));
-        return { qtyUnit: o && o.prixMode === 'unite' ? 'unités' : 'g', logRemain: r ? r.txt + ' avant cette dégustation' : (o ? 'Quantité du sachet non renseignée : pas d\'estimation du reste.' : ''),
+        const myP = o && o.owner !== me ? this.portionsFor(o).find(x => x.who === me) : null;
+        const fmtq = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
+        const pu = myP && myP.unit === 'u' ? ' u' : ' g';
+        const remainTxt = myP ? 'Ma part : reste ≈ ' + fmtq(myP.left) + pu + ' sur ' + fmtq(myP.grams) + pu + ' (sachet de ' + o.owner + ') avant cette dégustation' : r ? 'Mon sachet : ' + r.txt.charAt(0).toLowerCase() + r.txt.slice(1) + ' avant cette dégustation' : (o ? 'Quantité du sachet non renseignée : pas d\'estimation du reste.' : '');
+        return { qtyUnit: o && o.prixMode === 'unite' ? 'unités' : 'g', logRemain: remainTxt,
           noOthers: !others.length,
           withChips: others.map(u => { const on = cur.indexOf(u) >= 0; return { name: u, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.lf || {}).with || []; return { lf: Object.assign({}, s.lf, { with: on ? c.filter(x => x !== u) : c.concat([u]) }) }; }) }; }) };
       })(),
