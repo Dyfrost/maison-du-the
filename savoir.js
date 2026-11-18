@@ -3,7 +3,7 @@ window.MDT_SAVOIR = {
   // ---------------------------------------------------------------- Encyclopédie
   cats: [
     ['fab', '🌿', 'Fabrication'],
-    ['deg', '✨', 'Dégustation'],
+    ['deg', '👃', 'Dégustation'],
     ['prep', '🫖', 'Préparation'],
     ['type', '🍵', 'Thés & appellations']
   ],
