@@ -161,6 +161,11 @@
   .gs-secret { background: repeating-linear-gradient(45deg, #2b2118, #2b2118 12px, #3a2d22 12px, #3a2d22 24px); color: #f6efe2; border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; }
   .gs-best { background: rgba(255,255,255,.1); border-radius: 16px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px; }
   .gs-best b { font-size: 17px; font-weight: 600; }
+  .gs-infn { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 58px; height: 44px; padding: 0 12px; border-radius: 999px; background: #5f9ea0; color: #fff; font-family: var(--font-heading); font-size: 20px; }
+  .gs-infbar { background: #d9e8e8; }
+  .gs-infbar2 { display: flex; align-items: center; gap: 12px; background: #d9e8e8; border-radius: 18px; padding: 10px 14px; font-size: 15px; line-height: 1.45; }
+  .gs-ch.off { opacity: .45; cursor: default; }
+  .gs-hint:not(.open) { cursor: default; }
   .gs-peek { cursor: pointer; border: none; border-radius: 999px; padding: 10px 18px; font-family: var(--font-body); font-size: 15px; background: rgba(255,255,255,.12); color: #f6efe2; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3); align-self: flex-start; }
   .gs-q { flex: none; width: 76px; height: 76px; border-radius: 50%; background: #2b2118; color: #f6efe2; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 40px; animation: gsPulse 2.4s ease-in-out infinite; }
   @keyframes gsPulse { 0%, 100% { transform: scale(1) rotate(-4deg); } 50% { transform: scale(1.06) rotate(4deg); } }
@@ -1134,7 +1139,7 @@
 
         <sc-if value="{{ gs.gsSetupOn }}" hint-placeholder-val="{{ true }}">
           <sc-if value="{{ gs.gsHasLive }}" hint-placeholder-val="{{ false }}"><section class="gs-card" style="background: var(--color-accent-100);"><h2 class="gs-h2">🎯 Parties en cours</h2><sc-for list="{{ gs.gsLive }}" as="lv" hint-placeholder-count="1"><div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 15px; margin-right: auto;">{{ lv.txt }}</span><button class="btn btn-primary" onClick="{{ lv.join }}" style="white-space: nowrap;">Rejoindre</button></div></sc-for></section></sc-if>
-          <p style="margin: 0; font-size: 16px; line-height: 1.55; opacity: .8; max-width: 780px;">Le <b>maître du jeu</b> voit tout sur son écran : le thé tiré, comment le préparer et les réponses de chacun. Les <b>joueurs</b> goûtent la tasse sur leur téléphone, débloquent des indices (qui coûtent des points) et choisissent leur réponse. 100 points par bonne réponse, moins les indices.</p>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55; opacity: .8; max-width: 780px;">Le <b>maître du jeu</b> voit tout sur son écran : le thé tiré, comment le préparer et les réponses de chacun. Les <b>joueurs</b> goûtent sur leur téléphone. À chaque nouvelle infusion, un indice de plus se révèle… mais la réponse rapporte moins : 100 pts à la 1re infusion, puis 80, 65, 50, 40, 30. Une réponse est définitive : à toi de choisir le bon moment.</p>
           <section class="gs-card">
             <h2 class="gs-h2">👑 Maître du jeu</h2>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ gs.gsMasters }}" as="m" hint-placeholder-count="3"><button class="{{ m.cls }}" onClick="{{ m.go }}">{{ m.label }}</button></sc-for></div>
@@ -1142,6 +1147,9 @@
             <sc-if value="{{ gs.gsNoPeople }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">Ajoute des amis ou rejoins un salon pour avoir des joueurs.</span></sc-if>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ gs.gsPlayers }}" as="m" hint-placeholder-count="3"><button class="{{ m.cls }}" onClick="{{ m.go }}">{{ m.label }}</button></sc-for></div>
             <h2 class="gs-h2" style="margin-top: 4px;">🍵 Avec quels thés ?</h2>
+            <span class="gs-k">La boîte de qui ?</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ gs.gsSrcs }}" as="sr" hint-placeholder-count="2"><button class="{{ sr.cls }}" onClick="{{ sr.go }}">{{ sr.label }}<sc-if value="{{ sr.sub }}" hint-placeholder-val="{{ false }}"><small>{{ sr.sub }}</small></sc-if></button></sc-for></div>
+            <span class="gs-k">Lesquels ?</span>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button class="lf-sp {{ gs.gsModeAll }}" onClick="{{ gs.gsPickAll }}" aria-pressed="{{ gs.gsModeAll }}">📦 Toute la boîte <small>{{ gs.gsAllTxt }}</small></button>
               <button class="lf-sp {{ gs.gsModePick }}" onClick="{{ gs.gsPickSel }}" aria-pressed="{{ gs.gsModePick }}">✋ Ceux qu’on a sous la main</button>
@@ -1167,6 +1175,10 @@
               <details style="font-size: 14px; opacity: .85;"><summary style="cursor: pointer;">Indices que verront les joueurs</summary><sc-for list="{{ gs.gsHintsAll }}" as="h" hint-placeholder-count="3"><div style="padding: 3px 0;">{{ h.txt }}</div></sc-for></details>
               <sc-if value="{{ gs.gsPlay }}" hint-placeholder-val="{{ true }}"><button class="gs-peek" onClick="{{ gs.gsRedraw }}">🔄 Tirer un autre thé (on ne l’a pas sous la main)</button></sc-if>
             </section>
+            <sc-if value="{{ gs.gsPlay }}" hint-placeholder-val="{{ true }}"><section class="gs-card gs-infbar">
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><span class="gs-infn">💧 {{ gs.gsInf }}</span><div style="display: flex; flex-direction: column; gap: 2px; margin-right: auto;"><b style="font-size: 17px;">Infusion {{ gs.gsInf }} · une bonne réponse vaut {{ gs.gsInfPts }}</b><span style="font-size: 14px; opacity: .75;">{{ gs.gsInfTime }}</span></div>
+              <sc-if value="{{ gs.gsCanNextInf }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ gs.gsNextInf }}" style="white-space: nowrap;">💧 Infusion suivante (révèle un indice)</button></sc-if></div>
+            </section></sc-if>
             <section class="gs-card">
               <h2 class="gs-h2">Les joueurs</h2>
               <div class="gs-histl"><sc-for list="{{ gs.gsStatus }}" as="x" hint-placeholder-count="2"><span class="{{ x.cls }}"><b>{{ x.name }}</b> {{ x.txt }}</span></sc-for></div>
@@ -1182,12 +1194,13 @@
           <sc-if value="{{ gs.gsIsPlayer }}" hint-placeholder-val="{{ true }}">
             <sc-if value="{{ gs.gsPlay }}" hint-placeholder-val="{{ true }}">
               <section class="gs-card">
-                <div style="display: flex; gap: 16px; align-items: center;"><span class="gs-q">?</span><div style="display: flex; flex-direction: column; gap: 4px;"><h2 class="gs-h2">Une tasse mystère</h2><span style="font-size: 15px; opacity: .75;">Servie par {{ gs.gsMasterName }}. Sens la feuille, puis la tasse, puis bois. Encore {{ gs.gsPts }} points en jeu ({{ gs.gsCost }}).</span></div></div>
-                <sc-if value="{{ gs.gsNotAnswered }}" hint-placeholder-val="{{ true }}"><span class="gs-k">Indices · touche pour révéler</span>
+                <div style="display: flex; gap: 16px; align-items: center;"><span class="gs-q">?</span><div style="display: flex; flex-direction: column; gap: 4px;"><h2 class="gs-h2">Une tasse mystère</h2><span style="font-size: 15px; opacity: .75;">Servie par {{ gs.gsMasterName }}. Sens la feuille, puis la tasse, puis bois.</span></div></div>
+                <div class="gs-infbar2"><span class="gs-infn">💧 {{ gs.gsInf }}</span><span>Infusion {{ gs.gsInf }} · répondre maintenant rapporte <b>{{ gs.gsPts }} pts</b>, à la prochaine infusion {{ gs.gsNextPts }} pts. Une réponse est définitive.</span></div>
+                <sc-if value="{{ gs.gsNotAnswered }}" hint-placeholder-val="{{ true }}"><span class="gs-k">Indices · un de plus à chaque infusion</span>
                   <div class="gs-hints"><sc-for list="{{ gs.gsHints }}" as="h" hint-placeholder-count="5"><button class="{{ h.cls }}" onClick="{{ h.unlock }}"><span class="gs-hi">{{ h.icon }}</span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><small>{{ h.label }} · {{ h.cost }}</small><sc-if value="{{ h.open }}" hint-placeholder-val="{{ false }}"><b>{{ h.val }}</b></sc-if><sc-if value="{{ h.closed }}" hint-placeholder-val="{{ true }}"><b style="opacity: .45;">••••••</b></sc-if></span></button></sc-for></div></sc-if>
                 <span class="gs-k">Ta réponse</span>
                 <div class="gs-grid"><sc-for list="{{ gs.gsOpts }}" as="o" hint-placeholder-count="6"><button class="{{ o.cls }}" onClick="{{ o.pick }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div>
-                <sc-if value="{{ gs.gsAnswered }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">✅ Réponse envoyée : <b>{{ gs.gsMyAnswer }}</b>. Tu peux encore changer d’avis tant que {{ gs.gsMasterName }} n’a pas révélé.</p></sc-if>
+                <sc-if value="{{ gs.gsAnswered }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">🔒 Réponse verrouillée à l’infusion {{ gs.gsMyInf }} : <b>{{ gs.gsMyAnswer }}</b> ({{ gs.gsMyPts }} pts si c’est juste). Verdict quand {{ gs.gsMasterName }} révélera.</p></sc-if>
               </section>
             </sc-if>
             <sc-if value="{{ gs.gsWon }}" hint-placeholder-val="{{ false }}"><section class="gs-res ok"><span style="font-size: 44px;">🎉</span><div><b class="gs-big">Bien vu !</b><span>C’était bien <b>{{ gs.gsTarget }}</b> · {{ gs.gsTargetFam }}. {{ gs.gsGain }}.</span></div></section></sc-if>
@@ -4575,6 +4588,7 @@ class Component extends DCLogic {
     const now = Date.now(); Object.keys(out).forEach(id => { if (now - (out[id].ts || 0) > 3 * 864e5) delete out[id]; });
     return out;
   }
+  guessPtsAt(inf) { const T = [100, 80, 65, 50, 40, 30]; return T[Math.min(T.length, Math.max(1, inf)) - 1] || 20; }
   guessHints(id) {
     const S = window.MDT_SAVOIR || {}; const a = this.getAdds(); const p = a.prods.find(x => x.id === id) || {};
     const tags = (p.tags || []).map(t => this.canonTag(t)).filter(Boolean);
@@ -4603,7 +4617,7 @@ class Component extends DCLogic {
     const l = ls[0]; if (!l) return null;
     const gear = this.logGears(l).map(g => g.name).join(', ');
     const temps = this.infsOf(l).length ? this.infsOf(l).map(i => i.t).join(' / ') + ' s' : (l.temps || '');
-    return { note: String(l.note).replace('.', ','), who: l.author, date: this.fmtDate(l.date),
+    return { infs: this.infsOf(l).map(i => i.t), note: String(l.note).replace('.', ','), who: l.author, date: this.fmtDate(l.date),
       params: [l.qty ? l.qty + (/g/.test(l.qty) ? '' : ' g') : '', l.temperature ? l.temperature + (/°/.test(l.temperature) ? '' : ' °C') : '', temps, gear, l.technique ? 'technique ' + l.technique : ''].filter(Boolean).join(' · ') || 'réglages non renseignés' };
   }
   guessView(me) {
@@ -4625,17 +4639,22 @@ class Component extends DCLogic {
       const master = st.master || me;
       const people = Array.from(new Set([me].concat(this.salonMates(me), this.friendsOf(me))));
       const players = (st.players || people.filter(u => u !== master && this.salonMates(me).indexOf(u) >= 0)).filter(u => u !== master);
-      const coll = this.collection().filter(o => this.canTaste(o, master) && !this.emptyFor(o, master));
+      const team = [master].concat(players);
+      const src = st.src && (st.src === '*' || team.indexOf(st.src) >= 0) ? st.src : master;   // boîte de qui ? '*' = toutes réunies
+      const owners = src === '*' ? team : [src];
+      const coll = this.collection().filter(o => owners.some(u => this.canTaste(o, u) && !this.emptyFor(o, u)));
       const byProd = {}; coll.forEach(o => { byProd[o.prodId] = 1; });
       const allIds = Object.keys(byProd).sort((x, y) => nm(x).localeCompare(nm(y), 'fr'));
       const mode = st.mode || 'all'; const pick = st.pick || [];
       const pool = mode === 'pick' ? pick.filter(id => byProd[id]) : allIds;
+      const boxOf = u => { const ids = {}; this.collection().forEach(o => { if (this.canTaste(o, u) && !this.emptyFor(o, u)) ids[o.prodId] = 1; }); return Object.keys(ids).length; };
       return Object.assign(base, {
         gsMasters: people.map(u => ({ label: (u === master ? '👑 ' : '') + u + (u === me ? ' (moi)' : ''), cls: u === master ? 'lf-sp hot' : 'lf-sp', go: () => setS({ master: u, players: players.filter(x => x !== u).concat(u !== master && master !== u ? [master].filter(x => x !== u) : []) }) })),
         gsPlayers: people.filter(u => u !== master).map(u => { const on = players.indexOf(u) >= 0; return { label: (on ? '✓ ' : '') + u + (u === me ? ' (moi)' : ''), cls: on ? 'lf-sp hot' : 'lf-sp', go: () => setS({ players: on ? players.filter(x => x !== u) : players.concat([u]) }) }; }),
         gsNoPeople: people.length < 2,
         gsModeAll: mode !== 'pick', gsModePick: mode === 'pick', gsPickAll: () => setS({ mode: 'all' }), gsPickSel: () => setS({ mode: 'pick' }),
-        gsAllTxt: allIds.length + ' thé' + (allIds.length > 1 ? 's' : '') + ' chez ' + (master === me ? 'toi' : master),
+        gsSrcs: team.map(u => ({ u: u, lbl: '📦 Boîte de ' + (u === me ? 'moi' : u) + (u === master ? ' 👑' : ''), n: boxOf(u) })).concat(team.length > 1 ? [{ u: '*', lbl: '🧺 Toutes les boîtes réunies', n: null }] : []).map(x => ({ label: x.lbl, sub: x.n != null ? x.n + ' thé' + (x.n > 1 ? 's' : '') : '', cls: src === x.u ? 'lf-sp hot' : 'lf-sp', go: () => setS({ src: x.u, pick: [] }) })),
+        gsAllTxt: allIds.length + ' thé' + (allIds.length > 1 ? 's' : '') + (src === '*' ? ' dans toutes les boîtes' : ' chez ' + (src === me ? 'toi' : src)),
         gsChoices: allIds.map(id => { const on = pick.indexOf(id) >= 0; return { label: nm(id), sub: famName(id), on: on, cls: on ? 'gs-ch on' : 'gs-ch', toggle: () => setS({ pick: on ? pick.filter(x => x !== id) : pick.concat([id]) }) }; }),
         gsPoolTxt: !players.length ? 'Choisis au moins un joueur.' : pool.length < 2 ? 'Il faut au moins 2 thés pour jouer.' : pool.length + ' thés en jeu · ' + players.length + ' joueur' + (players.length > 1 ? 's' : ''),
         gsCanStart: pool.length >= 2 && players.length > 0,
@@ -4646,7 +4665,7 @@ class Component extends DCLogic {
     // ---- partie en cours
     const g = GG[gid]; const isMaster = g.master === me; const isPlayer = (g.players || []).indexOf(me) >= 0;
     const rd = g.round + ':' + g.target; const ans = (g.answers || {})[rd] || {}; const hb = (g.hintsBy || {})[rd] || {};
-    const H = this.guessHints(g.target);
+    const H = this.guessHints(g.target); const INF = g.inf || 1;
     const costOf = u => H.filter(h => (hb[u] || []).indexOf(h.k) >= 0).reduce((t, h) => t + h.cost, 0);
     const ptsOf = (rdk, u) => { const x = ((g.answers || {})[rdk] || {})[u]; return x && x.ok ? x.pts : 0; };
     const score = u => Object.keys(g.answers || {}).filter(k => g.revealed && g.revealed.indexOf(k) >= 0).reduce((t, k) => t + ptsOf(k, u), 0);
@@ -4661,15 +4680,19 @@ class Component extends DCLogic {
       gsBoard: board, gsPlay: g.phase === 'play', gsReveal: g.phase === 'reveal', gsEnded: g.phase === 'ended', gsTarget: nm(g.target), gsTargetFam: famName(g.target),
       gsLeave: () => this.setState({ gsId: null }) };
     if (isMaster) {
-      const mcoll = this.collection().filter(o => o.prodId === g.target && this.canTaste(o, me));
+      const team = [g.master].concat(g.players || []); const mcoll = this.collection().filter(o => o.prodId === g.target && team.some(u => this.canTaste(o, u))).sort((x, y) => (y.owner === me) - (x.owner === me));
       const best = this.guessBest(g.target); const pr = prodOf(g.target);
       const bump = fn => this.setGuessGame(g.id, x => { fn(x); x.rev = (x.rev || 0) + 1; x.ts = Date.now(); return x; });
       return Object.assign(base, common, {
-        gsSac: mcoll.map(o => (o.owner === me ? 'ton sachet' : 'la portion de ' + o.owner) + (o.code ? ' ' + o.code : '')).join(' ou ') || '—',
+        gsSac: mcoll.map(o => (o.owner === me ? 'ton sachet' : 'le sachet de ' + o.owner) + (o.code ? ' ' + o.code : '')).join(' ou ') || '—',
         gsBest: best ? best.note + '/20 par ' + best.who + ' le ' + best.date : '', gsBestParams: best ? best.params : '', gsHasBest: !!best, gsNoBest: !best,
         gsReco: [pr.recoQty ? pr.recoQty + ' g' : '', pr.recoTemp ? pr.recoTemp + (/°/.test(pr.recoTemp) ? '' : ' °C') : '', pr.recoTimes || ''].filter(Boolean).join(' · '),
-        gsHintsAll: H.map(h => ({ txt: h.icon + ' ' + h.label + ' : ' + h.val })),
-        gsStatus: (g.players || []).map(u => { const x = ans[u]; const nh = (hb[u] || []).length; return { name: u, txt: x ? 'a répondu ' + nm(x.pid) + (x.ok ? ' ✓' : ' ✗') : 'réfléchit…' + (nh ? ' (' + nh + ' indice' + (nh > 1 ? 's' : '') + ')' : ''), cls: x ? (x.ok ? 'gs-h ok' : 'gs-h ko') : 'gs-h' }; }),
+        gsHintsAll: H.map((h, i) => ({ txt: 'Infusion ' + (i + 1) + ' · ' + h.icon + ' ' + h.label + ' : ' + h.val + ((g.inf || 1) > i ? ' ✓ révélé' : '') })),
+        gsInf: String(g.inf || 1), gsInfPts: this.guessPtsAt(g.inf || 1) + ' pts',
+        gsInfTime: best && best.infs.length ? (best.infs[(g.inf || 1) - 1] != null ? 'Temps conseillé pour cette infusion : ' + best.infs[(g.inf || 1) - 1] + ' s (d’après la meilleure séance)' : 'La meilleure séance s’arrêtait à ' + best.infs.length + ' infusions : allonge un peu le temps') : '',
+        gsCanNextInf: g.phase === 'play' && (g.inf || 1) < H.length + 2,
+        gsNextInf: () => bump(x => { x.inf = (x.inf || 1) + 1; }),
+        gsStatus: (g.players || []).map(u => { const x = ans[u]; const nh = (hb[u] || []).length; return { name: u, txt: x ? 'a répondu ' + nm(x.pid) + ' à l’infusion ' + (x.inf || 1) + (x.ok ? ' ✓ ' + x.pts + ' pts' : ' ✗') : 'réfléchit…', cls: x ? (x.ok ? 'gs-h ok' : 'gs-h ko') : 'gs-h' }; }),
         gsAllAnswered: (g.players || []).every(u => ans[u]),
         gsRedraw: () => { if (Object.keys(ans).length && !window.confirm('Des joueurs ont déjà répondu : tirer un autre thé annule leurs réponses de cette manche. Continuer ?')) return; bump(x => { const n = this.guessNewRound(x, true); Object.assign(x, n); }); },
         gsDoReveal: () => bump(x => { x.phase = 'reveal'; x.revealed = (x.revealed || []).concat([x.round + ':' + x.target]); }),
@@ -4677,23 +4700,23 @@ class Component extends DCLogic {
         gsEnd: () => { if (window.confirm('Terminer la partie ?')) bump(x => { x.phase = 'ended'; }); },
         gsSave: () => { const o = mcoll[0]; if (!o) return; this.setState({ view: 'log', editLogId: null, lfMode: 'full', logMsg: '', lf: Object.assign(this.lfWithLot({ date: mdtToday(), with: (g.players || []).filter(u => u !== me) }, o.id), { avis: '🎯 Devine le thé (manche ' + g.round + ') : ' + (g.players || []).map(u => u + ' ' + (ans[u] && ans[u].ok ? '✓' : '✗')).join(', ') + '. ' }) }); } });
     }
-    // joueur
-    const used = hb[me] || []; const myAns = ans[me]; const cost = costOf(me);
+    // joueur : chaque infusion révèle un indice ; plus on répond tôt, plus ça rapporte (réponse verrouillée)
+    const myAns = ans[me]; const ptsNow = this.guessPtsAt(INF);
     return Object.assign(base, common, {
-      gsPts: String(Math.max(10, 100 - cost)), gsCost: cost ? '−' + cost + ' pts d’indices' : 'aucun indice utilisé',
-      gsHints: H.map(h => { const open = used.indexOf(h.k) >= 0; return { icon: h.icon, label: h.label, val: h.val, open: open, closed: !open, cost: h.cost ? '−' + h.cost + ' pts' : 'Gratuit', cls: open ? 'gs-hint open' : 'gs-hint',
-        unlock: () => { if (open || myAns || g.phase !== 'play') return; this.setGuessGame(g.id, x => { x.hintsBy = x.hintsBy || {}; x.hintsBy[rd] = x.hintsBy[rd] || {}; x.hintsBy[rd][me] = (x.hintsBy[rd][me] || []).concat([h.k]); return x; }); } }; }),
-      gsOpts: (g.opts || []).map(id => ({ label: nm(id), sub: famName(id), cls: myAns && myAns.pid === id ? 'gs-ch on' : 'gs-ch',
-        pick: () => { if (g.phase !== 'play') return; const ok = id === g.target; this.setGuessGame(g.id, x => { x.answers = x.answers || {}; x.answers[rd] = x.answers[rd] || {}; x.answers[rd][me] = { pid: id, ok: ok, pts: ok ? Math.max(10, 100 - cost) : 0, target: g.target, ts: Date.now() }; return x; }); } })),
-      gsAnswered: !!myAns, gsNotAnswered: !myAns, gsMyAnswer: myAns ? nm(myAns.pid) : '',
-      gsWon: revealed && !!myAns && myAns.ok, gsLost: revealed && !(myAns && myAns.ok), gsGain: myAns && myAns.ok ? '+' + myAns.pts + ' points' : '0 point', gsAnswerTxt: myAns ? 'Tu as répondu ' + nm(myAns.pid) : 'Tu n’as pas répondu',
+      gsInf: String(INF), gsPts: String(ptsNow), gsNextPts: String(this.guessPtsAt(INF + 1)),
+      gsHints: H.map((h, i) => { const open = INF > i; return { icon: h.icon, label: h.label, val: h.val, open: open, closed: !open, cost: open ? 'révélé à l’infusion ' + (i + 1) : 'à l’infusion ' + (i + 1), cls: open ? 'gs-hint open' : 'gs-hint', unlock: () => {} }; }),
+      gsOpts: (g.opts || []).map(id => ({ label: nm(id), sub: famName(id), cls: myAns && myAns.pid === id ? 'gs-ch on' : myAns ? 'gs-ch off' : 'gs-ch',
+        pick: () => { if (g.phase !== 'play' || myAns) return; if (!window.confirm('Répondre « ' + nm(id) + ' » maintenant, pour ' + ptsNow + ' points ? Ta réponse sera verrouillée.')) return; const ok = id === g.target;
+          this.setGuessGame(g.id, x => { x.answers = x.answers || {}; x.answers[rd] = x.answers[rd] || {}; if (!x.answers[rd][me]) x.answers[rd][me] = { pid: id, ok: ok, pts: ok ? ptsNow : 0, inf: INF, target: g.target, ts: Date.now() }; return x; }); } })),
+      gsAnswered: !!myAns, gsNotAnswered: !myAns, gsMyAnswer: myAns ? nm(myAns.pid) : '', gsMyInf: myAns ? String(myAns.inf || 1) : '', gsMyPts: myAns ? String(this.guessPtsAt(myAns.inf || 1)) : '',
+      gsWon: revealed && !!myAns && myAns.ok, gsLost: revealed && !(myAns && myAns.ok), gsGain: myAns && myAns.ok ? '+' + myAns.pts + ' points (réponse à l’infusion ' + (myAns.inf || 1) + ')' : '0 point', gsAnswerTxt: myAns ? 'Tu as répondu ' + nm(myAns.pid) : 'Tu n’as pas répondu',
       gsClue: (prodOf(g.target).tags || []).filter(x => this.canonTag(x)).slice(0, 6).join(', ') });
   }
   guessNewRound(g, same) {
     const pool = g.pool || []; const prev = g.target; const cand = pool.length > 2 ? pool.filter(x => x !== prev) : pool; const t = cand[Math.floor(Math.random() * cand.length)];
     const others = pool.filter(x => x !== t).sort(() => Math.random() - .5).slice(0, 7); const opts = others.concat([t]).sort(() => Math.random() - .5);
     const round = same ? g.round : (g.round || 0) + 1; const ans = Object.assign({}, g.answers || {}); const hb = Object.assign({}, g.hintsBy || {}); delete ans[String(round)]; delete hb[String(round)];
-    return Object.assign({}, g, { target: t, opts: opts, round: round, answers: ans, hintsBy: hb, phase: 'play' });
+    return Object.assign({}, g, { target: t, opts: opts, round: round, answers: ans, hintsBy: hb, phase: 'play', inf: 1 });
   }
 
   // ---------- Tea Wrapped mensuel
