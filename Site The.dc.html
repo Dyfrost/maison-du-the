@@ -314,6 +314,7 @@
     main.page .row-wrap > .acts, main.page .row-wrap > .side { flex: 1 1 100% !important; justify-content: flex-start !important; align-items: flex-start !important; text-align: left !important; flex-direction: row !important; gap: 8px !important; }
     main.page input, main.page select, main.page textarea { font-size: 16px !important; }
     .tabbar { display: flex !important; }
+    .bug-fab { width: 40px !important; height: 40px !important; font-size: 18px !important; right: 12px !important; bottom: calc(92px + env(safe-area-inset-bottom)) !important; opacity: .85; }
     header .ubtn { font-size: 0 !important; padding: 3px 8px 3px 3px !important; gap: 4px !important; }
     header .ubtn > span:first-child { font-size: 12px !important; }
     header .ubtn > span:not(:first-child) { display: none !important; }
@@ -358,6 +359,12 @@
     </div>
     </sc-if>
     <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; width: 42px; height: 42px; padding: 0; border-radius: 50%; background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center;" style-hover="background: var(--color-accent-100);"><img src="{{ langFlag }}" alt="" width="24" height="16" style="width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); display: block;"></button>
+    <sc-if value="{{ scanOn }}" hint-placeholder-val="{{ false }}"><div class="bug-ov" role="dialog" aria-modal="true" aria-label="Scanner un QR code"><button class="bug-bd" onClick="{{ scanClose }}" aria-label="Fermer"></button>
+      <div class="bug-box" style="align-items: stretch;">
+        <div style="display: flex; align-items: center; gap: 10px;"><h2 style="margin: 0; font-size: 22px; margin-right: auto;">📷 Scanner un sachet</h2><button onClick="{{ scanClose }}" aria-label="Fermer" style="cursor: pointer; border: none; background: transparent; font-size: 20px; color: var(--color-text);">✕</button></div>
+        <div style="position: relative; border-radius: 18px; overflow: hidden; background: #000; aspect-ratio: 3 / 4; max-height: 60vh;"><video id="mdt-scan-video" playsInline="{{ true }}" muted="{{ true }}" autoPlay="{{ true }}" style="width: 100%; height: 100%; object-fit: cover; display: block;"></video><div style="position: absolute; inset: 18%; border: 3px solid rgba(255,255,255,.85); border-radius: 18px; pointer-events: none;"></div></div>
+        <p role="status" style="margin: 0; font-size: 14px; text-align: center;">{{ scanMsg }}</p>
+      </div></div></sc-if>
     <sc-if value="{{ bg0.bugBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bg0.bugToggle }}" class="bug-fab" title="Signaler un bug" aria-label="Signaler un bug">🐞</button></sc-if>
     <sc-if value="{{ bg0.bugOpen }}" hint-placeholder-val="{{ false }}"><div class="bug-ov" role="dialog" aria-modal="true" aria-label="Signaler un bug"><button class="bug-bd" onClick="{{ bg0.bugClose }}" aria-label="Fermer"></button>
       <div class="bug-box">
@@ -500,6 +507,7 @@
             <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; font-size: 16px; padding: 14px 22px;">☕ Nouvelle dégustation</button>
             <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
             <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
+            <sc-if value="{{ canScan }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ scanOpen }}" style="white-space: nowrap;">📷 Scanner</button></sc-if>
           </div>
           <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ true }}">
           <div style="position: relative; overflow: hidden; background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
@@ -695,7 +703,7 @@
             <h1 style="font-size: 46px; margin: 0;">Mes thés</h1>
             <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">{{ mineCount }}</p>
           </div>
-          <div style="display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap;"><sc-if value="{{ canQrAll }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ qrAll }}" title="Une étiquette QR par sachet (non vide) : scannée, elle lance une dégustation" style="white-space: nowrap;">🏷️ Étiquettes QR</button></sc-if><button class="btn btn-primary" onClick="{{ newLot }}" style="white-space: nowrap;">＋ Ajouter un thé</button></div>
+          <div style="display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap;"><sc-if value="{{ canScan }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ scanOpen }}" style="white-space: nowrap;">📷 Scanner un QR</button></sc-if><sc-if value="{{ canQrAll }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ qrAll }}" title="Une étiquette QR par sachet (non vide) : scannée, elle lance une dégustation" style="white-space: nowrap;">🏷️ Étiquettes QR</button></sc-if><button class="btn btn-primary" onClick="{{ newLot }}" style="white-space: nowrap;">＋ Ajouter un thé</button></div>
         </div>
         <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 3px;">
           <sc-if value="{{ scopeMeOn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Les thés de {{ me }}</button></sc-if><sc-if value="{{ scopeMeOff }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Les thés de {{ me }}</button></sc-if>
@@ -5325,6 +5333,37 @@ class Component extends DCLogic {
       nfTz: nf.tz || (Intl.DateTimeFormat().resolvedOptions().timeZone) || '' };
   }
   // ---------- Étiquettes QR : un code par sachet ; scanné, il ouvre une dégustation de ce sachet
+  // ---------- Scanner de QR dans l'appli (garde la session de l'écran d'accueil)
+  async scanStart() {
+    this.setState({ scanOn: true, scanMsg: 'Ouverture de la caméra…' });
+    try {
+      if (!window.jsQR) await new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = './vendor/jsQR-1.4.0.js'; sc.onload = res; sc.onerror = () => rej(new Error('lecteur de QR introuvable')); document.head.appendChild(sc); });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+      this._scanStream = stream;
+      await new Promise(r => setTimeout(r, 50));
+      const v = document.getElementById('mdt-scan-video'); if (!v) { this.scanStop(); return; }
+      v.srcObject = stream; v.setAttribute('playsinline', ''); v.muted = true; await v.play();
+      this.setState({ scanMsg: 'Visez le QR code d’un sachet' });
+      const c = document.createElement('canvas'); const ctx = c.getContext('2d', { willReadFrequently: true });
+      const tick = () => {
+        if (!this._scanStream) return;
+        if (v.readyState >= 2 && v.videoWidth) {
+          const w = Math.min(640, v.videoWidth), h = Math.round(v.videoHeight * w / v.videoWidth); c.width = w; c.height = h; ctx.drawImage(v, 0, 0, w, h);
+          const code = window.jsQR(ctx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' });
+          if (code && code.data) { this.scanFound(code.data); return; }
+        }
+        this._scanT = setTimeout(tick, 180);
+      };
+      tick();
+    } catch (e) { this.setState({ scanMsg: 'Caméra indisponible : ' + (e.message || e) + '. Autorisez la caméra pour ce site dans les réglages.' }); }
+  }
+  scanStop() { clearTimeout(this._scanT); try { (this._scanStream ? this._scanStream.getTracks() : []).forEach(t => t.stop()); } catch (e) {} this._scanStream = null; this.setState({ scanOn: false, scanMsg: '' }); }
+  scanFound(txt) {
+    this.scanStop(); try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
+    const h = String(txt).indexOf('#');
+    if (h >= 0 && /#(sac|prod|log|go)=/.test(txt.slice(h))) { const hash = txt.slice(h); if (location.hash === hash) this.applyHash(); else location.hash = hash; return; }
+    this.flash('Ce QR code n’est pas un sachet de la Maison du Thé.');
+  }
   printLabels(ids, title, offIds) {
     offIds = offIds || [];
     const coll = this.collection(); const list = ids.map(id => coll.find(o => o.id === id)).filter(Boolean);
@@ -8300,6 +8339,7 @@ class Component extends DCLogic {
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
       shareToast: this.state.shareToast || '', bg0: this.bugView(me),
+      scanOn: !!this.state.scanOn, scanMsg: this.state.scanMsg || '', scanOpen: () => this.scanStart(), scanClose: () => this.scanStop(), canScan: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
       canQrAll: !!me && this.collection().some(o => o.owner === me), qrAll: () => { const mineC = this.collection().filter(o => o.owner === me).sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr')); this.printLabels(mineC.map(o => o.id), 'Mes étiquettes', mineC.filter(o => this.isEmptySachet(o)).map(o => o.id)); },
       teaBtnTxt: this.isMod(me) ? 'Ajouter au catalogue' : 'Proposer au catalogue', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
       ...(() => { const ann = (this.getAdds().options || {}).announce || {}; let hidden = false; try { hidden = !!ann.at && localStorage.getItem('mdt-ann') === ann.at; } catch (e) {}
