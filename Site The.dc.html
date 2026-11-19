@@ -138,6 +138,32 @@
   .mdt-tip.on { opacity: 1; transform: none; }
   .mdt-tip b { font-size: 12px; letter-spacing: .04em; }
   .tag-accent { cursor: help; }
+  .wrap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .wrap-card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px 22px 20px; min-height: 170px; display: flex; flex-direction: column; gap: 6px; box-shadow: var(--shadow-sm); animation: wrapIn .55s cubic-bezier(.2,.9,.3,1.2) both; }
+  .wrap-card:first-child { grid-column: span 2; min-height: 200px; }
+  .wrap-ic { position: absolute; right: 14px; top: 10px; font-size: 54px; opacity: .22; transform: rotate(-8deg); }
+  .wrap-k { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
+  .wrap-big { font-family: var(--font-heading); font-weight: 400; font-size: 34px; line-height: 1.08; margin-top: auto; overflow-wrap: anywhere; }
+  .wrap-card:first-child .wrap-big { font-size: 52px; }
+  .wrap-sub { font-size: 14px; line-height: 1.45; opacity: .8; }
+  @keyframes wrapIn { from { opacity: 0; transform: translateY(18px) scale(.96); } to { opacity: 1; transform: none; } }
+  .wrap-banner { cursor: pointer; border: none; display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; padding: 16px 20px; border-radius: 24px; background: linear-gradient(120deg, #f3d3a0, #e9c7b8 50%, #e7def2); color: #2b2118; font-family: var(--font-heading); font-size: 19px; text-align: left; box-shadow: var(--shadow-sm); }
+  .wrap-banner b { font-family: var(--font-body); font-size: 14px; font-weight: 600; }
+  @media (max-width: 720px) { .wrap-card:first-child { grid-column: auto; } .wrap-card:first-child .wrap-big { font-size: 42px; } }
+  .feed { display: flex; flex-direction: column; gap: 10px; }
+  .feed-it { display: flex; gap: 12px; align-items: flex-start; background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 14%, transparent); border-radius: 22px; padding: 12px 16px; animation: fadeUp .3s ease both; }
+  .feed-av { width: 40px; height: 40px; font-size: 17px; background: var(--color-accent-2-600); }
+  .feed-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .feed-top { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; font-size: 15px; line-height: 1.4; }
+  .feed-note { flex: none; color: #fff; font-family: var(--font-heading); font-size: 15px; padding: 3px 10px; border-radius: 999px; }
+  .feed-q { margin: 0; font-size: 14px; line-height: 1.5; opacity: .8; border-left: 3px solid var(--color-accent-300); padding-left: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .feed-foot { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+  .feed-when { opacity: .6; }
+  .feed-open { cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-accent-700); }
+  .feed-re { display: flex; gap: 4px; margin-left: auto; }
+  .feed-re button { cursor: pointer; border: none; border-radius: 999px; padding: 3px 8px; font-size: 14px; display: inline-flex; gap: 3px; align-items: center; color: var(--color-text); transition: transform .12s; }
+  .feed-re button:hover { transform: scale(1.12); }
+  .feed-re small { font-size: 12px; font-weight: 600; }
   .sl-nav { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .sl-pill { cursor: pointer; border: none; white-space: nowrap; border-radius: 999px; padding: 9px 16px; font-family: var(--font-heading); font-size: 15px; transition: transform .12s; }
   .sl-pill:hover { transform: translateY(-1px); }
@@ -277,6 +303,7 @@
             <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon{{ salonBadge }}</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
+            <button role="menuitem" onClick="{{ menuWrap }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🎁 Tea Wrapped</button>
             <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
@@ -359,6 +386,7 @@
             <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
             <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
           </div>
+          <sc-if value="{{ wrapReady }}" hint-placeholder-val="{{ false }}"><button onClick="{{ menuWrap }}" class="wrap-banner"><span>{{ wrapReadyTxt }}</span><b>Le découvrir →</b></button></sc-if>
           <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ true }}">
           <div style="position: relative; overflow: hidden; background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
             <span aria-hidden="true" style="position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: {{ sugColor }}; opacity: .35;"></span>
@@ -1034,6 +1062,31 @@
     </sc-if>
 
 
+
+    <sc-if value="{{ isWrap }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><span style="font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .6;">🎁 Tea Wrapped</span><h1 style="font-size: 46px; margin: 0; text-transform: capitalize;">{{ wr.wTitle }}<span style="font-size: 18px; text-transform: none; opacity: .6;">{{ wr.wRunning }}</span></h1></div>
+          <button class="btn btn-secondary" onClick="{{ wr.wPrev }}" aria-label="Mois précédent" style="white-space: nowrap;">‹ Mois précédent</button>
+          <sc-if value="{{ wr.wCanNext }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ wr.wNext }}" aria-label="Mois suivant" style="white-space: nowrap;">Mois suivant ›</button></sc-if>
+        </div>
+        <sc-if value="{{ wr.wEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; opacity: .75;">Aucune dégustation ce mois-là… la théière a fait la grève 🫖</p></sc-if>
+        <sc-if value="{{ wr.wHas }}" hint-placeholder-val="{{ true }}">
+          <div class="wrap-grid">
+            <sc-for list="{{ wr.wCards }}" as="wc" hint-placeholder-count="8">
+              <div class="wrap-card" style="background: {{ wc.bg }}; color: {{ wc.fg }}; animation-delay: {{ wc.delay }};">
+                <span class="wrap-ic">{{ wc.icon }}</span>
+                <span class="wrap-k">{{ wc.k }}</span>
+                <b class="wrap-big">{{ wc.big }}</b>
+                <span class="wrap-sub">{{ wc.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ wr.wShare }}" style="white-space: nowrap;">↗ Partager mon résumé</button><sc-if value="{{ wr.wMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 14px;">{{ wr.wMsg }}</span></sc-if></div>
+        </sc-if>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isSalon }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -1093,7 +1146,7 @@
               <div class="tp-team" aria-label="Équipe de tea pets">
                 <sc-for list="{{ sl.petCards }}" as="pc" hint-placeholder-count="3">
                   <div class="tp-card" role="button" tabindex="0" onClick="{{ pc.ping }}" style="opacity: {{ pc.cardOp }};" title="Cliquer pour le retrouver dans l’enclos">
-                    <div class="{{ pc.picCls }}"><sc-if value="{{ pc.sprite }}" hint-placeholder-val="{{ false }}"><img src="{{ pc.sprite }}" alt=""></sc-if><sc-if value="{{ pc.noSprite }}" hint-placeholder-val="{{ true }}"><span style="font-size: 28px;">🐸</span></sc-if><sc-if value="{{ pc.shiny }}" hint-placeholder-val="{{ false }}"><i class="tp-shine" style="-webkit-mask-image: {{ pc.mask }}; mask-image: {{ pc.mask }};"></i><b class="tp-spark s1">✦</b><b class="tp-spark s2">✦</b></sc-if></div>
+                    <div class="{{ pc.picCls }}"><sc-if value="{{ pc.sprite }}" hint-placeholder-val="{{ false }}"><img src="{{ pc.sprite }}" alt=""></sc-if><sc-if value="{{ pc.noSprite }}" hint-placeholder-val="{{ true }}"><span style="font-size: 28px;">🐸</span></sc-if><sc-if value="{{ pc.hasAcc }}" hint-placeholder-val="{{ false }}"><i class="tp-acc"></i></sc-if><sc-if value="{{ pc.shiny }}" hint-placeholder-val="{{ false }}"><i class="tp-shine" style="-webkit-mask-image: {{ pc.mask }}; mask-image: {{ pc.mask }};"></i><b class="tp-spark s1">✦</b><b class="tp-spark s2">✦</b></sc-if></div>
                     <div class="tp-card-main">
                       <div class="tp-card-top"><button class="tp-card-name" onClick="{{ pc.open }}">{{ pc.name }}</button><sc-if value="{{ pc.crown }}" hint-placeholder-val="{{ false }}"><span title="Chef de l’enclos">👑</span></sc-if><span class="tp-card-lvl">{{ pc.lvl }}</span></div>
                       <div class="tp-hp"><span class="tp-hp-lbl">PV</span><span class="tp-hp-bar"><i style="width: {{ pc.hpPct }}; background: {{ pc.hpColor }};"></i></span><span class="tp-hp-num">{{ pc.hp }}</span></div>
@@ -1116,6 +1169,23 @@
                 </sc-for>
               </div>
             </section>
+          </sc-if>
+
+          <sc-if value="{{ sl.tabFil }}" hint-placeholder-val="{{ false }}">
+            <div class="feed">
+              <sc-if value="{{ sl.noFeed }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien pour l’instant : la prochaine dégustation d’un membre apparaîtra ici.</p></sc-if>
+              <sc-for list="{{ sl.feed }}" as="fd" hint-placeholder-count="4">
+                <article class="feed-it">
+                  <span class="mb-av feed-av">{{ fd.initial }}</span>
+                  <div class="feed-body">
+                    <div class="feed-top"><span><b>{{ fd.who }}</b> {{ fd.txt }}</span><sc-if value="{{ fd.hasNote }}" hint-placeholder-val="{{ false }}"><span class="feed-note" style="background: {{ fd.noteBg }};">{{ fd.note }}</span></sc-if></div>
+                    <sc-if value="{{ fd.hasQuote }}" hint-placeholder-val="{{ false }}"><p class="feed-q">« {{ fd.quote }} »</p></sc-if>
+                    <div class="feed-foot"><span class="feed-when">{{ fd.icon }} {{ fd.when }}</span><sc-if value="{{ fd.link }}" hint-placeholder-val="{{ false }}"><button class="feed-open" onClick="{{ fd.open }}">Voir →</button></sc-if>
+                      <span class="feed-re"><sc-for list="{{ fd.reacts }}" as="re" hint-placeholder-count="4"><button onClick="{{ re.toggle }}" title="{{ re.title }}" style="background: {{ re.bg }}; box-shadow: {{ re.ring }};">{{ re.em }}<small>{{ re.n }}</small></button></sc-for></span></div>
+                  </div>
+                </article>
+              </sc-for>
+            </div>
           </sc-if>
 
           <sc-if value="{{ sl.tabMem }}" hint-placeholder-val="{{ false }}">
@@ -2144,6 +2214,7 @@
               <li><b>Propriétaire assidu</b> : si son propriétaire a bu un autre thé ce jour-là, la perte est divisée par deux.</li>
               <li><b>KO</b> : à 0 PV il s’endort (couché, grisé, 💤). Une seule dégustation avec lui le réveille.</li>
               <li><b>Expérience</b> : +10 XP par dégustation, +5 si la note est ≥ 16, +3 à plusieurs, plus le bonus de son caractère.</li>
+              <li><b>Évolutions</b> : au niveau 5 le tea pet devient <b>🍃 Culotté</b> (patine de l’argile, une pousse de thé sur la tête), au niveau 10 <b>🎋 Vénérable</b> (patine profonde, chapeau de cueilleur).</li>
               <li><b>Chef de l’enclos 👑</b> : le tea pet qui a seul le niveau le plus haut.</li>
               <li><b>Humeurs</b> : ❤️ a bu aujourd’hui · ✨ en forme (≥ 75 PV) · 💧 assoiffé (&lt; 35 PV, il ralentit) · 💤 KO.</li>
               <li>Le caractère est tiré au hasard une fois pour toutes à la création du tea pet.</li>
@@ -4338,6 +4409,7 @@ class Component extends DCLogic {
     { key: 'gourmand', name: 'Gourmand', icon: '🍩', grace: 1, rate: 1.3, heal: 55, desc: 'A très vite soif mais se régale.', bonus: '+55 PV par dégustation (au lieu de +40)' }
   ];
   petTemper(g) { let h = 0; String(g.id).split('').forEach(c => { h = (h * 33 + c.charCodeAt(0)) >>> 0; }); return this.petTempers[(h >> 7) % this.petTempers.length]; }
+  petStage(lvl) { return lvl >= 10 ? { k: 2, name: 'Vénérable', icon: '🎋' } : lvl >= 5 ? { k: 1, name: 'Culotté', icon: '🍃' } : { k: 0, name: 'Argile neuve', icon: '' }; }
   petLevel(xp) { let L = 1; while (15 * (L + 1) * L <= xp) L++; return L; }
   petStats(g) {
     const dkey = d => d.toISOString().slice(0, 10);   // dates « AAAA-MM-JJ » manipulées en UTC
@@ -4454,6 +4526,99 @@ class Component extends DCLogic {
   setMainSalon(id) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { salonMain: id }); this.setOpt('profiles', all); }
   setSalons(list) { this.setOpt('salons', list.filter(x => (x.members || []).length)); }
 
+  relTime(ts) {
+    const d = Date.now() - ts; if (d < 6e4) return 'à l’instant'; if (d < 36e5) return 'il y a ' + Math.round(d / 6e4) + ' min';
+    const day = mdtDayKey(new Date(ts)), today = mdtToday(), y = mdtDayKey(new Date(Date.now() - 864e5));
+    const hm = new Date(ts).toTimeString().slice(0, 5);
+    if (day === today) return 'aujourd’hui à ' + hm; if (day === y) return 'hier à ' + hm; return this.fmtDate(day);
+  }
+  salonFeed(sal, me) {
+    const a = this.getAdds(); const M = sal.members || []; const R = (a.options || {}).reacts || {};
+    const sacById = {}; a.sachets.forEach(o => { sacById[o.id] = o; });
+    const pname = sid => { const o = sacById[sid]; const p = o && a.prods.find(x => x.id === o.prodId); return p ? (p.nom || p.the) : 'un thé'; };
+    const items = [];
+    a.logs.forEach(l => { if (M.indexOf(l.author) < 0) return;
+      const ts = this.idTs(l.id) || (/^\d{4}-\d{2}-\d{2}$/.test(l.date || '') ? new Date(l.date + 'T' + (/^\d{1,2}:\d{2}$/.test(l.heure || '') ? l.heure.padStart(5, '0') : '12:00')).getTime() : 0); if (!ts) return;
+      const w = (l.with || []).filter(x => x !== l.author); const n = this.noteNum(l);
+      items.push({ key: 'l:' + l.id, ts: ts, who: l.author, icon: l.live ? '🫖' : '☕', txt: (l.live ? 'est en pleine séance Gong Fu avec « ' : 'a dégusté « ') + pname(l.lotId) + ' »' + (w.length ? ' avec ' + w.join(', ') : ''),
+        note: n != null ? String(l.note).replace('.', ',') : '', noteBg: n != null ? this.noteColors(l.note).noteBg : 'transparent', quote: String(l.avis || l.nez || '').trim().slice(0, 180), open: () => this.openLogDetail(l.id) }); });
+    (a.events || []).forEach(e => { if (M.indexOf(e.who) < 0) return;
+      if (['prod', 'sachet', 'share', 'give', 'gear', 'salon'].indexOf(e.type) < 0) return;
+      if (e.type === 'salon' && String(e.text).indexOf('« ' + sal.name + ' »') < 0) return;
+      const sa = e.sid && sacById[e.sid];
+      items.push({ key: 'e:' + e.id, ts: Date.parse(e.ts) || 0, who: e.who, icon: e.icon, txt: e.text, note: '', noteBg: 'transparent', quote: '', open: sa ? () => this.openProd(sa.prodId) : e.pid ? () => this.openProd(e.pid) : null }); });
+    (a.gear || []).filter(g => this.gearCatKey(g.type) === 'teapet' && M.indexOf(g.owner) >= 0).forEach(g => { const st = this.petStats(g); if (!st.levelUp) return; const sg = this.petStage(st.lvl);
+      items.push({ key: 'p:' + g.id + ':' + st.lvl, ts: new Date(mdtToday() + 'T00:00').getTime() + 1, who: g.owner, icon: '🐸', txt: 'voit son tea pet ' + g.name + ' passer niveau ' + st.lvl + ((st.lvl === 5 || st.lvl === 10) ? ' et devenir ' + sg.icon + ' ' + sg.name + ' !' : ' 🎉'), note: '', noteBg: 'transparent', quote: '', open: () => this.setState({ view: 'gearItem', gearId: g.id }) }); });
+    items.sort((x, y) => y.ts - x.ts);
+    const EMO = ['🍵', '❤️', '🤯', '😂'];
+    return items.slice(0, 40).map(it => { const r = R[it.key] || {};
+      return Object.assign({}, it, { initial: String(it.who).charAt(0).toUpperCase(), when: this.relTime(it.ts), hasNote: !!it.note, hasQuote: !!it.quote, link: !!it.open, plain: !it.open, open: it.open || (() => {}),
+        reacts: EMO.map(em => { const who = Object.keys(r).filter(u => r[u] === em); const mine = r[me] === em;
+          return { em: em, n: who.length ? String(who.length) : '', title: who.length ? who.join(', ') : 'Réagir', bg: mine ? 'var(--color-accent-100)' : 'transparent', ring: mine ? 'inset 0 0 0 1.5px var(--color-accent-700)' : 'inset 0 0 0 1px var(--color-divider)',
+            toggle: () => { const all = Object.assign({}, (this.getAdds().options || {}).reacts || {}); const cur = Object.assign({}, all[it.key] || {}); if (cur[me] === em) delete cur[me]; else cur[me] = em; all[it.key] = cur; this.setOpt('reacts', all); } }; }) }); });
+  }
+
+  // ---------- Tea Wrapped mensuel
+  wrapDefaultMonth() { const t = mdtToday(); const d = +t.slice(8, 10); if (d > 7) return t.slice(0, 7); const y = +t.slice(0, 4), m = +t.slice(5, 7); return m === 1 ? (y - 1) + '-12' : y + '-' + String(m - 1).padStart(2, '0'); }
+  wrapView(me) {
+    const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    const cur = mdtToday().slice(0, 7); const M = this.state.wrapM || this.wrapDefaultMonth();
+    const shift = (mk, d) => { let y = +mk.slice(0, 4), m = +mk.slice(5, 7) + d; while (m < 1) { m += 12; y--; } while (m > 12) { m -= 12; y++; } return y + '-' + String(m).padStart(2, '0'); };
+    const label = mk => MOIS[+mk.slice(5, 7) - 1] + ' ' + mk.slice(0, 4);
+    const a = this.getAdds();
+    const sacById = {}; a.sachets.forEach(o => { sacById[o.id] = o; });
+    const prodOf = l => { const o = sacById[l.lotId]; return o ? a.prods.find(p => p.id === o.prodId) : null; };
+    const mineAll = a.logs.filter(l => (l.author === me || (l.with || []).indexOf(me) >= 0) && /^\d{4}-\d{2}-\d{2}$/.test(l.date || ''));
+    const logs = mineAll.filter(l => l.date.slice(0, 7) === M);
+    const prevN = mineAll.filter(l => l.date.slice(0, 7) === shift(M, -1)).length;
+    const nav = { wTitle: label(M), wCur: M === cur, wPrev: () => this.setState({ wrapM: shift(M, -1) }), wNext: () => this.setState({ wrapM: shift(M, 1) }), wCanNext: M < cur, wNoNext: M >= cur, wRunning: M === cur ? ' (en cours)' : '' };
+    if (!logs.length) return Object.assign(nav, { wEmpty: true, wHas: false, wCards: [] });
+    const pl = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
+    const f1 = n => (Math.round(n * 10) / 10).toString().replace('.', ',');
+    const grams = logs.reduce((t, l) => t + (this.qtyNum(l.qty) || 0), 0);
+    const infs = logs.reduce((t, l) => t + this.infsOf(l).length, 0);
+    const byP = {}; logs.forEach(l => { const p = prodOf(l); if (!p) return; const b = byP[p.id] = byP[p.id] || { p: p, n: 0, notes: [] }; b.n++; const n = this.noteNum(l); if (n != null) b.notes.push(n); });
+    const teas = Object.keys(byP).map(k => byP[k]);
+    const top = teas.slice().sort((x, y) => y.n - x.n)[0];
+    const best = teas.filter(b => b.notes.length).map(b => Object.assign(b, { max: Math.max.apply(null, b.notes) })).sort((x, y) => y.max - x.max)[0];
+    const before = new Set(mineAll.filter(l => l.date.slice(0, 7) < M).map(l => (prodOf(l) || {}).id).filter(Boolean));
+    const fresh = teas.filter(b => !before.has(b.p.id));
+    const fam = {}; logs.forEach(l => { const p = prodOf(l); const fk = p && this.famOf(p.the); if (fk) fam[fk] = (fam[fk] || 0) + 1; });
+    const famL = Object.keys(fam).sort((x, y) => fam[y] - fam[x]);
+    const PERSO = { blanc: ['Le Rêveur des cimes', 'Des bourgeons, du duvet, de la douceur : tu as bu dans les nuages.'], vert: ['L’Herboriste', 'Tu as passé le mois au jardin, entre herbe coupée et châtaigne.'], jaune: ['Le Lettré', 'Rare et raffiné : les thés jaunes ne sont pas pour tout le monde.'], oolong: ['L’Alchimiste du Wuyi', 'Roulé, torréfié, oxydé à point : tu maîtrises l’entre-deux.'], noir: ['Le Gardien du feu', 'Malté, cacao, miel : un mois tout en chaleur.'], sombre: ['Le Moine des caves', 'Sous-bois, camphre, années de patience : tu as le goût du temps.'], aromatise: ['Le Parfumeur', 'Bergamote, jasmin, épices : tu aimes quand ça raconte une histoire.'], tisane: ['Le Druide', 'Herbes et fleurs, sans théine : la sagesse du soir.'], rooibos: ['L’Explorateur austral', 'Le rouge d’Afrique du Sud n’a plus de secret pour toi.'], mate: ['Le Gaucho', 'Calebasse et bombilla : énergie garantie.'] };
+    const per = famL[0] && PERSO[famL[0]] ? PERSO[famL[0]] : ['L’Amateur éclairé', 'Un peu de tout, beaucoup de curiosité.'];
+    const arom = this.aromaCounts(logs, teas.map(b => b.p)).slice(0, 3);
+    const hourOf = l => { const m = /^(\d{1,2}):/.exec(l.heure || ''); return m ? +m[1] : null; };
+    const slot = { 'le matin': 0, 'l’après-midi': 0, 'le soir': 0, 'la nuit': 0 };
+    logs.forEach(l => { const h = hourOf(l); if (h == null) return; slot[h >= 5 && h < 12 ? 'le matin' : h < 18 && h >= 12 ? 'l’après-midi' : h >= 18 && h < 23 ? 'le soir' : 'la nuit']++; });
+    const slotTop = Object.keys(slot).sort((x, y) => slot[y] - slot[x])[0]; const hasSlot = slot[slotTop] > 0;
+    const JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const wd = {}; logs.forEach(l => { const k = new Date(l.date + 'T12:00').getDay(); wd[k] = (wd[k] || 0) + 1; }); const wdTop = Object.keys(wd).sort((x, y) => wd[y] - wd[x])[0];
+    const days = Array.from(new Set(logs.map(l => l.date))).sort(); let run = 1, bestRun = 1;
+    for (let i = 1; i < days.length; i++) { const gap = (new Date(days[i]) - new Date(days[i - 1])) / 864e5; run = gap === 1 ? run + 1 : 1; bestRun = Math.max(bestRun, run); }
+    const mates = {}; logs.forEach(l => [l.author].concat(l.with || []).forEach(u => { if (u && u !== me) mates[u] = (mates[u] || 0) + 1; }));
+    const mate = Object.keys(mates).sort((x, y) => mates[y] - mates[x])[0];
+    const pets = {}; logs.forEach(l => this.logGears(l).forEach(g => { if (this.gearCatKey(g.type) === 'teapet') pets[g.name] = (pets[g.name] || 0) + 1; }));
+    const pet = Object.keys(pets).sort((x, y) => pets[y] - pets[x])[0];
+    const delta = logs.length - prevN;
+    const C = (icon, k, big, sub, bg, fg) => ({ icon: icon, k: k, big: big, sub: sub, bg: bg, fg: fg || '#2b2118' });
+    const cards = [
+      C('🍵', 'Ton mois en tasses', pl(logs.length, 'dégustation'), (prevN && M !== cur ? (delta > 0 ? '+' + delta + ' par rapport à ' + label(shift(M, -1)).split(' ')[0] : delta < 0 ? delta + ' par rapport à ' + label(shift(M, -1)).split(' ')[0] : 'autant que le mois dernier') + ' · ' : '') + pl(teas.length, 'thé') + ' différent' + (teas.length > 1 ? 's' : ''), '#f3d3a0'),
+      C('⚖️', 'Feuilles infusées', (grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g'), infs ? pl(infs, 'infusion') + ' en Gong Fu' : 'de thé sec, au total', '#d8e6c4'),
+      top ? C('🏆', 'Le thé du mois', top.p.nom || top.p.the, top.n + ' fois dans ta tasse', '#e9c7b8') : null,
+      best ? C('⭐', 'Meilleure note', f1(best.max) + '/20', best.p.nom || best.p.the, '#f4e4bb') : null,
+      C('🎭', 'Ta personnalité du mois', per[0], per[1], '#5a4636', '#f6efe2'),
+      arom.length ? C('👃', 'Arômes fétiches', arom.map(x => x.w).join(' · '), 'les plus présents dans tes avis et tes thés', '#e7def2') : null,
+      famL.length ? C('🗺️', 'Famille dominante', this.families[famL[0]].name, famL.slice(0, 3).map(k => this.families[k].name + ' ' + Math.round(fam[k] / logs.length * 100) + ' %').join(' · '), '#d9e5f1') : null,
+      hasSlot ? C('🕰️', 'Ton moment', 'plutôt ' + slotTop, 'surtout le ' + JOURS[wdTop] + (bestRun > 1 ? ' · série de ' + bestRun + ' jours d’affilée' : ''), '#f6dbe2') : C('📅', 'Ton jour', 'le ' + JOURS[wdTop], bestRun > 1 ? 'série de ' + bestRun + ' jours d’affilée' : 'ton jour de thé préféré', '#f6dbe2'),
+      mate ? C('🤝', 'Partenaire de tasse', mate, pl(mates[mate], 'dégustation') + ' ensemble', '#dcebd8') : null,
+      fresh.length ? C('🧭', 'Découvertes', pl(fresh.length, 'nouveau thé').replace('nouveau thés', 'nouveaux thés'), fresh.slice(0, 3).map(b => b.p.nom || b.p.the).join(', ') + (fresh.length > 3 ? '…' : ''), '#f9eeda') : null,
+      pet ? C('🐸', 'Tea pet le mieux nourri', pet, pl(pets[pet], 'dégustation') + ' à ses côtés', '#cfe3a8') : null
+    ].filter(Boolean).map((c, i) => Object.assign(c, { delay: (i * 70) + 'ms' }));
+    const txt = '🎁 Mon Tea Wrapped de ' + label(M) + ' : ' + pl(logs.length, 'dégustation') + ', ' + (grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g') + ' de thé' + (top ? ', thé du mois : ' + (top.p.nom || top.p.the) : '') + ' — ' + per[0] + ' 🍵';
+    return Object.assign(nav, { wEmpty: false, wHas: true, wCards: cards, wShare: () => { try { if (navigator.share) navigator.share({ title: 'Tea Wrapped', text: txt }); else { navigator.clipboard.writeText(txt); this.setState({ wrapMsg: 'Résumé copié !' }); } } catch (e) {} }, wMsg: this.state.wrapMsg || '' });
+  }
+
   salonStats(sal) {
     const a = this.getAdds();
     const M = sal.members || [];
@@ -4534,8 +4699,8 @@ class Component extends DCLogic {
     const friends = this.friendsOf(me);
     const invitable = friends.filter(u => (mine.members || []).indexOf(u) < 0 && (mine.invites || []).indexOf(u) < 0);
     const n = mine.members.length;
-    const tab = this.state.slTab === 'mem' ? 'mem' : (this.state.slTab === 'opt' && isChief) ? 'opt' : 'acc';
-    const tabs = [['acc', '🏠 Accueil'], ['mem', '👥 Membres · ' + n]].concat(isChief ? [['opt', '⚙️ Options']] : []).map(t => ({ label: t[1], on: tab === t[0], bg: tab === t[0] ? 'var(--color-accent)' : 'transparent', fg: tab === t[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ slTab: t[0], slMenu: '', slMsg: '' }) }));
+    const tab = this.state.slTab === 'mem' ? 'mem' : this.state.slTab === 'fil' ? 'fil' : (this.state.slTab === 'opt' && isChief) ? 'opt' : 'acc';
+    const tabs = [['acc', '🏠 Accueil'], ['fil', '📰 Fil'], ['mem', '👥 Membres · ' + n]].concat(isChief ? [['opt', '⚙️ Options']] : []).map(t => ({ label: t[1], on: tab === t[0], bg: tab === t[0] ? 'var(--color-accent)' : 'transparent', fg: tab === t[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ slTab: t[0], slMenu: '', slMsg: '' }) }));
     const sc = this.salonColor(mine);
     const pets = (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet' && mine.members.indexOf(g.owner) >= 0);
     // stats par membre (dans ce salon)
@@ -4554,13 +4719,13 @@ class Component extends DCLogic {
     const isMain = !!main && main.id === mine.id;
     return Object.assign(base, addPart, { isMain: isMain, notMain: !isMain, mainName: main ? main.name : '',
       makeMain: () => { this.setMainSalon(mine.id); this.setState({ slMsg: '⭐ « ' + mine.name + ' » est maintenant votre salon principal : son nom s’affiche à côté du vôtre et vos stats « Dans mon salon » portent sur lui.' }); },
-      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt',
+      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt', tabFil: tab === 'fil', feed: tab === 'fil' ? this.salonFeed(mine, me) : [], noFeed: tab === 'fil' && !this.salonFeed(mine, me).length,
       ...(() => {
         const ps = pets.map(g => ({ g: g, st: this.petStats(g) })).sort((x, y) => y.st.lvl - x.st.lvl || y.st.xp - x.st.xp || x.g.name.localeCompare(y.g.name, 'fr'));
         const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
         return {
-          petsJson: JSON.stringify(ps.map(x => ({ id: x.g.id, name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', hp: x.st.hp, ko: x.st.ko, mood: x.st.mood, lvl: x.st.lvl, crown: x.g.id === crown }))),
-          petCards: ps.map(x => ({ name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', noSprite: !x.g.sprite, lvl: 'Nv. ' + x.st.lvl, crown: x.g.id === crown, picCls: x.g.id === crown ? 'tp-card-pic tp-crowned' : 'tp-card-pic', shiny: x.g.id === crown, mask: x.g.sprite ? 'url(' + x.g.sprite + ')' : 'none',
+          petsJson: JSON.stringify(ps.map(x => ({ id: x.g.id, name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', hp: x.st.hp, ko: x.st.ko, mood: x.st.mood, lvl: x.st.lvl, crown: x.g.id === crown, stage: this.petStage(x.st.lvl).k }))),
+          petCards: ps.map(x => ({ name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', noSprite: !x.g.sprite, lvl: 'Nv. ' + x.st.lvl + (this.petStage(x.st.lvl).k ? ' · ' + this.petStage(x.st.lvl).icon + ' ' + this.petStage(x.st.lvl).name : ''), crown: x.g.id === crown, picCls: 'tp-card-pic tp-st' + this.petStage(x.st.lvl).k + (x.g.id === crown ? ' tp-crowned' : ''), hasAcc: this.petStage(x.st.lvl).k > 0, shiny: x.g.id === crown, mask: x.g.sprite ? 'url(' + x.g.sprite + ')' : 'none',
             hp: x.st.hp + ' / 100', hpPct: x.st.hp + '%', hpColor: x.st.hpColor, xpTxt: 'XP ' + x.st.xpIn + ' / ' + x.st.xpNeed, xpPct: x.st.xpPct + '%',
             status: x.st.status, sub: x.st.lastTxt + ' · ' + x.st.temper, levelUp: x.st.levelUp, ko: x.st.ko, cardOp: x.st.ko ? '.7' : '1',
             ping: () => { if (window.mdtPetPing) window.mdtPetPing(x.g.id); }, open: () => this.setState({ view: 'gearItem', gearId: x.g.id }) })),
@@ -6362,7 +6527,7 @@ class Component extends DCLogic {
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
-    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
+    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'wrap', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -6643,6 +6808,9 @@ class Component extends DCLogic {
       menuPacks: () => this.setState({ menuOpen: false, view: 'packs' }),
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
       menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
+      menuWrap: () => this.setState({ menuOpen: false, view: 'wrap', wrapM: null, wrapMsg: '' }),
+      isWrap: v === 'wrap', wr: v === 'wrap' ? this.wrapView(me) : {},
+      wrapReady: +mdtToday().slice(8, 10) <= 7 && this.getAdds().logs.some(l => (l.author === me || (l.with || []).indexOf(me) >= 0) && String(l.date || '').slice(0, 7) === this.wrapDefaultMonth()), wrapReadyTxt: '🎁 Ton Tea Wrapped de ' + ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'][+this.wrapDefaultMonth().slice(5, 7) - 1] + ' est prêt',
       isStats: v === 'stats',
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
