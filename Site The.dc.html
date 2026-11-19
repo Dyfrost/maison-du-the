@@ -49,6 +49,12 @@
   .sac-name:hover { color: var(--color-accent-700); }
   .city-tag { display: inline-flex; align-items: center; gap: 3px; font-family: var(--font-body); font-size: 12.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: #d9e5f1; color: #2c4a6b; white-space: nowrap; line-height: 1.3; }
   .ubtn[data-dot="true"]::after { content: ''; position: absolute; top: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; background: #c0392b; box-shadow: 0 0 0 2px var(--color-bg); }
+  .bug-fab { position: fixed; right: 18px; bottom: 18px; z-index: 70; width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer; font-size: 23px; background: var(--color-surface); box-shadow: 0 6px 20px rgba(43,33,24,.18), inset 0 0 0 1px var(--color-divider); transition: transform .15s; }
+  .bug-fab:hover { transform: scale(1.08); }
+  .bug-ov { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .bug-bd { position: absolute; inset: 0; border: none; background: rgba(43,33,24,.35); cursor: default; }
+  .bug-box { position: relative; width: min(560px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--color-bg); border-radius: 26px; padding: 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.25); font-family: var(--font-body); }
+  @media print { .bug-fab { display: none; } }
   .sac-cat { cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text); opacity: .65; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px; }
   .sac-cat:hover { opacity: 1; color: var(--color-accent-700); }
   .sac-sub { font-size: 14px; opacity: .75; }
@@ -352,7 +358,21 @@
     </div>
     </sc-if>
     <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; width: 42px; height: 42px; padding: 0; border-radius: 50%; background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center;" style-hover="background: var(--color-accent-100);"><img src="{{ langFlag }}" alt="" width="24" height="16" style="width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); display: block;"></button>
-    <sc-if value="{{ newVer }}" hint-placeholder-val="{{ false }}"><div role="status" style="position: fixed; right: 20px; bottom: 20px; z-index: 81; background: var(--color-text); color: var(--color-bg); padding: 10px 12px 10px 18px; border-radius: 999px; font-family: var(--font-body); font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.2); display: flex; align-items: center; gap: 12px;">✨ Nouvelle version du site<button onClick="{{ doUpdate }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; background: var(--color-accent); color: var(--color-bg); font: inherit; font-weight: 600;">Recharger</button></div></sc-if>
+    <sc-if value="{{ bg0.bugBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bg0.bugToggle }}" class="bug-fab" title="Signaler un bug" aria-label="Signaler un bug">🐞</button></sc-if>
+    <sc-if value="{{ bg0.bugOpen }}" hint-placeholder-val="{{ false }}"><div class="bug-ov" role="dialog" aria-modal="true" aria-label="Signaler un bug"><button class="bug-bd" onClick="{{ bg0.bugClose }}" aria-label="Fermer"></button>
+      <div class="bug-box">
+        <div style="display: flex; align-items: center; gap: 10px;"><h2 style="margin: 0; font-size: 22px; margin-right: auto;">🐞 Signaler un bug</h2><button onClick="{{ bg0.bugClose }}" aria-label="Fermer" style="cursor: pointer; border: none; background: transparent; font-size: 20px; color: var(--color-text);">✕</button></div>
+        <p style="margin: 0; font-size: 13.5px; opacity: .7;">Un truc qui ne marche pas, s’affiche mal, ou une idée ? Ça arrive directement aux admins. La page et l’appareil sont joints automatiquement.</p>
+        <input class="input" value="{{ bg0.bugTitle }}" onInput="{{ bg0.setBugTitle }}" maxLength="150" placeholder="Titre (ex. « Le bouton Enregistrer ne fait rien »)" aria-label="Titre" style="padding: 10px 14px;">
+        <textarea class="input" rows="5" value="{{ bg0.bugBody }}" onInput="{{ bg0.setBugBody }}" placeholder="Que s’est-il passé ? Qu’est-ce que vous attendiez ? Comment le reproduire ?" aria-label="Description" style="border-radius: 18px; resize: vertical; padding: 12px 14px;"></textarea>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <sc-for list="{{ bg0.bugPhotos }}" as="bph" hint-placeholder-count="1"><span style="position: relative; display: inline-block;"><img src="{{ bph.u }}" alt="Photo jointe" style="width: 76px; height: 76px; object-fit: cover; border-radius: 12px;"><button onClick="{{ bph.del }}" aria-label="Retirer la photo" style="position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; border: none; background: var(--color-text); color: var(--color-bg); cursor: pointer; font-size: 12px;">✕</button></span></sc-for>
+          <sc-if value="{{ bg0.bugCanAdd }}" hint-placeholder-val="{{ true }}"><label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer; position: relative;">📷 Ajouter des photos<input type="file" accept="image/*" multiple="{{ true }}" onChange="{{ bg0.bugPick }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label></sc-if>
+        </div>
+        <sc-if value="{{ bg0.bugMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px;">{{ bg0.bugMsg }}</p></sc-if>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;"><button class="btn btn-ghost" onClick="{{ bg0.bugClose }}" style="white-space: nowrap;">Annuler</button><button class="btn btn-primary" onClick="{{ bg0.bugSend }}" disabled="{{ bg0.bugBusy }}" style="white-space: nowrap;">{{ bg0.bugSendTxt }}</button></div>
+      </div></div></sc-if>
+    <sc-if value="{{ newVer }}" hint-placeholder-val="{{ false }}"><div role="status" style="position: fixed; right: 20px; bottom: 84px; z-index: 81; background: var(--color-text); color: var(--color-bg); padding: 10px 12px 10px 18px; border-radius: 999px; font-family: var(--font-body); font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.2); display: flex; align-items: center; gap: 12px;">✨ Nouvelle version du site<button onClick="{{ doUpdate }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; background: var(--color-accent); color: var(--color-bg); font: inherit; font-weight: 600;">Recharger</button></div></sc-if>
     <sc-if value="{{ shareToast }}" hint-placeholder-val="{{ false }}"><div role="status" style="position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 80; background: var(--color-text); color: var(--color-bg); padding: 10px 18px; border-radius: 999px; font-family: var(--font-body); font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.2);">{{ shareToast }}</div></sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div class="nav-bell" style="position: relative;">
@@ -2450,6 +2470,27 @@
             </sc-for>
           </section>
         </sc-if>
+        <sc-if value="{{ tabDevOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🛠️ Développement · bugs signalés ({{ dvN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Envoyés par les membres avec le bouton 🐞 en bas à droite du site (titre, texte, photos, page et appareil).</p></div><button class="btn btn-secondary" onClick="{{ dvReload }}" style="white-space: nowrap; background: var(--color-bg);">↻ Actualiser</button></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ dvFilters }}" as="df" hint-placeholder-count="4"><button onClick="{{ df.go }}" aria-pressed="{{ df.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ df.bg }}; color: {{ df.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ df.label }}</button></sc-for></div>
+            <sc-if value="{{ dvMsg }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .8;">{{ dvMsg }}</p></sc-if>
+            <sc-if value="{{ dvEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien ici. ✨</p></sc-if>
+            <sc-for list="{{ dvList }}" as="bg" hint-placeholder-count="2">
+              <div style="background: var(--color-bg); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 17px;">{{ bg.title }}</b><span style="font-size: 12.5px; font-weight: 600; padding: 2px 10px; border-radius: 999px; background: {{ bg.stBg }}; color: {{ bg.stFg }};">{{ bg.st }}</span><span style="font-size: 13px; opacity: .6; margin-left: auto;">{{ bg.who }} · {{ bg.when }}</span></div>
+                <sc-if value="{{ bg.hasBody }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;">{{ bg.body }}</p></sc-if>
+                <sc-if value="{{ bg.hasPhotos }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ bg.photos }}" as="bp" hint-placeholder-count="2"><a href="{{ bp.u }}" target="_blank" rel="noopener"><img src="{{ bp.u }}" alt="Capture" style="width: 140px; height: 100px; object-fit: cover; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--color-divider);"></a></sc-for></div></sc-if>
+                <span style="font-size: 11.5px; opacity: .5; word-break: break-all;">{{ bg.meta }}</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <sc-if value="{{ bg.isOpenish }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ bg.doing }}" style="white-space: nowrap; font-size: 13.5px;">🔧 En cours</button><button class="btn btn-secondary" onClick="{{ bg.done }}" style="white-space: nowrap; font-size: 13.5px;">✅ Résolu</button><button class="btn btn-ghost" onClick="{{ bg.reject }}" style="white-space: nowrap; font-size: 13.5px;">✖ Pas un bug</button></sc-if>
+                  <sc-if value="{{ bg.isClosed }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ bg.reopen }}" style="white-space: nowrap; font-size: 13.5px;">↺ Rouvrir</button></sc-if>
+                  <button class="btn btn-ghost" onClick="{{ bg.del }}" style="white-space: nowrap; font-size: 13.5px; color: var(--color-accent-800); margin-left: auto;">🗑 Supprimer</button>
+                </div>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabDashOn }}" hint-placeholder-val="{{ false }}">
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
             <sc-for list="{{ dbCards }}" as="dc" hint-placeholder-count="6"><button onClick="{{ dc.go }}" style="cursor: pointer; text-align: left; border: none; border-radius: 22px; padding: 16px 18px; background: {{ dc.bg }}; box-shadow: {{ dc.ring }}; font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 14px; opacity: .75;">{{ dc.icon }} {{ dc.label }}</span><span style="font-family: var(--font-heading); font-size: 32px; line-height: 1.1;">{{ dc.n }}</span><span style="font-size: 12.5px; opacity: .6;">{{ dc.sub }}</span></button></sc-for>
@@ -3244,7 +3285,7 @@
         <section style="display: flex; flex-direction: column; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0; margin-right: auto;">Les sachets</h2>
             <sc-if value="{{ pv.iOwn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.addSachet }}" style="white-space: nowrap;">＋ Un sachet</button></sc-if>
-            <sc-if value="{{ pv.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ pv.addSachet }}" style="white-space: nowrap;">Je possède</button></sc-if>
+            <sc-if value="{{ pv.iDontOwn }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary" onClick="{{ pv.wish }}" style="white-space: nowrap;">{{ pv.wishTxt }}</button><button class="btn btn-primary" onClick="{{ pv.addSachet }}" style="white-space: nowrap;">Je possède</button></sc-if>
           </div>
           <sc-for list="{{ pv.sachets }}" as="sa" hint-placeholder-count="1">
                   <div class="sac {{ sa.sacCls }}">
@@ -3431,6 +3472,7 @@
         <section style="background: var(--color-surface); border-radius: 34px; padding: 24px 26px; display: flex; flex-direction: column; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
             <h2 style="font-size: 28px; margin: 0; margin-right: auto;">Les thés de la maison</h2>
+            <sc-if value="{{ teaCanWish }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ teaWish }}" style="white-space: nowrap; background: var(--color-bg);">{{ teaWishTxt }}</button></sc-if>
             <button class="btn btn-secondary" onClick="{{ teaBuy }}" style="white-space: nowrap; background: var(--color-bg);">＋ J'en ai acheté</button>
           </div>
           <sc-if value="{{ teaNoProds }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">Personne n’en a encore dans la maison.</p></sc-if>
@@ -5010,12 +5052,13 @@ class Component extends DCLogic {
   async loadAdminCounts(force) {
     if (!this.sb || !this._v2Tables || !this.isAdmin(this.me())) return; if (!force && Date.now() - (this._admCntAt || 0) < 300000) return; this._admCntAt = Date.now();
     try { const { count } = await this.sb.from('mdt_errors').select('id', { count: 'exact', head: true }).gt('ts', new Date(Date.now() - 864e5).toISOString()); this.setState({ admErr24: count || 0 }); } catch (e) {}
+    try { const { data } = await this.sb.rpc('mdt_bugs_list'); if (data) this.setState({ admBugs: data.filter(b => b.status === 'open').length }); } catch (e) {}
   }
   admAlerts() {
     const me = this.me(); if (!me || !this.isMod(me)) return 0; const a = this.getAdds();
     const rep = this.reports().filter(r => r.status === 'open').length;
     const pend = (a.teas || []).filter(t => t.pending).length + (a.decl || []).filter(d => d.pending).length;
-    return rep + pend + (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0);
+    return rep + pend + (this.isAdmin(me) ? (this.state.admErr24 || 0) + (this.state.admBugs || 0) : 0);
   }
   similarNames(name, list) {
     const n = this.norm(name).replace(/[^a-z0-9]/g, ''); if (n.length < 3) return [];
@@ -5105,7 +5148,7 @@ class Component extends DCLogic {
     const go = t => () => this.setState({ addTab: t, addMsg: '' });
     const card = (icon, n, label, sub, tab, warn) => ({ icon: icon, n: String(n), label: label, sub: sub, go: go(tab), bg: warn && n ? '#fbebeb' : 'var(--color-bg)', ring: warn && n ? 'inset 0 0 0 1.5px #c0392b55' : 'inset 0 0 0 1px var(--color-divider)' });
     const ann = (a.options || {}).announce || {}; const bw = (a.options || {}).bannedWords || [];
-    return { dbCards: [card('🚩', rep, 'Signalements ouverts', 'à traiter', 'mod', true), card('⏳', pend, 'Ajouts à valider', 'thés et variantes', 'mod', true),
+    return { dbCards: [card('🐞', this.state.admBugs || 0, 'Bugs signalés', 'à traiter', 'dev', true), card('🚩', rep, 'Signalements ouverts', 'à traiter', 'mod', true), card('⏳', pend, 'Ajouts à valider', 'thés et variantes', 'mod', true),
         card('🐞', this.state.admErr24 || 0, 'Erreurs (24 h)', this._v2Tables ? 'plantages remontés' : 'nouveau stockage requis', 'err', true),
         card('👋', fresh.length, 'Nouveaux membres', '7 derniers jours' + (fresh.length ? ' : ' + fresh.map(m => m.nom).join(', ') : ''), 'usr', false),
         card('🟢', active, 'Membres actifs', 'venus ces 7 jours', 'usr', false), card('🧽', qual.total, 'À compléter', 'données à corriger', 'qual', false)],
@@ -5269,7 +5312,7 @@ class Component extends DCLogic {
     const nf = this.prefsOf(me).notif || {}; const mod = this.realMod(me), adm = this.realAdmin(me);
     const set = patch => { const cur = Object.assign({}, this.prefsOf(me).notif || {}, patch); if (!cur.tz) cur.tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/Paris'; this.setPrefs({ notif: cur }); };
     const T = [];
-    if (mod) T.push(['🛡️ Administration', [['adm_report', '🚩 Nouveau signalement'], ['adm_pending', '⏳ Ajout au catalogue à valider']].concat(adm ? [['adm_member', '👋 Nouveau membre inscrit']] : [])]);
+    if (mod) T.push(['🛡️ Administration', [['adm_report', '🚩 Nouveau signalement'], ['adm_pending', '⏳ Ajout au catalogue à valider']].concat(adm ? [['adm_member', '👋 Nouveau membre inscrit'], ['adm_bug', '🐞 Nouveau bug signalé']] : [])]);
     T.push(['👥 Les autres et moi', [['friend_req', '🤝 Demande d’ami reçue'], ['salon_invite', '🏮 Invitation dans un salon'], ['log_with', '☕ Quelqu’un m’ajoute à sa dégustation'], ['gift', '🎁 Un sachet m’est offert ou attribué'], ['announce', '📣 Nouvelle annonce de la maison']]]);
     T.push(['🏮 Mes salons', [['salon_log', '🍵 Chaque dégustation d’un membre de mes salons (peut faire beaucoup)']]]);
     T.push(['⏰ Rappels (à l’heure choisie)', [['tea_day', '🎲 Proposition de thé du jour (un de mes sachets peu bu)'], ['pet_thirst', '💧 Mon tea pet a soif (3 jours sans thé)'], ['wrap', '🎁 Mon Tea Wrapped du mois est prêt (le 1er)']]]);
@@ -5282,7 +5325,8 @@ class Component extends DCLogic {
       nfTz: nf.tz || (Intl.DateTimeFormat().resolvedOptions().timeZone) || '' };
   }
   // ---------- Étiquettes QR : un code par sachet ; scanné, il ouvre une dégustation de ce sachet
-  printLabels(ids, title) {
+  printLabels(ids, title, offIds) {
+    offIds = offIds || [];
     const coll = this.collection(); const list = ids.map(id => coll.find(o => o.id === id)).filter(Boolean);
     if (!list.length) { this.flash('Aucun sachet à imprimer.'); return; }
     if (!window.qrcode) { this.flash('Générateur de QR codes indisponible : rechargez la page.'); return; }
@@ -5290,15 +5334,17 @@ class Component extends DCLogic {
     const base = this.siteUrl();
     const cards = list.map(o => { const q = window.qrcode(0, 'M'); q.addData(base + '#sac=' + o.id); q.make();
       const shop = this.shopTxt(o.marque, o.ville);
-      return '<div class="lb"><button class="x" onclick="this.parentNode.remove()" title="Retirer">×</button>' + q.createSvgTag({ cellSize: 3, margin: 1, scalable: true }) +
+      return '<label class="lb' + (offIds.indexOf(o.id) >= 0 ? ' off' : '') + '" data-q="' + esc(String((o.nom || '') + ' ' + (o.the || '') + ' ' + (o.code || '') + ' ' + (o.marque || '') + ' ' + (o.ville || '')).toLowerCase()) + '"><input type="checkbox" class="ck"' + (offIds.indexOf(o.id) >= 0 ? '' : ' checked') + ' onchange="this.parentNode.classList.toggle(\'off\',!this.checked);upd()">' + q.createSvgTag({ cellSize: 3, margin: 1, scalable: true }) +
         '<div class="tx"><b>' + esc(o.nom || o.the) + '</b>' + (o.nom && o.the && o.nom !== o.the ? '<span>' + esc(o.the) + '</span>' : '') + (shop ? '<span>' + esc(shop) + '</span>' : '') +
-        '<span class="c">' + esc(o.code || '') + '</span><span class="o">' + esc(o.owner) + (o.achat ? ' · ' + esc(this.fmtDate(o.achat)) : '') + '</span></div></div>'; }).join('');
+        '<span class="c">' + esc(o.code || '') + '</span><span class="o">' + esc(o.owner) + (o.achat ? ' · ' + esc(this.fmtDate(o.achat)) : '') + (offIds.indexOf(o.id) >= 0 ? ' · vide' : '') + '</span></div></label>'; }).join('');
     const html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(title || 'Étiquettes QR') + ' — Maison du Thé</title><style>' +
       'body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:16px;color:#2b2118;background:#fff}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.bar button{font:inherit;padding:8px 16px;border-radius:999px;border:1px solid #c9b89a;background:#f5ead8;cursor:pointer}.bar span{font-size:13px;opacity:.7}' +
       '.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(62mm,1fr));gap:4mm}.lb{position:relative;display:flex;gap:3mm;align-items:center;border:1px dashed #bbb;border-radius:3mm;padding:3mm;break-inside:avoid;page-break-inside:avoid}.lb svg{width:24mm;height:24mm;flex:none}' +
       '.tx{display:flex;flex-direction:column;gap:1mm;font-size:9pt;line-height:1.2;min-width:0}.tx b{font-size:11pt}.tx .c{font-family:ui-monospace,Menlo,monospace;font-size:7.5pt;opacity:.75;word-break:break-all}.tx .o{font-size:8pt;opacity:.65}' +
-      '.x{position:absolute;top:1mm;right:1.5mm;border:none;background:none;font-size:16px;cursor:pointer;opacity:.5}@media print{.bar,.x{display:none}body{margin:6mm}.lb{border-color:#ddd}}</style></head><body>' +
-      '<div class="bar"><button onclick="window.print()">🖨️ Imprimer</button><span>' + list.length + ' étiquette(s) · cliquez × pour en retirer une avant d’imprimer. Scannée avec le téléphone, une étiquette ouvre une nouvelle dégustation de ce sachet.</span></div><div class="g">' + cards + '</div></body></html>';
+      '.lb{cursor:pointer}.ck{position:absolute;top:1.5mm;right:1.5mm;width:16px;height:16px;cursor:pointer}.lb.off{opacity:.3}.lb.hid{display:none}.bar input[type=search]{font:inherit;padding:7px 14px;border-radius:999px;border:1px solid #c9b89a;min-width:200px}' +
+      '@media print{.bar,.ck{display:none}.lb.off{display:none}body{margin:6mm}.lb{border-color:#ddd}}</style>' +
+      '<script>function upd(){var n=document.querySelectorAll(".lb:not(.off)").length;document.getElementById("n").textContent=n+" étiquette(s) cochée(s)"}function selAll(v){document.querySelectorAll(".lb:not(.hid) .ck").forEach(function(c){c.checked=v;c.parentNode.classList.toggle("off",!v)});upd()}function flt(q){q=q.toLowerCase();document.querySelectorAll(".lb").forEach(function(l){l.classList.toggle("hid",q&&l.getAttribute("data-q").indexOf(q)<0)})}<\/script></head><body onload="upd()">' +
+      '<div class="bar"><button onclick="window.print()">🖨️ Imprimer la sélection</button><button onclick="selAll(true)">Tout cocher</button><button onclick="selAll(false)">Tout décocher</button><input type="search" placeholder="Filtrer (nom, code, boutique…)" oninput="flt(this.value)"><b id="n"></b><span>Cochez les sachets dont vous voulez l’étiquette (les sachets vides sont décochés). Scannée avec le téléphone, une étiquette ouvre une nouvelle dégustation de ce sachet.</span></div><div class="g">' + cards + '</div></body></html>';
     const w = window.open('', '_blank');
     if (w) { w.document.open(); w.document.write(html); w.document.close(); return; }
     const blob = new Blob([html], { type: 'text/html' }); const u = URL.createObjectURL(blob); const el = document.createElement('a'); el.href = u; el.download = 'etiquettes-qr.html'; document.body.appendChild(el); el.click(); el.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
@@ -5311,6 +5357,10 @@ class Component extends DCLogic {
       bought: () => { this.setWishes(this.wishesOf(me).filter(x => x.id !== w.id)); const fk = this.famOf(w.name); this.setState(s0 => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s0.form, { prodId: '', the: fk ? w.name : '', nomFour: fk ? '' : w.name, marque: w.shop || '', ville: w.city || '', prixPaye: String(w.price || '').replace(/[^\d.,]/g, ''), commentaire: w.note || '' }), formRev: (s0.formRev || 0) + 1 })); this.flash('Ajoutez le sachet que vous venez d’acheter 🎉'); },
       del: () => this.setWishes(this.wishesOf(me).filter(x => x.id !== w.id)) }));
   }
+  isWished(name) { const me = this.me(); return !!me && this.wishesOf(me).some(w => this.norm(w.name) === this.norm(name)); }
+  toggleWish(w) { const me = this.me(); if (!me) return; const cur = this.wishesOf(me);
+    if (this.isWished(w.name)) { this.setWishes(cur.filter(x => this.norm(x.name) !== this.norm(w.name))); this.flash('Retiré de vos envies.'); return; }
+    this.setWishes(cur.concat([Object.assign({ id: 'w' + Date.now().toString(36), at: new Date().toISOString() }, w)])); this.flash('🎁 Ajouté à votre liste d’envies (visible sur votre profil).'); }
   wishView(u, me) {
     const isMe = u === me; const d = this.state.wishDraft || {};
     return { show: isMe || this.salonMates(me).indexOf(u) >= 0 || this.friendsOf(me).indexOf(u) >= 0 || this.isAdmin(me), isMe: isMe, list: this.wishCards(u, me), empty: !this.wishesOf(u).length,
@@ -6546,6 +6596,56 @@ class Component extends DCLogic {
     }).filter(Boolean);
   }
 
+  async photoUrl(file, kind) {
+    const url = URL.createObjectURL(file);
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const cloud = !!(this.sb && this.state.session); const max = cloud ? 1600 : 700;
+    const r = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * r); c.height = Math.round(img.naturalHeight * r);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+    if (!cloud) return c.toDataURL('image/jpeg', 0.72);
+    const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.82));
+    const path = kind + '/' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8) + '.jpg';
+    const { error } = await this.sb.storage.from('photos').upload(path, blob, { contentType: 'image/jpeg', upsert: false }); if (error) throw error;
+    return this.sb.storage.from('photos').getPublicUrl(path).data.publicUrl;
+  }
+  // ---------- 🐞 Remontée de bugs
+  bugView(me) {
+    const st = this.state.bug || {};
+    const set = patch => this.setState(s0 => ({ bug: Object.assign({}, s0.bug, patch) }));
+    return { bugBtn: !!me && !!this.state.session && this.state.view !== 'session', bugOpen: !!st.open, bugTitle: st.title || '', bugBody: st.body || '', bugMsg: st.msg || '', bugBusy: !!st.busy, bugSendTxt: st.busy ? 'Envoi…' : 'Envoyer',
+      bugPhotos: (st.photos || []).map((u, i) => ({ u: u, del: () => set({ photos: (this.state.bug.photos || []).filter((x, j) => j !== i) }) })), bugHasPhotos: !!(st.photos || []).length, bugCanAdd: (st.photos || []).length < 4,
+      bugToggle: () => set({ open: !st.open, msg: '' }), bugClose: () => set({ open: false }),
+      setBugTitle: e => set({ title: e.target.value }), setBugBody: e => set({ body: e.target.value }),
+      bugPick: async e => { const files = Array.from(e.target.files || []).slice(0, 4 - (st.photos || []).length); e.target.value = ''; if (!files.length) return; set({ msg: 'Envoi de ' + files.length + ' photo(s)…', busy: true });
+        try { const urls = []; for (const f of files) urls.push(await this.photoUrl(f, 'bugs')); this.setState(s0 => ({ bug: Object.assign({}, s0.bug, { photos: (s0.bug.photos || []).concat(urls), msg: '', busy: false }) })); }
+        catch (x) { set({ msg: 'Photo non envoyée : ' + (x.message || x), busy: false }); } },
+      bugSend: async () => { const t = String(st.title || '').trim(); if (!t) { set({ msg: 'Donnez un titre au bug.' }); return; } if (!this.sb || !this.v2) { set({ msg: 'Le signalement de bugs demande le nouveau stockage.' }); return; }
+        set({ busy: true, msg: '' });
+        const ctxTxt = '\n\n— Page : ' + (this.state.view || 'home') + (this.state.addTab ? ' / ' + this.state.addTab : '') + ' · écran ' + window.innerWidth + '×' + window.innerHeight;
+        const { error } = await this.sb.rpc('mdt_bug_submit', { t: t, b: String(st.body || '').trim() + ctxTxt, ph: st.photos || [], u: location.href, a: navigator.userAgent });
+        if (error) { set({ busy: false, msg: 'Échec : ' + error.message }); return; }
+        this.setState({ bug: {} }); this.flash('Merci ! Le bug a été transmis 🐞'); } };
+  }
+  async loadBugs() {
+    if (!this.sb || !this._v2Tables) { this.setState({ bugList: [], bugListMsg: 'La remontée de bugs s’active avec le script supabase-v2.sql (dernière version).' }); return; }
+    this._bugLoading = true; const { data, error } = await this.sb.rpc('mdt_bugs_list'); this._bugLoading = false;
+    this.setState({ bugList: data || [], bugListMsg: error ? error.message : '', bugAt: Date.now(), admBugs: (data || []).filter(b => b.status === 'open').length });
+  }
+  devView() {
+    if (this.state.bugAt == null && !this._bugLoading) setTimeout(() => this.loadBugs(), 0);
+    const L = this.state.bugList || []; const f = this.state.bugF || 'open';
+    const S = { open: ['🆕 Nouveau', '#fbebeb', '#7a1f16'], doing: ['🔧 En cours', '#f9eeda', '#6b4a12'], done: ['✅ Résolu', '#e5f4e4', '#2f5b3a'], rejected: ['✖ Pas un bug', 'var(--color-bg)', 'var(--color-text)'] };
+    const setS = async (id, s) => { const { error } = await this.sb.rpc('mdt_bug_set', { i: id, s: s }); if (error) { window.alert(error.message); return; } this.loadBugs(); };
+    const shown = L.filter(b => f === 'all' || (f === 'open' ? (b.status === 'open' || b.status === 'doing') : b.status === f));
+    return { dvMsg: this.state.bugListMsg || '', dvEmpty: !shown.length, dvN: String(L.filter(b => b.status === 'open').length),
+      dvFilters: [['open', 'À traiter'], ['done', 'Résolus'], ['rejected', 'Pas des bugs'], ['all', 'Tout']].map(x => ({ label: x[1], on: f === x[0], bg: f === x[0] ? 'var(--color-text)' : 'var(--color-bg)', fg: f === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ bugF: x[0] }) })),
+      dvReload: () => this.loadBugs(),
+      dvList: shown.map(b => { const sc = S[b.status] || S.open; return { title: b.title, who: b.who || '?', when: new Date(b.ts).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }), body: b.body || '', hasBody: !!b.body, st: sc[0], stBg: sc[1], stFg: sc[2],
+        photos: (b.photos || []).map(u => ({ u: u })), hasPhotos: !!(b.photos || []).length, meta: (b.url || '') + (b.ua ? ' · ' + b.ua : ''),
+        doing: () => setS(b.id, 'doing'), done: () => setS(b.id, 'done'), reject: () => setS(b.id, 'rejected'), reopen: () => setS(b.id, 'open'), isClosed: b.status === 'done' || b.status === 'rejected', isOpenish: b.status === 'open' || b.status === 'doing',
+        del: () => { if (window.confirm('Supprimer ce signalement de bug ?')) setS(b.id, 'delete'); } }; }) };
+  }
   async uploadPhoto(file, kind, field) {
     if (!file) return;
     const msgKey = field + 'Msg';
@@ -7350,7 +7450,8 @@ class Component extends DCLogic {
     const canEditP = !!me && (!!this.state.session || !this.state.cloud);
     const pe0 = this.state.prodEdit && this.state.prodEdit.id === pr.id ? this.state.prodEdit : null;
     const startEdit = () => this.setState({ prodEdit: { id: pr.id, nom: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', ref: pr.ref || '', variante: pr.variante || '', boutique: pr.boutique || '', commentaire: pr.commentaire || '', tags: (pr.tags || []).slice(), recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', rev: Date.now() }, prodNewTag: '' });
-    return { cities: this.prodCities(pr.id).map(c => ({ c: c })), hasCities: this.prodCities(pr.id).length > 0, reco: [pr.recoTemp ? pr.recoTemp + (/^\d+$/.test(pr.recoTemp) ? ' °C' : '') : '', pr.recoQty ? pr.recoQty + (/^\s*[\d.,]+\s*$/.test(pr.recoQty) ? ' g' : '') : '', pr.recoTimes].filter(Boolean).join(' · '), canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
+    return { wishTxt: this.isWished(pr.nom || pr.the) ? '✓ Dans mes envies' : '🎁 Ajouter à mes envies', wish: () => this.toggleWish({ name: pr.nom || pr.the, shop: pr.marque || '', city: this.prodCities(pr.id)[0] || '', price: '', note: '' }),
+      cities: this.prodCities(pr.id).map(c => ({ c: c })), hasCities: this.prodCities(pr.id).length > 0, reco: [pr.recoTemp ? pr.recoTemp + (/^\d+$/.test(pr.recoTemp) ? ' °C' : '') : '', pr.recoQty ? pr.recoQty + (/^\s*[\d.,]+\s*$/.test(pr.recoQty) ? ' g' : '') : '', pr.recoTimes].filter(Boolean).join(' · '), canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
       member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: this.shopTxt(pr.marque, this.prodCities(pr.id).join('/')) || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
       famName: fk ? this.families[fk].name : '—',
@@ -7897,7 +7998,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['dash', 'new', 'mod', 'scan', 'qual', 'cat', 'mrg', 'mrq', 'usr', 'opt', 'jrn', 'jeu', 'err', 'inf'] : ['mod'];
+    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['dash', 'dev', 'new', 'mod', 'scan', 'qual', 'cat', 'mrg', 'mrq', 'usr', 'opt', 'jrn', 'jeu', 'err', 'inf'] : ['mod'];
       if (this.state.view === 'admin' && !this.isMod(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = ADM[0]; }
@@ -8119,6 +8220,7 @@ class Component extends DCLogic {
           teaLogsOpen: () => this.setState({ view: 'logs', collView: 'logs', dq: '', dTea: tea.name, ds: 'me' }),
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
+          teaCanWish: !!me && !!this.state.session || (!this.state.cloud && !!me), teaWishTxt: this.isWished(tea.name) ? '✓ Dans mes envies' : '🎁 Ajouter à mes envies', teaWish: () => this.toggleWish({ name: tea.name, shop: '', city: '', price: '', note: '' }),
           teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
         };
       })(),
@@ -8160,7 +8262,7 @@ class Component extends DCLogic {
         this.loadAdminCounts(true); this.setState({ asMember: false, menuOpen: false, view: 'admin', addTab: this.realAdmin(this.me()) ? 'dash' : 'mod', addMsg: '' }); },
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['dash', '🏠', 'Accueil', 'À traiter, annonce, mots interdits'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0) > 0 ? ' (' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0)) + ')' : ''), 'Signalements, ajouts à valider'], ['scan', '🔍', 'Textes à vérifier', 'Insultes, liens, contacts…'], ['qual', '🧽', 'Qualité', 'Données à compléter'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['dash', '🏠', 'Accueil', 'À traiter, annonce, mots interdits'], ['dev', '🛠️', 'Développement' + (this.state.admBugs ? ' (' + this.state.admBugs + ')' : ''), 'Bugs signalés par les membres'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0) > 0 ? ' (' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0)) + ')' : ''), 'Signalements, ajouts à valider'], ['scan', '🔍', 'Textes à vérifier', 'Insultes, liens, contacts…'], ['qual', '🧽', 'Qualité', 'Données à compléter'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
@@ -8196,8 +8298,8 @@ class Component extends DCLogic {
       isStats: v === 'stats',
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
-      shareToast: this.state.shareToast || '',
-      canQrAll: !!me && this.collection().some(o => o.owner === me && !this.isEmptySachet(o)), qrAll: () => this.printLabels(this.collection().filter(o => o.owner === me && !this.isEmptySachet(o)).sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr')).map(o => o.id), 'Mes étiquettes'),
+      shareToast: this.state.shareToast || '', bg0: this.bugView(me),
+      canQrAll: !!me && this.collection().some(o => o.owner === me), qrAll: () => { const mineC = this.collection().filter(o => o.owner === me).sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr')); this.printLabels(mineC.map(o => o.id), 'Mes étiquettes', mineC.filter(o => this.isEmptySachet(o)).map(o => o.id)); },
       teaBtnTxt: this.isMod(me) ? 'Ajouter au catalogue' : 'Proposer au catalogue', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
       ...(() => { const ann = (this.getAdds().options || {}).announce || {}; let hidden = false; try { hidden = !!ann.at && localStorage.getItem('mdt-ann') === ann.at; } catch (e) {}
         return { annShow: !!ann.text && !hidden && !this.state.annHidden, annText: ann.text || '', annHide: () => { try { localStorage.setItem('mdt-ann', ann.at || ''); } catch (e) {} this.setState({ annHidden: true }); },
@@ -8346,7 +8448,7 @@ class Component extends DCLogic {
         return { canClear: this.isMod(me) && !!pdesc, clear: () => { if (!window.confirm('Effacer la description de ' + u + ' ?')) return; const pr = Object.assign({}, (this.getAdds().options || {}).profiles || {}); pr[u] = Object.assign({}, pr[u], { desc: '' }); this.setOpt('profiles', pr); this.modLog('a effacé la description de', u); this.flash('Description de ' + u + ' effacée.'); },
           show: true, name: u, blocked: bl, blockTxt: bl ? 'Débloquer' : '🚫 Bloquer', block: () => this.toggleBlock(u), report: () => this.report({ t: 'user', who: u, label: 'le profil de ' + u }) }; })(),
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
-      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabDashOn: this.state.addTab === 'dash', ...(v === 'admin' && this.state.addTab === 'dash' ? this.dashView() : { dbCards: [], bwList: [] }), tabScanOn: this.state.addTab === 'scan', ...(v === 'admin' && this.state.addTab === 'scan' ? this.scanView() : { scList: [], scFilters: [] }), tabQualOn: this.state.addTab === 'qual', ...(v === 'admin' && this.state.addTab === 'qual' ? this.qualityView() : { qGroups: [] }), tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
+      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabDevOn: this.state.addTab === 'dev', ...(v === 'admin' && this.state.addTab === 'dev' ? this.devView() : { dvList: [], dvFilters: [] }), tabDashOn: this.state.addTab === 'dash', ...(v === 'admin' && this.state.addTab === 'dash' ? this.dashView() : { dbCards: [], bwList: [] }), tabScanOn: this.state.addTab === 'scan', ...(v === 'admin' && this.state.addTab === 'scan' ? this.scanView() : { scList: [], scFilters: [] }), tabQualOn: this.state.addTab === 'qual', ...(v === 'admin' && this.state.addTab === 'qual' ? this.qualityView() : { qGroups: [] }), tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
       infPets: this.state.addTab !== 'inf' ? [] : (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet').sort((x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearAlpha(x, y)).map(g => { const st = this.petStats(g); const T = this.petTemper(g);
         const upd = patch => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: b.gear.map(x => { if (x.id !== g.id) return x; const c = Object.assign({}, x, patch); Object.keys(patch).forEach(k => { if (patch[k] == null) delete c[k]; }); return c; }) })); };
         return { name: g.name, owner: g.owner, sub: 'Nv. ' + st.lvl + ' · ' + st.xp + ' XP · ' + st.hp + ' PV · ' + T.icon + ' ' + T.name + (g.temper ? ' (choisi)' : ' (tiré au hasard)') + (g.petReset ? ' · remis à zéro le ' + this.fmtDate(g.petReset.day) : ''),
