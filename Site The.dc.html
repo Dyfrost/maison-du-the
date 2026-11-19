@@ -1785,6 +1785,14 @@
             <sc-if value="{{ lfPrefilled }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; background: var(--color-accent-100); border-radius: 12px; padding: 6px 10px; align-self: flex-start;">✨ {{ lfPrefilled }}</span></sc-if>
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matériel</span>
+              <div role="group" aria-label="Presets de matériel" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 8px 10px; border-radius: 16px; background: var(--color-bg);">
+                <span style="font-size: 12.5px; opacity: .65; margin-right: 2px;">⚡ Presets</span>
+                <sc-for list="{{ lfPresets }}" as="gp" hint-placeholder-count="2"><span style="display: inline-flex; align-items: center; gap: 2px;"><button onClick="{{ gp.toggle }}" aria-pressed="{{ gp.on }}" title="Coche ou décoche tout le matériel du preset" style="cursor: pointer; border: none; box-shadow: inset 0 0 0 1.5px var(--color-accent-700); background: {{ gp.bg }}; color: {{ gp.fg }}; font-family: var(--font-body); font-size: 13.5px; padding: 5px 12px; border-radius: 999px; white-space: nowrap;">{{ gp.label }}</button><sc-if value="{{ gpEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ gp.upd }}" title="Remplacer par le matériel coché" style="cursor: pointer; border: none; background: transparent; font-size: 14px; padding: 2px 4px; color: var(--color-text);">↻</button><button onClick="{{ gp.del }}" title="Supprimer le preset" style="cursor: pointer; border: none; background: transparent; font-size: 14px; padding: 2px 4px; color: #a8432e;">✕</button></sc-if></span></sc-for>
+                <sc-if value="{{ gpNewClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ gpOpen }}" style="cursor: pointer; border: 1.5px dashed var(--color-divider); background: transparent; color: var(--color-text); font-family: var(--font-body); font-size: 13.5px; padding: 4px 11px; border-radius: 999px;">＋ Nouveau preset</button></sc-if>
+                <sc-if value="{{ gpNewOpen }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap;"><input class="input" autoFocus style="width: 160px; box-sizing: border-box; font-size: 14px; padding: 6px 12px;" placeholder="Nom (ex. Malaisie)" aria-label="Nom du preset" value="{{ gpName }}" onInput="{{ gpSetName }}" onKeyDown="{{ gpKey }}"><button onClick="{{ gpSave }}" class="btn btn-primary" style="font-size: 13.5px; padding: 6px 12px;">Enregistrer ({{ gpCount }})</button><button onClick="{{ gpCancel }}" style="cursor: pointer; border: none; background: transparent; font-size: 13.5px; color: var(--color-text); opacity: .7;">Annuler</button></span></sc-if>
+                <sc-if value="{{ lfHasPresets }}" hint-placeholder-val="{{ false }}"><button onClick="{{ gpToggleEdit }}" style="cursor: pointer; margin-left: auto; border: none; background: transparent; color: var(--color-text); font-family: var(--font-body); font-size: 13px; opacity: .7;">{{ gpEditLbl }}</button></sc-if>
+                <sc-if value="{{ gpMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="flex-basis: 100%; font-size: 12.5px; opacity: .75;">{{ gpMsg }}</span></sc-if>
+              </div>
               <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
                 <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
                 <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" defaultValue="{{ lf.infusion }}" onInput="{{ setLz.infusion }}" key="{{ lfKey }}-infusion">
@@ -6587,7 +6595,29 @@ class Component extends DCLogic {
         const all = this.gearUsable(me).concat((this.getAdds().gear || []).filter(g => cur.indexOf(g.id) >= 0 && !this.gearUsable(me).some(x => x.id === g.id)));
         const mine = all.filter(g => g.owner === me).sort(ord), others = all.filter(g => g.owner !== me).sort(ord);
         const show = !!this.state.showSalonGear || others.some(g => cur.indexOf(g.id) >= 0);
-        return { lfGearChips: mine.map(chip), lfGearSalon: others.map(chip), hasSalonGear: others.length > 0, showSalonGear: show, salonGearBox: show ? '✓' : '',
+        // Presets de matériel : ne font que cocher/décocher du matériel, rien n'est rattaché à la dégustation
+        const allP = (this.getAdds().options || {}).profiles || {}; const presets = ((allP[me] || {}).gearPresets || []);
+        const gearIds = new Set((this.getAdds().gear || []).map(g => g.id));
+        const live = pr => (pr.ids || []).filter(id => gearIds.has(id));
+        const isOn = pr => { const ids = live(pr); return ids.length > 0 && ids.every(id => cur.indexOf(id) >= 0); };
+        const savePresets = list => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { gearPresets: list }); this.setOpt('profiles', all); };
+        const setIds = f => this.setState(s0 => { const lf = s0.lf || {}; const ids = f((lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice()); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; });
+        const editing = !!this.state.gpEdit;
+        const lfPresets = presets.map(pr => { const on = isOn(pr); const n = live(pr).length;
+          return { label: (on ? '✓ ' : '') + pr.name + ' · ' + n, on: on, bg: on ? 'var(--color-accent-700)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)',
+            toggle: () => { if (editing) return; const mineIds = live(pr); if (on) { const keep = new Set(); presets.forEach(q => { if (q.id !== pr.id && isOn(q)) live(q).forEach(id => keep.add(id)); }); setIds(ids => ids.filter(id => mineIds.indexOf(id) < 0 || keep.has(id))); } else setIds(ids => ids.concat(mineIds.filter(id => ids.indexOf(id) < 0))); },
+            del: () => { if (window.confirm('Supprimer le preset « ' + pr.name + ' » ? (le matériel n’est pas touché)')) savePresets(presets.filter(q => q.id !== pr.id)); },
+            upd: () => { if (!cur.length) return; savePresets(presets.map(q => q.id === pr.id ? Object.assign({}, q, { ids: cur.slice() }) : q)); this.setState({ gpMsg: '« ' + pr.name + ' » contient maintenant les ' + cur.length + ' objets cochés.' }); } }; });
+        const gpName = this.state.gpName || '';
+        const lfPresetVals = { lfPresets: lfPresets, lfHasPresets: presets.length > 0, gpEdit: editing, gpEditLbl: editing ? 'Terminé' : '✎ Gérer',
+          gpToggleEdit: () => this.setState({ gpEdit: !editing, gpMsg: '' }), gpNewOpen: this.state.gpNew === true, gpNewClosed: this.state.gpNew !== true,
+          gpOpen: () => this.setState({ gpNew: true, gpName: '', gpMsg: '' }), gpCancel: () => this.setState({ gpNew: false }),
+          gpName: gpName, gpSetName: e => this.setState({ gpName: e.target.value }),
+          gpSave: () => { const nm = String(this.state.gpName || '').trim(); if (!nm) { this.setState({ gpMsg: 'Donnez un nom au preset.' }); return; } if (!cur.length) { this.setState({ gpMsg: 'Cochez d’abord le matériel à mettre dans le preset.' }); return; }
+            savePresets(presets.concat([{ id: 'gp' + Date.now().toString(36), name: nm, ids: cur.slice() }])); this.setState({ gpNew: false, gpName: '', gpMsg: 'Preset « ' + nm + ' » créé avec ' + cur.length + ' objet' + (cur.length > 1 ? 's' : '') + '.' }); },
+          gpKey: e => { if (e.key === 'Enter') { e.preventDefault(); lfPresetVals.gpSave(); } },
+          gpMsg: this.state.gpMsg || '', gpCount: cur.length ? cur.length + ' objet' + (cur.length > 1 ? 's' : '') + ' coché' + (cur.length > 1 ? 's' : '') : 'rien de coché' };
+        return { ...lfPresetVals, lfGearChips: mine.map(chip), lfGearSalon: others.map(chip), hasSalonGear: others.length > 0, showSalonGear: show, salonGearBox: show ? '✓' : '',
           toggleSalonGear: () => this.setState(s0 => ({ showSalonGear: !show })) };
       })(),
       gearHint: this.gearUsable(me).length ? 'Touchez tout ce que vous utilisez. Le matériel du salon s’affiche avec la case ci-dessous.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
