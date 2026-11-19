@@ -366,7 +366,6 @@
         <div style="position: relative; border-radius: 18px; overflow: hidden; background: #000; aspect-ratio: 3 / 4; max-height: 60vh;"><video id="mdt-scan-video" playsInline="{{ true }}" muted="{{ true }}" autoPlay="{{ true }}" style="width: 100%; height: 100%; object-fit: cover; display: block;"></video><div style="position: absolute; inset: 18%; border: 3px solid rgba(255,255,255,.85); border-radius: 18px; pointer-events: none;"></div></div>
         <p role="status" style="margin: 0; font-size: 14px; text-align: center;">{{ scanMsg }}</p>
       </div></div></sc-if>
-    <sc-if value="{{ bg0.bugBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ bg0.bugToggle }}" class="bug-fab" title="Signaler un bug" aria-label="Signaler un bug">🐞</button></sc-if>
     <sc-if value="{{ bg0.bugOpen }}" hint-placeholder-val="{{ false }}"><div class="bug-ov" role="dialog" aria-modal="true" aria-label="Signaler un bug"><button class="bug-bd" onClick="{{ bg0.bugClose }}" aria-label="Fermer"></button>
       <div class="bug-box">
         <div style="display: flex; align-items: center; gap: 10px;"><h2 style="margin: 0; font-size: 22px; margin-right: auto;">🐞 Signaler un bug</h2><button onClick="{{ bg0.bugClose }}" aria-label="Fermer" style="cursor: pointer; border: none; background: transparent; font-size: 20px; color: var(--color-text);">✕</button></div>
