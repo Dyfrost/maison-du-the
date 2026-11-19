@@ -1580,7 +1580,7 @@
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" data-val="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}" label="{{ gt.l }}">{{ gt.l }}</option></sc-for></select></label><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Modèle</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.model }}" data-val="{{ gf.model }}" onChange="{{ setG.model }}"><option value="">—</option><sc-for list="{{ gearModelGroups }}" as="mg" hint-placeholder-count="2"><optgroup label="{{ mg.label }}"><sc-for list="{{ mg.items }}" as="gm" hint-placeholder-count="4"><option value="{{ gm }}" label="{{ gm }}">{{ gm }}</option></sc-for></optgroup></sc-for></select></label>
               <sc-if value="{{ gfVol }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Contenance (ml)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 120" defaultValue="{{ gf.volume }}" onInput="{{ setGz.volume }}" key="{{ gfKey }}-volume"></label></sc-if>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matière</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfMatPh }}" defaultValue="{{ gf.material }}" onInput="{{ setGz.material }}" key="{{ gfKey }}-material"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Boutique</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" defaultValue="{{ gf.origin }}" onInput="{{ setGz.origin }}" key="{{ gfKey }}-origin"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque / origine</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" defaultValue="{{ gf.origin }}" onInput="{{ setGz.origin }}" key="{{ gfKey }}-origin"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date d’achat</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="" value="{{ gf.achat }}" onInput="{{ setG.achat }}"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix (€)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 45" defaultValue="{{ gf.prix }}" onInput="{{ setGz.prix }}" key="{{ gfKey }}-prix"></label>
             </div>
@@ -2342,6 +2342,7 @@
             <sc-for list="{{ brList }}" as="br" hint-placeholder-count="3">
               <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 18px;">{{ br.name }}</b><span style="font-size: 14px; opacity: .65;">{{ br.n }}</span><sc-if value="{{ br.hasNear }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">{{ br.nearTxt }}</span></sc-if></div>
+                <sc-if value="{{ br.hasCities }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ br.cities }}" as="bc" hint-placeholder-count="2"><span style="font-size: 13.5px; padding: 4px 10px; border-radius: 999px; background: var(--color-surface); opacity: {{ bc.dim }};">📍 {{ bc.c }} <span style="opacity: .6;">{{ bc.n }}</span></span></sc-for></div></sc-if>
                 <span style="font-size: 13.5px; opacity: .7;">{{ br.ex }}</span>
                 <sc-if value="{{ br.multi }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .8;">{{ br.spells }}</span></sc-if>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
@@ -2691,7 +2692,11 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Boutique</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Maison X" defaultValue="{{ form.marque }}" onInput="{{ setFz.marque }}" key="{{ formKey }}-marque">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : PALAIS DES THÉS" defaultValue="{{ form.marque }}" onInput="{{ setFz.marque }}" key="{{ formKey }}-marque" list="liste-boutiques">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ville de la boutique</span>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Toulouse, Kuala Lumpur, en ligne" defaultValue="{{ form.ville }}" onInput="{{ setFz.ville }}" key="{{ formKey }}-ville" list="liste-villes">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
@@ -3045,7 +3050,8 @@
           <h2 style="font-size: 22px; margin: 0;">✏️ Modifier « {{ pv.name }} »</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 14px;">
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Nom chez le fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.nom }}" onInput="{{ pe.set.nom }}" key="{{ pe.key }}-nom"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.marque }}" onInput="{{ pe.set.marque }}" key="{{ pe.key }}-marque"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.marque }}" onInput="{{ pe.set.marque }}" key="{{ pe.key }}-marque" list="liste-boutiques"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Ville de la boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ville }}" onInput="{{ pe.set.ville }}" key="{{ pe.key }}-ville" list="liste-villes"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ref }}" onInput="{{ pe.set.ref }}" key="{{ pe.key }}-ref"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.variante }}" onInput="{{ pe.set.variante }}" key="{{ pe.key }}-variante"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">🌡 Temp. conseillée (fabricant)<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 95" defaultValue="{{ pe.recoTemp }}" onInput="{{ pe.set.recoTemp }}" key="{{ pe.key }}-recoTemp"></label>
@@ -3728,6 +3734,8 @@
     </sc-if>
 
     <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--color-divider); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 13px; opacity: .65;"><span>Maison du Thé</span><button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: inherit; text-decoration: underline;">Confidentialité et mentions légales</button></footer>
+    <datalist id="liste-boutiques"><sc-for list="{{ dlShops }}" as="ds" hint-placeholder-count="2"><option value="{{ ds }}"></option></sc-for></datalist>
+    <datalist id="liste-villes"><sc-for list="{{ dlCities }}" as="dc" hint-placeholder-count="2"><option value="{{ dc }}"></option></sc-for></datalist>
   </main>
 </div>
 
@@ -4452,8 +4460,8 @@ class Component extends DCLogic {
       cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Boutique'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
       rows = a.prods.map(p => { const sacs = a.sachets.filter(x => x.prodId === p.id); const nl = sacs.reduce((t, x) => t + (logsBySac[x.id] || []).length, 0); const ts = this.idTs(p.id);
         return { id: p.id, v: { nom: p.nom || p.the, the: p.the + (p.variante ? ' · ' + p.variante : ''), fam: famName(p.the), marque: p.marque || '—', nSac: sacs.length, nLog: nl, who: creator('pid', p.id) || (sacs[0] || {}).owner || '—', date: ts },
-          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique'], ['ref', 'Référence'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
-          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
+          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique'], ['ville', 'Ville de la boutique'], ['ref', 'Référence'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, ville: this.cityFmt(d.ville), ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
           open: () => this.openProd(p.id), delMsg: 'Supprimer « ' + (p.nom || p.the) + ' » ? ' + sacs.length + ' sachet(s) et ' + nl + ' dégustation(s) seront aussi supprimés.', delFn: delProds([p.id]) }; });
     } else if (kind === 'sachet') {
       cols = [['code', 'Code'], ['nom', 'Thé'], ['owner', 'Propriétaire'], ['qty', 'Quantité'], ['reste', 'Reste'], ['nLog', 'Dégust.'], ['etat', 'État'], ['date', 'Ajouté le']];
@@ -4784,7 +4792,9 @@ class Component extends DCLogic {
     const shown = list.filter(g => !q || this.norm(g.spells.join(' ')).indexOf(q) >= 0 || g.prods.some(p => this.norm(p.nom || p.the).indexOf(q) >= 0));
     return { brN: String(list.length), brNone: none ? none + ' thé' + (none > 1 ? 's' : '') + ' du commerce sans boutique.' : '', brMsg: this.state.brMsg || '', brQ: this.state.brQ || '', setBrQ: e => this.setState({ brQ: e.target.value }), brEmpty: !shown.length,
       brList: shown.map(g => { const nr = near(g); const draft = ed[g.key] != null ? ed[g.key] : g.name; const tgt = mg[g.key] || (nr[0] ? nr[0].key : '');
-        return { name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
+        const cities = {}; g.prods.forEach(p => { const c = String(p.ville || '').trim() || 'sans ville'; cities[c] = (cities[c] || 0) + 1; });
+        const cl = Object.keys(cities).sort((x, y) => (x === 'sans ville') - (y === 'sans ville') || cities[y] - cities[x] || x.localeCompare(y, 'fr'));
+        return { cities: cl.map(c => ({ c: c, n: String(cities[c]), dim: c === 'sans ville' ? '.55' : '1' })), hasCities: cl.length > 0, name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
           ex: g.prods.slice(0, 5).map(p => p.nom || p.the).join(' · ') + (g.prods.length > 5 ? '…' : ''),
           hasNear: nr.length > 0, nearTxt: nr.length ? '⚠️ Doublon probable de « ' + nr.map(h => h.name).join(' », « ') + ' »' : '',
           draft: draft, setDraft: e => { const v = this.upInput(e); this.setState(st => ({ brEdit: Object.assign({}, st.brEdit, { [g.key]: v }) })); },
@@ -5514,7 +5524,7 @@ class Component extends DCLogic {
   fieldChanges(o, n, kind, names) {
     const L = { log: { lotId: 'Sachet', author: 'Auteur', with: 'Participants', date: 'Date', heure: 'Heure', note: 'Note', infusion: 'Infusions', temps: 'Temps', temperature: 'Température', qty: 'Quantité', technique: 'Technique', repas: 'Moment', avis: 'Avis', nez: 'Nez', gearIds: 'Matériel', tags: 'Tags', endTs: 'Fin', startTs: 'Début' },
       sachet: { code: 'Code', owner: 'Propriétaire', prodId: 'Thé du commerce', achat: 'Date d’achat', prodDate: 'Année de production', lot: 'Lot', quantite: 'Quantité', prixMode: 'Vendu à', prixPaye: 'Prix payé', freq: 'Fréquence', commentaire: 'Commentaire', empty: 'Vide', sachetPhoto: 'Photo' },
-      prod: { nom: 'Nom', the: 'Thé du catalogue', variante: 'Variante', marque: 'Boutique', ref: 'Référence', boutique: 'Lieu d’achat', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
+      prod: { nom: 'Nom', the: 'Thé du catalogue', variante: 'Variante', marque: 'Boutique', ville: 'Ville', ref: 'Référence', boutique: 'Lieu d’achat', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
       gear: { name: 'Nom', type: 'Type', owner: 'Propriétaire', prix: 'Prix', marque: 'Marque', matiere: 'Matière', contenance: 'Contenance', photo: 'Photo', desc: 'Description', vitrine: 'Vitrine' },
       cat: { nom: 'Nom', famille: 'Famille', traduction: 'Traduction', origine: 'Origine', pays: 'Pays', province: 'Province', gout: 'Goût', recolte: 'Récolte' } }[kind] || {};
     const SKIP = ['history', 'adjust', 'shares', 'gearId', 'live', 'rev', 'id', 'pending'];
@@ -6054,7 +6064,7 @@ class Component extends DCLogic {
       if (!pr) return null;
       return { id: sa.id, prodId: pr.id, owner: sa.owner, shares: sa.shares || [], portionAdj: sa.portionAdj || {}, portionEmpty: sa.portionEmpty || {}, owners: [sa.owner].concat((sa.shares || []).map(x => x.to)).filter((x, i, arr) => x && arr.indexOf(x) === i),
         recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '',
-        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: sa.photoThe || '', photo: sa.photo || '', history: sa.history || [], adjust: sa.adjust || null, empty: sa.empty,
+        the: pr.the, variante: pr.variante || '', nom: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', boutique: pr.boutique || '', ref: pr.ref || '', tags: pr.tags || [], prodComment: pr.commentaire || '', prodCode: pr.code || '', prodPhoto: sa.photoThe || '', photo: sa.photo || '', history: sa.history || [], adjust: sa.adjust || null, empty: sa.empty,
         code: sa.code || '', achat: sa.achat || '', prodDate: sa.prodDate || '', annee: sa.prodDate || '', lot: sa.lot || '', prixMode: sa.prixMode || 'poids', prixPaye: sa.prixPaye || '', quantite: sa.quantite || '', freq: sa.freq || '', commentaire: sa.commentaire || '' };
     }).filter(Boolean);
   }
@@ -6259,7 +6269,7 @@ class Component extends DCLogic {
     const rm = sa.id ? this.remainFor(sa) : null;
     const pst = this.statsMany(this.collection().filter(o => o.prodId === p.id).map(o => o.id));
     const freq = sa.freq ? ((this.opts().freqs.find(f => String(f.code) === String(sa.freq)) || {}).label || sa.freq) : '';
-    const sac = [['Propriétaire', sa.owner], ['Boutique', p.marque || sa.marque || p.boutique || sa.boutique], ['Réf. fournisseur', p.ref || sa.ref], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', (this.priceVisible(sa.owner) && sa.prixPaye) ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
+    const sac = [['Propriétaire', sa.owner], ['Boutique', this.shopTxt(p.marque || sa.marque || p.boutique || sa.boutique, p.ville)], ['Réf. fournisseur', p.ref || sa.ref], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', (this.priceVisible(sa.owner) && sa.prixPaye) ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const tea = [['Thé du catalogue', p.the], ['Variante', p.variante], ['Famille', fk ? this.families[fk].name : ''], ['Origine', cat ? (cat.origin || cat.pays || '') : ''], ['Moyenne de ce thé', pst.n ? this.avgTxt(pst) + ' (' + pst.n + ')' : '']].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const join = me ? this.joinInfo(l, me) : {};
     const canEdit = !!me && !!this.state.session && this.canEditLog(l, me); const canDel = canEdit && this.norm(l.author || '') === this.norm(me);
@@ -6597,7 +6607,7 @@ class Component extends DCLogic {
     this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: o.marque || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: this.shopTxt(o.marque, o.ville) || '—', canDel: this.norm(l.author || '') === this.norm(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   computeStats(coll, me) {
     coll = coll.map(o => this.priceVisible(o.owner) ? o : Object.assign({}, o, { prixPaye: '' }));
@@ -6823,7 +6833,7 @@ class Component extends DCLogic {
     const photo = (sacs.find(o => o.prodPhoto) || sacs.find(o => o.photo) || {});
     const canEditP = !!me && (!!this.state.session || !this.state.cloud);
     const pe0 = this.state.prodEdit && this.state.prodEdit.id === pr.id ? this.state.prodEdit : null;
-    const startEdit = () => this.setState({ prodEdit: { id: pr.id, nom: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', variante: pr.variante || '', boutique: pr.boutique || '', commentaire: pr.commentaire || '', tags: (pr.tags || []).slice(), recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', rev: Date.now() }, prodNewTag: '' });
+    const startEdit = () => this.setState({ prodEdit: { id: pr.id, nom: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', ref: pr.ref || '', variante: pr.variante || '', boutique: pr.boutique || '', commentaire: pr.commentaire || '', tags: (pr.tags || []).slice(), recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', rev: Date.now() }, prodNewTag: '' });
     return { reco: [pr.recoTemp ? pr.recoTemp + (/^\d+$/.test(pr.recoTemp) ? ' °C' : '') : '', pr.recoQty ? pr.recoQty + (/^\s*[\d.,]+\s*$/.test(pr.recoQty) ? ' g' : '') : '', pr.recoTimes].filter(Boolean).join(' · '), canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
       member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
@@ -6833,7 +6843,7 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
       prix: this.avgPrice(sacs) || '—', nSac: String(sacs.length), owners: owners.length ? 'chez ' + owners.join(', ') : 'personne pour l’instant',
       iOwn: mineS.length > 0, iDontOwn: !mineS.length,
-      addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
+      addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
       sachets: sacs.map(o => this.sachetView(o, me)), noLogs: !ls.length, hasLogs: ls.length > 1,
       ...(() => {
         const mode = this.state.pvSort || 'recent';
@@ -7008,7 +7018,7 @@ class Component extends DCLogic {
     const sk = (() => { const ls = this.logsFor(o.id); const st2 = this.statsFor(o.id); const p = this.num(o.prixPaye), q = this.num(o.quantite);
       return { alpha: o.nom || o.the, price: p && q ? (o.prixMode === 'unite' ? p / q : p / q * 100) : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st2.avg }; })();
     return { _k: sk, ...give, ...shareCtl, ...adjustCtl, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? (portions.length ? o.owner + ' : ' + rm.txt.replace('Reste', 'reste') : rm.txt) : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
-      name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
+      name: o.nom || o.the, the: o.the, variante: o.variante, marque: this.shopTxt(o.marque, o.ville) || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: (this.priceVisible(o.owner) && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
       subLine: [o.marque, this.formatTxt(o), o.owner ? (o.owner === me ? 'à moi' : 'à ' + o.owner) : ''].filter(Boolean).join(' · '),
@@ -7036,7 +7046,7 @@ class Component extends DCLogic {
       openCat: () => this.openCatTea(o.the),
       nameOpen: this.stop(() => this.openProd(o.prodId)),
       taste: () => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: mdtToday() }, this.state.lf), o.id) }),
-      edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { recoTemp: o.recoTemp || '', recoQty: o.recoQty || '', recoTimes: o.recoTimes || '', prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
+      edit: () => this.setState({ view: 'add', addTab: 'lot', editId: o.id, addMsg: '', form: Object.assign({}, this.state.form, { recoTemp: o.recoTemp || '', recoQty: o.recoQty || '', recoTimes: o.recoTimes || '', prodId: o.prodId, the: o.the, variante: o.variante, nomFour: o.nom, marque: o.marque, ville: o.ville || '', ref: o.ref, boutique: o.boutique, tags: (o.tags || []).slice(), prodComment: o.prodComment, prodPhoto: o.prodPhoto, sachetPhoto: o.photo, code: o.code, achat: o.achat, prodDate: o.prodDate, lot: o.lot, prixMode: o.prixMode, prixPaye: o.prixPaye, quantite: o.quantite, freq: o.freq, commentaire: o.commentaire }) }),
       remove: () => { if (!window.confirm('Supprimer le sachet ' + o.code + ' ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); },
       menuRemove: () => { this.setState({ sacMenu: null }); if (!window.confirm('Supprimer le sachet ' + o.code + ' et ses dégustations ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.filter(x => x.id !== o.id), logs: a.logs.filter(x => x.lotId !== o.id) })); } };
   }
@@ -7086,6 +7096,9 @@ class Component extends DCLogic {
   // une dégustation ne peut pas avoir son auteur parmi les participants (ex. auteur changé dans l'admin)
   // met le champ en majuscules pendant la frappe sans déplacer le curseur
   upInput(e) { const el = e.target; const up = String(el.value).toLocaleUpperCase('fr-FR'); if (up !== el.value) { const a = el.selectionStart, b = el.selectionEnd; el.value = up; try { el.setSelectionRange(a, b); } catch (x) {} } return up; }
+  shopTxt(m, v) { m = String(m || '').trim(); v = String(v || '').trim(); return m ? m + (v ? ' · ' + v : '') : (v || ''); }
+  cityFmt(v) { v = String(v || '').trim().replace(/\s+/g, ' '); const small = ['de', 'du', 'des', 'la', 'le', 'les', 'en', 'sur', 'sous', 'lès', 'et', 'aux', 'au'];
+    return v.split(/([ -])/).map((w, i) => (i > 0 && small.indexOf(w.toLowerCase()) >= 0) || /^[ -]$/.test(w) || !w ? w : w.charAt(0).toLocaleUpperCase('fr-FR') + w.slice(1)).join(''); }
   upBrand(m) { return String(m || '').trim().replace(/\s+/g, ' ').toLocaleUpperCase('fr-FR'); }
   fixLogWith() {
     if (!this.isAdmin(this.me())) return; const a = this.getAdds();
@@ -7114,14 +7127,14 @@ class Component extends DCLogic {
     const addNew = () => { const t = String(this.state.prodNewTag || '').trim(); if (!t) return; const name = t.charAt(0).toUpperCase() + t.slice(1); const exist = this.allTags().find(x => this.norm(x) === this.norm(name)); const tag = exist || name; if (!exist) this.setTagList(this.allTags().concat([tag])); const m = merged(); this._peDraft = {}; this.setState({ prodNewTag: '', prodEdit: Object.assign({}, m, { tags: m.tags.indexOf(tag) >= 0 ? m.tags : m.tags.concat([tag]) }) }); };
     const all = this.allTags(); const extra = pe.tags.filter(t => all.indexOf(t) < 0);
     const tp = this.tagPicker(merged().tags, tags => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: tags }) }); }, 'tpOpenP');
-    return { tp: tp, key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
-      set: ['nom', 'marque', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
+    return { tp: tp, key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ville: pe.ville, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
+      set: ['nom', 'marque', 'ville', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
       tagsCount: pe.tags.length ? pe.tags.length + ' sélectionné' + (pe.tags.length > 1 ? 's' : '') : 'cliquez pour en choisir',
       chips: all.concat(extra).map(t => { const on = pe.tags.indexOf(t) >= 0; return { label: (on ? '✓ ' : '') + t, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', toggle: () => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: on ? m.tags.filter(x => x !== t) : m.tags.concat([t]) }) }); } }; }),
       newTag: this.state.prodNewTag || '', setNewTag: e => this.setState({ prodNewTag: e.target.value }), newTagKey: e => { if (e.key === 'Enter') { e.preventDefault(); addNew(); } }, addTag: addNew,
       cancel: () => { this._peDraft = {}; this.setState({ prodEdit: null }); },
       save: () => { const m = merged(); this._peDraft = {}; const a = this.getAdds(); const clean = v => String(v || '').trim();
-        this.setAdds(Object.assign({}, a, { prods: a.prods.map(x => x.id === m.id ? Object.assign({}, x, { nom: clean(m.nom), marque: clean(m.marque), ref: clean(m.ref), variante: clean(m.variante), boutique: clean(m.boutique), commentaire: clean(m.commentaire), recoTemp: clean(m.recoTemp), recoQty: clean(m.recoQty), recoTimes: clean(m.recoTimes), tags: m.tags }) : x) }));
+        this.setAdds(Object.assign({}, a, { prods: a.prods.map(x => x.id === m.id ? Object.assign({}, x, { nom: clean(m.nom), marque: clean(m.marque), ville: this.cityFmt(m.ville), ref: clean(m.ref), variante: clean(m.variante), boutique: clean(m.boutique), commentaire: clean(m.commentaire), recoTemp: clean(m.recoTemp), recoQty: clean(m.recoQty), recoTimes: clean(m.recoTimes), tags: m.tags }) : x) }));
         this.setState({ prodEdit: null }); } };
   }
 
@@ -7523,7 +7536,7 @@ class Component extends DCLogic {
         const fk = this.state.key; const t = this.listFor(fk)[this.state.idx || 0] || {};
         const a = this.getAdds();
         const prods = a.prods.filter(p => this.norm(p.the) === this.norm(t.name || ''));
-        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Boutique : ' + p.marque : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
+        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Boutique : ' + this.shopTxt(p.marque, p.ville) : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
       })(),
       ...(() => {
         const a = this.getAdds();
@@ -7532,7 +7545,7 @@ class Component extends DCLogic {
         const prodIds = prods.map(x => x.id);
         const myLogs = a.logs.filter(l => this.inLog(l, me) && coll.some(o => o.id === l.lotId && prodIds.indexOf(o.prodId) >= 0)).sort((x, y) => String(y.date).localeCompare(String(x.date)));
         const taste = id => this.setState({ view: 'log', logMsg: '', lf: this.lfWithLot(Object.assign({ date: mdtToday() }, this.state.lf), id) });
-        const fill = pr => ({ recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
+        const fill = pr => ({ recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' });
         const addSachet = pr => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, fill(pr)) }));
         const card = pr => {
           const sacs = coll.filter(o => o.prodId === pr.id);
@@ -7556,7 +7569,7 @@ class Component extends DCLogic {
           teaLogsOpen: () => this.setState({ view: 'logs', collView: 'logs', dq: '', dTea: tea.name, ds: 'me' }),
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
-          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
+          teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
         };
       })(),
       teaTags: tTags,
@@ -7632,7 +7645,8 @@ class Component extends DCLogic {
       isStats: v === 'stats',
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
-      shareToast: this.state.shareToast || '', newVer: !!this.state.newVer, doUpdate: () => this.applyUpdate(true),
+      shareToast: this.state.shareToast || '',
+      dlShops: Array.from(new Set(this.getAdds().prods.map(p => p.marque).filter(Boolean))).sort(), dlCities: Array.from(new Set(this.getAdds().prods.map(p => p.ville).filter(Boolean))).sort((x, y) => x.localeCompare(y, 'fr')), newVer: !!this.state.newVer, doUpdate: () => this.applyUpdate(true),
       menuGear: () => this.setState({ menuOpen: false, view: 'gear', gearEdit: null, gearMsg: '' }),
       isGear: v === 'gear', isGearItem: v === 'gearItem',
       gi: v === 'gearItem' ? this.gearItemView(me) : {},
@@ -7965,7 +7979,7 @@ class Component extends DCLogic {
       hasLive: this.liveLogs(me).length > 0,
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
-      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
+      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
       mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » pour voir ceux des autres.'; })(),
@@ -7979,7 +7993,7 @@ class Component extends DCLogic {
           const st = this.statsMany(allSacs.map(x => x.id)); const open = !!(this.state.openProds || {})[pid];
           const ph = (allSacs.find(x => x.prodPhoto) || {}).prodPhoto || '';
           return { ...this.expFlags('p:' + pid), photo: ph, noPhoto: !ph, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
-            marque: o.marque || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
+            marque: this.shopTxt(o.marque, o.ville) || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
             avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
@@ -8019,7 +8033,7 @@ class Component extends DCLogic {
       noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
       lfNoteColor: this.noteColors((this.state.lf || {}).note).noteBg,
       setLz: ['temps', 'temperature', 'qty', 'repas', 'avis', 'infusion', 'nez'].reduce((o, k) => { o[k] = this.lazySet('lf', k); return o; }, {}),
-      setFz: ['recoTemp', 'recoQty', 'recoTimes', 'prodComment', 'variante', 'nomFour', 'marque', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'lot', 'boutique', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'vNom', 'vTrad', 'vProfil', 'vDesc', 'prodDate', 'annee', 'format'].reduce((o, k) => { o[k] = this.lazySet('form', k); return o; }, {}),
+      setFz: ['recoTemp', 'recoQty', 'recoTimes', 'prodComment', 'variante', 'nomFour', 'marque', 'ville', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'lot', 'boutique', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'vNom', 'vTrad', 'vProfil', 'vDesc', 'prodDate', 'annee', 'format'].reduce((o, k) => { o[k] = this.lazySet('form', k); return o; }, {}),
       lfKey: 'lf' + (this.state.lfRev || 0),
       formKey: 'f' + (this.state.formRev || 0),
       setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: k === 'lotId' ? this.lfWithLot(s.lf || {}, val) : Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
@@ -8097,7 +8111,7 @@ class Component extends DCLogic {
       ...this.catEditVals(),
       tabLotOn: (this.state.addTab || 'lot') === 'lot', tabLotOff: (this.state.addTab || 'lot') !== 'lot',
       form: Object.assign({ famille: 'blanc', nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '', the: '', lot: '', boutique: '', annee: '', format: '', commentaire: '', ref: '', code: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', vParent: '', vNom: '', vTrad: '', vProfil: '', vDesc: '' }, this.state.form),
-      setF: ['prodComment', 'achat', 'prodDate', 'variante', 'nomFour', 'marque', 'famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }, k === 'the' && val !== (s.form || {}).the ? { variante: '' } : {}) })); }; return o; }, {}),
+      setF: ['prodComment', 'achat', 'prodDate', 'variante', 'nomFour', 'marque', 'ville', 'famille', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'the', 'lot', 'boutique', 'annee', 'format', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'freq', 'vParent', 'vNom', 'vTrad', 'vProfil', 'vDesc'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ form: Object.assign({}, s.form, { [k]: val }, k === 'the' && val !== (s.form || {}).the ? { variante: '' } : {}) })); }; return o; }, {}),
       addMsg: this.state.addMsg || '',
       allTeaNames: Object.keys(this.families).reduce((a, k) => a.concat(this.listFor(k).map(t => t.name)), []),
       modeNew: () => this.setState({ addMode: 'new', addMsg: '' }),
@@ -8114,7 +8128,7 @@ class Component extends DCLogic {
         const n = a.sachets.filter(x => x.owner === me && pr && x.prodId === pr.id && x.id !== this.state.editId).length + 1;
         return { genCode: gen, codeSuggest: (this.state.editId && fm.code) ? fm.code : gen + '-' + ini + n + '-XXXX',
           prodOptions: a.prods.slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the))).map(x => ({ id: x.id, label: [x.nom || x.the, x.the !== x.nom ? x.the : '', x.marque, x.code].filter(Boolean).join(' — ') })),
-          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { recoTemp: x.recoTemp || '', recoQty: x.recoQty || '', recoTimes: x.recoTimes || '', prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } };
+          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { recoTemp: x.recoTemp || '', recoQty: x.recoQty || '', recoTimes: x.recoTimes || '', prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ville: x.ville || '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } };
       })(),
       noteHint: (() => { const n = parseFloat(String((this.state.form || {}).note20 || '').replace(',', '.')); if (isNaN(n)) return '0–4 à jeter · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel'; return n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? "Correct, sans plus" : n <= 18 ? 'Vraiment bon' : 'Exceptionnel'; })(),
       saveVar: () => {
@@ -8142,7 +8156,7 @@ class Component extends DCLogic {
         if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez la famille de thé.' }); return; }
         if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
         const a = this.getAdds();
-        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], recoTemp: String(fm.recoTemp || '').trim(), recoQty: String(fm.recoQty || '').trim(), recoTimes: String(fm.recoTimes || '').trim(), commentaire: fm.prodComment || '' };
+        const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ville: this.cityFmt(fm.ville), ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], recoTemp: String(fm.recoTemp || '').trim(), recoQty: String(fm.recoQty || '').trim(), recoTimes: String(fm.recoTimes || '').trim(), commentaire: fm.prodComment || '' };
         let prods = a.prods.slice(), prodId = fm.prodId;
         if (prodId && prods.some(x => x.id === prodId)) {
           prods = prods.map(x => x.id === prodId ? Object.assign({}, x, prodFields) : x);
@@ -8160,7 +8174,7 @@ class Component extends DCLogic {
         let code = old && old.prodId === prodId && old.code ? old.code : pr.code + '-' + ini + n + '-' + rnd();
         while (a.sachets.some(x => x.code === code && (!old || x.id !== old.id))) code = pr.code + '-' + ini + n + '-' + rnd();
         const sac = { prodId: prodId, owner: me, code: code, achat: fm.achat || '', prodDate: fm.prodDate || '', lot: fm.lot || '', prixMode: fm.prixMode || 'poids', prixPaye: fm.prixPaye || '', quantite: fm.quantite || '', freq: fm.freq || '', commentaire: fm.commentaire || '', photo: fm.sachetPhoto || '', photoThe: fm.prodPhoto || '' };
-        const clear = { prodPhoto: '', sachetPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' };
+        const clear = { prodPhoto: '', sachetPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' };
         if (this.state.editId) {
           this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.map(x => x.id === this.state.editId ? Object.assign({}, x, sac, { owner: x.owner }) : x) }));
           this.setState(s => ({ view: 'mine', editId: null, form: Object.assign({}, s.form, clear) }));
