@@ -6112,7 +6112,7 @@ class Component extends DCLogic {
 
   joinInfo(l, me) {
     const author = l.author || '';
-    const can = !!me && this.norm(author) !== this.norm(me) && (this.salonMates(me).indexOf(author) >= 0 || this.friendsOf(me).indexOf(author) >= 0 || (l.with || []).indexOf(me) >= 0);
+    const can = !!me && this.norm(author) !== this.norm(me) && (this.salonMates(me).indexOf(author) >= 0 || (l.with || []).indexOf(me) >= 0);
     const joined = (l.with || []).indexOf(me) >= 0;
     return { canJoin: can, joinTxt: joined ? '✓ J’y étais (me retirer)' : '＋ J’y étais aussi',
       toggleJoin: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === l.id ? Object.assign({}, x, { with: joined ? (x.with || []).filter(w => w !== me) : (x.with || []).concat([me]) }) : x) })); } };
