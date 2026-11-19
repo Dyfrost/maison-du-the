@@ -5005,7 +5005,7 @@ class Component extends DCLogic {
       else if (h.kind === 'salon') this.setSalons(this.salons().map(x => x.id === h.id ? Object.assign({}, x, { desc: '' }) : x));
       this.modLog('a effacé un texte', h.where + (h.who ? ' (' + h.who + ')' : '')); };
     const open = h => { if (h.kind === 'profile' || h.kind === 'user') this.setState({ view: 'profile', profUser: h.id, profEdit: false });
-      else if (h.kind === 'log') this.setState({ addTab: 'new', adKind: 'log', adQ: '', adFilter: '', adSel: [], adEdit: 'log:' + h.id, adDraft: Object.assign({}, (a.logs.find(l => l.id === h.id) || {}), { withTxt: ((a.logs.find(l => l.id === h.id) || {}).with || []).join(', ') }) });
+      else if (h.kind === 'log') this.openLogDetail(h.id);
       else if (h.kind === 'prod') this.openProd(h.id);
       else if (h.kind === 'sachet') { const x = a.sachets.find(z => z.id === h.id); if (x) this.openProd(x.prodId); }
       else if (h.kind === 'gear') this.setState({ view: 'gear' });
