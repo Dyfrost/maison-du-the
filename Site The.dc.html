@@ -1233,14 +1233,9 @@
 
     <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both;">
-        <div style="display: flex; flex-direction: column; gap: 6px;"><h1 style="font-size: 46px; margin: 0;">⚙️ Paramètres</h1><p style="font-size: 16px; opacity: .72; margin: 0;">Ton compte {{ sett.setTag }} : ce que les autres voient de toi, et ce que tu veux voir.</p></div>
+        <div style="display: flex; flex-direction: column; gap: 6px;"><h1 style="font-size: 46px; margin: 0;">⚙️ Paramètres</h1><p style="font-size: 16px; opacity: .72; margin: 0;">Ton compte {{ sett.setTag }} : ce que les autres voient de toi.</p></div>
         <sc-if value="{{ sett.setMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px; color: #2f5b3a;">{{ sett.setMsg }}</p></sc-if>
-        <section class="set-card">
-          <h2 class="set-h">🙂 Profil</h2>
-          <span class="set-l">Description affichée sur ton profil</span>
-          <textarea class="input" rows="3" value="{{ sett.setDesc }}" onInput="{{ sett.onSetDesc }}" placeholder="Ton thé préféré, ta façon de l’infuser, ce que tu cherches…" aria-label="Description du profil" style="resize: vertical; border-radius: 20px;"></textarea>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ sett.saveDesc }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sett.openProfile }}" style="white-space: nowrap;">Voir mon profil →</button><span style="font-size: 14px; opacity: .7; margin-left: auto;">Salon principal : {{ sett.setSalon }} · <button class="btn btn-ghost" onClick="{{ sett.openSalon }}" style="padding: 0; font-size: 14px;">changer</button></span></div>
-        </section>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 14px;"><button class="btn btn-secondary" onClick="{{ sett.openProfile }}" style="white-space: nowrap;">🙂 Voir mon profil</button><span style="opacity: .7;">Salon principal : {{ sett.setSalon }}</span><button class="btn btn-ghost" onClick="{{ sett.openSalon }}" style="white-space: nowrap; font-size: 14px;">changer</button></div>
         <section class="set-card">
           <h2 class="set-h">👁️ Qui peut voir mon profil ?</h2>
           <div class="set-opts"><sc-for list="{{ sett.setProfile }}" as="o" hint-placeholder-count="3"><button class="{{ o.cls }}" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div>
