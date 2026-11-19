@@ -1027,7 +1027,7 @@
       <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <h1 style="font-size: 46px; margin: 0;">Salons</h1>
-          <p style="font-size: 16px; opacity: .72; margin: 0;">Un salon réunit quelques amis autour du thé. Vous pouvez en rejoindre jusqu’à 5 et en créer 5 ; le salon choisi ici sert pour vos stats « Dans mon salon ».</p>
+          <p style="font-size: 16px; opacity: .72; margin: 0;">Un salon réunit quelques amis autour du thé. Vous pouvez en rejoindre jusqu’à 5 et en créer 5 ; votre salon principal ⭐ est celui affiché à côté de votre nom et utilisé pour les stats « Dans mon salon ». Le matériel, lui, vient de tous vos salons.</p>
         </div>
         <nav class="sl-nav" aria-label="Mes salons">
           <sc-for list="{{ sl.nav }}" as="sn" hint-placeholder-count="2"><button class="sl-pill" onClick="{{ sn.go }}" aria-current="{{ sn.cur }}" style="background: {{ sn.bg }}; color: {{ sn.fg }}; box-shadow: {{ sn.ring }};">{{ sn.name }}</button></sc-for>
@@ -1063,6 +1063,8 @@
             <span style="font-family: var(--font-heading); font-size: 30px; line-height: 1.1;">{{ sl.name }}</span>
             <span style="font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: {{ sl.tagBg }}; color: {{ sl.tagFg }};">{{ sl.name }}</span>
             <span style="font-size: 14px; opacity: .65;">{{ sl.count }} · chef : {{ sl.chief }}</span>
+            <sc-if value="{{ sl.isMain }}" hint-placeholder-val="{{ true }}"><span title="Salon principal" style="margin-left: auto; font-size: 13.5px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: #f4e4bb; color: #6b4e12;">⭐ Salon principal</span></sc-if>
+            <sc-if value="{{ sl.notMain }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sl.makeMain }}" title="Votre salon principal : son tag s’affiche à côté de votre nom et les stats « Dans mon salon » portent sur lui" style="margin-left: auto; white-space: nowrap; font-size: 14px;">⭐ En faire mon salon principal</button></sc-if>
           </div>
           <div role="tablist" aria-label="Sections du salon" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px; flex-wrap: wrap;">
             <sc-for list="{{ sl.tabs }}" as="st" hint-placeholder-count="3"><button role="tab" aria-selected="{{ st.on }}" onClick="{{ st.go }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ st.bg }}; color: {{ st.fg }};">{{ st.label }}</button></sc-for>
@@ -4433,12 +4435,12 @@ class Component extends DCLogic {
 
   salons() { return ((this.getAdds().options || {}).salons) || []; }
   salonsOf(u) { return this.salons().filter(x => (x.members || []).indexOf(u) >= 0); }
-  // Salon « actif » d'une personne : celui choisi dans le navigateur (profil.salonActive), sinon le premier
-  salonOf(u) { const L = this.salonsOf(u); if (!L.length) return null; const act = ((((this.getAdds().options || {}).profiles || {})[u]) || {}).salonActive; return L.find(x => x.id === act) || L[0]; }
+  // Salon principal d'une personne (profil.salonMain) : c'est lui qui sert pour le tag, les stats « Dans mon salon », etc.
+  salonOf(u) { const L = this.salonsOf(u); if (!L.length) return null; const pr = ((((this.getAdds().options || {}).profiles || {})[u]) || {}); return L.find(x => x.id === pr.salonMain) || L.find(x => x.id === pr.salonActive) || L[0]; }
   salonMates(u) { const set = new Set([u]); this.salonsOf(u).forEach(x => (x.members || []).forEach(m => set.add(m))); return Array.from(set); }
   salonCreatedBy(u) { return this.salons().filter(x => (x.creator || x.chief) === u).length; }
   salonInvitesFor(u) { return this.salons().filter(x => (x.invites || []).indexOf(u) >= 0 && (x.members || []).indexOf(u) < 0); }
-  setActiveSalon(id) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { salonActive: id }); this.setOpt('profiles', all); }
+  setMainSalon(id) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { salonMain: id }); this.setOpt('profiles', all); }
   setSalons(list) { this.setOpt('salons', list.filter(x => (x.members || []).length)); }
 
   salonStats(sal) {
@@ -4488,19 +4490,19 @@ class Component extends DCLogic {
 
   salonView(me) {
     const all = this.salons(); const MAX = 5;
-    const mineL = this.salonsOf(me); const mine = this.salonOf(me);
+    const mineL = this.salonsOf(me); const main = this.salonOf(me); const mine = mineL.find(x => x.id === this.state.slCur) || main;
     const createdN = this.salonCreatedBy(me);
     const inv = this.salonInvitesFor(me);
     const base = { q: this.state.slQ || '', setQ: e => this.setState({ slQ: e.target.value, slMsg: '' }), msg: this.state.slMsg || '' };
-    const go = id => { this.setActiveSalon(id); this.setState({ slAdd: false, slMenu: '', slMsg: '', slRename: null, slDescEdit: false }); };
-    const nav = mineL.map(x => { const c = this.salonColor(x); const on = mine && x.id === mine.id && !this.state.slAdd; return { name: (x.chief === me ? '👑 ' : '') + x.name, bg: on ? c.bg : 'transparent', fg: on ? c.fg : 'var(--color-text)', ring: on ? 'inset 0 0 0 2px ' + c.fg + ', 0 3px 10px rgba(0,0,0,.12)' : 'inset 0 0 0 1.5px ' + c.bg, cur: on ? 'page' : 'false', go: () => go(x.id) }; });
+    const go = id => { this.setState({ slCur: id, slAdd: false, slMenu: '', slMsg: '', slRename: null, slDescEdit: false }); };
+    const nav = mineL.map(x => { const c = this.salonColor(x); const on = mine && x.id === mine.id && !this.state.slAdd; return { name: (main && x.id === main.id ? '⭐ ' : '') + (x.chief === me ? '👑 ' : '') + x.name, bg: on ? c.bg : 'transparent', fg: on ? c.fg : 'var(--color-text)', ring: on ? 'inset 0 0 0 2px ' + c.fg + ', 0 3px 10px rgba(0,0,0,.12)' : 'inset 0 0 0 1.5px ' + c.bg, cur: on ? 'page' : 'false', go: () => go(x.id) }; });
     const canJoin = mineL.length < MAX, canCreate = canJoin && createdN < MAX;
     const showAdd = !mine || !!this.state.slAdd;
     const addPart = { nav: nav, navCount: mineL.length + ' / ' + MAX + ' salons', navAddLbl: '＋ Rejoindre ou créer' + (inv.length ? ' (' + inv.length + ')' : ''),
       navAddBg: showAdd ? 'var(--color-accent)' : 'var(--color-bg)', navAddFg: showAdd ? 'var(--color-bg)' : 'var(--color-text)',
       toggleAdd: () => this.setState({ slAdd: !this.state.slAdd, slMsg: '' }), showAdd: showAdd, hideAdd: !showAdd,
       invites: inv.map(x => ({ name: x.name, chief: x.chief, n: (x.members || []).length + ' membre' + ((x.members || []).length > 1 ? 's' : ''),
-        accept: () => { if (!canJoin) return this.setState({ slMsg: 'Vous êtes déjà dans ' + MAX + ' salons : quittez-en un pour rejoindre celui-ci.' }); this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { members: y.members.concat([me]), invites: (y.invites || []).filter(i => i !== me) }) : y)); this.setActiveSalon(x.id); this.setState({ slAdd: false, slTab: 'acc', slMsg: 'Bienvenue dans le salon ' + x.name + ' !' }); },
+        accept: () => { if (!canJoin) return this.setState({ slMsg: 'Vous êtes déjà dans ' + MAX + ' salons : quittez-en un pour rejoindre celui-ci.' }); this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { members: y.members.concat([me]), invites: (y.invites || []).filter(i => i !== me) }) : y)); if (!mineL.length) this.setMainSalon(x.id); this.setState({ slCur: x.id, slAdd: false, slTab: 'acc', slMsg: 'Bienvenue dans le salon ' + x.name + ' !' }); },
         refuse: () => this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) }) : y)) })),
       hasInvites: inv.length > 0, noInvites: !inv.length, canCreate: canCreate, cantCreate: !canCreate,
       limitTxt: !canJoin ? 'Vous êtes dans ' + MAX + ' salons, le maximum : quittez-en un pour en rejoindre ou en créer un autre.' : 'Vous avez déjà créé ' + MAX + ' salons, le maximum.',
@@ -4512,8 +4514,8 @@ class Component extends DCLogic {
         if (all.some(x => this.norm(x.name) === this.norm(n))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' });
         const id = 'sal' + Date.now().toString(36);
         this.setSalons(all.concat([{ id: id, name: n, chief: me, creator: me, members: [me], invites: [], ts: new Date().toISOString() }]));
-        this.setActiveSalon(id);
-        this.setState({ slQ: '', slAdd: false, slTab: 'acc', slMsg: 'Salon « ' + n + ' » créé : vous en êtes le chef 👑.' });
+        if (!mineL.length) this.setMainSalon(id);
+        this.setState({ slCur: id, slQ: '', slAdd: false, slTab: 'acc', slMsg: 'Salon « ' + n + ' » créé : vous en êtes le chef 👑.' });
       } };
     if (!mine) return Object.assign(base, addPart, { has: false, none: true, members: [], stats: [], tabs: [], petCards: [] });
     const upd = (fn) => this.setSalons(this.salons().map(x => x.id === mine.id ? fn(Object.assign({}, x)) : x));
@@ -4538,7 +4540,10 @@ class Component extends DCLogic {
       this.setState({ slMsg: '', slMenu: '', slTab: 'acc' });
     };
     const descEditing = isChief && !!this.state.slDescEdit;
-    return Object.assign(base, addPart, { tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt',
+    const isMain = !!main && main.id === mine.id;
+    return Object.assign(base, addPart, { isMain: isMain, notMain: !isMain, mainName: main ? main.name : '',
+      makeMain: () => { this.setMainSalon(mine.id); this.setState({ slMsg: '⭐ « ' + mine.name + ' » est maintenant votre salon principal : son nom s’affiche à côté du vôtre et vos stats « Dans mon salon » portent sur lui.' }); },
+      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt',
       ...(() => {
         const ps = pets.map(g => ({ g: g, st: this.petStats(g) })).sort((x, y) => y.st.lvl - x.st.lvl || y.st.xp - x.st.xp || x.g.name.localeCompare(y.g.name, 'fr'));
         const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
