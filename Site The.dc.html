@@ -1372,7 +1372,17 @@
 
     <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 22px; animation: fadeUp .45s ease both;">
-        <sc-if value="{{ pf.locked }}" hint-placeholder-val="{{ false }}"><p style="font-size: 17px; opacity: .75; margin: 0;">Ce profil n’est visible que par ses amis.</p></sc-if>
+        <sc-if value="{{ pf.locked }}" hint-placeholder-val="{{ false }}">
+          <section class="sac mb-card" style="padding: 22px 24px;"><div class="sac-head" style="flex-wrap: wrap; gap: 16px;">
+            <span class="mb-av" style="background: var(--color-accent-700); width: 64px; height: 64px; font-size: 28px;">{{ pf.lkInitial }}</span>
+            <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 24px;">{{ pf.lkName }}</span><sc-if value="{{ pf.lkBadge }}" hint-placeholder-val="{{ false }}"><span style="font-size: 18px;">{{ pf.lkBadge }}</span></sc-if><sc-if value="{{ pf.lkSalon }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: {{ pf.lkSalonBg }}; color: {{ pf.lkSalonFg }}; box-shadow: none;">{{ pf.lkSalon }}</span></sc-if></div>
+              <span class="sac-sub">🔒 Son profil (thés, matériel, badges) n’est visible que par ses amis.</span></div>
+            <sc-if value="{{ pf.lkCanAdd }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ pf.lkAdd }}" style="white-space: nowrap;">＋ Ajouter en ami</button></sc-if>
+            <sc-if value="{{ pf.lkSent }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">⏳ Demande envoyée</span><button class="btn btn-secondary" onClick="{{ pf.lkCancel }}" style="white-space: nowrap; background: var(--color-bg);">Annuler</button></sc-if>
+            <sc-if value="{{ pf.lkIncoming }}" hint-placeholder-val="{{ false }}"><button class="btn btn-primary" onClick="{{ pf.lkAccept }}" style="white-space: nowrap;">Accepter sa demande</button><button class="btn btn-secondary" onClick="{{ pf.lkRefuse }}" style="white-space: nowrap; background: var(--color-bg);">Refuser</button></sc-if>
+          </div></section>
+          <sc-if value="{{ pf.lkMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px;">{{ pf.lkMsg }}</p></sc-if>
+        </sc-if>
         <sc-if value="{{ pf.ok }}" hint-placeholder-val="{{ true }}">
           <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
             <span style="width: 76px; height: 76px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 32px;">{{ pf.initial }}</span>
@@ -3709,7 +3719,7 @@ class Component extends DCLogic {
     this.drawWheel();
     // Nouvelle page → on remonte en haut (sinon, sur téléphone, la page suivante garde le scroll de la précédente)
     const S = this.state; const pk = [S.view, S.key, S.prodId, S.gearId, S.group, S.sub, S.profUser, S.sharedLogId, S.sessionId, S.cerIdx, S.ii, S.ci].join('|');
-    if (this._pageKey !== undefined && this._pageKey !== pk) { try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {} }
+    if (this._pageKey !== undefined && this._pageKey !== pk) { if (this.state.pfMsg) setTimeout(() => this.setState({ pfMsg: '' }), 0); try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {} }
     this._pageKey = pk;
     if (this.state.editLogId && this.state.view !== 'log') this.setState({ editLogId: null, lf: { lotId: '', with: [], date: mdtToday() } });
   }
@@ -5001,7 +5011,17 @@ class Component extends DCLogic {
   profileView(me) {
     const u = this.state.profUser || me;
     const isMe = u === me;
-    if (!isMe && this.friendsOf(me).indexOf(u) < 0) return { locked: true, ok: false, kpis: [] };
+    if (!isMe && this.friendsOf(me).indexOf(u) < 0) {
+      const all = (this.getAdds().options || {}).friends || [];
+      const out = all.find(f => f.status === 'pending' && f.from === me && f.to === u), inc = all.find(f => f.status === 'pending' && f.from === u && f.to === me);
+      const sal = this.salonOf(u); const sc = this.salonColor(sal);
+      return { locked: true, ok: false, kpis: [], lkName: this.userTag(u), lkInitial: String(u).charAt(0).toUpperCase(), lkBadge: this.badgeOf(u), lkSalon: sal ? sal.name : '', lkSalonBg: sc.bg, lkSalonFg: sc.fg,
+        lkCanAdd: !out && !inc, lkSent: !!out, lkIncoming: !!inc, lkMsg: this.state.pfMsg || '',
+        lkAdd: () => { this.setFriends(all.concat([{ from: me, to: u, status: 'pending', ts: new Date().toISOString() }])); this.setState({ pfMsg: 'Demande envoyée à ' + u + '. Son profil s’ouvrira dès que la demande sera acceptée.' }); },
+        lkCancel: () => { this.setFriends(all.filter(f => f !== out)); this.setState({ pfMsg: '' }); },
+        lkAccept: () => { this.setFriends(all.map(f => f === inc ? Object.assign({}, f, { status: 'ok' }) : f)); this.setState({ pfMsg: 'Vous êtes maintenant amis avec ' + u + ' !' }); },
+        lkRefuse: () => { this.setFriends(all.filter(f => f !== inc)); this.setState({ pfMsg: '' }); } };
+    }
     const a = this.getAdds();
     const prof = ((a.options || {}).profiles || {})[u] || {};
     const sacs = a.sachets.filter(o => o.owner === u);
