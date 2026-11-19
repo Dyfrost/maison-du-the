@@ -7327,7 +7327,7 @@ class Component extends DCLogic {
       cloudGuest: guest,
       syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
-      localMode: !this.state.cloud,
+      localMode: !!this.state.cloudReady && !this.state.cloud,
       meInitial: (this.me() || '?').slice(0, 1).toUpperCase(),
       logout: async () => { this.setState({ menuOpen: false }); if (this.sb) await this.sb.auth.signOut(); this.setState({ session: null, view: 'home' }); },
       af: Object.assign({ nom: '', email: '', pass: '' }, this.state.af),
