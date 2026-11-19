@@ -2218,6 +2218,21 @@
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ msRun }}" style="white-space: nowrap;">🔀 Fusionner les sachets</button><sc-if value="{{ msMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ msMsg }}</span></sc-if></div>
           </section>
         </sc-if>
+        <sc-if value="{{ tabJeuOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🎯 Parties de Devine le thé</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Toutes les parties enregistrées. Supprimer une partie ne retire pas les stats déjà comptées pour les joueurs.</p></div>
+              <sc-if value="{{ agHasEnded }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ agClean }}" style="white-space: nowrap; background: var(--color-bg);">🧹 Supprimer les parties terminées</button></sc-if></div>
+            <sc-if value="{{ agEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune partie pour l’instant.</p></sc-if>
+            <sc-for list="{{ agList }}" as="ag" hint-placeholder-count="2">
+              <div class="sac mb-card"><div class="sac-head" style="flex-wrap: wrap;">
+                <span class="mb-av" style="background: var(--color-accent-700); font-size: 22px;">🎯</span>
+                <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 18px;">{{ ag.title }}</span><span class="mb-role" style="background: {{ ag.stBg }};">{{ ag.state }}</span></div><span class="sac-sub">{{ ag.sub }}</span></div>
+                <sc-if value="{{ ag.live }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ ag.end }}" style="white-space: nowrap; background: var(--color-bg);">Terminer</button></sc-if>
+                <button class="btn btn-secondary" onClick="{{ ag.del }}" style="white-space: nowrap; background: var(--color-bg); color: var(--color-accent-800);">🗑 Supprimer</button>
+              </div></div>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabInfOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
@@ -4575,7 +4590,21 @@ class Component extends DCLogic {
   }
 
   // ---------- 🎯 Devine le thé (multi-écrans : un maître du jeu, des joueurs)
-  guessGames() { return ((this.getAdds().options || {}).guessGames) || {}; }
+  guessGames() { const o = this.getAdds().options || {}; const del = o.guessDeleted || []; const all = o.guessGames || {}; const out = {}; Object.keys(all).forEach(k => { if (del.indexOf(k) < 0) out[k] = all[k]; }); return out; }
+  adminGames() {
+    const a = this.getAdds(); const o = a.options || {}; const all = o.guessGames || {}; const del = o.guessDeleted || [];
+    const nm = id => { const p = a.prods.find(x => x.id === id) || {}; return p.nom || p.the || '?'; };
+    const list = Object.keys(all).filter(k => del.indexOf(k) < 0).map(k => all[k]).sort((x, y) => (y.ts || 0) - (x.ts || 0));
+    const remove = ids => { const all2 = Object.assign({}, (this.getAdds().options || {}).guessGames || {}); ids.forEach(id => delete all2[id]); const d2 = ((this.getAdds().options || {}).guessDeleted || []).concat(ids).slice(-300); const a2 = this.getAdds(); this.setAdds(Object.assign({}, a2, { options: Object.assign({}, a2.options, { guessGames: all2, guessDeleted: d2 }) })); };
+    return { agList: list.map(g => { const sc = {}; Object.keys(g.answers || {}).filter(k => (g.revealed || []).indexOf(k) >= 0).forEach(k => Object.keys(g.answers[k]).forEach(u => { if (g.answers[k][u].ok) sc[u] = (sc[u] || 0) + g.answers[k][u].pts; }));
+        const ended = g.phase === 'ended' || Date.now() - (g.ts || 0) > 864e5;
+        return { title: '👑 ' + g.master + ' · ' + (g.players || []).join(', '), sub: new Date(g.ts || 0).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · manche ' + (g.round || 0) + ' · thé en cours : ' + nm(g.target) + ' · ' + (Object.keys(sc).length ? Object.keys(sc).map(u => u + ' ' + sc[u] + ' pts').join(', ') : 'aucun point'),
+          state: ended ? 'Terminée' : g.phase === 'reveal' ? 'Réponse révélée' : 'En cours', stBg: ended ? 'var(--color-bg)' : '#d9e8e8', live: !ended,
+          end: () => this.setGuessGame(g.id, x => { x.phase = 'ended'; x.rev = (x.rev || 0) + 1; return x; }),
+          del: () => { if (window.confirm('Supprimer cette partie ? Les stats déjà comptées des joueurs sont conservées.')) remove([g.id]); } }; }),
+      agEmpty: !list.length, agHasEnded: list.some(g => g.phase === 'ended' || Date.now() - (g.ts || 0) > 864e5),
+      agClean: () => { const ids = list.filter(g => g.phase === 'ended' || Date.now() - (g.ts || 0) > 864e5).map(g => g.id); if (ids.length && window.confirm('Supprimer les ' + ids.length + ' parties terminées ?')) remove(ids); } };
+  }
   setGuessGame(id, fn) { const a = this.getAdds(); const all = Object.assign({}, (a.options || {}).guessGames || {}); const g = all[id] ? JSON.parse(JSON.stringify(all[id])) : null; if (!g) return; all[id] = fn(g) || g; this.setOpt('guessGames', all); }
   // fusion des parties lors d'une synchro : le maître fait foi (rev), les réponses et indices des joueurs s'additionnent
   mergeGuessGames(loc, rem) {
@@ -5379,7 +5408,7 @@ class Component extends DCLogic {
     const seq = this._seq = (this._seq || 0) + 1;
     this._pushT = setTimeout(async () => {
       // pendant une partie de Devine le thé, on fusionne avec la version distante pour ne pas écraser les réponses des autres
-      try { const loc = (this.getAdds().options || {}).guessGames; if (loc && Object.keys(loc).some(k => loc[k].phase !== 'ended')) { const r = await this.sb.from('the_data').select('payload').eq('id', 'maison').maybeSingle(); const rem = (((r.data || {}).payload || {}).options || {}).guessGames; if (rem) { const a0 = this.getAdds(); this._adds = Object.assign({}, a0, { options: Object.assign({}, a0.options, { guessGames: this.mergeGuessGames(loc, rem) }) }); try { localStorage.setItem('the-ajouts', JSON.stringify(this._adds)); } catch (e) {} } } } catch (e) {}
+      try { const loc = (this.getAdds().options || {}).guessGames; if (loc && Object.keys(loc).some(k => loc[k].phase !== 'ended')) { const r = await this.sb.from('the_data').select('payload').eq('id', 'maison').maybeSingle(); const rem = (((r.data || {}).payload || {}).options || {}).guessGames; if (rem) { const a0 = this.getAdds(); this._adds = Object.assign({}, a0, { options: Object.assign({}, a0.options, { guessGames: (m => { (a0.options.guessDeleted || []).forEach(k => delete m[k]); return m; })(this.mergeGuessGames(loc, rem)), guessDeleted: Array.from(new Set((a0.options.guessDeleted || []).concat((((r.data || {}).payload || {}).options || {}).guessDeleted || []))) }) }); try { localStorage.setItem('the-ajouts', JSON.stringify(this._adds)); } catch (e) {} } } } catch (e) {}
       const { error } = await this.sb.from('the_data').upsert({ id: 'maison', payload: this.getAdds(), updated_at: new Date().toISOString() });
       if (seq === this._seq) this._dirty = false;
       if (error && error.code === 'P0001') { this._dirty = false; this.setState({ syncErr: '' }); window.alert('Modification refusée : ' + error.message); this.pullCloud(); return; }
@@ -6715,7 +6744,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf'];
+    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf', 'jeu'];
       if (this.state.view === 'admin' && !this.isAdmin(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'new'; }
@@ -6977,11 +7006,11 @@ class Component extends DCLogic {
       menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'new', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
-      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg',
+      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
       ...this.mergeVals(),
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
       isMine: v === 'mine',
