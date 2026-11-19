@@ -23,6 +23,7 @@
 <script src="_ds/organic-c107f2b2-6e10-450d-ab8a-cbfbcee7c3a5/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
 <script src="./supabase-config.js"></script>
+<script src="./version.js"></script>
 <script src="./vendor/supabase-2.119.1.js"></script>
 <script src="./vendor/qrcode-generator-1.4.4.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -421,7 +422,7 @@
             <sc-if value="{{ isModMenu }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">{{ admMenuTxt }}</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <sc-if value="{{ bg0.bugBtn }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ bugMenu }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🐞 Signaler un bug</button></sc-if>
-            <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
+            <button role="menuitem" onClick="{{ logout }}" style="display: flex; align-items: baseline; cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);"><span>Se déconnecter</span><span style="margin-left: auto; padding-left: 14px; font-size: 11.5px; color: var(--color-text); opacity: .45; font-weight: 400;">{{ siteVersion }}</span></button>
           </div>
         </sc-if>
       </div>
@@ -6543,7 +6544,7 @@ class Component extends DCLogic {
   watchVersion() {
     if (!/^https?:/.test(location.protocol) || /localhost|127\.0\.0\.1/.test(location.hostname)) return;
     try { if (sessionStorage.getItem('mdt-updated')) { sessionStorage.removeItem('mdt-updated'); setTimeout(() => this.flash('✨ Site mis à jour'), 800); } } catch (e) {}
-    const files = [location.pathname, 'savoir.js', 'teapets.js', 'i18n.js', 'supabase-config.js', 'support.js'];
+    const files = [location.pathname, 'version.js', 'savoir.js', 'teapets.js', 'i18n.js', 'supabase-config.js', 'support.js'];
     const sig = async () => { const out = []; for (const f of files) { const r = await fetch(f, { method: 'HEAD', cache: 'no-store' }); out.push(r.headers.get('etag') || r.headers.get('last-modified') || ''); } return out.join('|'); };
     const check = async () => { if (this._newVer) return; try { const v = await sig(); if (!v.replace(/\|/g, '')) return; if (!this._ver) this._ver = v; else if (v !== this._ver) { this._newVer = true; this.applyUpdate(); } } catch (e) {} };
     setTimeout(check, 3000); setInterval(() => { if (!document.hidden) check(); }, 60000);
@@ -6557,7 +6558,7 @@ class Component extends DCLogic {
   async applyUpdate(force) {
     if (!force && this.updateBusy()) { this.setState({ newVer: true }); clearTimeout(this._updT); this._updT = setTimeout(() => this.applyUpdate(), 30000); return; }
     // vide le cache du navigateur pour les fichiers du site, puis recharge
-    const files = [location.pathname, 'savoir.js', 'teapets.js', 'i18n.js', 'supabase-config.js', 'support.js', 'image-slot.js'];
+    const files = [location.pathname, 'version.js', 'savoir.js', 'teapets.js', 'i18n.js', 'supabase-config.js', 'support.js', 'image-slot.js'];
     try { await Promise.all(files.map(f => fetch(f, { cache: 'reload' }).catch(() => {}))); } catch (e) {}
     try { sessionStorage.setItem('mdt-updated', '1'); } catch (e) {}
     location.reload();
@@ -8338,7 +8339,7 @@ class Component extends DCLogic {
       isStats: v === 'stats',
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
-      shareToast: this.state.shareToast || '', bg0: this.bugView(me), bugMenu: () => this.setState(s0 => ({ menuOpen: false, bug: Object.assign({}, s0.bug, { open: true, msg: '' }) })),
+      shareToast: this.state.shareToast || '', bg0: this.bugView(me), siteVersion: 'v' + (window.MDT_VERSION || '?'), bugMenu: () => this.setState(s0 => ({ menuOpen: false, bug: Object.assign({}, s0.bug, { open: true, msg: '' }) })),
       scanOn: !!this.state.scanOn, scanMsg: this.state.scanMsg || '', scanOpen: () => this.scanStart(), scanClose: () => this.scanStop(), canScan: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && (navigator.maxTouchPoints > 0) && !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches),
       canQrAll: !!me && this.collection().some(o => o.owner === me), qrAll: () => { const mineC = this.collection().filter(o => o.owner === me).sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr')); this.printLabels(mineC.map(o => o.id), 'Mes étiquettes', mineC.filter(o => this.isEmptySachet(o)).map(o => o.id)); },
       teaBtnTxt: this.isMod(me) ? 'Ajouter au catalogue' : 'Proposer au catalogue', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
