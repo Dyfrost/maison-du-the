@@ -715,7 +715,7 @@
                       <div class="sac-head">
                         <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div class="sac-ph"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img src="{{ ph }}" alt=""></a></sc-for></div></sc-if>
                         <div class="sac-ttl">
-                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ sa.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
+                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
                           <span class="sac-sub">{{ sa.subLine }}<sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px;">📭 {{ sa.emptyTxt }}</span></sc-if><sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 13px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if></span>
                         </div>
                         <div class="sac-score"><b style="color: {{ sa.avgColor }};">{{ sa.avgNum }}</b><span>{{ sa.scoreSub }}</span></div>
@@ -774,7 +774,7 @@
                       <div class="sac-head">
                         <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div class="sac-ph"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img src="{{ ph }}" alt=""></a></sc-for></div></sc-if>
                         <div class="sac-ttl">
-                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ sa.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
+                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
                           <span class="sac-sub">{{ sa.subLine }}<sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px;">📭 {{ sa.emptyTxt }}</span></sc-if><sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 13px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if></span>
                         </div>
                         <div class="sac-score"><b style="color: {{ sa.avgColor }};">{{ sa.avgNum }}</b><span>{{ sa.scoreSub }}</span></div>
@@ -832,7 +832,7 @@
             <div role="button" tabindex="0" onClick="{{ m.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <span style="width: 12px; height: 12px; flex: none; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span>
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <button onClick="{{ m.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button><sc-if value="{{ m.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ m.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if>
+                <button onClick="{{ m.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
                 <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ m.marque }} · <button onClick="{{ m.catOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 12px; color: inherit; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 2px;" style-hover="color: var(--color-accent-700);">{{ m.the }}</button> · {{ m.nSac }}</span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); color: {{ m.avgColor }}; font-size: 16px;">{{ m.avg }}</span>
@@ -848,7 +848,7 @@
                 <sc-if value="{{ m.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 16px; height: 16px; flex: none; margin-top: 8px; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span></sc-if>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button><sc-if value="{{ m.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ m.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if>
+                    <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
                     
                   </div>
                   <button onClick="{{ m.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ m.the }} →</button>
@@ -872,7 +872,7 @@
                       <div class="sac-head">
                         <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div class="sac-ph"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img src="{{ ph }}" alt=""></a></sc-for></div></sc-if>
                         <div class="sac-ttl">
-                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ sa.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
+                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
                           <span class="sac-sub">{{ sa.subLine }}<sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px;">📭 {{ sa.emptyTxt }}</span></sc-if><sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 13px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if></span>
                         </div>
                         <div class="sac-score"><b style="color: {{ sa.avgColor }};">{{ sa.avgNum }}</b><span>{{ sa.scoreSub }}</span></div>
@@ -936,7 +936,7 @@
                 <sc-if value="{{ m.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="width: 16px; height: 16px; flex: none; margin-top: 8px; border-radius: 50%; border: 1px solid var(--color-divider); background: {{ m.color }};"></span></sc-if>
                 <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button><sc-if value="{{ m.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ m.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if>
+                    <button onClick="{{ m.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-heading); font-size: 22px; color: var(--color-text); text-align: left;" style-hover="color: var(--color-accent-700);">{{ m.name }}</button>
                     
                   </div>
                   <button onClick="{{ m.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ m.the }} →</button>
@@ -960,7 +960,7 @@
                       <div class="sac-head">
                         <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div class="sac-ph"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img src="{{ ph }}" alt=""></a></sc-for></div></sc-if>
                         <div class="sac-ttl">
-                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ sa.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
+                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
                           <span class="sac-sub">{{ sa.subLine }}<sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px;">📭 {{ sa.emptyTxt }}</span></sc-if><sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 13px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if></span>
                         </div>
                         <div class="sac-score"><b style="color: {{ sa.avgColor }};">{{ sa.avgNum }}</b><span>{{ sa.scoreSub }}</span></div>
@@ -1031,7 +1031,7 @@
                       <div class="sac-head">
                         <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div class="sac-ph"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img src="{{ ph }}" alt=""></a></sc-for></div></sc-if>
                         <div class="sac-ttl">
-                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ sa.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
+                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
                           <span class="sac-sub">{{ sa.subLine }}<sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px;">📭 {{ sa.emptyTxt }}</span></sc-if><sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 13px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if></span>
                         </div>
                         <div class="sac-score"><b style="color: {{ sa.avgColor }};">{{ sa.avgNum }}</b><span>{{ sa.scoreSub }}</span></div>
@@ -1577,15 +1577,15 @@
           <section style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
             <h2 style="font-size: 24px; margin: 0;">{{ gearFormTitle }}</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfNamePh }}" defaultValue="{{ gf.name }}" onInput="{{ setGz.name }}" key="{{ gfKey }}-name"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfNamePh }}" defaultValue="{{ gf.name }}" data-dv="{{ gf.name }}" onInput="{{ setGz.name }}" key="{{ gfKey }}-name"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" data-val="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}" label="{{ gt.l }}">{{ gt.l }}</option></sc-for></select></label><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Modèle</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.model }}" data-val="{{ gf.model }}" onChange="{{ setG.model }}"><option value="">—</option><sc-for list="{{ gearModelGroups }}" as="mg" hint-placeholder-count="2"><optgroup label="{{ mg.label }}"><sc-for list="{{ mg.items }}" as="gm" hint-placeholder-count="4"><option value="{{ gm }}" label="{{ gm }}">{{ gm }}</option></sc-for></optgroup></sc-for></select></label>
-              <sc-if value="{{ gfVol }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Contenance (ml)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 120" defaultValue="{{ gf.volume }}" onInput="{{ setGz.volume }}" key="{{ gfKey }}-volume"></label></sc-if>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matière</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfMatPh }}" defaultValue="{{ gf.material }}" onInput="{{ setGz.material }}" key="{{ gfKey }}-material"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque / origine</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" defaultValue="{{ gf.origin }}" onInput="{{ setGz.origin }}" key="{{ gfKey }}-origin"></label>
+              <sc-if value="{{ gfVol }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Contenance (ml)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 120" defaultValue="{{ gf.volume }}" data-dv="{{ gf.volume }}" onInput="{{ setGz.volume }}" key="{{ gfKey }}-volume"></label></sc-if>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matière</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfMatPh }}" defaultValue="{{ gf.material }}" data-dv="{{ gf.material }}" onInput="{{ setGz.material }}" key="{{ gfKey }}-material"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque / origine</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" defaultValue="{{ gf.origin }}" data-dv="{{ gf.origin }}" onInput="{{ setGz.origin }}" key="{{ gfKey }}-origin"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date d’achat</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="" value="{{ gf.achat }}" onInput="{{ setG.achat }}"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix (€)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 45" defaultValue="{{ gf.prix }}" onInput="{{ setGz.prix }}" key="{{ gfKey }}-prix"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix (€)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 45" defaultValue="{{ gf.prix }}" data-dv="{{ gf.prix }}" onInput="{{ setGz.prix }}" key="{{ gfKey }}-prix"></label>
             </div>
-            <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire</span><textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 20px; resize: vertical;" defaultValue="{{ gf.comment }}" onInput="{{ setGz.comment }}" key="{{ gfKey }}-comment" placeholder="Culottage, thés réservés, histoire…"></textarea></label>
+            <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire</span><textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 20px; resize: vertical;" defaultValue="{{ gf.comment }}" data-dv="{{ gf.comment }}" onInput="{{ setGz.comment }}" key="{{ gfKey }}-comment" placeholder="Culottage, thés réservés, histoire…"></textarea></label>
             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
               <sc-if value="{{ gearPhoto }}" hint-placeholder-val="{{ false }}"><img class="thumb" src="{{ gearPhoto }}" alt="" style="width: 72px; height: 72px;"></sc-if>
               <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer; position: relative;">📷 {{ gearPhotoBtn }}<input type="file" accept="image/*" onChange="{{ onGearPhoto }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></label>
@@ -1757,7 +1757,7 @@
           </div>
           <section class="sess-card">
             <h2 style="font-size: 22px; margin: 0;">👃 Premières impressions <span style="font-size: 13px; font-family: var(--font-body); opacity: .6;">· nez des feuilles sèches, puis réchauffées</span></h2>
-            <textarea class="input" rows="2" aria-label="Premières impressions" placeholder="Feuilles sèches : … · Feuilles réchauffées : …" defaultValue="{{ ss.nez }}" onInput="{{ ss.setNez }}" onBlur="{{ ss.flushNez }}" key="{{ ss.nezKey }}" style="width: 100%; box-sizing: border-box; font-size: 15px; background: var(--color-bg); resize: vertical;"></textarea>
+            <textarea class="input" rows="2" aria-label="Premières impressions" placeholder="Feuilles sèches : … · Feuilles réchauffées : …" defaultValue="{{ ss.nez }}" data-dv="{{ ss.nez }}" onInput="{{ ss.setNez }}" onBlur="{{ ss.flushNez }}" key="{{ ss.nezKey }}" style="width: 100%; box-sizing: border-box; font-size: 15px; background: var(--color-bg); resize: vertical;"></textarea>
           </section>
           <section class="sess-card">
             <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 22px; margin: 0;">Infusions</h2><span style="font-size: 13px; opacity: .7;">{{ ss.totalTxt }}</span></div>
@@ -1792,7 +1792,7 @@
             <h2 style="font-size: 22px; margin: 0;">Note et avis <span style="font-size: 13px; font-family: var(--font-body); opacity: .6;">· modifiables à tout moment</span></h2>
             <div style="display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
               <div style="display: flex; align-items: center; gap: 6px;"><button type="button" onClick="{{ ss.noteDown }}" aria-label="Baisser la note" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">−</button><input class="input" aria-label="Note sur 20" value="{{ ss.note }}" onChange="{{ ss.setNote }}" inputMode="decimal" placeholder="—" style="width: 100%; min-width: 0; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 8px; text-align: center; color: {{ ss.noteColor }}; background: var(--color-bg);"><button type="button" onClick="{{ ss.noteUp }}" aria-label="Monter la note" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">+</button></div>
-              <textarea class="input" rows="4" aria-label="Avis de la séance" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" defaultValue="{{ ss.avis }}" onInput="{{ ss.setAvis }}" onBlur="{{ ss.flushAvis }}" key="{{ ss.avisKey }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 14px; background: var(--color-bg); resize: vertical;"></textarea>
+              <textarea class="input" rows="4" aria-label="Avis de la séance" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" defaultValue="{{ ss.avis }}" data-dv="{{ ss.avis }}" onInput="{{ ss.setAvis }}" onBlur="{{ ss.flushAvis }}" key="{{ ss.avisKey }}" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 14px; background: var(--color-bg); resize: vertical;"></textarea>
             </div>
           </section>
           <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ ss.finish }}" style="white-space: nowrap;">✓ Terminer la dégustation</button><label style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px;">fin à<input class="input" type="time" value="{{ ss.endHm }}" onChange="{{ ss.setEnd }}" aria-label="Heure de fin" style="width: auto; padding: 7px 12px; background: var(--color-bg);"></label><span style="font-size: 13px; opacity: .65; align-self: center;">Tout est déjà enregistré au fur et à mesure : vous pouvez quitter et revenir via « Reprendre ».</span></div>
@@ -2034,7 +2034,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.date }}" onChange="{{ setL.date }}"></label>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ lfHeureLbl }}</span><input class="input" type="time" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.heure }}" onChange="{{ setL.heure }}"></label><sc-if value="{{ lfHasFin }}" hint-placeholder-val="{{ false }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Fin de séance</span><input class="input" type="time" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" value="{{ lf.fin }}" onChange="{{ setLfFin }}"></label></sc-if>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Moment</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="RAV · goûter · palet breton" defaultValue="{{ lf.repas }}" onInput="{{ setLz.repas }}" key="{{ lfKey }}-repas"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Moment</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="RAV · goûter · palet breton" defaultValue="{{ lf.repas }}" data-dv="{{ lf.repas }}" onInput="{{ setLz.repas }}" key="{{ lfKey }}-repas"></label>
             </div>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px;">Avec</span>
@@ -2061,7 +2061,7 @@
               </div>
               <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
                 <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
-                <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" defaultValue="{{ lf.infusion }}" onInput="{{ setLz.infusion }}" key="{{ lfKey }}-infusion">
+                <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" defaultValue="{{ lf.infusion }}" data-dv="{{ lf.infusion }}" onInput="{{ setLz.infusion }}" key="{{ lfKey }}-infusion">
               </div>
               <sc-if value="{{ hasSalonGear }}" hint-placeholder-val="{{ false }}">
                 <button onClick="{{ toggleSalonGear }}" aria-pressed="{{ showSalonGear }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;">{{ salonGearBox }}</span>Afficher le matériel du salon</button>
@@ -2071,9 +2071,9 @@
               </sc-if>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-              <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" defaultValue="{{ lf.temps }}" onInput="{{ setLz.temps }}" key="{{ lfKey }}-temps"></label></sc-if>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" defaultValue="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature"></label>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ma quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" defaultValue="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal"></label>
+              <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" defaultValue="{{ lf.temps }}" data-dv="{{ lf.temps }}" onInput="{{ setLz.temps }}" key="{{ lfKey }}-temps"></label></sc-if>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" defaultValue="{{ lf.temperature }}" data-dv="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ma quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" defaultValue="{{ lf.qty }}" data-dv="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal"></label>
               
             </div>
             <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; margin-top: -4px;">{{ logRemain }}</span></sc-if>
@@ -2086,15 +2086,16 @@
 <sc-if value="{{ lfShowNez }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
             <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">👃</span>Premières impressions <span style="font-family: var(--font-body); font-size: 13px; opacity: .6;">· facultatif</span></h2>
-            <textarea class="input" rows="3" aria-label="Premières impressions" placeholder="Le nez des feuilles sèches, puis des feuilles réchauffées dans la théière…" defaultValue="{{ lf.nez }}" onInput="{{ setLz.nez }}" key="{{ lfKey }}-nez" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 14px; resize: vertical;"></textarea>
+            <textarea class="input" rows="3" aria-label="Premières impressions" placeholder="Le nez des feuilles sèches, puis des feuilles réchauffées dans la théière…" defaultValue="{{ lf.nez }}" data-dv="{{ lf.nez }}" onInput="{{ setLz.nez }}" key="{{ lfKey }}-nez" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 14px; resize: vertical;"></textarea>
           </section>
           </sc-if>
           <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">⭐</span>Note et avis</h2><span style="font-size: 12px; opacity: .6;">{{ logNoteHint }}</span></div>
             <div style="display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
-              <div style="display: flex; align-items: center; gap: 6px;"><button type="button" onClick="{{ noteDown }}" aria-label="Baisser la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">−</button><input class="input" aria-label="Note sur 20" style="width: 100%; min-width: 0; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 8px; text-align: center; color: {{ lfNoteColor }};" placeholder="16,5" value="{{ lf.note }}" onChange="{{ setL.note }}" inputMode="decimal"><button type="button" onClick="{{ noteUp }}" aria-label="Monter la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">+</button></div>
-              <textarea class="input" rows="3" aria-label="Avis" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" defaultValue="{{ lf.avis }}" onInput="{{ setLz.avis }}" key="{{ lfKey }}-avis" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 16px; border-radius: 20px; resize: vertical;"></textarea>
+              <div style="display: flex; align-items: center; gap: 6px;"><button type="button" onClick="{{ noteDown }}" aria-label="Baisser la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">−</button><input class="input" aria-label="Note sur 20" style="width: 100%; min-width: 0; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 8px; text-align: center; color: {{ lfNoteColor }};" placeholder="16,5" value="{{ lfNoteNum }}" onInput="{{ setNoteNum }}" inputMode="decimal"><button type="button" onClick="{{ noteUp }}" aria-label="Monter la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">+</button></div>
+              <div style="display: flex; gap: 6px; grid-column: 1; justify-content: center;"><button type="button" onClick="{{ noteTogR }}" aria-pressed="{{ lfNoteR }}" title="En cours de réglage" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; background: {{ lfNoteRBg }}; color: {{ lfNoteRFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">R <span style="font-weight: 400;">réglage</span></button><button type="button" onClick="{{ noteTogL }}" aria-pressed="{{ lfNoteL }}" title="Loupé" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; background: {{ lfNoteLBg }}; color: {{ lfNoteLFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">L <span style="font-weight: 400;">loupé</span></button></div>
+              <textarea class="input" rows="3" aria-label="Avis" placeholder="Attaque, milieu, fin de bouche, évolution entre les infusions…" defaultValue="{{ lf.avis }}" data-dv="{{ lf.avis }}" onInput="{{ setLz.avis }}" key="{{ lfKey }}-avis" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 16px; border-radius: 20px; resize: vertical;"></textarea>
             </div>
           </section>
           </sc-if>
@@ -2264,6 +2265,14 @@
                             <sc-if value="{{ fd.isText }}" hint-placeholder-val="{{ true }}"><input class="input" type="{{ fd.type }}" value="{{ fd.value }}" onInput="{{ fd.set }}" list="{{ fd.list }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"></sc-if>
                             <sc-if value="{{ fd.isArea }}" hint-placeholder-val="{{ false }}"><textarea class="input" rows="3" value="{{ fd.value }}" onInput="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface); border-radius: 14px; resize: vertical;"></textarea></sc-if>
                             <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}"><select class="input" value="{{ fd.value }}" data-val="{{ fd.value }}" onChange="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"><sc-for list="{{ fd.options }}" as="fo" hint-placeholder-count="3"><option value="{{ fo.v }}" label="{{ fo.l }}">{{ fo.l }}</option></sc-for></select></sc-if>
+                            <sc-if value="{{ fd.isTags }}" hint-placeholder-val="{{ false }}"><div class="tp">
+                  <div class="tp-row"><span class="tp-lbl">Intensité</span><sc-for list="{{ fd.tp.intens }}" as="c" hint-placeholder-count="4"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div>
+                  <span class="tp-lbl" style="margin-top: 4px;">Arômes (familles de la roue)</span>
+                  <div class="tp-row"><sc-for list="{{ fd.tp.fams }}" as="f" hint-placeholder-count="15"><button type="button" class="tp-fam" onClick="{{ f.open }}" style="background: {{ f.bg }}; color: {{ f.fg }}; box-shadow: inset 0 0 0 {{ f.ring }} {{ f.c }};">{{ f.label }} <small>{{ f.arrow }}</small></button></sc-for></div>
+                  <sc-if value="{{ fd.tp.hasOpen }}" hint-placeholder-val="{{ false }}"><div class="tp-panel" style="border-color: {{ fd.tp.openC }};"><sc-for list="{{ fd.tp.openChips }}" as="c" hint-placeholder-count="6"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div></sc-if>
+                  <sc-if value="{{ fd.tp.hasOthers }}" hint-placeholder-val="{{ false }}"><div class="tp-row"><span class="tp-lbl">Hors roue (cliquer pour retirer)</span><sc-for list="{{ fd.tp.others }}" as="c" hint-placeholder-count="1"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" style="background: var(--color-bg); opacity: .7;">{{ c.label }}</button></sc-for></div></sc-if>
+                  <span class="tp-hint">✓ {{ fd.tp.summary }}</span>
+                </div></sc-if>
                             <sc-if value="{{ fd.isGear }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-wrap: wrap; gap: 6px;"><sc-for list="{{ fd.chips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13px; background: {{ gc.bg }}; color: {{ gc.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ gc.label }}</button></sc-for><sc-if value="{{ fd.noChips }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6;">Aucun matériel enregistré.</span></sc-if></div></sc-if>
                           </div>
                         </sc-for>
@@ -2590,19 +2599,19 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom de la variante</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Yu Pin Guan Yin Wang" defaultValue="{{ form.vNom }}" onInput="{{ setFz.vNom }}" key="{{ formKey }}-vNom">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Yu Pin Guan Yin Wang" defaultValue="{{ form.vNom }}" data-dv="{{ form.vNom }}" onInput="{{ setFz.vNom }}" key="{{ formKey }}-vNom">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Traduction</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Roi Guan Yin, qualité jade" defaultValue="{{ form.vTrad }}" onInput="{{ setFz.vTrad }}" key="{{ formKey }}-vTrad">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Roi Guan Yin, qualité jade" defaultValue="{{ form.vTrad }}" data-dv="{{ form.vTrad }}" onInput="{{ setFz.vTrad }}" key="{{ formKey }}-vTrad">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil</span>
-                <textarea class="input" rows="3" placeholder="ex : Floral intense, crémeux, longue finale" defaultValue="{{ form.vProfil }}" onInput="{{ setFz.vProfil }}" key="{{ formKey }}-vProfil" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
+                <textarea class="input" rows="3" placeholder="ex : Floral intense, crémeux, longue finale" defaultValue="{{ form.vProfil }}" data-dv="{{ form.vProfil }}" onInput="{{ setFz.vProfil }}" key="{{ formKey }}-vProfil" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ce qui change</span>
-                <textarea class="input" rows="3" placeholder="Terroir, cueillette, façonnage…" defaultValue="{{ form.vDesc }}" onInput="{{ setFz.vDesc }}" key="{{ formKey }}-vDesc" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
+                <textarea class="input" rows="3" placeholder="Terroir, cueillette, façonnage…" defaultValue="{{ form.vDesc }}" data-dv="{{ form.vDesc }}" onInput="{{ setFz.vDesc }}" key="{{ formKey }}-vDesc" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
               </label>
             </div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -2632,31 +2641,31 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Jin Jun Mei" defaultValue="{{ form.nom }}" onInput="{{ setFz.nom }}" key="{{ formKey }}-nom">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Jin Jun Mei" defaultValue="{{ form.nom }}" data-dv="{{ form.nom }}" onInput="{{ setFz.nom }}" key="{{ formKey }}-nom">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Traduction</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Sourcils dorés" defaultValue="{{ form.traduction }}" onInput="{{ setFz.traduction }}" key="{{ formKey }}-traduction">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Sourcils dorés" defaultValue="{{ form.traduction }}" data-dv="{{ form.traduction }}" onInput="{{ setFz.traduction }}" key="{{ formKey }}-traduction">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Origine</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Tongmu, Fujian" defaultValue="{{ form.origine }}" onInput="{{ setFz.origine }}" key="{{ formKey }}-origine">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Tongmu, Fujian" defaultValue="{{ form.origine }}" data-dv="{{ form.origine }}" onInput="{{ setFz.origine }}" key="{{ formKey }}-origine">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Pays</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Chine" defaultValue="{{ form.pays }}" onInput="{{ setFz.pays }}" key="{{ formKey }}-pays">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Chine" defaultValue="{{ form.pays }}" data-dv="{{ form.pays }}" onInput="{{ setFz.pays }}" key="{{ formKey }}-pays">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Province</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Fujian" defaultValue="{{ form.province }}" onInput="{{ setFz.province }}" key="{{ formKey }}-province">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Fujian" defaultValue="{{ form.province }}" data-dv="{{ form.province }}" onInput="{{ setFz.province }}" key="{{ formKey }}-province">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Profil général</span>
-                <textarea class="input" rows="3" placeholder="ex : Miel, cacao, patate douce" defaultValue="{{ form.gout }}" onInput="{{ setFz.gout }}" key="{{ formKey }}-gout" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
+                <textarea class="input" rows="3" placeholder="ex : Miel, cacao, patate douce" defaultValue="{{ form.gout }}" data-dv="{{ form.gout }}" onInput="{{ setFz.gout }}" key="{{ formKey }}-gout" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Récolte & production</span>
-                <textarea class="input" rows="3" placeholder="Cueillette, saison, façonnage…" defaultValue="{{ form.recolte }}" onInput="{{ setFz.recolte }}" key="{{ formKey }}-recolte" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
+                <textarea class="input" rows="3" placeholder="Cueillette, saison, façonnage…" defaultValue="{{ form.recolte }}" data-dv="{{ form.recolte }}" onInput="{{ setFz.recolte }}" key="{{ formKey }}-recolte" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);"></textarea>
               </label>
             </div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -2687,14 +2696,14 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Variante</span>
-                <select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; min-height: 50px;" defaultValue="{{ form.variante }}" onInput="{{ setFz.variante }}" key="{{ formKey }}-variante" disabled="{{ noVariants }}">
+                <select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; min-height: 50px;" defaultValue="{{ form.variante }}" data-dv="{{ form.variante }}" onInput="{{ setFz.variante }}" key="{{ formKey }}-variante" disabled="{{ noVariants }}">
                   <option value="" label="{{ variantPh }}">{{ variantPh }}</option>
                   <sc-for list="{{ variantOptions }}" as="vo" hint-placeholder-count="0"><option value="{{ vo }}" label="{{ vo }}">{{ vo }}</option></sc-for>
                 </select>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Nom du thé</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Le nom donné par le fournisseur" defaultValue="{{ form.nomFour }}" onInput="{{ setFz.nomFour }}" key="{{ formKey }}-nomFour">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Le nom donné par le fournisseur" defaultValue="{{ form.nomFour }}" data-dv="{{ form.nomFour }}" onInput="{{ setFz.nomFour }}" key="{{ formKey }}-nomFour">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Boutique</span>
@@ -2707,14 +2716,14 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" defaultValue="{{ form.ref }}" onInput="{{ setFz.ref }}" key="{{ formKey }}-ref">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" defaultValue="{{ form.ref }}" data-dv="{{ form.ref }}" onInput="{{ setFz.ref }}" key="{{ formKey }}-ref">
               </label>
               <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Recommandations du fabricant <span style="text-transform: none; letter-spacing: 0;">· facultatif</span></span>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
-                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Température conseillée" placeholder="🌡 Température (ex : 95)" defaultValue="{{ form.recoTemp }}" onInput="{{ setFz.recoTemp }}" key="{{ formKey }}-recoTemp">
-                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Quantité conseillée" placeholder="⚖️ Quantité (ex : 5 g / 100 ml)" defaultValue="{{ form.recoQty }}" onInput="{{ setFz.recoQty }}" key="{{ formKey }}-recoQty">
-                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Temps conseillés" placeholder="⏱ Temps (ex : 20/30/45 ou 3 min)" defaultValue="{{ form.recoTimes }}" onInput="{{ setFz.recoTimes }}" key="{{ formKey }}-recoTimes">
+                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Température conseillée" placeholder="🌡 Température (ex : 95)" defaultValue="{{ form.recoTemp }}" data-dv="{{ form.recoTemp }}" onInput="{{ setFz.recoTemp }}" key="{{ formKey }}-recoTemp">
+                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Quantité conseillée" placeholder="⚖️ Quantité (ex : 5 g / 100 ml)" defaultValue="{{ form.recoQty }}" data-dv="{{ form.recoQty }}" onInput="{{ setFz.recoQty }}" key="{{ formKey }}-recoQty">
+                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Temps conseillés" placeholder="⏱ Temps (ex : 20/30/45 ou 3 min)" defaultValue="{{ form.recoTimes }}" data-dv="{{ form.recoTimes }}" onInput="{{ setFz.recoTimes }}" key="{{ formKey }}-recoTimes">
                 </div>
               </div>
               <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -2736,7 +2745,7 @@
               </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le thé</span>
-                <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="Ce qui caractérise ce thé…" defaultValue="{{ form.prodComment }}" onInput="{{ setFz.prodComment }}" key="{{ formKey }}-prodComment"></textarea>
+                <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="Ce qui caractérise ce thé…" defaultValue="{{ form.prodComment }}" data-dv="{{ form.prodComment }}" onInput="{{ setFz.prodComment }}" key="{{ formKey }}-prodComment"></textarea>
               </label>
             </div>
           </section>
@@ -2758,11 +2767,11 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Année de production</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 2024" defaultValue="{{ form.prodDate }}" onInput="{{ setFz.prodDate }}" key="{{ formKey }}-prodDate">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 2024" defaultValue="{{ form.prodDate }}" data-dv="{{ form.prodDate }}" onInput="{{ setFz.prodDate }}" key="{{ formKey }}-prodDate">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Lot</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : n° de lot sur le paquet" defaultValue="{{ form.lot }}" onInput="{{ setFz.lot }}" key="{{ formKey }}-lot">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : n° de lot sur le paquet" defaultValue="{{ form.lot }}" data-dv="{{ form.lot }}" onInput="{{ setFz.lot }}" key="{{ formKey }}-lot">
               </label>
               <div style="display: flex; flex-direction: column; gap: 10px; grid-column: 1 / -1; background: var(--color-bg); border-radius: 24px; padding: 16px 18px;">
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
@@ -2776,11 +2785,11 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ qtyLabel }}</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ qtyPh }}" defaultValue="{{ form.quantite }}" onInput="{{ setFz.quantite }}" key="{{ formKey }}-quantite" inputMode="decimal">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ qtyPh }}" defaultValue="{{ form.quantite }}" data-dv="{{ form.quantite }}" onInput="{{ setFz.quantite }}" key="{{ formKey }}-quantite" inputMode="decimal">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix payé (€)</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 12,50" defaultValue="{{ form.prixPaye }}" onInput="{{ setFz.prixPaye }}" key="{{ formKey }}-prixPaye" inputMode="decimal">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 12,50" defaultValue="{{ form.prixPaye }}" data-dv="{{ form.prixPaye }}" onInput="{{ setFz.prixPaye }}" key="{{ formKey }}-prixPaye" inputMode="decimal">
               </label>
                 </div>
               </div>
@@ -2811,7 +2820,7 @@
               </div>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Commentaire sur le sachet</span>
-                <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="État, conservation, ressenti sur ce paquet…" defaultValue="{{ form.commentaire }}" onInput="{{ setFz.commentaire }}" key="{{ formKey }}-commentaire"></textarea>
+                <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="État, conservation, ressenti sur ce paquet…" defaultValue="{{ form.commentaire }}" data-dv="{{ form.commentaire }}" onInput="{{ setFz.commentaire }}" key="{{ formKey }}-commentaire"></textarea>
               </label>
             </div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -3044,7 +3053,7 @@
               <sc-if value="{{ pv.variante }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">Variante : {{ pv.variante }}</span></sc-if>
               <button class="tag tag-accent-2" onClick="{{ pv.openFam }}" style="border: none; cursor: pointer; font-family: var(--font-body);">{{ pv.famName }} →</button>
             </div>
-            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1><sc-if value="{{ pv.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ pv.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag" style="font-size: 14px; padding: 5px 12px;">📍 {{ ct.c }}</span></sc-for></sc-if><button class="btn btn-secondary" onClick="{{ pv.share }}" style="white-space: nowrap;">↗ Partager</button><sc-if value="{{ pv.canEditP }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.editP }}" style="white-space: nowrap;">✏️ Modifier le thé</button></sc-if></div>
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1><button class="btn btn-secondary" onClick="{{ pv.share }}" style="white-space: nowrap;">↗ Partager</button><sc-if value="{{ pv.canEditP }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.editP }}" style="white-space: nowrap;">✏️ Modifier le thé</button></sc-if></div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
               <span style="font-size: 15px; opacity: .8;">{{ pv.marque }}<sc-if value="{{ pv.ref }}" hint-placeholder-val="{{ false }}"> · réf. {{ pv.ref }}</sc-if></span>
               <sc-if value="{{ pv.reco }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; background: var(--color-surface); border-radius: 999px; padding: 5px 12px;">🏷 Conseil du fabricant : {{ pv.reco }}</span></sc-if>
@@ -3056,15 +3065,15 @@
         <section class="sac" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
           <h2 style="font-size: 22px; margin: 0;">✏️ Modifier « {{ pv.name }} »</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 14px;">
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Nom chez le fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.nom }}" onInput="{{ pe.set.nom }}" key="{{ pe.key }}-nom"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Nom chez le fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.nom }}" onInput="{{ pe.now.nom }}"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.marque }}" onInput="{{ pe.now.marque }}" list="liste-boutiques"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ref }}" onInput="{{ pe.set.ref }}" key="{{ pe.key }}-ref"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.variante }}" onInput="{{ pe.set.variante }}" key="{{ pe.key }}-variante"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">🌡 Temp. conseillée (fabricant)<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 95" defaultValue="{{ pe.recoTemp }}" onInput="{{ pe.set.recoTemp }}" key="{{ pe.key }}-recoTemp"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⚖️ Quantité conseillée<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 5 g / 100 ml" defaultValue="{{ pe.recoQty }}" onInput="{{ pe.set.recoQty }}" key="{{ pe.key }}-recoQty"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⏱ Temps conseillés<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 20/30/45" defaultValue="{{ pe.recoTimes }}" onInput="{{ pe.set.recoTimes }}" key="{{ pe.key }}-recoTimes"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.ref }}" onInput="{{ pe.now.ref }}"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.variante }}" onInput="{{ pe.now.variante }}"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">🌡 Temp. conseillée (fabricant)<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 95" value="{{ pe.recoTemp }}" onInput="{{ pe.now.recoTemp }}"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⚖️ Quantité conseillée<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 5 g / 100 ml" value="{{ pe.recoQty }}" onInput="{{ pe.now.recoQty }}"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⏱ Temps conseillés<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 20/30/45" value="{{ pe.recoTimes }}" onInput="{{ pe.now.recoTimes }}"></label>
           </div>
-          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Description<textarea class="input" rows="3" style="padding: 10px 12px; background: var(--color-bg); resize: vertical;" defaultValue="{{ pe.commentaire }}" onInput="{{ pe.set.commentaire }}" key="{{ pe.key }}-commentaire"></textarea></label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Description<textarea class="input" rows="3" style="padding: 10px 12px; background: var(--color-bg); resize: vertical;" value="{{ pe.commentaire }}" onInput="{{ pe.now.commentaire }}"></textarea></label>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <span style="font-size: 13px;">Tags <span style="opacity: .6;">· {{ pe.tagsCount }}</span></span>
             <div class="tp">
@@ -3098,7 +3107,7 @@
                       <div class="sac-head">
                         <sc-if value="{{ sa.anyPhoto }}" hint-placeholder-val="{{ false }}"><div class="sac-ph"><sc-for list="{{ sa.photos }}" as="ph" hint-placeholder-count="0"><a href="{{ ph }}" target="_blank" rel="noopener" aria-label="Voir la photo"><img src="{{ ph }}" alt=""></a></sc-for></div></sc-if>
                         <div class="sac-ttl">
-                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.hasCities }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ sa.cities }}" as="ct" hint-placeholder-count="1"><span class="city-tag">📍 {{ ct.c }}</span></sc-for></sc-if><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
+                          <div class="sac-nm"><button onClick="{{ sa.openTea }}" class="sac-name">{{ sa.name }}</button><sc-if value="{{ sa.the }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sa.openCat }}" class="sac-cat">{{ sa.the }}</button></sc-if></div>
                           <span class="sac-sub">{{ sa.subLine }}<sc-if value="{{ sa.isEmpty }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px;">📭 {{ sa.emptyTxt }}</span></sc-if><sc-if value="{{ sa.fromTxt }}" hint-placeholder-val="{{ false }}"> · <span class="tag tag-neutral" style="font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;">{{ sa.fromTxt }}<sc-if value="{{ sa.canUntag }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.untag }}" aria-label="Retirer l’étiquette" style="cursor: pointer; border: none; background: transparent; padding: 0 2px; font-size: 13px; line-height: 1; color: inherit;">×</button></sc-if></span></sc-if></span>
                         </div>
                         <div class="sac-score"><b style="color: {{ sa.avgColor }};">{{ sa.avgNum }}</b><span>{{ sa.scoreSub }}</span></div>
@@ -3978,7 +3987,7 @@ class Component extends DCLogic {
   }
 
   // Safari (iPad/iPhone) laisse parfois une liste déroulante vide quand ses options arrivent après sa valeur : on la resynchronise
-  syncSelects() { try { document.querySelectorAll('select[data-val]').forEach(el => { const v = el.getAttribute('data-val'); if (el.value !== v && Array.from(el.options).some(o => o.value === v)) el.value = v; }); } catch (e) {} }
+  syncSelects() { try { document.querySelectorAll('[data-dv]').forEach(el => { if (el.__dvDone) return; const v = el.getAttribute('data-dv'); if (!v) return; el.__dvDone = true; if (el.value === '') el.value = v; }); } catch (e) {} try { document.querySelectorAll('select[data-val]').forEach(el => { const v = el.getAttribute('data-val'); if (el.value !== v && Array.from(el.options).some(o => o.value === v)) el.value = v; }); } catch (e) {} }
   componentDidMount() {
     setTimeout(() => this.drawWheel(), 50); setTimeout(() => this.syncSelects(), 0);
     this.watchVersion();
@@ -4466,8 +4475,8 @@ class Component extends DCLogic {
       cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Boutique'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
       rows = a.prods.map(p => { const sacs = a.sachets.filter(x => x.prodId === p.id); const nl = sacs.reduce((t, x) => t + (logsBySac[x.id] || []).length, 0); const ts = this.idTs(p.id);
         return { id: p.id, v: { nom: p.nom || p.the, the: p.the + (p.variante ? ' · ' + p.variante : ''), fam: famName(p.the), marque: p.marque || '—', nSac: sacs.length, nLog: nl, who: creator('pid', p.id) || (sacs[0] || {}).owner || '—', date: ts },
-          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique', this.shopOptions(p.marque)], ['ref', 'Référence'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
-          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
+          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique', this.shopOptions(p.marque)], ['ref', 'Référence'], ['recoTemp', 'Temp. conseillée (vendeur)'], ['recoQty', 'Quantité conseillée'], ['recoTimes', 'Temps conseillés'], ['tags', 'Tags de goût', 'tags'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, recoTemp: d.recoTemp || '', recoQty: d.recoQty || '', recoTimes: d.recoTimes || '', tags: Array.isArray(d.tags) ? d.tags.slice() : (x.tags || []), ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
           open: () => this.openProd(p.id), delMsg: 'Supprimer « ' + (p.nom || p.the) + ' » ? ' + sacs.length + ' sachet(s) et ' + nl + ' dégustation(s) seront aussi supprimés.', delFn: delProds([p.id]) }; });
     } else if (kind === 'sachet') {
       cols = [['code', 'Code'], ['nom', 'Thé'], ['shop', 'Boutique'], ['owner', 'Propriétaire'], ['qty', 'Quantité'], ['reste', 'Reste'], ['nLog', 'Dégust.'], ['etat', 'État'], ['date', 'Ajouté le']];
@@ -4518,10 +4527,11 @@ class Component extends DCLogic {
         cancelEdit: () => this.setState({ adEdit: null, adDraft: {} }),
         saveEdit: () => { r.save(Object.assign({}, this.state.adDraft || {})); this.setState({ adEdit: null, adDraft: {} }); },
         fields: ed ? (r.fields || []).map(f => ({ label: f[1], value: draft[f[0]] == null ? '' : String(draft[f[0]]), type: f[2] === 'date' ? 'date' : 'text', list: f[2] === 'tea' ? 'liste-thes' : '',
-          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isGear: f[2] === 'gear',
+          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isGear: f[2] === 'gear', isTags: f[2] === 'tags',
+          ...(f[2] === 'tags' ? { tp: this.tagPicker(Array.isArray(draft.tags) ? draft.tags : [], tags => this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { tags: tags }) })), 'tpOpenA') } : { tp: { intens: [], fams: [], openChips: [], others: [] } }),
           ...(f[2] === 'gear' ? (() => { const cur = Array.isArray(draft.gearIds) ? draft.gearIds : (draft.gearId ? [draft.gearId] : []); const gs = (this.getAdds().gear || []).slice().sort((x, y) => (x.owner === draft.author ? 0 : 1) - (y.owner === draft.author ? 0 : 1) || String(x.owner).localeCompare(String(y.owner)) || x.name.localeCompare(y.name, 'fr'));
             return { noChips: !gs.length, chips: gs.map(g => { const on = cur.indexOf(g.id) >= 0; return { label: (on ? '✓ ' : '') + this.gearCat(g)[1] + ' ' + g.name + ' · ' + g.owner, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)',
-              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' || f[2] === 'gear' ? '1 / -1' : 'auto',
+              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' || f[2] === 'gear' || f[2] === 'tags' ? '1 / -1' : 'auto',
           set: e => { let val = f[0] === 'marque' && e.target.tagName !== 'SELECT' ? this.upInput(e) : e.target.value;
             if (val === '__new') { const v = window.prompt(f[0] === 'marque' ? 'Nom de la nouvelle boutique :' : 'Nom de la nouvelle ville :', ''); if (!v || !v.trim()) { this.setState({}); return; } val = f[0] === 'marque' ? this.upBrand(v) : this.cityFmt(v); }
             this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); } })) : [],
@@ -4600,8 +4610,9 @@ class Component extends DCLogic {
     return out;
   }
   lfGearIds() { const lf = this.state.lf || {}; return lf.gearIds || (lf.gearId ? [lf.gearId] : []); }
-  gearUsable(u) { const mem = this.salonMates(u); return (this.getAdds().gear || []).filter(g => g.owner === u || mem.indexOf(g.owner) >= 0); }
-  gearOf(u) { return (this.getAdds().gear || []).filter(g => g.owner === u); }
+  gearAlpha(x, y) { return String(x.name || '').localeCompare(String(y.name || ''), 'fr', { sensitivity: 'base', numeric: true }); }
+  gearUsable(u) { const mem = this.salonMates(u); return (this.getAdds().gear || []).filter(g => g.owner === u || mem.indexOf(g.owner) >= 0).sort((x, y) => this.gearAlpha(x, y)); }
+  gearOf(u) { return (this.getAdds().gear || []).filter(g => g.owner === u).sort((x, y) => this.gearAlpha(x, y)); }
   logGears(l) {
     const all = this.getAdds().gear || [];
     const ids = l.gearIds || (l.gearId ? [l.gearId] : []);
@@ -6875,7 +6886,7 @@ class Component extends DCLogic {
     const pe0 = this.state.prodEdit && this.state.prodEdit.id === pr.id ? this.state.prodEdit : null;
     const startEdit = () => this.setState({ prodEdit: { id: pr.id, nom: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', ref: pr.ref || '', variante: pr.variante || '', boutique: pr.boutique || '', commentaire: pr.commentaire || '', tags: (pr.tags || []).slice(), recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', rev: Date.now() }, prodNewTag: '' });
     return { cities: this.prodCities(pr.id).map(c => ({ c: c })), hasCities: this.prodCities(pr.id).length > 0, reco: [pr.recoTemp ? pr.recoTemp + (/^\d+$/.test(pr.recoTemp) ? ' °C' : '') : '', pr.recoQty ? pr.recoQty + (/^\s*[\d.,]+\s*$/.test(pr.recoQty) ? ' g' : '') : '', pr.recoTimes].filter(Boolean).join(' · '), canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
-      member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: pr.marque || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
+      member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: this.shopTxt(pr.marque, this.prodCities(pr.id).join('/')) || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
       famName: fk ? this.families[fk].name : '—',
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
@@ -7156,6 +7167,10 @@ class Component extends DCLogic {
       chips: list.map(c => { const on = this.norm(c) === this.norm(cur || ''); return { c: c, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', go: () => pick(on ? '' : c) }; }) };
   }
   setShopCities(k, list) { const all = Object.assign({}, (this.getAdds().options || {}).shopCities || {}); if (list.length) all[k] = list; else delete all[k]; this.setOpt('shopCities', all); }
+  // note de dégustation : lettres devant (L = loupé, R = en réglage, autres conservées) + valeur sur 20
+  noteSplit(n) { const m = String(n || '').trim().match(/^([A-Za-z]*)\s*(.*)$/); return { pre: (m ? m[1] : '').toUpperCase(), num: m ? m[2] : '' }; }
+  noteJoin(pre, num) { const letters = pre.split('').filter((c, i, a) => a.indexOf(c) === i); const order = ['L', 'R']; const other = letters.filter(c => order.indexOf(c) < 0); return other.concat(order.filter(c => letters.indexOf(c) >= 0)).join('') + num; }
+  noteClean(v) { v = String(v || '').replace(/\./g, ',').replace(/[^0-9,]/g, ''); const i = v.indexOf(','); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/,/g, '').slice(0, 2); const n = parseFloat(v.replace(',', '.')); if (isFinite(n) && n > 20) v = '20'; return v; }
   shopTxt(m, v) { m = String(m || '').trim(); v = String(v || '').trim(); return m ? m + (v ? ' · ' + v : '') : (v || ''); }
   cityFmt(v) { v = String(v || '').trim().replace(/\s+/g, ' '); const small = ['de', 'du', 'des', 'la', 'le', 'les', 'en', 'sur', 'sous', 'lès', 'et', 'aux', 'au'];
     return v.split(/([ -])/).map((w, i) => (i > 0 && small.indexOf(w.toLowerCase()) >= 0) || /^[ -]$/.test(w) || !w ? w : w.charAt(0).toLocaleUpperCase('fr-FR') + w.slice(1)).join(''); }
@@ -7196,7 +7211,7 @@ class Component extends DCLogic {
     const tp = this.tagPicker(merged().tags, tags => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: tags }) }); }, 'tpOpenP');
     return { tp: tp, key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ville: pe.ville, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
       set: ['nom', 'marque', 'ville', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
-      now: ['marque', 'ville'].reduce((o, k) => { o[k] = e => { const v = e.target.value; const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { [k]: v }) }); }; return o; }, {}),
+      now: ['nom', 'marque', 'ville', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => { const v = e.target.value; const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { [k]: v }) }); }; return o; }, {}),
       city: this.cityPick(pe.marque, pe.ville, c => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { ville: c }) }); }),
       tagsCount: pe.tags.length ? pe.tags.length + ' sélectionné' + (pe.tags.length > 1 ? 's' : '') : 'cliquez pour en choisir',
       chips: all.concat(extra).map(t => { const on = pe.tags.indexOf(t) >= 0; return { label: (on ? '✓ ' : '') + t, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', toggle: () => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: on ? m.tags.filter(x => x !== t) : m.tags.concat([t]) }) }); } }; }),
@@ -7605,7 +7620,7 @@ class Component extends DCLogic {
         const fk = this.state.key; const t = this.listFor(fk)[this.state.idx || 0] || {};
         const a = this.getAdds();
         const prods = a.prods.filter(p => this.norm(p.the) === this.norm(t.name || ''));
-        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Boutique : ' + this.shopTxt(p.marque, this.prodCities(p.id).join(', ')) : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
+        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Boutique : ' + this.shopTxt(p.marque, this.prodCities(p.id).join('/')) : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
       })(),
       ...(() => {
         const a = this.getAdds();
@@ -7785,7 +7800,7 @@ class Component extends DCLogic {
         const chip = g => { const T = this.gearCat(g); const on = cur.indexOf(g.id) >= 0;
           return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
             toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; };
-        const ord = (x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(x.type)) - this.gearTypeList().findIndex(t => t[0] === this.gearCatKey(y.type)) || String(x.name).localeCompare(String(y.name), 'fr');
+        const ord = (x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || String(x.name).localeCompare(String(y.name), 'fr', { sensitivity: 'base', numeric: true });
         const all = this.gearUsable(me).concat((this.getAdds().gear || []).filter(g => cur.indexOf(g.id) >= 0 && !this.gearUsable(me).some(x => x.id === g.id)));
         const mine = all.filter(g => g.owner === me).sort(ord), others = all.filter(g => g.owner !== me).sort(ord);
         const show = !!this.state.showSalonGear || others.some(g => cur.indexOf(g.id) >= 0);
@@ -8062,7 +8077,7 @@ class Component extends DCLogic {
           const st = this.statsMany(allSacs.map(x => x.id)); const open = !!(this.state.openProds || {})[pid];
           const ph = (allSacs.find(x => x.prodPhoto) || {}).prodPhoto || '';
           return { ...this.expFlags('p:' + pid), photo: ph, noPhoto: !ph, name: o.nom || o.the, the: o.the + (o.variante ? ' · ' + o.variante : ''), code: o.prodCode, color: fk ? this.families[fk].color : 'var(--color-neutral-300)',
-            marque: o.marque || '—', cities: this.prodCities(pid).map(c => ({ c: c })), hasCities: this.prodCities(pid).length > 0, boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
+            marque: this.shopTxt(o.marque, this.prodCities(pid).join('/')) || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
             avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
@@ -8098,8 +8113,13 @@ class Component extends DCLogic {
       lfPrefilled: (this.state.lf || {}).prefilled || '',
       lfWhenOpen: true, lfWhenClosed: false, toggleLfWhen: () => this.setState(s0 => ({ lfWhenOpen: !s0.lfWhenOpen })),
       lfWhenSummary: (() => { const lf = this.state.lf || {}; const today = mdtToday(); return [lf.date ? (lf.date === today ? 'Aujourd’hui' : 'le ' + this.fmtDate(lf.date)) : 'Date non précisée', lf.heure ? 'à ' + lf.heure : '', lf.repas || '', (lf.with || []).length ? 'avec ' + lf.with.join(', ') : 'seul·e'].filter(Boolean).join(' · '); })(),
-      noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
-      noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const n = parseFloat(String(lf.note || '').replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: String(v).replace('.', ',') }) }; }),
+      noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const sp = this.noteSplit(lf.note); const n = parseFloat(sp.num.replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: this.noteJoin(sp.pre, String(v).replace('.', ',')) }) }; }),
+      noteUp: () => this.setState(s0 => { const lf = s0.lf || {}; const sp = this.noteSplit(lf.note); const n = parseFloat(sp.num.replace(',', '.')); const v = Math.min(20, (isFinite(n) ? n : 14.5) + 0.5); return { lf: Object.assign({}, lf, { note: this.noteJoin(sp.pre, String(v).replace('.', ',')) }) }; }),
+      ...(() => { const sp = this.noteSplit((this.state.lf || {}).note); const has = c => sp.pre.indexOf(c) >= 0;
+        const tog = c => () => this.setState(s0 => { const lf = s0.lf || {}; const q = this.noteSplit(lf.note); const pre = q.pre.indexOf(c) >= 0 ? q.pre.replace(c, '') : q.pre + c; return { lf: Object.assign({}, lf, { note: this.noteJoin(pre, q.num) }) }; });
+        return { lfNoteNum: sp.num, setNoteNum: e => { const el = e.target; const v = this.noteClean(el.value); if (v !== el.value) el.value = v; this.setState(s0 => { const lf = s0.lf || {}; return { lf: Object.assign({}, lf, { note: this.noteJoin(this.noteSplit(lf.note).pre, v) }) }; }); },
+          lfNoteR: has('R'), lfNoteL: has('L'), noteTogR: tog('R'), noteTogL: tog('L'),
+          lfNoteRBg: has('R') ? '#d9e5f1' : 'var(--color-bg)', lfNoteRFg: has('R') ? '#2c4a6b' : 'var(--color-text)', lfNoteLBg: has('L') ? 'var(--color-accent-800)' : 'var(--color-bg)', lfNoteLFg: has('L') ? '#fff' : 'var(--color-text)' }; })(),
       lfNoteColor: this.noteColors((this.state.lf || {}).note).noteBg,
       setLz: ['temps', 'temperature', 'qty', 'repas', 'avis', 'infusion', 'nez'].reduce((o, k) => { o[k] = this.lazySet('lf', k); return o; }, {}),
       setFz: ['recoTemp', 'recoQty', 'recoTimes', 'prodComment', 'variante', 'nomFour', 'marque', 'ville', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'lot', 'boutique', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'vNom', 'vTrad', 'vProfil', 'vDesc', 'prodDate', 'annee', 'format'].reduce((o, k) => { o[k] = this.lazySet('form', k); return o; }, {}),
