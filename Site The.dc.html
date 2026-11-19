@@ -701,14 +701,14 @@
         </div>
         <div style="display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;">
           <div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px;">
-            <h1 style="font-size: 46px; margin: 0;">Mes thés</h1>
+            <h1 style="font-size: 46px; margin: 0;">{{ mineTitle }}</h1>
             <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">{{ mineCount }}</p>
           </div>
           <div style="display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap;"><sc-if value="{{ canScan }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ scanOpen }}" style="white-space: nowrap;">📷 Scanner un QR</button></sc-if><sc-if value="{{ canQrAll }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ qrAll }}" title="Une étiquette QR par sachet : scannée, elle ouvre la fiche du thé" style="white-space: nowrap;">🏷️ Étiquettes QR</button></sc-if><button class="btn btn-primary" onClick="{{ newLot }}" style="white-space: nowrap;">＋ Ajouter un thé</button></div>
         </div>
         <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 3px;">
           <sc-if value="{{ scopeMeOn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Les thés de {{ me }}</button></sc-if><sc-if value="{{ scopeMeOff }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Les thés de {{ me }}</button></sc-if>
-          <sc-if value="{{ scopeAllOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Toute la maison</button></sc-if><sc-if value="{{ scopeAllOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Toute la maison</button></sc-if>
+          <sc-if value="{{ scopeWhoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeWhoClose }}" title="Retirer le filtre" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">👤 {{ scopeWhoTxt }} ✕</button></sc-if><sc-if value="{{ scopeAllOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Toute la maison</button></sc-if><sc-if value="{{ scopeAllOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeAll }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Toute la maison</button></sc-if>
         </div>
         <div style="display: flex; gap: 10px; align-items: center; width: 100%; max-width: 640px;">
           <input class="input" type="search" placeholder="Filtrer par nom, code, boutique…" value="{{ mq }}" onChange="{{ onMq }}" style="flex: 1 1 200px; min-width: 0; box-sizing: border-box; font-size: 15px; padding: 12px 20px;">
@@ -783,7 +783,7 @@
                     </div>
                     <div class="sac-foot">
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
-                      <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
+                      <sc-if value="{{ sa.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.wish }}" style="white-space: nowrap;">{{ sa.wishTxt }}</button></sc-if><sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
                       <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle ouvre la fiche du thé</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
@@ -842,7 +842,7 @@
                     </div>
                     <div class="sac-foot">
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
-                      <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
+                      <sc-if value="{{ sa.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.wish }}" style="white-space: nowrap;">{{ sa.wishTxt }}</button></sc-if><sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
                       <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle ouvre la fiche du thé</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
@@ -895,6 +895,7 @@
                 <div class="side" style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
                   <span style="font-family: var(--font-heading); color: {{ m.avgColor }}; font-size: 22px;">{{ m.avg }}</span>
                   <span style="font-size: 12px; opacity: .65; white-space: nowrap;">{{ m.avgSub }}</span>
+                  <sc-if value="{{ m.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ m.wish }}" style="white-space: nowrap; margin-top: 8px;">{{ m.wishTxt }}</button></sc-if>
                 </div>
               </div>
               <button onClick="{{ m.toggle }}" aria-expanded="{{ m.open }}" style="align-self: flex-start; cursor: pointer; border: 1px solid var(--color-divider); background: var(--color-bg); border-radius: 999px; font-family: var(--font-body); font-size: 14px; color: var(--color-text); padding: 7px 14px; display: flex; align-items: center; gap: 8px;" style-hover="background: var(--color-accent-100);">{{ m.nSac }} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ m.rot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -940,7 +941,7 @@
                     </div>
                     <div class="sac-foot">
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
-                      <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
+                      <sc-if value="{{ sa.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.wish }}" style="white-space: nowrap;">{{ sa.wishTxt }}</button></sc-if><sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
                       <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle ouvre la fiche du thé</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
@@ -983,6 +984,7 @@
                 <div class="side" style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right;">
                   <span style="font-family: var(--font-heading); color: {{ m.avgColor }}; font-size: 22px;">{{ m.avg }}</span>
                   <span style="font-size: 12px; opacity: .65; white-space: nowrap;">{{ m.avgSub }}</span>
+                  <sc-if value="{{ m.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ m.wish }}" style="white-space: nowrap; margin-top: 8px;">{{ m.wishTxt }}</button></sc-if>
                 </div>
               </div>
               <button onClick="{{ m.toggle }}" aria-expanded="{{ m.open }}" style="align-self: flex-start; cursor: pointer; border: 1px solid var(--color-divider); background: var(--color-bg); border-radius: 999px; font-family: var(--font-body); font-size: 14px; color: var(--color-text); padding: 7px 14px; display: flex; align-items: center; gap: 8px;" style-hover="background: var(--color-accent-100);">{{ m.nSac }} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ m.rot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -1028,7 +1030,7 @@
                     </div>
                     <div class="sac-foot">
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
-                      <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
+                      <sc-if value="{{ sa.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.wish }}" style="white-space: nowrap;">{{ sa.wishTxt }}</button></sc-if><sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
                       <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle ouvre la fiche du thé</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
@@ -1099,7 +1101,7 @@
                     </div>
                     <div class="sac-foot">
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
-                      <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
+                      <sc-if value="{{ sa.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.wish }}" style="white-space: nowrap;">{{ sa.wishTxt }}</button></sc-if><sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
                       <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle ouvre la fiche du thé</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
@@ -1597,23 +1599,6 @@
             </div>
           </section>
           </sc-if>
-          <sc-if value="{{ pf.tsOpen }}" hint-placeholder-val="{{ false }}"><div class="bug-ov" role="dialog" aria-modal="true" aria-label="{{ pf.tsTitle }}"><button class="bug-bd" onClick="{{ pf.tsClose }}" aria-label="Fermer"></button>
-            <div class="bug-box" style="width: min(680px, 100%);">
-              <div style="display: flex; align-items: center; gap: 10px;"><h2 style="margin: 0; font-size: 24px; margin-right: auto;">🍵 {{ pf.tsTitle }}</h2><button onClick="{{ pf.tsClose }}" aria-label="Fermer" style="cursor: pointer; border: none; background: transparent; font-size: 20px; color: var(--color-text);">✕</button></div>
-              <p style="margin: 0; font-size: 13px; opacity: .7;">{{ pf.tsSub }}</p>
-              <input class="input" type="search" value="{{ pf.tsQ }}" onInput="{{ pf.tsSetQ }}" placeholder="🔎 Filtrer (thé, boutique, famille…)" aria-label="Filtrer les thés">
-              <sc-if value="{{ pf.tsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun thé ne correspond.</p></sc-if>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ pf.tsList }}" as="t" hint-placeholder-count="4">
-                <div class="sac mb-card" style="opacity: {{ t.dim }};"><div class="sac-head" style="align-items: center;">
-                  <div class="sac-ttl"><div class="sac-nm"><button class="sac-name" onClick="{{ t.open }}">{{ t.name }}</button><sc-if value="{{ t.fam }}" hint-placeholder-val="{{ false }}"><span class="mb-role">{{ t.fam }}</span></sc-if></div>
-                    <span class="sac-sub">{{ t.meta }}</span></div>
-                  <sc-if value="{{ t.canWish }}" hint-placeholder-val="{{ false }}"><button class="{{ t.wishCls }}" onClick="{{ t.wish }}" style="white-space: nowrap; flex: none;">{{ t.wishTxt }}</button></sc-if>
-                  <sc-if value="{{ t.haveIt }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6; white-space: nowrap; flex: none;">✓ Vous l’avez</span></sc-if>
-                </div></div>
-              </sc-for>
-              </div>
-            </div></div></sc-if>
           <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px;">
             <sc-for list="{{ pf.kpis }}" as="k" hint-placeholder-count="8">
               <sc-if value="{{ k.plain }}" hint-placeholder-val="{{ true }}">
@@ -3360,7 +3345,7 @@
                     </div>
                     <div class="sac-foot">
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
-                      <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
+                      <sc-if value="{{ sa.wishMine }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.wish }}" style="white-space: nowrap;">{{ sa.wishTxt }}</button></sc-if><sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
                       <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle ouvre la fiche du thé</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
@@ -5970,7 +5955,7 @@ class Component extends DCLogic {
       { label: 'Thé préféré', open: fav ? () => this.openProd(fav.p.id) : null, value: fav ? nm(fav.p) : '—', sub: fav ? f1(fav.avg) + '/20 sur ' + fav.notes.length + ' note' + (fav.notes.length > 1 ? 's' : '') : '' },
       { label: 'Famille favorite', open: topFam ? () => this.openFamily(topFam) : null, value: topFam ? this.families[topFam].name : '—', sub: topFam ? fam[topFam] + ' dégustations' : '' },
       { label: 'Dégustations', value: String(logs.length), sub: allNotes.length ? 'moyenne ' + f1(allNotes.reduce((t, n) => t + n, 0) / allNotes.length) + '/20' : '' },
-      { label: 'Sachets', open: sacs.length ? () => this.setState({ pfTeas: true, pfTeasU: u, pfTeasQ: '' }) : null, value: String(sacs.length), sub: new Set(sacs.map(o => o.prodId)).size + ' thés différents' + (sacs.length ? ' · voir →' : '') },
+      { label: 'Sachets', open: sacs.length ? () => { this.setState({ view: 'mine', collView: 'mine', scope: isMe ? 'me' : 'who', scopeWho: u, mq: '' }); try { window.scrollTo(0, 0); } catch (e) {} } : null, value: String(sacs.length), sub: new Set(sacs.map(o => o.prodId)).size + ' thés différents' + (sacs.length ? ' · voir →' : '') },
       { label: 'Thé consommé', value: grams ? (grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g') : '—', sub: 'd’après les quantités notées' },
       { label: 'Dernière dégustation', open: lastP ? () => this.openProd(lastP.id) : null, value: lastP ? nm(lastP) : '—', sub: last ? this.fmtDate(last.date) : '' },
       { label: 'Thés goûtés', value: String(arr.length), sub: 'thés différents dégustés' }
@@ -5985,23 +5970,6 @@ class Component extends DCLogic {
       cancel: () => this.setState({ profEdit: false }),
       save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
       kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)),
-      ...(() => {
-        if (!this.state.pfTeas || this.state.pfTeasU !== u) return { tsOpen: false, tsList: [] };
-        const q = this.norm(this.state.pfTeasQ || ''); const g = {};
-        sacs.forEach(o => { const p = a.prods.find(x => x.id === o.prodId); if (!p) return; const b = g[p.id] = g[p.id] || { p: p, n: 0, full: 0 }; b.n++; if (!this.emptyFor(o, u)) b.full++; });
-        const mine = new Set(a.sachets.filter(o => o.owner === me || (o.shares || []).some(x => x.to === me)).map(o => o.prodId));
-        const list = Object.keys(g).map(k => g[k]).map(b => { const p = b.p, name = p.nom || p.the, fk = this.famOf(p.the);
-          return { name: name, sort: this.norm(name), fam: fk ? this.families[fk].name : '', the: p.nom && p.the !== p.nom ? p.the : '', hasThe: !!(p.nom && p.the !== p.nom),
-            meta: [this.shopTxt(p.marque, this.prodCities(p.id).join('/')), b.n + (b.n > 1 ? ' sachets' : ' sachet') + (b.full ? '' : ' · vide')].filter(Boolean).join(' · '),
-            dim: b.full ? '1' : '.6', open: () => { this.setState({ pfTeas: false }); this.openProd(p.id); },
-            canWish: !isMe && !!me && !mine.has(p.id), haveIt: !isMe && mine.has(p.id),
-            wishTxt: this.isWished(name) ? '✓ Dans mes envies' : '🎁 Envie', wishCls: this.isWished(name) ? 'btn btn-secondary' : 'btn btn-ghost',
-            wish: () => this.toggleWish({ name: name, shop: p.marque || '', city: this.prodCities(p.id)[0] || '', price: '', note: 'Vu chez ' + u }) };
-        }).filter(x => !q || this.norm(x.name + ' ' + x.the + ' ' + x.meta + ' ' + x.fam).indexOf(q) >= 0).sort((x, y) => x.sort.localeCompare(y.sort));
-        return { tsOpen: true, tsList: list, tsEmpty: !list.length, tsTitle: isMe ? 'Mes thés' : 'Les thés de ' + u, tsQ: this.state.pfTeasQ || '',
-          tsSetQ: e => this.setState({ pfTeasQ: e.target.value }), tsClose: () => this.setState({ pfTeas: false }),
-          tsSub: Object.keys(g).length + ' thés · ' + sacs.length + ' sachets' + (isMe ? '' : ' · ajoutez ceux qui vous tentent à vos envies') };
-      })(),
       ...(() => {
         const gAll = (a.gear || []).filter(g => g.owner === u);
         const ids = (prof.gearShow || []).filter(id => gAll.some(g => g.id === id)).slice(0, 3);
@@ -7732,6 +7700,8 @@ class Component extends DCLogic {
       noRemainCtl: o.owner === me && !rm && !portions.length,
       get noRemainCtl2() { return this.noRemainCtl && !this.isEmpty; }, get showStock() { return this.hasRemain && !this.isEmpty; },
       get showFacts() { return this.facts2.length > 0 && !this.isEmpty; }, get showCode() { return !!this.code && !this.isEmpty; },
+      wishMine: this.state.view === 'mine' && (this.state.scope || 'me') !== 'me' && !!me && !!this.state.session && !this.collection().some(x => x.prodId === o.prodId && x.owners.indexOf(me) >= 0), wishTxt: this.isWished(o.nom || o.the) ? '✓ Dans mes envies' : '🎁 Ajouter à mes envies',
+      wish: () => this.toggleWish({ name: o.nom || o.the, shop: o.marque || '', city: o.ville || this.prodCities(o.prodId)[0] || '', price: '', note: 'Vu chez ' + o.owner }),
       get mineFull() { return this.mine && !this.isEmpty; }, get mineEmpty() { return this.mine && this.isEmpty; }, get notEmpty() { return !this.isEmpty; },
       get sacCls() { return this.isEmpty ? 'sac-empty' : ''; },
       facts: [['Propriétaire', o.owner], ['Acheté le', o.achat ? this.fmtDate(o.achat) : ''], ['Production', o.prodDate], ['Lot', o.lot], ['Format', this.formatTxt(o)], ['Payé', (this.priceVisible(o.owner) && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(o.prixPaye)) ? ' €' : '') + (this.prixTxt(o) ? ' (' + this.prixTxt(o) + ')' : '') : this.prixTxt(o)], ['Fréquence', o.freq ? ((this.opts().freqs.find(f => String(f.code) === String(o.freq)) || {}).label || o.freq) : '']].filter(x => x[1] && String(x[1]).trim() && x[1] !== '—').map(x => ({ k: x[0], v: x[1] })),
@@ -8151,7 +8121,7 @@ class Component extends DCLogic {
     const me = this.me();
     const scope = this.state.scope || 'me';
     const coll = this.collection();
-    const viewerC = (!!this.state.cloud && !this.state.session) ? null : me; const myColl = scope === 'all' ? coll.filter(o => o.owners.indexOf(me) >= 0 || this.contentVisible(o.owner, viewerC)) : coll.filter(o => o.owners.indexOf(me) >= 0);
+    const viewerC = (!!this.state.cloud && !this.state.session) ? null : me; const who = scope === 'who' ? this.state.scopeWho : null; const myColl = who ? coll.filter(o => o.owners.indexOf(who) >= 0 && (o.owners.indexOf(me) >= 0 || this.contentVisible(o.owner, viewerC) || this.isAdmin(me))) : scope === 'all' ? coll.filter(o => o.owners.indexOf(me) >= 0 || this.contentVisible(o.owner, viewerC)) : coll.filter(o => o.owners.indexOf(me) >= 0);
     const pm = (this.state.form || {}).prixMode || 'poids';
     const pick = {};
     Object.keys(this.families).forEach(k => { pick[k] = () => this.go('list', k, 0); });
@@ -8611,7 +8581,7 @@ class Component extends DCLogic {
       me: me,
       userChips: this.opts().users.map(u => ({ name: u, initial: u.slice(0, 1).toUpperCase(), on: u === me, off: u !== me, pick: () => { try { localStorage.setItem('the-user', u); } catch (e) {} this.setState({ user: u }); } })),
       scopeMe: () => this.setState({ scope: 'me' }), scopeAll: () => this.setState({ scope: 'all' }),
-      scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
+      scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeWhoOn: scope === 'who' && !!this.state.scopeWho, scopeWhoTxt: 'Les thés de ' + (this.state.scopeWho || ''), scopeWhoClose: () => this.setState({ scope: 'all' }), scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
       isAdmin: this.isAdmin(me), isModMenu: this.realMod(me), canSwitchMode: this.realMod(me), switchModeTxt: this.state.asMember ? '🛡️ Revenir en mode admin' : '👤 Passer en mode membre', switchMode: () => this.setAsMember(!this.state.asMember), asMemberBar: !!this.state.asMember && this.realMod(me), leaveMember: () => this.setAsMember(false), admMenuTxt: (this.realAdmin(me) ? '🛡️ Administration' : '🚩 Modération') + (this.admAlerts() ? ' · ' + this.admAlerts() + ' à traiter' : ''), admDot: this.admAlerts() > 0,
       lfSpecOn: this.isAdmin(me) && !this.state.editLogId,
@@ -8753,7 +8723,8 @@ class Component extends DCLogic {
       newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
-      mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » pour voir ceux des autres.'; })(),
+      mineTitle: scope === 'who' && this.state.scopeWho ? 'Les thés de ' + this.state.scopeWho : 'Mes thés',
+      mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'who' ? ' chez ' + this.state.scopeWho + ' · ajoutez ceux qui vous tentent à vos envies.' : scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » pour voir ceux des autres.'; })(),
       mineProds: this.sortList((() => {
         const q = this.norm(this.state.mq);
         const list = myColl.filter(o => this.famOk(o)).filter(o => !q || this.norm([o.the, o.nom, o.marque, o.ville, o.code, o.lot, o.boutique, o.prodDate, o.owner].join(' ')).indexOf(q) >= 0);
@@ -8767,6 +8738,8 @@ class Component extends DCLogic {
             marque: this.shopTxt(o.marque, this.prodCities(pid).join('/')) || '—', boutique: o.boutique || '—', tags: o.tags || [], prix: this.avgPrice(allSacs) || '—',
             avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'moyenne sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
             nSac: sacs.length + (sacs.length > 1 ? ' sachets' : ' sachet'), open: open, rot: open ? 180 : 0,
+            wishMine: scope === 'who' && !!me && !!this.state.session && !coll.some(x => x.prodId === pid && x.owners.indexOf(me) >= 0), wishTxt: this.isWished(o.nom || o.the) ? '✓ Dans mes envies' : '🎁 Ajouter à mes envies',
+            wish: () => this.toggleWish({ name: o.nom || o.the, shop: o.marque || '', city: this.prodCities(pid)[0] || '', price: '', note: 'Vu chez ' + (this.state.scopeWho || o.owner) }),
             toggle: () => this.setState(s => ({ openProds: Object.assign({}, s.openProds, { [pid]: !(s.openProds || {})[pid] }) })),
             openTea: () => this.openProd(pid),
             openCat: () => this.openCatTea(o.the),
