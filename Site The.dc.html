@@ -390,7 +390,7 @@
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <button role="menuitem" onClick="{{ menuSettings }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">⚙️ Paramètres</button>
-            <sc-if value="{{ isModMenu }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">{{ admMenuTxt }}</button></sc-if>
+            <sc-if value="{{ isModMenu }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">{{ admMenuTxt }}</button></sc-if><sc-if value="{{ canSwitchMode }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ switchMode }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 14px; color: var(--color-text); opacity: .8; padding: 8px 14px 10px 30px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">{{ switchModeTxt }}</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -420,6 +420,7 @@
 
   <main class="page" style="flex: 1; width: 100%; max-width: max(1140px, 75vw); box-sizing: border-box; margin: 0 auto; padding: 16px 40px 80px; display: flex; flex-direction: column;">
     <sc-if value="{{ annShow }}" hint-placeholder-val="{{ false }}"><div role="status" style="display: flex; gap: 12px; align-items: center; background: #d9e5f1; color: #2c4a6b; border-radius: 18px; padding: 10px 14px 10px 18px; margin: 0 0 18px; font-size: 15px;"><span style="flex: 1; white-space: pre-wrap;">📣 {{ annText }}</span><button onClick="{{ annHide }}" aria-label="Masquer l’annonce" style="cursor: pointer; border: none; background: transparent; font-size: 18px; color: inherit; padding: 2px 6px;">✕</button></div></sc-if>
+    <sc-if value="{{ asMemberBar }}" hint-placeholder-val="{{ false }}"><div role="status" style="display: flex; gap: 12px; align-items: center; background: var(--color-surface); border-radius: 18px; padding: 8px 10px 8px 18px; margin: 0 0 18px; font-size: 14.5px; box-shadow: inset 0 0 0 1px var(--color-divider);"><span style="flex: 1;">👤 Mode membre : vous voyez et utilisez le site comme un membre classique.</span><button class="btn btn-secondary" onClick="{{ leaveMember }}" style="white-space: nowrap; font-size: 14px;">🛡️ Revenir en mode admin</button></div></sc-if>
     <sc-if value="{{ suspShow }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #fbebeb; color: #7a1f16; border-radius: 18px; padding: 10px 18px; margin: 0 0 18px; font-size: 15px;">⛔ Votre compte est suspendu : vous pouvez consulter le site mais plus rien modifier. Contactez un administrateur.</div></sc-if>
     <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
       <button class="btn btn-secondary" style="white-space: nowrap; align-self: flex-start; margin: -8px 0 22px;" onClick="{{ goBack }}">← Retour</button>
@@ -4068,6 +4069,7 @@ class Component extends DCLogic {
   // Safari (iPad/iPhone) laisse parfois une liste déroulante vide quand ses options arrivent après sa valeur : on la resynchronise
   syncSelects() { try { document.querySelectorAll('[data-dv]').forEach(el => { if (el.__dvDone) return; const v = el.getAttribute('data-dv'); if (!v) return; el.__dvDone = true; if (el.value === '') el.value = v; }); } catch (e) {} try { document.querySelectorAll('select[data-val]').forEach(el => { const v = el.getAttribute('data-val'); if (el.value !== v && Array.from(el.options).some(o => o.value === v)) el.value = v; }); } catch (e) {} }
   componentDidMount() {
+    try { if (localStorage.getItem('mdt-asmember')) this.setState({ asMember: true }); } catch (e) {}
     setTimeout(() => this.drawWheel(), 50); setTimeout(() => this.syncSelects(), 0);
     this.watchVersion();
     window.__mdtApp = this;
@@ -4569,7 +4571,7 @@ class Component extends DCLogic {
       rows = a.logs.map(l => { const sa = sacBy[l.lotId] || {}; const p = prodBy[sa.prodId] || {};
         return { id: l.id, v: { date: l.date || '', nom: p.nom || p.the || '?', author: (l.author || '?') + ((l.with || []).length ? ' + ' + l.with.join(', ') : ''), note: this.num(String(l.note || '').replace(/[A-Za-z]/g, '')) , qty: l.qty || '—', avis: String(l.avis || '').slice(0, 60) + (String(l.avis || '').length > 60 ? '…' : '') },
           disp: { date: l.date ? this.fmtDate(l.date) : '—', note: l.note || '—' },
-          raw: Object.assign({}, l, { gearIds: this.logGears(l).map(g => g.id), withTxt: (l.with || []).join(', ') }), fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['withTxt', 'Participants (séparés par des virgules)'], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')'])], ['gearIds', 'Matériel', 'gear'], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Matériel (texte libre)'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
+          raw: Object.assign({}, l, { gearIds: this.logGears(l).map(g => g.id), withTxt: (l.with || []).join(', ') }), fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['withTxt', 'Participants (séparés par des virgules)'], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')']).sort((x, y) => x[1].localeCompare(y[1], 'fr', { sensitivity: 'base', numeric: true }))], ['gearIds', 'Matériel', 'gear'], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Matériel (texte libre)'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
           save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(z => z.id === l.id ? Object.assign({}, z, { with: (d.withTxt != null ? String(d.withTxt).split(/[,;&]+/) : (z.with || [])).map(w => this.canonUser(String(w).trim())).filter((w, i, arr) => w && w !== d.author && arr.indexOf(w) === i), gearIds: (d.gearIds || []).slice(), gearId: undefined, author: d.author, lotId: d.lotId, date: d.date, heure: d.heure, note: d.note, infusion: d.infusion, temps: d.temps, temperature: d.temperature, qty: d.qty, technique: d.technique, repas: d.repas, avis: d.avis }) : z) })); },
           open: () => p.id && this.openProd(p.id), delMsg: 'Supprimer la dégustation de ' + (l.author || '?') + ' du ' + (l.date ? this.fmtDate(l.date) : '?') + ' ?', delFn: delLogs([l.id]) }; });
     } else {
@@ -4876,8 +4878,13 @@ class Component extends DCLogic {
   }
 
   admins(o) { o = o || this.getAdds().options || {}; return Array.isArray(o.admins) ? o.admins : ['Raph', 'Maël']; }
-  isAdmin(u) { return !!u && this.admins().indexOf(u) >= 0; }
-  isMod(u) { return this.isAdmin(u) || (!!u && ((this.getAdds().options || {}).mods || []).indexOf(u) >= 0); }
+  // « mode membre » : un admin/modérateur voit et utilise le site comme un membre classique
+  realAdmin(u) { return !!u && this.admins().indexOf(u) >= 0; }
+  realMod(u) { return this.realAdmin(u) || (!!u && ((this.getAdds().options || {}).mods || []).indexOf(u) >= 0); }
+  asMember(u) { return !!this.state.asMember && !!u && u === this.me(); }
+  isAdmin(u) { return this.realAdmin(u) && !this.asMember(u); }
+  isMod(u) { return this.realMod(u) && !this.asMember(u); }
+  setAsMember(on) { try { localStorage.setItem('mdt-asmember', on ? '1' : ''); } catch (e) {} this.setState({ asMember: !!on, menuOpen: false, view: on && this.state.view === 'admin' ? 'home' : this.state.view }); this.flash(on ? '👤 Mode membre : vous voyez le site comme tout le monde.' : '🛡️ Retour en mode admin.'); }
   async setRole(u, r) { if (!this.v2) return; const { error } = await this.sb.rpc('mdt_set_role', { n: u, r: r }); if (error) { window.alert(error.message); return; } this._members = null; this._v2Since = null; this.pullV2(true); }
 
   salonColors() {
@@ -8216,7 +8223,7 @@ class Component extends DCLogic {
       scopeMe: () => this.setState({ scope: 'me' }), scopeAll: () => this.setState({ scope: 'all' }),
       scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
-      isAdmin: this.isAdmin(me), isModMenu: this.isMod(me), admMenuTxt: (this.isAdmin(me) ? '🛡️ Administration' : '🚩 Modération') + (this.admAlerts() ? ' · ' + this.admAlerts() + ' à traiter' : ''), admDot: this.admAlerts() > 0,
+      isAdmin: this.isAdmin(me), isModMenu: this.isMod(me), canSwitchMode: this.realMod(me), switchModeTxt: this.state.asMember ? '🛡️ Revenir en mode admin' : '👤 Passer en mode membre', switchMode: () => this.setAsMember(!this.state.asMember), asMemberBar: !!this.state.asMember && this.realMod(me), leaveMember: () => this.setAsMember(false), admMenuTxt: (this.isAdmin(me) ? '🛡️ Administration' : '🚩 Modération') + (this.admAlerts() ? ' · ' + this.admAlerts() + ' à traiter' : ''), admDot: this.admAlerts() > 0,
       lfSpecOn: this.isAdmin(me) && !this.state.editLogId,
       admQ: this.state.admQ || '', setAdmQ: e => this.setState({ admQ: e.target.value }),
       ...(() => {
