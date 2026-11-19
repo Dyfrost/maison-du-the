@@ -2342,7 +2342,10 @@
             <sc-for list="{{ brList }}" as="br" hint-placeholder-count="3">
               <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 18px;">{{ br.name }}</b><span style="font-size: 14px; opacity: .65;">{{ br.n }}</span><sc-if value="{{ br.hasNear }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">{{ br.nearTxt }}</span></sc-if></div>
-                <sc-if value="{{ br.hasCities }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ br.cities }}" as="bc" hint-placeholder-count="2"><span style="font-size: 13.5px; padding: 4px 10px; border-radius: 999px; background: var(--color-surface); opacity: {{ bc.dim }};">📍 {{ bc.c }} <span style="opacity: .6;">{{ bc.n }}</span></span></sc-for></div></sc-if>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+                  <sc-for list="{{ br.cities }}" as="bc" hint-placeholder-count="2"><span style="font-size: 13.5px; padding: 4px 6px 4px 10px; border-radius: 999px; background: var(--color-surface); opacity: {{ bc.dim }}; display: inline-flex; align-items: center; gap: 4px;">📍 {{ bc.c }} <span style="opacity: .6;">{{ bc.n }}</span><sc-if value="{{ bc.canEdit }}" hint-placeholder-val="{{ true }}"><button onClick="{{ bc.ren }}" title="Renommer" aria-label="Renommer la ville" style="cursor: pointer; border: none; background: transparent; padding: 0 3px; font-size: 12px;">✏️</button><button onClick="{{ bc.del }}" title="Retirer" aria-label="Retirer la ville" style="cursor: pointer; border: none; background: transparent; padding: 0 3px; font-size: 13px; color: var(--color-accent-800);">✕</button></sc-if></span></sc-for>
+                  <span style="display: inline-flex; gap: 4px; align-items: center;"><input class="input" value="{{ br.cityDraft }}" onInput="{{ br.setCity }}" onKeyDown="{{ br.cityKey }}" placeholder="Ajouter une ville…" aria-label="Ajouter une ville" style="width: 170px; padding: 5px 12px; font-size: 13.5px;"><button class="btn btn-secondary" onClick="{{ br.addCity }}" style="white-space: nowrap; padding: 5px 12px; font-size: 13.5px;">＋</button></span>
+                </div>
                 <span style="font-size: 13.5px; opacity: .7;">{{ br.ex }}</span>
                 <sc-if value="{{ br.multi }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .8;">{{ br.spells }}</span></sc-if>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
@@ -2692,11 +2695,12 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Boutique</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : PALAIS DES THÉS" defaultValue="{{ form.marque }}" onInput="{{ setFz.marque }}" key="{{ formKey }}-marque" list="liste-boutiques">
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : PALAIS DES THÉS" value="{{ form.marque }}" onInput="{{ setF.marque }}" list="liste-boutiques">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ville de la boutique</span>
-                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Toulouse, Kuala Lumpur, en ligne" defaultValue="{{ form.ville }}" onInput="{{ setFz.ville }}" key="{{ formKey }}-ville" list="liste-villes">
+                <sc-if value="{{ fCity.has }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ fCity.chips }}" as="fc" hint-placeholder-count="2"><button type="button" onClick="{{ fc.go }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 14px; background: {{ fc.bg }}; color: {{ fc.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">📍 {{ fc.c }}</button></sc-for></div></sc-if>
+                <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ fCityPh }}" value="{{ form.ville }}" onInput="{{ setF.ville }}" list="liste-villes">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Réf. fournisseur</span>
@@ -3050,8 +3054,8 @@
           <h2 style="font-size: 22px; margin: 0;">✏️ Modifier « {{ pv.name }} »</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 14px;">
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Nom chez le fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.nom }}" onInput="{{ pe.set.nom }}" key="{{ pe.key }}-nom"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.marque }}" onInput="{{ pe.set.marque }}" key="{{ pe.key }}-marque" list="liste-boutiques"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Ville de la boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ville }}" onInput="{{ pe.set.ville }}" key="{{ pe.key }}-ville" list="liste-villes"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.marque }}" onInput="{{ pe.now.marque }}" list="liste-boutiques"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Ville de la boutique<sc-if value="{{ pe.city.has }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ pe.city.chips }}" as="pc" hint-placeholder-count="2"><button type="button" onClick="{{ pc.go }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 5px 11px; font-family: var(--font-body); font-size: 13.5px; background: {{ pc.bg }}; color: {{ pc.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">📍 {{ pc.c }}</button></sc-for></div></sc-if><input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.ville }}" onInput="{{ pe.now.ville }}" placeholder="Autre ville…" list="liste-villes"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ref }}" onInput="{{ pe.set.ref }}" key="{{ pe.key }}-ref"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.variante }}" onInput="{{ pe.set.variante }}" key="{{ pe.key }}-variante"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">🌡 Temp. conseillée (fabricant)<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 95" defaultValue="{{ pe.recoTemp }}" onInput="{{ pe.set.recoTemp }}" key="{{ pe.key }}-recoTemp"></label>
@@ -4794,7 +4798,21 @@ class Component extends DCLogic {
       brList: shown.map(g => { const nr = near(g); const draft = ed[g.key] != null ? ed[g.key] : g.name; const tgt = mg[g.key] || (nr[0] ? nr[0].key : '');
         const cities = {}; g.prods.forEach(p => { const c = String(p.ville || '').trim() || 'sans ville'; cities[c] = (cities[c] || 0) + 1; });
         const cl = Object.keys(cities).sort((x, y) => (x === 'sans ville') - (y === 'sans ville') || cities[y] - cities[x] || x.localeCompare(y, 'fr'));
-        return { cities: cl.map(c => ({ c: c, n: String(cities[c]), dim: c === 'sans ville' ? '.55' : '1' })), hasCities: cl.length > 0, name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
+        const reg = ((((a.options || {}).shopCities) || {})[g.key]) || [];
+        reg.forEach(c => { if (!Object.keys(cities).some(x => this.norm(x) === this.norm(c))) cities[c] = 0; });
+        const cl2 = Object.keys(cities).sort((x, y) => (x === 'sans ville') - (y === 'sans ville') || x.localeCompare(y, 'fr'));
+        const regOf = () => (((((this.getAdds().options || {}).shopCities) || {})[g.key]) || []).slice();
+        const cityRows = cl2.map(c => { const none = c === 'sans ville'; return { c: c, n: cities[c] ? String(cities[c]) : '0', dim: none ? '.55' : '1', canEdit: !none,
+          ren: () => { const v = window.prompt('Renommer la ville « ' + c + ' » de ' + g.name + ' :', c); if (v == null) return; const nv = this.cityFmt(v); if (!nv || nv === c) return;
+            const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(p => this.brandKey(p.marque) === g.key && this.norm(p.ville || '') === this.norm(c) ? Object.assign({}, p, { ville: nv }) : p) }));
+            const r = regOf().filter(x => this.norm(x) !== this.norm(c)); if (!r.some(x => this.norm(x) === this.norm(nv))) r.push(nv); this.setShopCities(g.key, r); this.setState({ brMsg: '✓ « ' + c + ' » renommée en « ' + nv + ' ».' }); },
+          del: () => { const n = cities[c] || 0; if (!window.confirm('Retirer « ' + c + ' » de ' + g.name + ' ?' + (n ? ' ' + n + ' thé(s) passeront « sans ville ».' : ''))) return;
+            if (n) { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(p => this.brandKey(p.marque) === g.key && this.norm(p.ville || '') === this.norm(c) ? Object.assign({}, p, { ville: '' }) : p) })); }
+            this.setShopCities(g.key, regOf().filter(x => this.norm(x) !== this.norm(c))); this.setState({ brMsg: '✓ « ' + c + ' » retirée de ' + g.name + '.' }); } }; });
+        const cdraft = (this.state.brCity || {})[g.key] || '';
+        const addCity = () => { const nv = this.cityFmt(cdraft); if (!nv) return; const r = regOf(); if (r.some(x => this.norm(x) === this.norm(nv)) || Object.keys(cities).some(x => this.norm(x) === this.norm(nv))) { this.setState({ brMsg: '« ' + nv + ' » est déjà dans la liste de ' + g.name + '.' }); return; }
+          this.setShopCities(g.key, r.concat([nv])); this.setState(st => ({ brCity: Object.assign({}, st.brCity, { [g.key]: '' }), brMsg: '✓ « ' + nv + ' » ajoutée à ' + g.name + '.' })); };
+        return { cities: cityRows, hasCities: cityRows.length > 0, cityDraft: cdraft, setCity: e => { const v = e.target.value; this.setState(st => ({ brCity: Object.assign({}, st.brCity, { [g.key]: v }) })); }, addCity: addCity, cityKey: e => { if (e.key === 'Enter') addCity(); }, name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
           ex: g.prods.slice(0, 5).map(p => p.nom || p.the).join(' · ') + (g.prods.length > 5 ? '…' : ''),
           hasNear: nr.length > 0, nearTxt: nr.length ? '⚠️ Doublon probable de « ' + nr.map(h => h.name).join(' », « ') + ' »' : '',
           draft: draft, setDraft: e => { const v = this.upInput(e); this.setState(st => ({ brEdit: Object.assign({}, st.brEdit, { [g.key]: v }) })); },
@@ -7096,6 +7114,19 @@ class Component extends DCLogic {
   // une dégustation ne peut pas avoir son auteur parmi les participants (ex. auteur changé dans l'admin)
   // met le champ en majuscules pendant la frappe sans déplacer le curseur
   upInput(e) { const el = e.target; const up = String(el.value).toLocaleUpperCase('fr-FR'); if (up !== el.value) { const a = el.selectionStart, b = el.selectionEnd; el.value = up; try { el.setSelectionRange(a, b); } catch (x) {} } return up; }
+  // villes d'une boutique : liste gérée par l'admin + villes déjà saisies sur les thés
+  shopCities(shop) {
+    const k = this.brandKey(shop); if (!k) return []; const a = this.getAdds(); const reg = (((a.options || {}).shopCities) || {})[k] || [];
+    const out = []; const add = c => { c = String(c || '').trim(); if (c && !out.some(x => this.norm(x) === this.norm(c))) out.push(c); };
+    reg.forEach(add); a.prods.forEach(p => { if (this.brandKey(p.marque) === k) add(p.ville); });
+    return out.sort((x, y) => x.localeCompare(y, 'fr'));
+  }
+  cityPick(shop, cur, pick) {
+    const list = this.shopCities(shop);
+    return { show: !!String(shop || '').trim(), has: list.length > 0, none: !!String(shop || '').trim() && !list.length,
+      chips: list.map(c => { const on = this.norm(c) === this.norm(cur || ''); return { c: c, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', go: () => pick(on ? '' : c) }; }) };
+  }
+  setShopCities(k, list) { const all = Object.assign({}, (this.getAdds().options || {}).shopCities || {}); if (list.length) all[k] = list; else delete all[k]; this.setOpt('shopCities', all); }
   shopTxt(m, v) { m = String(m || '').trim(); v = String(v || '').trim(); return m ? m + (v ? ' · ' + v : '') : (v || ''); }
   cityFmt(v) { v = String(v || '').trim().replace(/\s+/g, ' '); const small = ['de', 'du', 'des', 'la', 'le', 'les', 'en', 'sur', 'sous', 'lès', 'et', 'aux', 'au'];
     return v.split(/([ -])/).map((w, i) => (i > 0 && small.indexOf(w.toLowerCase()) >= 0) || /^[ -]$/.test(w) || !w ? w : w.charAt(0).toLocaleUpperCase('fr-FR') + w.slice(1)).join(''); }
@@ -7129,6 +7160,8 @@ class Component extends DCLogic {
     const tp = this.tagPicker(merged().tags, tags => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: tags }) }); }, 'tpOpenP');
     return { tp: tp, key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ville: pe.ville, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
       set: ['nom', 'marque', 'ville', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
+      now: ['marque', 'ville'].reduce((o, k) => { o[k] = e => { const v = e.target.value; const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { [k]: v }) }); }; return o; }, {}),
+      city: this.cityPick(pe.marque, pe.ville, c => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { ville: c }) }); }),
       tagsCount: pe.tags.length ? pe.tags.length + ' sélectionné' + (pe.tags.length > 1 ? 's' : '') : 'cliquez pour en choisir',
       chips: all.concat(extra).map(t => { const on = pe.tags.indexOf(t) >= 0; return { label: (on ? '✓ ' : '') + t, on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? '#fff' : 'var(--color-text)', toggle: () => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: on ? m.tags.filter(x => x !== t) : m.tags.concat([t]) }) }); } }; }),
       newTag: this.state.prodNewTag || '', setNewTag: e => this.setState({ prodNewTag: e.target.value }), newTagKey: e => { if (e.key === 'Enter') { e.preventDefault(); addNew(); } }, addTag: addNew,
@@ -7646,7 +7679,7 @@ class Component extends DCLogic {
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
       shareToast: this.state.shareToast || '',
-      dlShops: Array.from(new Set(this.getAdds().prods.map(p => p.marque).filter(Boolean))).sort(), dlCities: Array.from(new Set(this.getAdds().prods.map(p => p.ville).filter(Boolean))).sort((x, y) => x.localeCompare(y, 'fr')), newVer: !!this.state.newVer, doUpdate: () => this.applyUpdate(true),
+      dlShops: Array.from(new Set(this.getAdds().prods.map(p => p.marque).filter(Boolean))).sort(), dlCities: Array.from(new Set(this.getAdds().prods.map(p => p.ville).filter(Boolean).concat(Object.values(((this.getAdds().options || {}).shopCities) || {}).reduce((t, l) => t.concat(l), [])))).sort((x, y) => x.localeCompare(y, 'fr')), newVer: !!this.state.newVer, doUpdate: () => this.applyUpdate(true),
       menuGear: () => this.setState({ menuOpen: false, view: 'gear', gearEdit: null, gearMsg: '' }),
       isGear: v === 'gear', isGearItem: v === 'gearItem',
       gi: v === 'gearItem' ? this.gearItemView(me) : {},
@@ -8036,6 +8069,8 @@ class Component extends DCLogic {
       setFz: ['recoTemp', 'recoQty', 'recoTimes', 'prodComment', 'variante', 'nomFour', 'marque', 'ville', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'lot', 'boutique', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'vNom', 'vTrad', 'vProfil', 'vDesc', 'prodDate', 'annee', 'format'].reduce((o, k) => { o[k] = this.lazySet('form', k); return o; }, {}),
       lfKey: 'lf' + (this.state.lfRev || 0),
       formKey: 'f' + (this.state.formRev || 0),
+      fCity: this.cityPick((this.state.form || {}).marque, (this.state.form || {}).ville, c => this.setState(s => ({ form: Object.assign({}, s.form, { ville: c }) }))),
+      fCityPh: (this.state.form || {}).marque && this.shopCities((this.state.form || {}).marque).length ? 'Votre ville n’y est pas ? Tapez-la ici' : 'ex : Toulouse, Kuala Lumpur, en ligne',
       setL: ['lotId', 'date', 'heure', 'note', 'infusion', 'temps', 'temperature', 'qty', 'technique', 'repas', 'avis'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ lf: k === 'lotId' ? this.lfWithLot(s.lf || {}, val) : Object.assign({}, s.lf, { [k]: val }) })); }; return o; }, {}),
       lotOptions: (() => {
         const q = this.norm(this.state.lotQ || '').split(/\s+/).filter(Boolean);
