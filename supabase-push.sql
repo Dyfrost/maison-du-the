@@ -236,3 +236,17 @@ select cron.schedule('mdt-push', '* * * * *', $cron$
   select net.http_post(url := 'https://hnyomaobuftunuhwkzox.supabase.co/functions/v1/bright-endpoint',
                        headers := '{"Content-Type": "application/json"}'::jsonb, body := '{}'::jsonb);
 $cron$);
+
+-- ---------- Envoi immédiat : dès qu'une notification entre dans la file, la fonction est appelée
+-- (pg_net est asynchrone : l'enregistrement n'attend pas l'envoi ; la tâche de chaque minute reste en filet de sécurité)
+create or replace function public.mdt_notif_kick() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  perform net.http_post(url := 'https://hnyomaobuftunuhwkzox.supabase.co/functions/v1/bright-endpoint',
+                        headers := '{"Content-Type": "application/json"}'::jsonb, body := '{}'::jsonb);
+  return null;
+exception when others then return null;
+end $$;
+drop trigger if exists mdt_notif_kick on public.mdt_notif;
+create trigger mdt_notif_kick after insert on public.mdt_notif
+for each statement execute function public.mdt_notif_kick();
