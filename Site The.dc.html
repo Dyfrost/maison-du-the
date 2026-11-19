@@ -138,6 +138,17 @@
   .mdt-tip.on { opacity: 1; transform: none; }
   .mdt-tip b { font-size: 12px; letter-spacing: .04em; }
   .tag-accent { cursor: help; }
+  .sl-nav { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .sl-pill { cursor: pointer; border: none; white-space: nowrap; border-radius: 999px; padding: 9px 16px; font-family: var(--font-heading); font-size: 15px; transition: transform .12s; }
+  .sl-pill:hover { transform: translateY(-1px); }
+  .sl-count { font-size: 13px; opacity: .6; margin-left: 4px; }
+  .sl-lbl { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
+  .mb-card { padding: 14px 18px; }
+  .mb-av { flex: none; width: 50px; height: 50px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 22px; }
+  .mb-role { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--color-divider); }
+  .mb-card .sac-more { flex: none; }
+  .mb-menu { bottom: auto; top: calc(100% + 8px); }
+  @media (max-width: 720px) { .mb-card { padding: 12px 14px; } .mb-av { width: 42px; height: 42px; font-size: 18px; } .mb-card .sac-head { align-items: center; } }
   .tp { display: flex; flex-direction: column; gap: 8px; }
   .tp-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .tp-lbl { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px; }
@@ -263,7 +274,7 @@
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
-            <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon</button>
+            <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon{{ salonBadge }}</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
@@ -960,10 +971,6 @@
           <h1 style="font-size: 46px; margin: 0;">{{ frTitle }}</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0;">{{ frIntro }}</p>
         </div>
-        <div role="tablist" aria-label="Amis ou salon" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px;">
-          <button role="tab" aria-selected="{{ frTabF }}" onClick="{{ frShowF }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ frFBg }}; color: {{ frFFg }};">👥 Amis{{ frFBadge }}</button>
-          <button role="tab" aria-selected="{{ frTabS }}" onClick="{{ frShowS }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ frSBg }}; color: {{ frSFg }};">🏮 Salon{{ frSBadge }}</button>
-        </div>
         <sc-if value="{{ frTabF }}" hint-placeholder-val="{{ true }}">
         <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; flex-direction: row; align-items: center; flex-wrap: wrap;">
           <span style="width: 48px; height: 48px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 20px;">{{ fr.meInitial }}</span>
@@ -1012,55 +1019,57 @@
           </section>
         </sc-if>
         </sc-if>
-        <sc-if value="{{ frTabS }}" hint-placeholder-val="{{ false }}">
-        <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
-          <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 24px; margin: 0;">Mon salon</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Un salon réunit quelques amis, comme un clan. On ne peut être que dans un seul salon ; celui qui le crée en est le chef 👑. Son nom s’affiche à côté du pseudo.</p></div>
-          <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
-            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><span style="font-family: var(--font-heading); font-size: 28px;">{{ sl.name }}</span><span style="font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: {{ sl.tagBg }}; color: {{ sl.tagFg }};">{{ sl.name }}</span><span style="font-size: 14px; opacity: .7;">{{ sl.count }}</span></div>
-            <sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Couleur du tag</span><div role="radiogroup" aria-label="Couleur du tag" style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ sl.colors }}" as="c" hint-placeholder-count="10"><button role="radio" aria-checked="{{ c.on }}" aria-label="{{ c.name }}" title="{{ c.name }}" onClick="{{ c.pick }}" style="cursor: pointer; width: 26px; height: 26px; border-radius: 50%; border: none; padding: 0; background: {{ c.bg }}; box-shadow: {{ c.ring }}; color: {{ c.fg }}; font-size: 11px; font-weight: 700;">A</button></sc-for></div></div></sc-if>
-            <sc-if value="{{ sl.descEditing }}" hint-placeholder-val="{{ false }}">
-              <textarea class="input" rows="3" value="{{ sl.descDraft }}" onInput="{{ sl.setDescDraft }}" placeholder="La devise du salon, vos thés fétiches, vos rituels…" aria-label="Description du salon" style="resize: vertical; border-radius: 20px;"></textarea>
-              <div style="display: flex; gap: 10px;"><button class="btn btn-primary" onClick="{{ sl.saveDesc }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sl.cancelDesc }}" style="white-space: nowrap;">Annuler</button></div>
-            </sc-if>
-            <sc-if value="{{ sl.descShow }}" hint-placeholder-val="{{ true }}">
-              <sc-if value="{{ sl.desc }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 16px; line-height: 1.6; white-space: pre-wrap; text-wrap: pretty; border-left: 3px solid var(--color-accent); padding-left: 12px;">{{ sl.desc }}</p></sc-if>
-              <sc-if value="{{ sl.canDesc }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sl.editDesc }}" style="align-self: flex-start; white-space: nowrap; padding-left: 0; font-size: 14px;">{{ sl.descBtn }}</button></sc-if>
-            </sc-if>
-            <sc-for list="{{ sl.members }}" as="mb" hint-placeholder-count="2">
-              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0;">
-                <button onClick="{{ mb.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 17px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ mb.label }}<sc-if value="{{ mb.badge }}" hint-placeholder-val="{{ false }}"> <span style="font-size: 13px; padding: 2px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--color-accent); margin-left: 4px;">{{ mb.badge }}</span></sc-if></button>
-                <sc-if value="{{ mb.canManage }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ mb.makeChief }}" style="white-space: nowrap; font-size: 13px;">Nommer chef</button><button class="btn btn-ghost" onClick="{{ mb.kick }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Exclure</button></sc-if>
-              </div>
-            </sc-for>
-            <sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Inviter un ami</span>
-                <sc-if value="{{ sl.noInvitable }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">Aucun ami disponible : il faut être amis et que la personne ne soit pas déjà dans un salon.</span></sc-if>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ sl.invitable }}" as="iv" hint-placeholder-count="1"><button class="btn btn-secondary" onClick="{{ iv.invite }}" style="white-space: nowrap;">＋ {{ iv.name }}</button></sc-for></div>
-                <sc-if value="{{ sl.hasPending }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .75;">Invitations en attente : {{ sl.pending }}</span></sc-if>
-              </div>
-            </sc-if>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; padding-top: 4px;">
-              <button class="btn btn-ghost" onClick="{{ sl.leave }}" style="white-space: nowrap; color: var(--color-accent-800); padding-left: 0;">Quitter le salon</button>
-              <sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ sl.rename }}" style="white-space: nowrap;">Renommer</button><button class="btn btn-ghost" onClick="{{ sl.dissolve }}" style="white-space: nowrap; color: var(--color-accent-800);">Dissoudre</button></sc-if>
-            </div>
-          </sc-if>
-          <sc-if value="{{ sl.none }}" hint-placeholder-val="{{ true }}">
+      </div>
+    </sc-if>
+
+
+    <sc-if value="{{ isSalon }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <h1 style="font-size: 46px; margin: 0;">Salons</h1>
+          <p style="font-size: 16px; opacity: .72; margin: 0;">Un salon réunit quelques amis autour du thé. Vous pouvez en rejoindre jusqu’à 5 et en créer 5 ; le salon choisi ici sert pour vos stats « Dans mon salon ».</p>
+        </div>
+        <nav class="sl-nav" aria-label="Mes salons">
+          <sc-for list="{{ sl.nav }}" as="sn" hint-placeholder-count="2"><button class="sl-pill" onClick="{{ sn.go }}" aria-current="{{ sn.cur }}" style="background: {{ sn.bg }}; color: {{ sn.fg }}; box-shadow: {{ sn.ring }};">{{ sn.name }}</button></sc-for>
+          <button class="sl-pill" onClick="{{ sl.toggleAdd }}" style="background: {{ sl.navAddBg }}; color: {{ sl.navAddFg }}; box-shadow: inset 0 0 0 1.5px var(--color-divider);">{{ sl.navAddLbl }}</button>
+          <span class="sl-count">{{ sl.navCount }}</span>
+        </nav>
+        <sc-if value="{{ sl.msg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px; background: var(--color-accent-100); border-radius: 16px; padding: 10px 14px;">{{ sl.msg }}</p></sc-if>
+
+        <sc-if value="{{ sl.showAdd }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+            <h2 style="font-size: 24px; margin: 0;">Rejoindre ou créer un salon</h2>
+            <span style="font-size: 13.5px; opacity: .7;">{{ sl.quotaTxt }}</span>
+            <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Invitations reçues</span>
+            <sc-if value="{{ sl.noInvites }}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; opacity: .7;">Aucune invitation pour l’instant : un chef de salon peut vous inviter si vous êtes amis.</span></sc-if>
             <sc-for list="{{ sl.invites }}" as="iv" hint-placeholder-count="0">
-              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
-                <span style="font-size: 16px; margin-right: auto;"><b>{{ iv.chief }}</b> vous invite dans le salon <b>{{ iv.name }}</b></span>
+              <div class="sac" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px;">
+                <span style="font-size: 16px; margin-right: auto;"><b>{{ iv.chief }}</b> vous invite dans <b>{{ iv.name }}</b> <span style="opacity: .6; font-size: 13.5px;">· {{ iv.n }}</span></span>
                 <button class="btn btn-primary" onClick="{{ iv.accept }}" style="white-space: nowrap;">Rejoindre</button>
                 <button class="btn btn-ghost" onClick="{{ iv.refuse }}" style="white-space: nowrap;">Refuser</button>
               </div>
             </sc-for>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-top: 4px;">Créer un salon</span>
+            <sc-if value="{{ sl.canCreate }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 10px; flex-wrap: wrap;">
               <input class="input" value="{{ sl.q }}" onInput="{{ sl.setQ }}" placeholder="Nom du salon" aria-label="Nom du salon" style="flex: 1 1 200px; min-width: 0;">
-              <button class="btn btn-primary" onClick="{{ sl.create }}" style="white-space: nowrap;">Créer un salon</button>
-            </div>
-          </sc-if>
-          <sc-if value="{{ sl.msg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px;">{{ sl.msg }}</p></sc-if>
-        </section>
-            <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
+              <button class="btn btn-primary" onClick="{{ sl.create }}" style="white-space: nowrap;">Créer le salon</button>
+            </div></sc-if>
+            <sc-if value="{{ sl.cantCreate }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .75;">{{ sl.limitTxt }}</span></sc-if>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ sl.hideAdd }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span style="font-family: var(--font-heading); font-size: 30px; line-height: 1.1;">{{ sl.name }}</span>
+            <span style="font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: {{ sl.tagBg }}; color: {{ sl.tagFg }};">{{ sl.name }}</span>
+            <span style="font-size: 14px; opacity: .65;">{{ sl.count }} · chef : {{ sl.chief }}</span>
+          </div>
+          <div role="tablist" aria-label="Sections du salon" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px; flex-wrap: wrap;">
+            <sc-for list="{{ sl.tabs }}" as="st" hint-placeholder-count="3"><button role="tab" aria-selected="{{ st.on }}" onClick="{{ st.go }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ st.bg }}; color: {{ st.fg }};">{{ st.label }}</button></sc-for>
+          </div>
+
+          <sc-if value="{{ sl.tabAcc }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ sl.hasDesc }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; line-height: 1.6; white-space: pre-wrap; text-wrap: pretty; border-left: 3px solid {{ sl.tagBg }}; padding-left: 14px;">{{ sl.desc }}</p></sc-if>
             <section style="display: flex; flex-direction: column; gap: 12px;">
               <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0;">🐸 L’enclos des tea pets</h2><span style="font-size: 13px; opacity: .65;">{{ sl.petsTxt }}</span></div>
               <div class="tp-wrap">
@@ -1085,8 +1094,6 @@
               </sc-if>
               </div>
             </section>
-            </sc-if>
-            <sc-if value="{{ sl.has }}" hint-placeholder-val="{{ false }}">
             <section style="display: flex; flex-direction: column; gap: 12px;">
               <h2 style="font-size: 24px; margin: 0;">Stats communes</h2>
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;">
@@ -1096,7 +1103,56 @@
                 </sc-for>
               </div>
             </section>
-            </sc-if>
+          </sc-if>
+
+          <sc-if value="{{ sl.tabMem }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <sc-for list="{{ sl.members }}" as="mb" hint-placeholder-count="3">
+                <div class="sac mb-card">
+                  <div class="sac-head">
+                    <span class="mb-av" style="background: {{ mb.avBg }};">{{ mb.initial }}</span>
+                    <div class="sac-ttl">
+                      <div class="sac-nm"><button class="sac-name" onClick="{{ mb.open }}">{{ mb.tag }}</button><sc-if value="{{ mb.badge }}" hint-placeholder-val="{{ false }}"><span style="font-size: 16px;">{{ mb.badge }}</span></sc-if><span class="mb-role" style="background: {{ mb.roleBg }}; color: {{ mb.roleFg }};">{{ mb.role }}</span><sc-if value="{{ mb.you }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: var(--color-accent-100);">vous</span></sc-if></div>
+                      <span class="sac-sub">{{ mb.sub }}</span>
+                    </div>
+                    <div class="sac-score"><b>{{ mb.nLogs }}</b><span>{{ mb.nLbl }}</span></div>
+                    <div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ mb.menuToggle }}" aria-haspopup="true" aria-expanded="{{ mb.menuOpen }}" aria-label="Actions">⋯</button><sc-if value="{{ mb.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ mb.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu mb-menu" role="menu">
+                      <button role="menuitem" onClick="{{ mb.open }}">🙂 Voir le profil<small>Ses thés, son matériel, ses badges</small></button>
+                      <sc-if value="{{ mb.canManage }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ mb.makeChief }}">👑 Nommer chef<small>Il pourra gérer les options du salon</small></button><button role="menuitem" class="danger" onClick="{{ mb.kick }}">🚪 Exclure du salon</button></sc-if>
+                      <sc-if value="{{ mb.isSelf }}" hint-placeholder-val="{{ false }}"><button role="menuitem" class="danger" onClick="{{ mb.leave }}">🚪 Quitter le salon</button></sc-if>
+                    </div></sc-if></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <section style="background: var(--color-surface); border-radius: 26px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+              <h2 style="font-size: 20px; margin: 0;">Inviter des amis</h2>
+              <sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}">
+                <sc-if value="{{ sl.noInvitable }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">Tous vos amis sont déjà là ou invités. Ajoutez des amis depuis le menu Amis.</span></sc-if>
+                <sc-if value="{{ sl.hasInvitable }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ sl.invitable }}" as="iv" hint-placeholder-count="1"><button class="btn btn-secondary" onClick="{{ iv.invite }}" style="white-space: nowrap; background: var(--color-bg);">＋ {{ iv.name }}</button></sc-for></div></sc-if>
+              </sc-if>
+              <sc-if value="{{ sl.notChief }}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; opacity: .7;">Seul le chef du salon peut inviter : demandez à {{ sl.chief }}.</span></sc-if>
+              <sc-if value="{{ sl.hasPending }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><span style="font-size: 13.5px; opacity: .7;">En attente :</span><sc-for list="{{ sl.pending }}" as="pd" hint-placeholder-count="1"><span style="display: inline-flex; align-items: center; gap: 4px; background: var(--color-bg); border-radius: 999px; padding: 4px 6px 4px 12px; font-size: 14px;">{{ pd.name }}<sc-if value="{{ sl.isChief }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pd.cancel }}" title="Annuler l’invitation" aria-label="Annuler l’invitation" style="cursor: pointer; border: none; background: transparent; font-size: 13px; color: var(--color-text); opacity: .6;">✕</button></sc-if></span></sc-for></div></sc-if>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{ sl.tabOpt }}" hint-placeholder-val="{{ false }}">
+            <section style="background: var(--color-surface); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 18px;">
+              <div style="display: flex; flex-direction: column; gap: 8px;"><span class="sl-lbl">Nom du salon</span>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;"><input class="input" value="{{ sl.renameDraft }}" onInput="{{ sl.setRename }}" aria-label="Nom du salon" style="flex: 1 1 220px; min-width: 0;"><button class="btn btn-primary" onClick="{{ sl.rename }}" style="white-space: nowrap;">Renommer</button></div></div>
+              <div style="display: flex; flex-direction: column; gap: 8px;"><span class="sl-lbl">Couleur du tag</span>
+                <div role="radiogroup" aria-label="Couleur du tag" style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ sl.colors }}" as="co" hint-placeholder-count="6"><button role="radio" aria-checked="{{ co.on }}" onClick="{{ co.pick }}" title="{{ co.name }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 600; background: {{ co.bg }}; color: {{ co.fg }}; box-shadow: {{ co.ring }};">{{ co.name }}</button></sc-for></div></div>
+              <div style="display: flex; flex-direction: column; gap: 8px;"><span class="sl-lbl">Description (affichée sur l’accueil)</span>
+                <sc-if value="{{ sl.descEditing }}" hint-placeholder-val="{{ false }}">
+                  <textarea class="input" rows="3" value="{{ sl.descDraft }}" onInput="{{ sl.setDescDraft }}" placeholder="La devise du salon, vos thés fétiches, vos rituels…" aria-label="Description du salon" style="resize: vertical; border-radius: 20px;"></textarea>
+                  <div style="display: flex; gap: 10px;"><button class="btn btn-primary" onClick="{{ sl.saveDesc }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sl.cancelDesc }}" style="white-space: nowrap;">Annuler</button></div>
+                </sc-if>
+                <sc-if value="{{ sl.descShow }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ sl.hasDesc }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; line-height: 1.6; white-space: pre-wrap; opacity: .85;">{{ sl.desc }}</p></sc-if><button class="btn btn-secondary" onClick="{{ sl.editDesc }}" style="align-self: flex-start; white-space: nowrap; background: var(--color-bg);">{{ sl.descBtn }}</button></sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--color-divider); padding-top: 14px;"><span class="sl-lbl" style="color: var(--color-accent-800);">Zone sensible</span>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;"><button class="btn btn-secondary" onClick="{{ sl.leave }}" style="white-space: nowrap; background: var(--color-bg);">Quitter le salon</button><button class="btn btn-secondary" onClick="{{ sl.dissolve }}" style="white-space: nowrap; background: var(--color-bg); color: var(--color-accent-800);">Dissoudre le salon</button></div></div>
+            </section>
+          </sc-if>
         </sc-if>
       </div>
     </sc-if>
@@ -4211,7 +4267,7 @@ class Component extends DCLogic {
     return out;
   }
   lfGearIds() { const lf = this.state.lf || {}; return lf.gearIds || (lf.gearId ? [lf.gearId] : []); }
-  gearUsable(u) { const sal = this.salonOf(u); const mem = sal ? sal.members : [u]; return (this.getAdds().gear || []).filter(g => g.owner === u || mem.indexOf(g.owner) >= 0); }
+  gearUsable(u) { const mem = this.salonMates(u); return (this.getAdds().gear || []).filter(g => g.owner === u || mem.indexOf(g.owner) >= 0); }
   gearOf(u) { return (this.getAdds().gear || []).filter(g => g.owner === u); }
   logGears(l) {
     const all = this.getAdds().gear || [];
@@ -4247,7 +4303,7 @@ class Component extends DCLogic {
     return Object.assign({}, l, { infusion: rest.join(', '), technique: nt });
   }
   logGearLinks(l, me) {
-    const sal = this.salonOf(me); const mem = sal ? sal.members : [me];
+    const mem = this.salonMates(me);
     const order = ['theiere', 'tasse', 'bateau', 'autre', 'teapet'];
     return this.logGears(l).slice().sort((x, y) => order.indexOf(this.gearCatKey(x.type)) - order.indexOf(this.gearCatKey(y.type))).map(g => { const can = g.owner === me || mem.indexOf(g.owner) >= 0; return { name: this.gearCat(g)[1] + ' ' + g.name, title: this.gearCat(g)[2] + ' · ' + g.name + ' (à ' + g.owner + ')', can: can, cannot: !can, open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; });
   }
@@ -4376,8 +4432,13 @@ class Component extends DCLogic {
   salonColor(sal) { const c = this.salonColors()[(sal && sal.color) || 'terre'] || this.salonColors().terre; return { bg: c[1], fg: c[2] }; }
 
   salons() { return ((this.getAdds().options || {}).salons) || []; }
-  salonOf(u) { return this.salons().find(x => (x.members || []).indexOf(u) >= 0) || null; }
-  salonInvitesFor(u) { return this.salonOf(u) ? [] : this.salons().filter(x => (x.invites || []).indexOf(u) >= 0); }
+  salonsOf(u) { return this.salons().filter(x => (x.members || []).indexOf(u) >= 0); }
+  // Salon « actif » d'une personne : celui choisi dans le navigateur (profil.salonActive), sinon le premier
+  salonOf(u) { const L = this.salonsOf(u); if (!L.length) return null; const act = ((((this.getAdds().options || {}).profiles || {})[u]) || {}).salonActive; return L.find(x => x.id === act) || L[0]; }
+  salonMates(u) { const set = new Set([u]); this.salonsOf(u).forEach(x => (x.members || []).forEach(m => set.add(m))); return Array.from(set); }
+  salonCreatedBy(u) { return this.salons().filter(x => (x.creator || x.chief) === u).length; }
+  salonInvitesFor(u) { return this.salons().filter(x => (x.invites || []).indexOf(u) >= 0 && (x.members || []).indexOf(u) < 0); }
+  setActiveSalon(id) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { salonActive: id }); this.setOpt('profiles', all); }
   setSalons(list) { this.setOpt('salons', list.filter(x => (x.members || []).length)); }
 
   salonStats(sal) {
@@ -4426,32 +4487,58 @@ class Component extends DCLogic {
   }
 
   salonView(me) {
-    const all = this.salons();
-    const mine = this.salonOf(me);
-    const upd = (fn) => this.setSalons(this.salons().map(x => mine && x.id === mine.id ? fn(Object.assign({}, x)) : x));
+    const all = this.salons(); const MAX = 5;
+    const mineL = this.salonsOf(me); const mine = this.salonOf(me);
+    const createdN = this.salonCreatedBy(me);
+    const inv = this.salonInvitesFor(me);
     const base = { q: this.state.slQ || '', setQ: e => this.setState({ slQ: e.target.value, slMsg: '' }), msg: this.state.slMsg || '' };
-    if (!mine) {
-      const inv = this.salonInvitesFor(me);
-      return Object.assign(base, { has: false, none: true,
-        invites: inv.map(x => ({ name: x.name, chief: x.chief,
-          accept: () => { this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { members: y.members.concat([me]), invites: (y.invites || []).filter(i => i !== me) }) : Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) }))); this.setState({ slMsg: 'Bienvenue dans le salon ' + x.name + ' !' }); },
-          refuse: () => this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) }) : y)) })),
-        create: () => {
-          const n = String(this.state.slQ || '').trim();
-          if (!n) return this.setState({ slMsg: 'Donnez un nom au salon.' });
-          if (all.some(x => this.norm(x.name) === this.norm(n))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' });
-          this.setSalons(all.map(y => Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) })).concat([{ id: 'sal' + Date.now().toString(36), name: n, chief: me, members: [me], invites: [], ts: new Date().toISOString() }]));
-          this.setState({ slQ: '', slMsg: 'Salon « ' + n + ' » créé : vous en êtes le chef 👑.' });
-        } });
-    }
+    const go = id => { this.setActiveSalon(id); this.setState({ slAdd: false, slMenu: '', slMsg: '', slRename: null, slDescEdit: false }); };
+    const nav = mineL.map(x => { const c = this.salonColor(x); const on = mine && x.id === mine.id && !this.state.slAdd; return { name: (x.chief === me ? '👑 ' : '') + x.name, bg: on ? c.bg : 'transparent', fg: on ? c.fg : 'var(--color-text)', ring: on ? 'inset 0 0 0 2px ' + c.fg + ', 0 3px 10px rgba(0,0,0,.12)' : 'inset 0 0 0 1.5px ' + c.bg, cur: on ? 'page' : 'false', go: () => go(x.id) }; });
+    const canJoin = mineL.length < MAX, canCreate = canJoin && createdN < MAX;
+    const showAdd = !mine || !!this.state.slAdd;
+    const addPart = { nav: nav, navCount: mineL.length + ' / ' + MAX + ' salons', navAddLbl: '＋ Rejoindre ou créer' + (inv.length ? ' (' + inv.length + ')' : ''),
+      navAddBg: showAdd ? 'var(--color-accent)' : 'var(--color-bg)', navAddFg: showAdd ? 'var(--color-bg)' : 'var(--color-text)',
+      toggleAdd: () => this.setState({ slAdd: !this.state.slAdd, slMsg: '' }), showAdd: showAdd, hideAdd: !showAdd,
+      invites: inv.map(x => ({ name: x.name, chief: x.chief, n: (x.members || []).length + ' membre' + ((x.members || []).length > 1 ? 's' : ''),
+        accept: () => { if (!canJoin) return this.setState({ slMsg: 'Vous êtes déjà dans ' + MAX + ' salons : quittez-en un pour rejoindre celui-ci.' }); this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { members: y.members.concat([me]), invites: (y.invites || []).filter(i => i !== me) }) : y)); this.setActiveSalon(x.id); this.setState({ slAdd: false, slTab: 'acc', slMsg: 'Bienvenue dans le salon ' + x.name + ' !' }); },
+        refuse: () => this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { invites: (y.invites || []).filter(i => i !== me) }) : y)) })),
+      hasInvites: inv.length > 0, noInvites: !inv.length, canCreate: canCreate, cantCreate: !canCreate,
+      limitTxt: !canJoin ? 'Vous êtes dans ' + MAX + ' salons, le maximum : quittez-en un pour en rejoindre ou en créer un autre.' : 'Vous avez déjà créé ' + MAX + ' salons, le maximum.',
+      quotaTxt: 'Salons rejoints : ' + mineL.length + ' / ' + MAX + ' · salons créés : ' + createdN + ' / ' + MAX,
+      create: () => {
+        const n = String(this.state.slQ || '').trim();
+        if (!canCreate) return;
+        if (!n) return this.setState({ slMsg: 'Donnez un nom au salon.' });
+        if (all.some(x => this.norm(x.name) === this.norm(n))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' });
+        const id = 'sal' + Date.now().toString(36);
+        this.setSalons(all.concat([{ id: id, name: n, chief: me, creator: me, members: [me], invites: [], ts: new Date().toISOString() }]));
+        this.setActiveSalon(id);
+        this.setState({ slQ: '', slAdd: false, slTab: 'acc', slMsg: 'Salon « ' + n + ' » créé : vous en êtes le chef 👑.' });
+      } };
+    if (!mine) return Object.assign(base, addPart, { has: false, none: true, members: [], stats: [], tabs: [], petCards: [] });
+    const upd = (fn) => this.setSalons(this.salons().map(x => x.id === mine.id ? fn(Object.assign({}, x)) : x));
     const isChief = mine.chief === me;
     const friends = this.friendsOf(me);
-    const invitable = friends.filter(u => !this.salonOf(u) && (mine.invites || []).indexOf(u) < 0);
+    const invitable = friends.filter(u => (mine.members || []).indexOf(u) < 0 && (mine.invites || []).indexOf(u) < 0);
     const n = mine.members.length;
-    const descEditing = isChief && !!this.state.slDescEdit;
+    const tab = this.state.slTab === 'mem' ? 'mem' : (this.state.slTab === 'opt' && isChief) ? 'opt' : 'acc';
+    const tabs = [['acc', '🏠 Accueil'], ['mem', '👥 Membres · ' + n]].concat(isChief ? [['opt', '⚙️ Options']] : []).map(t => ({ label: t[1], on: tab === t[0], bg: tab === t[0] ? 'var(--color-accent)' : 'transparent', fg: tab === t[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ slTab: t[0], slMenu: '', slMsg: '' }) }));
     const sc = this.salonColor(mine);
     const pets = (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet' && mine.members.indexOf(g.owner) >= 0);
-    return Object.assign(base, { tagBg: sc.bg, tagFg: sc.fg,
+    // stats par membre (dans ce salon)
+    const a = this.getAdds(); const M = mine.members;
+    const inSalon = l => [l.author].concat(l.with || []).some(x => M.indexOf(x) >= 0);
+    const memStat = u => { const ls = a.logs.filter(l => (l.author === u || (l.with || []).indexOf(u) >= 0) && inSalon(l)); const together = ls.filter(l => [l.author].concat(l.with || []).filter(x => x !== u && M.indexOf(x) >= 0).length > 0);
+      const last = ls.map(l => l.date).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d || '')).sort().pop(); const sacs = a.sachets.filter(o => o.owner === u && !o.empty).length; return { n: ls.length, together: together.length, last: last, sacs: sacs }; };
+    const menuFor = this.state.slMenu || '';
+    const leave = () => {
+      const rest = mine.members.filter(m => m !== me);
+      if (!window.confirm(rest.length ? (isChief ? 'Quitter le salon ? ' + rest[0] + ' deviendra chef.' : 'Quitter le salon « ' + mine.name + ' » ?') : 'Vous êtes seul : quitter supprimera le salon. Continuer ?')) return;
+      upd(x => Object.assign(x, { members: rest, chief: isChief ? (rest[0] || '') : x.chief }));
+      this.setState({ slMsg: '', slMenu: '', slTab: 'acc' });
+    };
+    const descEditing = isChief && !!this.state.slDescEdit;
+    return Object.assign(base, addPart, { tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt',
       ...(() => {
         const ps = pets.map(g => ({ g: g, st: this.petStats(g) })).sort((x, y) => y.st.lvl - x.st.lvl || y.st.xp - x.st.xp || x.g.name.localeCompare(y.g.name, 'fr'));
         const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
@@ -4465,28 +4552,31 @@ class Component extends DCLogic {
       })(),
       petsTxt: pets.length ? pets.length + ' tea pet' + (pets.length > 1 ? 's' : '') + ' en balade · ajoutez-en avec une photo dans Mon matériel' : 'Aucun tea pet pour l’instant : ajoutez-en un avec une photo dans Mon matériel (catégorie Tea pets).',
       colors: Object.keys(this.salonColors()).map(k => { const c = this.salonColors()[k]; const on = (mine.color || 'terre') === k; return { name: c[0], bg: c[1], fg: c[2], on: on, ring: on ? '0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-text)' : 'inset 0 0 0 1px rgba(0,0,0,.12)', pick: () => upd(x => Object.assign(x, { color: k })) }; }),
-      desc: mine.desc || '', descEditing: descEditing, descShow: !descEditing, canDesc: isChief,
-      descBtn: mine.desc ? '✎ Modifier la description' : '＋ Ajouter une description',
+      desc: mine.desc || '', hasDesc: !!mine.desc, descEditing: descEditing, descShow: !descEditing,
       descDraft: this.state.slDescDraft || '', setDescDraft: e => this.setState({ slDescDraft: e.target.value }),
       editDesc: () => this.setState({ slDescEdit: true, slDescDraft: mine.desc || '' }),
       cancelDesc: () => this.setState({ slDescEdit: false }),
-      saveDesc: () => { const d = String(this.state.slDescDraft || '').trim(); upd(x => Object.assign(x, { desc: d })); this.setState({ slDescEdit: false }); },
-      stats: this.salonStats(mine), has: true, none: false, name: mine.name, isChief: isChief, count: n + (n > 1 ? ' membres' : ' membre'),
-      members: mine.members.slice().sort((x, y) => (y === mine.chief) - (x === mine.chief)).map(u => ({ badge: this.badgeOf(u), label: (u === mine.chief ? '👑 ' : '') + this.userTag(u) + (u === me ? ' (vous)' : ''),
-        open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
-        canManage: isChief && u !== me,
-        makeChief: () => { if (window.confirm('Nommer ' + u + ' chef du salon ?')) upd(x => Object.assign(x, { chief: u })); },
-        kick: () => { if (window.confirm('Exclure ' + u + ' du salon ?')) upd(x => Object.assign(x, { members: x.members.filter(m => m !== u) })); } })),
+      saveDesc: () => { const d = String(this.state.slDescDraft || '').trim(); upd(x => Object.assign(x, { desc: d })); this.setState({ slDescEdit: false, slMsg: 'Description enregistrée.' }); },
+      descBtn: mine.desc ? '✎ Modifier la description' : '＋ Ajouter une description',
+      stats: this.salonStats(mine), has: true, none: false, name: mine.name, isChief: isChief, notChief: !isChief, chief: mine.chief, count: n + (n > 1 ? ' membres' : ' membre'),
+      members: mine.members.slice().sort((x, y) => (y === mine.chief) - (x === mine.chief) || (x === me ? -1 : y === me ? 1 : 0) || x.localeCompare(y, 'fr')).map(u => { const st = memStat(u); const ch = u === mine.chief; const self = u === me; const open = menuFor === u;
+        return { name: u, tag: this.userTag(u), initial: String(u).charAt(0).toUpperCase(), badge: this.badgeOf(u), avBg: ch ? '#b8862b' : self ? 'var(--color-accent-700)' : 'var(--color-accent-2-600)',
+          role: ch ? '👑 Chef' : 'Membre', roleBg: ch ? '#f4e4bb' : 'var(--color-bg)', roleFg: ch ? '#6b4e12' : 'var(--color-text)', you: self,
+          sub: [st.together + ' ensemble', st.sacs + ' sachet' + (st.sacs > 1 ? 's' : ''), st.last ? 'dernière le ' + this.fmtDate(st.last) : 'pas encore de dégustation'].join(' · '),
+          nLogs: String(st.n), nLbl: st.n > 1 ? 'dégustations' : 'dégustation',
+          menuOpen: open, menuToggle: () => this.setState({ slMenu: open ? '' : u }),
+          open: () => this.setState({ view: 'profile', profUser: u, profEdit: false, slMenu: '' }),
+          canManage: isChief && !self, isSelf: self,
+          makeChief: () => { this.setState({ slMenu: '' }); if (window.confirm('Nommer ' + u + ' chef du salon ?')) upd(x => Object.assign(x, { chief: u })); },
+          kick: () => { this.setState({ slMenu: '' }); if (window.confirm('Exclure ' + u + ' du salon ?')) upd(x => Object.assign(x, { members: x.members.filter(m => m !== u) })); },
+          leave: () => { this.setState({ slMenu: '' }); leave(); } }; }),
       invitable: invitable.map(u => ({ name: u, invite: () => { upd(x => Object.assign(x, { invites: (x.invites || []).concat([u]) })); this.setState({ slMsg: 'Invitation envoyée à ' + u + '.' }); } })),
-      noInvitable: !invitable.length, hasPending: (mine.invites || []).length > 0, pending: (mine.invites || []).join(', '),
-      leave: () => {
-        const rest = mine.members.filter(m => m !== me);
-        if (!window.confirm(rest.length ? (isChief ? 'Quitter le salon ? ' + rest[0] + ' deviendra chef.' : 'Quitter le salon ?') : 'Vous êtes seul : quitter supprimera le salon. Continuer ?')) return;
-        upd(x => Object.assign(x, { members: rest, chief: isChief ? (rest[0] || '') : x.chief }));
-        this.setState({ slMsg: '' });
-      },
-      rename: () => { const nn = window.prompt('Nouveau nom du salon', mine.name); if (nn && nn.trim()) { if (all.some(x => x.id !== mine.id && this.norm(x.name) === this.norm(nn.trim()))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' }); upd(x => Object.assign(x, { name: nn.trim() })); } },
-      dissolve: () => { if (window.confirm('Dissoudre le salon « ' + mine.name + ' » ? Tous les membres en sortiront.')) this.setSalons(this.salons().filter(x => x.id !== mine.id)); } });
+      noInvitable: !invitable.length, hasInvitable: invitable.length > 0, hasPending: (mine.invites || []).length > 0,
+      pending: (mine.invites || []).map(u => ({ name: u, cancel: () => upd(x => Object.assign(x, { invites: (x.invites || []).filter(i => i !== u) })) })),
+      leave: leave,
+      renameDraft: this.state.slRename != null ? this.state.slRename : mine.name, setRename: e => this.setState({ slRename: e.target.value, slMsg: '' }),
+      rename: () => { const nn = String(this.state.slRename != null ? this.state.slRename : mine.name).trim(); if (!nn || nn === mine.name) return; if (all.some(x => x.id !== mine.id && this.norm(x.name) === this.norm(nn))) return this.setState({ slMsg: 'Ce nom de salon est déjà pris.' }); upd(x => Object.assign(x, { name: nn })); this.setState({ slRename: null, slMsg: 'Salon renommé en « ' + nn + ' ».' }); },
+      dissolve: () => { if (window.confirm('Dissoudre le salon « ' + mine.name + ' » ? Tous les membres en sortiront.')) { this.setSalons(this.salons().filter(x => x.id !== mine.id)); this.setState({ slTab: 'acc', slMsg: 'Salon dissous.' }); } } });
   }
 
   friendsView(me) {
@@ -5109,8 +5199,7 @@ class Component extends DCLogic {
 
   joinInfo(l, me) {
     const author = l.author || '';
-    const sal = this.salonOf(me);
-    const can = !!sal && this.norm(author) !== this.norm(me) && sal.members.indexOf(author) >= 0;
+    const can = this.norm(author) !== this.norm(me) && this.salonMates(me).indexOf(author) >= 0;
     const joined = (l.with || []).indexOf(me) >= 0;
     return { canJoin: can, joinTxt: joined ? '✓ J’y étais (me retirer)' : '＋ J’y étais aussi',
       toggleJoin: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === l.id ? Object.assign({}, x, { with: joined ? (x.with || []).filter(w => w !== me) : (x.with || []).concat([me]) }) : x) })); } };
@@ -6242,7 +6331,7 @@ class Component extends DCLogic {
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
-    const v = (guest && ['mine', 'log', 'add', 'friends', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
+    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -6585,9 +6674,9 @@ class Component extends DCLogic {
             this.setState({ gearEdit: null, gearMsg: '' });
           },
           gearEmpty: !mineG.length,
-          gearSalon: (() => { const sal = this.salonOf(me); if (!sal) return []; return sal.members.filter(u => u !== me).map(u => ({ owner: u, items: (this.getAdds().gear || []).filter(g => g.owner === u).map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? g.volume + ' ml' : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) })).filter(x => x.items.length); })(),
-          hasGearSalon: !!this.salonOf(me) && (this.getAdds().gear || []).some(g => g.owner !== me && this.salonOf(me).members.indexOf(g.owner) >= 0),
-          gearSalonName: (this.salonOf(me) || {}).name || '',
+          gearSalon: (() => { const mates = this.salonMates(me); if (mates.length < 2) return []; return mates.filter(u => u !== me).map(u => ({ owner: u, items: (this.getAdds().gear || []).filter(g => g.owner === u).map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? g.volume + ' ml' : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) })).filter(x => x.items.length); })(),
+          hasGearSalon: (this.getAdds().gear || []).some(g => g.owner !== me && this.salonMates(me).indexOf(g.owner) >= 0),
+          gearSalonName: this.salonsOf(me).map(x => x.name).join(', '),
           gearGroups: this.gearTypeList().map(T => ({ icon: T[1], title: T[2], items: mineG.filter(g => this.gearCatKey(g.type) === T[0]) })).filter(G => G.items.length).map(G => ({ icon: G.icon, title: G.title, n: String(G.items.length), items: G.items.map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [this.gearModelOf(g), g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) }))
         };
       })(),
@@ -6628,7 +6717,8 @@ class Component extends DCLogic {
       gearHint: this.gearUsable(me).length ? 'Touchez tout ce que vous utilisez. Le matériel du salon s’affiche avec la case ci-dessous.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
 
       menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frTab: 'friends', frMsg: '' }),
-      menuSalon: () => this.setState({ menuOpen: false, view: 'friends', frTab: 'salon', frMsg: '' }),
+      menuSalon: () => this.setState({ menuOpen: false, view: 'salon', slAdd: false, slMenu: '', slMsg: '' }),
+      salonBadge: this.salonInvitesFor(me).length ? ' (' + this.salonInvitesFor(me).length + ')' : '',
       friendCount: ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length + this.salonInvitesFor(me).length,
       ...(() => {
         const nf = this.notifsFor(me);
@@ -6636,7 +6726,7 @@ class Component extends DCLogic {
         const sacById = {}; this.getAdds().sachets.forEach(x => { sacById[x.id] = x; });
         const NL = nf.items.map(x => ({ icon: x.icon, txt: x.txt.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'), when: x.when, dot: x.unread ? 'var(--color-accent)' : 'transparent', bg: x.unread ? 'var(--color-accent-100)' : 'transparent', unread: x.unread,
             del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
-            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.logId) this.openLogDetail(x.logId); else if (x.friends || x.salon) this.setState({ view: 'friends', frTab: x.salon ? 'salon' : 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
+            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.logId) this.openLogDetail(x.logId); else if (x.friends || x.salon) this.setState(x.salon ? { view: 'salon', slAdd: true } : { view: 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
         return { notifCount: nf.unread, hasNotifCount: nf.unread > 0, notifOpen: open, notifEmpty: !nf.items.length,
           notifLabel: nf.unread ? nf.unread + ' notification' + (nf.unread > 1 ? 's' : '') + ' non lue' + (nf.unread > 1 ? 's' : '') : 'Notifications',
           toggleNotif: () => this.setState(st => ({ notifOpen: !st.notifOpen, menuOpen: false })),
@@ -6650,17 +6740,17 @@ class Component extends DCLogic {
       meSalon: (this.salonOf(me) || {}).name || '', meSalonC: this.salonColor(this.salonOf(me)),
       meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
       friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n + this.salonInvitesFor(me).length; return m ? ' (' + m + ')' : ''; })(),
-      isFriends: v === 'friends',
+      isFriends: v === 'friends', isSalon: v === 'salon',
       fr: v === 'friends' ? this.friendsView(me) : {},
-      sl: v === 'friends' ? this.salonView(me) : {},
-      frTabF: this.state.frTab !== 'salon', frTabS: this.state.frTab === 'salon',
+      sl: v === 'salon' ? this.salonView(me) : {},
+      frTabF: true, frTabS: false,
       frShowF: () => this.setState({ frTab: 'friends' }), frShowS: () => this.setState({ frTab: 'salon' }),
       frFBg: this.state.frTab !== 'salon' ? 'var(--color-accent)' : 'transparent', frFFg: this.state.frTab !== 'salon' ? 'var(--color-bg)' : 'var(--color-text)',
       frSBg: this.state.frTab === 'salon' ? 'var(--color-accent)' : 'transparent', frSFg: this.state.frTab === 'salon' ? 'var(--color-bg)' : 'var(--color-text)',
       frFBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; return n ? ' (' + n + ')' : ''; })(),
       frSBadge: this.salonInvitesFor(me).length ? ' (' + this.salonInvitesFor(me).length + ')' : '',
-      frTitle: this.state.frTab === 'salon' ? 'Salon' : 'Amis',
-      frIntro: this.state.frTab === 'salon' ? 'Votre salon, ses membres et ce que vous partagez autour du thé.' : 'Ajoutez quelqu’un avec son identifiant (par exemple Maël#0002). Une fois la demande acceptée, vous voyez son profil.',
+      frTitle: 'Amis',
+      frIntro: 'Ajoutez quelqu’un avec son identifiant (par exemple Maël#0002). Une fois la demande acceptée, vous voyez son profil.',
       isProfile: v === 'profile',
       pf: v === 'profile' ? this.profileView(me) : {},
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
