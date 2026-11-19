@@ -5693,6 +5693,8 @@ class Component extends DCLogic {
 
   setAdds(a) {
     this._chg = (this._chg || 0) + 1;
+    // marques toujours en majuscules
+    if (a && a.prods && a.prods.some(p => p.marque && p.marque !== this.upBrand(p.marque))) a = Object.assign({}, a, { prods: a.prods.map(p => p.marque && p.marque !== this.upBrand(p.marque) ? Object.assign({}, p, { marque: this.upBrand(p.marque) }) : p) });
     try {
       const prev = this._adds || {};
       if (prev !== a && this.state.session) {
@@ -7054,8 +7056,10 @@ class Component extends DCLogic {
       summary: picked.length ? picked.join(' · ') : 'Aucun arôme choisi : ouvre une famille pour préciser.' };
   }
   // une dégustation ne peut pas avoir son auteur parmi les participants (ex. auteur changé dans l'admin)
+  upBrand(m) { return String(m || '').trim().replace(/\s+/g, ' ').toLocaleUpperCase('fr-FR'); }
   fixLogWith() {
     if (!this.isAdmin(this.me())) return; const a = this.getAdds();
+    if (a.prods.some(p => p.marque && p.marque !== this.upBrand(p.marque))) { this.setAdds(Object.assign({}, a)); return this.fixLogWith(); }
     const bad = a.logs.filter(l => (l.with || []).some((w, i, arr) => w === l.author || arr.indexOf(w) !== i)); if (!bad.length) return;
     this.setAdds(Object.assign({}, a, { logs: a.logs.map(l => bad.indexOf(l) < 0 ? l : Object.assign({}, l, { with: (l.with || []).filter((w, i, arr) => w !== l.author && arr.indexOf(w) === i) })) }));
   }
