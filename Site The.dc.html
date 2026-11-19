@@ -1918,7 +1918,7 @@
           <h1 style="font-size: 46px; margin: 0;">{{ logTitle }}</h1>
           <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{ liveList }}" as="lv" hint-placeholder-count="1"><button onClick="{{ lv.go }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours : {{ lv.name }}</b><span style="font-size: 13px; opacity: .75;">{{ lv.meta }}</span></span><span style="font-weight: 600; white-space: nowrap; color: var(--color-accent-700);">Reprendre →</span></button></sc-for></div></sc-if>
           <sc-if value="{{ lfNew }}" hint-placeholder-val="{{ true }}"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;"><sc-for list="{{ lfModes }}" as="md" hint-placeholder-count="2"><button onClick="{{ md.pick }}" aria-pressed="{{ md.on }}" style="cursor: pointer; text-align: left; border: 2px solid {{ md.bd }}; background: {{ md.bg }}; border-radius: 20px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; color: var(--color-text); font-family: var(--font-body);"><span aria-hidden="true" style="font-size: 26px;">{{ md.icon }}</span><span style="display: flex; flex-direction: column; gap: 2px;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">{{ md.label }}</b><span style="font-size: 13px; opacity: .75;">{{ md.desc }}</span></span></button></sc-for></div></sc-if>
-          <sc-if value="{{ lfNew }}" hint-placeholder-val="{{ true }}"><div class="lf-spec"><span>✨ Dégustations spéciales</span><sc-for list="{{ lfSpecial }}" as="sp" hint-placeholder-count="3"><button class="{{ sp.cls }}" onClick="{{ sp.go }}">{{ sp.label }}<sc-if value="{{ sp.soon }}" hint-placeholder-val="{{ false }}"><small>bientôt</small></sc-if></button></sc-for></div></sc-if>
+          <sc-if value="{{ lfSpecOn }}" hint-placeholder-val="{{ false }}"><div class="lf-spec"><span>✨ Dégustations spéciales</span><sc-for list="{{ lfSpecial }}" as="sp" hint-placeholder-count="3"><button class="{{ sp.cls }}" onClick="{{ sp.go }}">{{ sp.label }}<sc-if value="{{ sp.soon }}" hint-placeholder-val="{{ false }}"><small>bientôt</small></sc-if></button></sc-for></div></sc-if>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
@@ -7275,6 +7275,7 @@ class Component extends DCLogic {
       scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
       isAdmin: this.isAdmin(me),
+      lfSpecOn: this.isAdmin(me) && !this.state.editLogId,
       admQ: this.state.admQ || '', setAdmQ: e => this.setState({ admQ: e.target.value }),
       ...(() => {
         const q = this.norm(this.state.admQ || '').replace('#', '');
