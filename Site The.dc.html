@@ -2345,7 +2345,7 @@
                 <span style="font-size: 13.5px; opacity: .7;">{{ br.ex }}</span>
                 <sc-if value="{{ br.multi }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .8;">{{ br.spells }}</span></sc-if>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                  <input class="input" value="{{ br.draft }}" onInput="{{ br.setDraft }}" aria-label="Nouveau nom" style="flex: 1; min-width: 180px;">
+                  <input class="input" value="{{ br.draft }}" onInput="{{ br.setDraft }}" aria-label="Nouveau nom" style="flex: 1; min-width: 180px; text-transform: uppercase;">
                   <button class="btn btn-secondary" onClick="{{ br.rename }}" style="white-space: nowrap;">✏️ Renommer</button>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
@@ -4507,7 +4507,7 @@ class Component extends DCLogic {
           ...(f[2] === 'gear' ? (() => { const cur = Array.isArray(draft.gearIds) ? draft.gearIds : (draft.gearId ? [draft.gearId] : []); const gs = (this.getAdds().gear || []).slice().sort((x, y) => (x.owner === draft.author ? 0 : 1) - (y.owner === draft.author ? 0 : 1) || String(x.owner).localeCompare(String(y.owner)) || x.name.localeCompare(y.name, 'fr'));
             return { noChips: !gs.length, chips: gs.map(g => { const on = cur.indexOf(g.id) >= 0; return { label: (on ? '✓ ' : '') + this.gearCat(g)[1] + ' ' + g.name + ' · ' + g.owner, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)',
               toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' || f[2] === 'gear' ? '1 / -1' : 'auto',
-          set: e => { const val = e.target.value; this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); } })) : [],
+          set: e => { const val = f[0] === 'marque' ? this.upInput(e) : e.target.value; this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); } })) : [],
         cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
         toggle: () => this.setState(s0 => { const cur = s0.adSel || []; return { adSel: cur.indexOf(r.id) >= 0 ? cur.filter(z => z !== r.id) : cur.concat([r.id]) }; }),
         open: r.open, del: () => { if (window.confirm(r.delMsg)) del(r.delFn); } }; }),
@@ -4786,7 +4786,7 @@ class Component extends DCLogic {
         return { name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
           ex: g.prods.slice(0, 5).map(p => p.nom || p.the).join(' · ') + (g.prods.length > 5 ? '…' : ''),
           hasNear: nr.length > 0, nearTxt: nr.length ? '⚠️ Doublon probable de « ' + nr.map(h => h.name).join(' », « ') + ' »' : '',
-          draft: draft, setDraft: e => { const v = e.target.value; this.setState(st => ({ brEdit: Object.assign({}, st.brEdit, { [g.key]: v }) })); },
+          draft: draft, setDraft: e => { const v = this.upInput(e); this.setState(st => ({ brEdit: Object.assign({}, st.brEdit, { [g.key]: v }) })); },
           rename: () => { const v = String(draft).trim(); if (!v) { this.setState({ brMsg: 'Le nom ne peut pas être vide.' }); return; } const other = list.find(h => h !== g && h.key === this.brandKey(v));
             if (other && !window.confirm('« ' + v + ' » existe déjà : les deux marques seront réunies. Continuer ?')) return;
             const n = setAll(other ? [g.key, other.key] : [g.key], v); this.setState(st => { const e2 = Object.assign({}, st.brEdit); delete e2[g.key]; return { brEdit: e2, brMsg: '✓ ' + n + ' thé(s) renommé(s) en « ' + v + ' ».' }; }); },
@@ -7056,6 +7056,8 @@ class Component extends DCLogic {
       summary: picked.length ? picked.join(' · ') : 'Aucun arôme choisi : ouvre une famille pour préciser.' };
   }
   // une dégustation ne peut pas avoir son auteur parmi les participants (ex. auteur changé dans l'admin)
+  // met le champ en majuscules pendant la frappe sans déplacer le curseur
+  upInput(e) { const el = e.target; const up = String(el.value).toLocaleUpperCase('fr-FR'); if (up !== el.value) { const a = el.selectionStart, b = el.selectionEnd; el.value = up; try { el.setSelectionRange(a, b); } catch (x) {} } return up; }
   upBrand(m) { return String(m || '').trim().replace(/\s+/g, ' ').toLocaleUpperCase('fr-FR'); }
   fixLogWith() {
     if (!this.isAdmin(this.me())) return; const a = this.getAdds();
