@@ -182,6 +182,18 @@
   .gs-histl { display: flex; gap: 8px; flex-wrap: wrap; }
   .gs-h { font-size: 13.5px; border-radius: 999px; padding: 5px 12px; background: var(--color-surface); }
   .gs-h.ok b { color: #2f5b3a; } .gs-h.ko b { color: #a8432e; }
+  .set-card { background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .set-h { margin: 0; font-size: 22px; }
+  .set-l { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; opacity: .65; line-height: 1.45; }
+  .set-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .set-opt { cursor: pointer; text-align: left; border: none; border-radius: 20px; padding: 14px 16px; background: var(--color-bg); box-shadow: inset 0 0 0 1.5px var(--color-divider); color: var(--color-text); font-family: var(--font-body); display: flex; flex-direction: column; gap: 4px; transition: transform .12s; }
+  .set-opt:hover { transform: translateY(-1px); }
+  .set-opt.on { box-shadow: inset 0 0 0 2.5px var(--color-accent); background: var(--color-accent-100); }
+  .set-opt b { font-size: 16px; } .set-opt small { font-size: 13px; opacity: .7; line-height: 1.35; }
+  .set-sw { cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 10px; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); }
+  .set-sw i { width: 48px; height: 28px; border-radius: 999px; background: var(--color-neutral-300, #cfc3ad); position: relative; transition: background .2s; }
+  .set-sw i::after { content: ''; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: left .2s; }
+  .set-sw.on i { background: var(--color-accent-2-600); } .set-sw.on i::after { left: 23px; }
   .stk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   @media (max-width: 720px) { .stk { padding: 14px; min-height: 92px; } .stk-v { font-size: 24px; } .stk-ic { font-size: 20px; } }
   .stk { position: relative; overflow: hidden; background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-height: 104px; }
@@ -367,6 +379,7 @@
           <button aria-label="Fermer le menu" class="sheet-bd" onClick="{{ closeMenu }}" style="position: fixed; inset: 0; background: transparent; border: none; cursor: default; z-index: 40;"></button>
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
+            <button role="menuitem" onClick="{{ menuSettings }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">⚙️ Paramètres</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
             <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon{{ salonBadge }}</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
@@ -1217,6 +1230,35 @@
       </div>
     </sc-if>
 
+
+    <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both;">
+        <div style="display: flex; flex-direction: column; gap: 6px;"><h1 style="font-size: 46px; margin: 0;">⚙️ Paramètres</h1><p style="font-size: 16px; opacity: .72; margin: 0;">Ton compte {{ sett.setTag }} : ce que les autres voient de toi, et ce que tu veux voir.</p></div>
+        <sc-if value="{{ sett.setMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px; color: #2f5b3a;">{{ sett.setMsg }}</p></sc-if>
+        <section class="set-card">
+          <h2 class="set-h">🙂 Profil</h2>
+          <span class="set-l">Description affichée sur ton profil</span>
+          <textarea class="input" rows="3" value="{{ sett.setDesc }}" onInput="{{ sett.onSetDesc }}" placeholder="Ton thé préféré, ta façon de l’infuser, ce que tu cherches…" aria-label="Description du profil" style="resize: vertical; border-radius: 20px;"></textarea>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ sett.saveDesc }}" style="white-space: nowrap;">Enregistrer</button><button class="btn btn-ghost" onClick="{{ sett.openProfile }}" style="white-space: nowrap;">Voir mon profil →</button><span style="font-size: 14px; opacity: .7; margin-left: auto;">Salon principal : {{ sett.setSalon }} · <button class="btn btn-ghost" onClick="{{ sett.openSalon }}" style="padding: 0; font-size: 14px;">changer</button></span></div>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">👁️ Qui peut voir mon profil ?</h2>
+          <div class="set-opts"><sc-for list="{{ sett.setProfile }}" as="o" hint-placeholder-count="3"><button class="{{ o.cls }}" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div>
+          <span class="set-l" style="text-transform: none; letter-spacing: 0;">Ton profil montre tes thés préférés, ton matériel en vitrine et tes badges. Ton nom reste visible partout.</span>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">🍵 Qui peut voir mes thés et mes dégustations ?</h2>
+          <div class="set-opts"><sc-for list="{{ sett.setContent }}" as="o" hint-placeholder-count="3"><button class="{{ o.cls }}" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div>
+          <span class="set-l" style="text-transform: none; letter-spacing: 0;">S’applique à la liste des thés de la maison, aux dégustations et au fil du salon. Les personnes avec qui tu dégustes voient toujours la dégustation partagée, et tes notes comptent toujours (anonymement) dans les moyennes.</span>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">💶 Affichage</h2>
+          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 2px; margin-right: auto;"><b style="font-size: 16px;">Prix des thés et du matériel</b><span style="font-size: 14px; opacity: .7;">Masque les prix payés, les prix au gramme et le rapport qualité/prix (pour toi uniquement).</span></div>
+            <button class="{{ sett.setPricesCls }}" onClick="{{ sett.togglePrices }}" role="switch" aria-checked="{{ sett.setPricesOn }}"><i></i><span>{{ sett.setPricesLbl }}</span></button></div>
+        </section>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isSalon }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -1376,7 +1418,7 @@
           <section class="sac mb-card" style="padding: 22px 24px;"><div class="sac-head" style="flex-wrap: wrap; gap: 16px;">
             <span class="mb-av" style="background: var(--color-accent-700); width: 64px; height: 64px; font-size: 28px;">{{ pf.lkInitial }}</span>
             <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 24px;">{{ pf.lkName }}</span><sc-if value="{{ pf.lkBadge }}" hint-placeholder-val="{{ false }}"><span style="font-size: 18px;">{{ pf.lkBadge }}</span></sc-if><sc-if value="{{ pf.lkSalon }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: {{ pf.lkSalonBg }}; color: {{ pf.lkSalonFg }}; box-shadow: none;">{{ pf.lkSalon }}</span></sc-if></div>
-              <span class="sac-sub">🔒 Son profil (thés, matériel, badges) n’est visible que par ses amis.</span></div>
+              <span class="sac-sub">{{ pf.lkLockTxt }}</span></div>
             <sc-if value="{{ pf.lkCanAdd }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ pf.lkAdd }}" style="white-space: nowrap;">＋ Ajouter en ami</button></sc-if>
             <sc-if value="{{ pf.lkSent }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7;">⏳ Demande envoyée</span><button class="btn btn-secondary" onClick="{{ pf.lkCancel }}" style="white-space: nowrap; background: var(--color-bg);">Annuler</button></sc-if>
             <sc-if value="{{ pf.lkIncoming }}" hint-placeholder-val="{{ false }}"><button class="btn btn-primary" onClick="{{ pf.lkAccept }}" style="white-space: nowrap;">Accepter sa demande</button><button class="btn btn-secondary" onClick="{{ pf.lkRefuse }}" style="white-space: nowrap; background: var(--color-bg);">Refuser</button></sc-if>
@@ -4530,7 +4572,7 @@ class Component extends DCLogic {
     const mine = g.owner === me;
     const isPet = this.gearCatKey(g.type) === 'teapet';
     return { isPet: isPet && !!g.photo, sprite: g.sprite || '', hasSprite: !!g.sprite, spriteBusy: this.state.spriteBusy === g.id, spriteBtn: this.state.spriteBusy === g.id ? 'Création du pixel art…' : (g.sprite ? '↻ Refaire le pixel art' : '✨ Créer le pixel art'), remakeSprite: () => this.makeGearSprite(g.id), name: g.name, icon: T[1], typeName: T[2] + (this.gearModelOf(g) ? ' · ' + this.gearModelOf(g) : ''), photo: g.photo || '', noPhoto: !g.photo, comment: g.comment || '', mine: mine,
-      meta: [g.owner !== me ? 'à ' + g.owner : '',  g.volume ? g.volume + ' ml' : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', g.prix ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
+      meta: [g.owner !== me ? 'à ' + g.owner : '',  g.volume ? g.volume + ' ml' : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', (this.showPrices() && g.prix) ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
       edit: () => this.setState({ view: 'gear', gearEdit: g.id, gf: Object.assign({}, g, { type: this.gearCatKey(g.type), model: this.gearModelOf(g) }), gearMsg: '', form: Object.assign({}, this.state.form, { gearPhoto: g.photo || '' }) }),
       remove: () => { if (!window.confirm('Supprimer « ' + g.name + ' » ? Les dégustations restent, sans théière associée.')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: (b.gear || []).filter(x => x.id !== g.id) })); this.setState({ view: 'gear' }); },
       kpis: [
@@ -4558,6 +4600,28 @@ class Component extends DCLogic {
   salonColor(sal) { const c = this.salonColors()[(sal && sal.color) || 'terre'] || this.salonColors().terre; return { bg: c[1], fg: c[2] }; }
 
   salons() { return ((this.getAdds().options || {}).salons) || []; }
+  prefsOf(u) { return (((((this.getAdds().options || {}).profiles || {})[u]) || {}).prefs) || {}; }
+  showPrices() { return this.prefsOf(this.me()).showPrices !== false; }
+  // le contenu (thés, sachets, dégustations) d'un membre est-il visible par ce lecteur ? (viewer null = visiteur non connecté)
+  contentVisible(owner, viewer) {
+    if (!owner || owner === viewer) return true; const vis = this.prefsOf(owner).contentVis || 'public';
+    if (vis === 'public') return true; if (!viewer || vis === 'private') return false;
+    return this.friendsOf(owner).indexOf(viewer) >= 0 || this.salonMates(owner).indexOf(viewer) >= 0;
+  }
+  logVisible(l, viewer) { return (viewer && this.inLog(l, viewer)) || this.contentVisible(l.author, viewer); }
+  setPrefs(patch) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { prefs: Object.assign({}, (all[me] || {}).prefs, patch) }); this.setOpt('profiles', all); }
+  settingsView(me) {
+    const pr = this.prefsOf(me); const prof = ((((this.getAdds().options || {}).profiles || {})[me]) || {});
+    const VIS = [['public', '🌍', 'Public', 'Tous les membres de la maison'], ['friends', '🤝', 'Amis', 'Tes amis et les membres de tes salons'], ['private', '🔒', 'Privé', 'Personne d’autre que toi']];
+    const choice = (key, def) => VIS.map(v => { const on = (pr[key] || def) === v[0]; return { label: v[1] + ' ' + v[2], sub: v[3], on: on, cls: on ? 'set-opt on' : 'set-opt', pick: () => { this.setPrefs({ [key]: v[0] }); this.setState({ setMsg: 'Enregistré ✓' }); } }; });
+    const sp = pr.showPrices !== false;
+    return { setProfile: choice('profileVis', 'friends'), setContent: choice('contentVis', 'public'),
+      setPricesOn: sp, setPricesLbl: sp ? 'Affichés' : 'Masqués', setPricesCls: sp ? 'set-sw on' : 'set-sw', togglePrices: () => { this.setPrefs({ showPrices: !sp }); this.setState({ setMsg: 'Enregistré ✓' }); },
+      setDesc: this.state.setDesc != null ? this.state.setDesc : (prof.desc || ''), onSetDesc: e => this.setState({ setDesc: e.target.value }),
+      saveDesc: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { desc: String(this.state.setDesc != null ? this.state.setDesc : prof.desc || '').trim() }); this.setOpt('profiles', all); this.setState({ setDesc: null, setMsg: 'Description enregistrée ✓' }); },
+      setTag: this.userTag(me), setMsg: this.state.setMsg || '', openProfile: () => this.setState({ view: 'profile', profUser: me, profEdit: false }),
+      openSalon: () => this.setState({ view: 'salon' }), setSalon: (this.salonOf(me) || {}).name || 'aucun' };
+  }
   salonsOf(u) { return this.salons().filter(x => (x.members || []).indexOf(u) >= 0); }
   // Salon principal d'une personne (profil.salonMain) : c'est lui qui sert pour le tag, les stats « Dans mon salon », etc.
   salonOf(u) { const L = this.salonsOf(u); if (!L.length) return null; const pr = ((((this.getAdds().options || {}).profiles || {})[u]) || {}); return L.find(x => x.id === pr.salonMain) || L.find(x => x.id === pr.salonActive) || L[0]; }
@@ -4578,12 +4642,12 @@ class Component extends DCLogic {
     const sacById = {}; a.sachets.forEach(o => { sacById[o.id] = o; });
     const pname = sid => { const o = sacById[sid]; const p = o && a.prods.find(x => x.id === o.prodId); return p ? (p.nom || p.the) : 'un thé'; };
     const items = [];
-    a.logs.forEach(l => { if (M.indexOf(l.author) < 0) return;
+    a.logs.forEach(l => { if (M.indexOf(l.author) < 0 || !this.logVisible(l, me)) return;
       const ts = this.idTs(l.id) || (/^\d{4}-\d{2}-\d{2}$/.test(l.date || '') ? new Date(l.date + 'T' + (/^\d{1,2}:\d{2}$/.test(l.heure || '') ? l.heure.padStart(5, '0') : '12:00')).getTime() : 0); if (!ts) return;
       const w = (l.with || []).filter(x => x !== l.author); const n = this.noteNum(l);
       items.push({ key: 'l:' + l.id, ts: ts, who: l.author, icon: l.live ? '🫖' : '☕', txt: (l.live ? 'est en pleine séance Gong Fu avec « ' : 'a dégusté « ') + pname(l.lotId) + ' »' + (w.length ? ' avec ' + w.join(', ') : ''),
         note: n != null ? String(l.note).replace('.', ',') : '', noteBg: n != null ? this.noteColors(l.note).noteBg : 'transparent', quote: String(l.avis || l.nez || '').trim().slice(0, 180), open: () => this.openLogDetail(l.id) }); });
-    (a.events || []).forEach(e => { if (M.indexOf(e.who) < 0) return;
+    (a.events || []).forEach(e => { if (M.indexOf(e.who) < 0 || e.adm || !this.contentVisible(e.who, me)) return;
       if (['prod', 'sachet', 'share', 'give', 'gear', 'salon'].indexOf(e.type) < 0) return;
       if (e.type === 'salon' && String(e.text).indexOf('« ' + sal.name + ' »') < 0) return;
       const sa = e.sid && sacById[e.sid];
@@ -5011,11 +5075,13 @@ class Component extends DCLogic {
   profileView(me) {
     const u = this.state.profUser || me;
     const isMe = u === me;
-    if (!isMe && this.friendsOf(me).indexOf(u) < 0) {
+    const pvis = this.prefsOf(u).profileVis || 'friends';
+    if (!isMe && pvis === 'private') { const sal0 = this.salonOf(u); const sc0 = this.salonColor(sal0); return { locked: true, ok: false, kpis: [], lkName: this.userTag(u), lkInitial: String(u).charAt(0).toUpperCase(), lkBadge: '', lkSalon: sal0 ? sal0.name : '', lkSalonBg: sc0.bg, lkSalonFg: sc0.fg, lkLockTxt: '🔒 Ce profil est privé.', lkCanAdd: false, lkSent: false, lkIncoming: false, lkMsg: '' }; }
+    if (!isMe && pvis !== 'public' && this.friendsOf(me).indexOf(u) < 0) {
       const all = (this.getAdds().options || {}).friends || [];
       const out = all.find(f => f.status === 'pending' && f.from === me && f.to === u), inc = all.find(f => f.status === 'pending' && f.from === u && f.to === me);
       const sal = this.salonOf(u); const sc = this.salonColor(sal);
-      return { locked: true, ok: false, kpis: [], lkName: this.userTag(u), lkInitial: String(u).charAt(0).toUpperCase(), lkBadge: this.badgeOf(u), lkSalon: sal ? sal.name : '', lkSalonBg: sc.bg, lkSalonFg: sc.fg,
+      return { locked: true, ok: false, kpis: [], lkLockTxt: '🔒 Son profil (thés, matériel, badges) n’est visible que par ses amis.', lkName: this.userTag(u), lkInitial: String(u).charAt(0).toUpperCase(), lkBadge: this.badgeOf(u), lkSalon: sal ? sal.name : '', lkSalonBg: sc.bg, lkSalonFg: sc.fg,
         lkCanAdd: !out && !inc, lkSent: !!out, lkIncoming: !!inc, lkMsg: this.state.pfMsg || '',
         lkAdd: () => { this.setFriends(all.concat([{ from: me, to: u, status: 'pending', ts: new Date().toISOString() }])); this.setState({ pfMsg: 'Demande envoyée à ' + u + '. Son profil s’ouvrira dès que la demande sera acceptée.' }); },
         lkCancel: () => { this.setFriends(all.filter(f => f !== out)); this.setState({ pfMsg: '' }); },
@@ -5372,6 +5438,7 @@ class Component extends DCLogic {
       const prev = this._adds || {};
       if (prev !== a && this.state.session) {
         const ev = this.diffEvents(prev, a);
+        if (ev.length && this.state.view === 'admin') ev.forEach(e => { e.adm = true; });
         if (ev.length) a = Object.assign({}, a, { events: (a.events || prev.events || []).concat(ev).slice(-400) });
       }
     } catch (e) {}
@@ -5708,7 +5775,7 @@ class Component extends DCLogic {
     const rm = sa.id ? this.remainFor(sa) : null;
     const pst = this.statsMany(this.collection().filter(o => o.prodId === p.id).map(o => o.id));
     const freq = sa.freq ? ((this.opts().freqs.find(f => String(f.code) === String(sa.freq)) || {}).label || sa.freq) : '';
-    const sac = [['Propriétaire', sa.owner], ['Marque', p.marque || sa.marque], ['Réf. fournisseur', p.ref || sa.ref], ['Boutique', p.boutique || sa.boutique], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', sa.prixPaye ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
+    const sac = [['Propriétaire', sa.owner], ['Marque', p.marque || sa.marque], ['Réf. fournisseur', p.ref || sa.ref], ['Boutique', p.boutique || sa.boutique], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', (this.showPrices() && sa.prixPaye) ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const tea = [['Thé du catalogue', p.the], ['Variante', p.variante], ['Famille', fk ? this.families[fk].name : ''], ['Origine', cat ? (cat.origin || cat.pays || '') : ''], ['Moyenne de ce thé', pst.n ? this.avgTxt(pst) + ' (' + pst.n + ')' : '']].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const join = me ? this.joinInfo(l, me) : {};
     const canEdit = !!me && !!this.state.session && this.canEditLog(l, me); const canDel = canEdit && this.norm(l.author || '') === this.norm(me);
@@ -6133,6 +6200,7 @@ class Component extends DCLogic {
       { icon: '🫖', title: 'Le matériel', sections: [sec('Matériel le plus utilisé', 'Nombre de dégustations par pièce', gearBars, A1), sec('Le matériel de la maison', 'Pièces par catégorie', gearCatBars, A2), sec('Tea pets', 'Classement par niveau', petB, '#5b9a3c')] },
       { icon: '🏮', title: 'Les salons', sections: [sec('Salons', 'Dégustations où au moins un membre était présent', salB, A2)] }
     ].map(g => Object.assign(g, { sections: g.sections.filter(x => !x.empty) })).filter(g => g.sections.length);
+    if (!this.showPrices()) { for (let i = kpis.length - 1; i >= 0; i--) if (/€/.test(String(kpis[i].value) + String(kpis[i].sub || ''))) kpis.splice(i, 1); groups.forEach(g => { g.sections = g.sections.filter(x => x.title !== 'Rapport qualité/prix'); }); for (let i = groups.length - 1; i >= 0; i--) if (!groups[i].sections.length) groups.splice(i, 1); }
     if (gf.length) kpis.push({ label: 'Séances Gong Fu', value: String(gf.length), sub: f1(avg(gf.map(l => this.infsOf(l).length))) + ' infusions en moyenne' });
     kpis.forEach((k, i) => { k.icon = ['🍵', '☕', '⭐', '⚖️', '💶', '🧾', '🔥', '👥', '🫖', '🌀'][i] || '•'; });
     return { groups: groups, tagline: logs.length ? logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' passée' + (logs.length > 1 ? 's' : '') + ' au crible. Aucune n’a été maltraitée.' : 'Des chiffres sur tout et n’importe quoi, dès que la maison commencera à boire.',
@@ -6457,7 +6525,7 @@ class Component extends DCLogic {
       return { alpha: o.nom || o.the, price: p && q ? (o.prixMode === 'unite' ? p / q : p / q * 100) : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st2.avg }; })();
     return { _k: sk, ...give, ...shareCtl, ...adjustCtl, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? (portions.length ? o.owner + ' : ' + rm.txt.replace('Reste', 'reste') : rm.txt) : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
       name: o.nom || o.the, the: o.the, variante: o.variante, marque: o.marque || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
-      achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: o.prixPaye ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
+      achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: (this.showPrices() && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
       subLine: [o.marque, this.formatTxt(o), o.owner ? (o.owner === me ? 'à moi' : 'à ' + o.owner) : ''].filter(Boolean).join(' · '),
       avgNum: st.avg != null ? st.avg.toFixed(1).replace('.', ',') : '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'var(--color-text)',
@@ -6467,13 +6535,13 @@ class Component extends DCLogic {
       menuOpen: this.state.sacMenu === o.id, menuToggle: () => this.setState(s0 => ({ sacMenu: s0.sacMenu === o.id ? null : o.id })),
       menuShare: () => { this.setState({ sacMenu: null }); if (shareCtl.shareToggle) shareCtl.shareToggle(); },
       menuGive: () => { this.setState({ sacMenu: null }); give.giveToggle(); },
-      get hasFacts() { return this.facts2.length > 0; }, facts2: [['Acheté le', o.achat ? this.fmtDate(o.achat) : ''], ['Production', o.prodDate], ['Lot', o.lot], ['Payé', o.prixPaye ? String(o.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(o.prixPaye)) ? ' €' : '') + (this.prixTxt(o) ? ' (' + this.prixTxt(o) + ')' : '') : this.prixTxt(o)], ['Fréquence', o.freq ? ((this.opts().freqs.find(f => String(f.code) === String(o.freq)) || {}).label || o.freq) : ''], ['Boutique', o.boutique]].filter(x => x[1] && String(x[1]).trim() && x[1] !== '—').map(x => ({ k: x[0], v: String(x[1]).replace(/^(\d)/, '$1') })),
+      get hasFacts() { return this.facts2.length > 0; }, facts2: [['Acheté le', o.achat ? this.fmtDate(o.achat) : ''], ['Production', o.prodDate], ['Lot', o.lot], ['Payé', (this.showPrices() && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(o.prixPaye)) ? ' €' : '') + (this.prixTxt(o) ? ' (' + this.prixTxt(o) + ')' : '') : this.prixTxt(o)], ['Fréquence', o.freq ? ((this.opts().freqs.find(f => String(f.code) === String(o.freq)) || {}).label || o.freq) : ''], ['Boutique', o.boutique]].filter(x => x[1] && String(x[1]).trim() && x[1] !== '—').map(x => ({ k: x[0], v: String(x[1]).replace(/^(\d)/, '$1') })),
       noRemainCtl: o.owner === me && !rm && !portions.length,
       get noRemainCtl2() { return this.noRemainCtl && !this.isEmpty; }, get showStock() { return this.hasRemain && !this.isEmpty; },
       get showFacts() { return this.facts2.length > 0 && !this.isEmpty; }, get showCode() { return !!this.code && !this.isEmpty; },
       get mineFull() { return this.mine && !this.isEmpty; }, get mineEmpty() { return this.mine && this.isEmpty; }, get notEmpty() { return !this.isEmpty; },
       get sacCls() { return this.isEmpty ? 'sac-empty' : ''; },
-      facts: [['Propriétaire', o.owner], ['Acheté le', o.achat ? this.fmtDate(o.achat) : ''], ['Production', o.prodDate], ['Lot', o.lot], ['Format', this.formatTxt(o)], ['Payé', o.prixPaye ? String(o.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(o.prixPaye)) ? ' €' : '') + (this.prixTxt(o) ? ' (' + this.prixTxt(o) + ')' : '') : this.prixTxt(o)], ['Fréquence', o.freq ? ((this.opts().freqs.find(f => String(f.code) === String(o.freq)) || {}).label || o.freq) : '']].filter(x => x[1] && String(x[1]).trim() && x[1] !== '—').map(x => ({ k: x[0], v: x[1] })),
+      facts: [['Propriétaire', o.owner], ['Acheté le', o.achat ? this.fmtDate(o.achat) : ''], ['Production', o.prodDate], ['Lot', o.lot], ['Format', this.formatTxt(o)], ['Payé', (this.showPrices() && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(o.prixPaye)) ? ' €' : '') + (this.prixTxt(o) ? ' (' + this.prixTxt(o) + ')' : '') : this.prixTxt(o)], ['Fréquence', o.freq ? ((this.opts().freqs.find(f => String(f.code) === String(o.freq)) || {}).label || o.freq) : '']].filter(x => x[1] && String(x[1]).trim() && x[1] !== '—').map(x => ({ k: x[0], v: x[1] })),
       meta: [o.achat ? 'acheté le ' + this.fmtDate(o.achat) : '', o.prodDate ? 'année de production ' + o.prodDate : '', o.lot ? 'lot ' + o.lot : '', this.formatTxt(o), this.prixTxt(o)].filter(Boolean).join(' · '),
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
@@ -6495,6 +6563,7 @@ class Component extends DCLogic {
   }
 
   avgPrice(sachets) {
+    if (!this.showPrices()) return '';
     const g = [], u = [];
     sachets.forEach(o => { const p = this.num(o.prixPaye), q = this.num(o.quantite); if (p == null || !q) return; (o.prixMode === 'unite' ? u : g).push(o.prixMode === 'unite' ? p / q : p / q * 100); });
     const fmt = x => x.toFixed(2).replace('.', ',') + ' €';
@@ -6588,7 +6657,7 @@ class Component extends DCLogic {
 
   prixTxt(o) {
     const p = this.num(o.prixPaye), q = this.num(o.quantite);
-    if (p == null) return '';
+    if (p == null || !this.showPrices()) return '';
     const fmt = x => x.toFixed(2).replace('.', ',') + ' €';
     if (o.prixMode === 'unite') return q ? fmt(p / q) + ' / u' : fmt(p);
     return q ? fmt(p / q * 100) + ' / 100 g' : fmt(p);
@@ -6771,7 +6840,7 @@ class Component extends DCLogic {
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
-    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'guess', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
+    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'guess', 'settings', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -6836,7 +6905,7 @@ class Component extends DCLogic {
     const me = this.me();
     const scope = this.state.scope || 'me';
     const coll = this.collection();
-    const myColl = scope === 'all' ? coll : coll.filter(o => o.owners.indexOf(me) >= 0);
+    const viewerC = (!!this.state.cloud && !this.state.session) ? null : me; const myColl = scope === 'all' ? coll.filter(o => o.owners.indexOf(me) >= 0 || this.contentVisible(o.owner, viewerC)) : coll.filter(o => o.owners.indexOf(me) >= 0);
     const pm = (this.state.form || {}).prixMode || 'poids';
     const pick = {};
     Object.keys(this.families).forEach(k => { pick[k] = () => this.go('list', k, 0); });
@@ -7041,6 +7110,8 @@ class Component extends DCLogic {
       closeMenu: () => this.setState({ menuOpen: false }),
       menuMine: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
       menuProfile: () => this.setState({ menuOpen: false, view: 'profile', profUser: me, profEdit: false }),
+      menuSettings: () => this.setState({ menuOpen: false, view: 'settings', setMsg: '', setDesc: null }),
+      isSettings: v === 'settings', sett: v === 'settings' ? this.settingsView(me) : {},
       openColl: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
       collTea: () => this.setState({ view: 'mine', collView: 'mine' }),
       collLog: () => this.setState({ view: 'logs', collView: 'logs' }),
@@ -7238,7 +7309,7 @@ class Component extends DCLogic {
       dvSmall: () => { this.setState({ dvmode: 'small' }); try { localStorage.setItem('the-dvmode', 'small'); } catch (e) {} },
       dq: this.state.dq || '', onDq: e => this.setState({ dq: e.target.value }), dTea: this.state.dTea || '', clearDTea: () => this.setState({ dTea: '' }),
       ...(() => {
-        const all = this.getAdds().logs.filter(l => coll.some(o => o.id === l.lotId));
+        const viewerL = guest ? null : me; const all = this.getAdds().logs.filter(l => coll.some(o => o.id === l.lotId) && this.logVisible(l, viewerL));
         const mineOnly = (this.state.ds || 'me') === 'me';
         const q = this.norm(this.state.dq);
         const dTea = this.norm(this.state.dTea || ''); const list = all.filter(l => !mineOnly || this.inLog(l, me)).filter(l => !dTea || this.norm((coll.find(x => x.id === l.lotId) || {}).the || '') === dTea).filter(l => this.famOk(coll.find(x => x.id === l.lotId))).filter(l => { if (!q) return true; const o = coll.find(x => x.id === l.lotId) || {}; return this.norm([o.nom, o.the, o.variante, o.code, l.author, (l.with || []).join(' '), l.avis, l.note].join(' ')).indexOf(q) >= 0; })
@@ -7512,7 +7583,7 @@ class Component extends DCLogic {
         this.setState({ lotQ: '', logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
       },
       hasRecent: this.getAdds().logs.length > 0,
-      recentLogs: this.getAdds().logs.slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => this.logCard(l, coll, me)),
+      recentLogs: this.getAdds().logs.filter(l => this.logVisible(l, guest ? null : me)).slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => this.logCard(l, coll, me)),
       tabTea: () => this.setState({ addTab: 'tea', addMsg: '' }),
       tabLot: () => this.setState({ addTab: 'lot', addMsg: '' }),
       never: false,
