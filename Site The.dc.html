@@ -726,7 +726,7 @@
             <div role="button" tabindex="0" onClick="{{ sa.toggleExp }}" aria-expanded="false" style="width: 100%; box-sizing: border-box; text-align: left; border: none; cursor: pointer; font-family: inherit; color: inherit; display: flex; align-items: center; gap: 12px; background: var(--color-surface); border-radius: 18px; padding: 10px 14px;">
               <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
                 <button onClick="{{ sa.nameOpen }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 16px; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; align-self: flex-start;" style-hover="color: var(--color-accent-700);">{{ sa.name }}</button>
-                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sa.marque }} · {{ sa.owner }}<sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"> · {{ sa.remainShort }}</sc-if></span>
+                <span style="font-size: 12px; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ sa.marque }}<sc-if value="{{ sa.showOwner }}" hint-placeholder-val="{{ true }}"> · {{ sa.owner }}</sc-if><sc-if value="{{ sa.hasRemain }}" hint-placeholder-val="{{ false }}"> · {{ sa.remainShort }}</sc-if></span>
               </div>
               <span style="flex: none; font-family: var(--font-heading); font-size: 16px;">{{ sa.avg }}</span>
               <span style="flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); color: var(--color-accent-700);" title="Agrandir"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex: none; opacity: .6;"><path d="m6 9 6 6 6-6"/></svg></span>
@@ -7458,7 +7458,7 @@ class Component extends DCLogic {
       openTea: () => { if (fk) { const i = this.listFor(fk).findIndex(t => this.norm(t.name) === this.norm(pr.the)); this.setState({ view: 'tea', key: fk, idx: Math.max(0, i), teaBack: 'prod' }); } },
       openFam: () => { if (fk) this.go('list', fk, 0); },
       avg: this.avgTxt(st) || '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'inherit', avgSub: st.n ? 'sur ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
-      prix: this.avgPrice(sacs) || '—', nSac: String(sacs.length), owners: owners.length ? 'chez ' + owners.join(', ') : 'personne pour l’instant',
+      prix: this.avgPrice(sacs) || '—', nSac: String(sacs.length), owners: this.isGuest() ? (owners.length ? 'dans la maison' : 'personne pour l’instant') : owners.length ? 'chez ' + owners.join(', ') : 'personne pour l’instant',
       iOwn: mineS.length > 0, iDontOwn: !mineS.length,
       addSachet: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', sachetPhoto: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', prodId: pr.id, the: pr.the, variante: pr.variante || '', nomFour: pr.nom || '', marque: pr.marque || '', ville: '', ref: pr.ref || '', boutique: pr.boutique || '', tags: (pr.tags || []).slice(), prodComment: pr.commentaire || '' }) })),
       sachets: sacs.map(o => this.sachetView(o, me)), noLogs: !ls.length, hasLogs: ls.length > 1,
@@ -7635,11 +7635,11 @@ class Component extends DCLogic {
     const sk = (() => { const ls = this.logsFor(o.id); const st2 = this.statsFor(o.id); const p = this.num(o.prixPaye), q = this.num(o.quantite);
       return { alpha: o.nom || o.the, price: p && q ? (o.prixMode === 'unite' ? p / q : p / q * 100) : null, last: ls.map(l => String(l.date || '') + String(l.heure || '')).sort().pop() || null, count: ls.length, note: st2.avg }; })();
     const cityOne = String(o.ville || '').trim();
-    return { cities: cityOne ? [{ c: cityOne }] : [], hasCities: !!cityOne, _k: sk, ...give, ...shareCtl, ...adjustCtl, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? (portions.length ? o.owner + ' : ' + rm.txt.replace('Reste', 'reste') : rm.txt) : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
+    return { showOwner: !this.isGuest(), cities: cityOne ? [{ c: cityOne }] : [], hasCities: !!cityOne, _k: sk, ...give, ...shareCtl, ...adjustCtl, ...this.expFlags('s:' + o.id), remainShort: rm ? 'reste ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit : '', hasRemain: !!rm, remainTxt: rm ? (portions.length ? o.owner + ' : ' + rm.txt.replace('Reste', 'reste') : rm.txt) : '', remainPct: rm ? rm.pct : 0, remainLow: !!rm && rm.pct <= 20, photos: photos, anyPhoto: photos.length > 0, id: o.id, code: o.code, owner: o.owner, mine: o.owner === me,
       name: o.nom || o.the, the: o.the, variante: o.variante, marque: this.shopTxt(o.marque, o.ville) || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: (this.priceVisible(o.owner) && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
-      subLine: [this.shopTxt(o.marque, o.ville), this.formatTxt(o), o.owner ? (o.owner === me ? 'à moi' : 'à ' + o.owner) : ''].filter(Boolean).join(' · '),
+      subLine: [this.shopTxt(o.marque, o.ville), this.formatTxt(o), o.owner && !this.isGuest() ? (o.owner === me ? 'à moi' : 'à ' + o.owner) : ''].filter(Boolean).join(' · '),
       avgNum: st.avg != null ? st.avg.toFixed(1).replace('.', ',') : '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'var(--color-text)',
       scoreSub: st.n ? '/20 · ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
       remainNice: rm ? '≈ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit + ' restant' + (rm.left > 1 ? 's' : '') + (this.num(o.quantite) ? ' sur ' + String(o.quantite).replace('.', ',') + ' ' + rm.unit : '') : '',
@@ -7738,6 +7738,7 @@ class Component extends DCLogic {
   noteSplit(n) { const m = String(n || '').trim().match(/^([A-Za-z]*)\s*(.*)$/); return { pre: (m ? m[1] : '').toUpperCase(), num: m ? m[2] : '' }; }
   noteJoin(pre, num) { const letters = pre.split('').filter((c, i, a) => a.indexOf(c) === i); const order = ['L', 'R']; const other = letters.filter(c => order.indexOf(c) < 0); return other.concat(order.filter(c => letters.indexOf(c) >= 0)).join('') + num; }
   noteClean(v) { v = String(v || '').replace(/\./g, ',').replace(/[^0-9,]/g, ''); const i = v.indexOf(','); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/,/g, '').slice(0, 2); const n = parseFloat(v.replace(',', '.')); if (isFinite(n) && n > 20) v = '20'; return v; }
+  isGuest() { return !!this.state.cloud && !this.state.session; }
   shopTxt(m, v) { m = String(m || '').trim(); v = String(v || '').trim(); return m ? m + (v ? ' · ' + v : '') : (v || ''); }
   cityFmt(v) { v = String(v || '').trim().replace(/\s+/g, ' '); const small = ['de', 'du', 'des', 'la', 'le', 'les', 'en', 'sur', 'sous', 'lès', 'et', 'aux', 'au'];
     return v.split(/([ -])/).map((w, i) => (i > 0 && small.indexOf(w.toLowerCase()) >= 0) || /^[ -]$/.test(w) || !w ? w : w.charAt(0).toLocaleUpperCase('fr-FR') + w.slice(1)).join(''); }
@@ -8214,7 +8215,7 @@ class Component extends DCLogic {
         const mine = prods.filter(pr => coll.some(o => o.prodId === pr.id && o.owner === me)), others = prods.filter(pr => mine.indexOf(pr) < 0);
         return {
           teaProds: mine.concat(others).map(pr => { const c = card(pr); const sacs = coll.filter(o => o.prodId === pr.id); const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i); const pst = this.statsMany(sacs.map(o => o.id));
-            return Object.assign(c, { line: [pr.variante, pr.marque, owners.length ? 'chez ' + owners.join(', ') : ''].filter(Boolean).join(' · '), avgColor: pst.avg != null ? this.noteColors(String(Math.round(pst.avg * 10) / 10)).noteBg : 'inherit' }); }),
+            return Object.assign(c, { line: [pr.variante, pr.marque, owners.length && !this.isGuest() ? 'chez ' + owners.join(', ') : ''].filter(Boolean).join(' · '), avgColor: pst.avg != null ? this.noteColors(String(Math.round(pst.avg * 10) / 10)).noteBg : 'inherit' }); }),
           teaNoProds: !prods.length, ...(guest ? { hsOn: false } : this.houseTeaStats(prods, me)),
           teaHasLogs: myLogs.length > 0, teaLogsLbl: '☕ Voir mes ' + myLogs.length + ' dégustation' + (myLogs.length > 1 ? 's' : '') + ' de ce thé →',
           teaLogsOpen: () => this.setState({ view: 'logs', collView: 'logs', dq: '', dTea: tea.name, ds: 'me' }),
