@@ -6899,7 +6899,7 @@ class Component extends DCLogic {
       goHome: () => this.go('home'),
       goBack: () => (v === 'sharedLog' && this.state.detailBack) ? this.setState({ view: this.state.detailBack, detailBack: null }) : (v === 'tea' && this.state.teaBack) ? this.setState({ view: this.state.teaBack, teaBack: null }) : (v === 'list' && this.state.famBack) ? this.setState({ view: this.state.famBack, famBack: null }) : v === 'sub' ? this.setState({ view: 'tea' }) : this.go(v === 'tea' ? 'list' : (v === 'list' ? 'types' : (v === 'lore' ? 'types' : (v === 'mine' || v === 'log' || v === 'logs' || v === 'stats') ? 'home' : v === 'gearItem' ? 'gear' : v === 'profile' ? 'friends' : v === 'prod' ? (this.state.prodBack || 'mine') : v === 'cer' ? 'ceremonies' : v === 'packs' ? 'mine' : v === 'toolsGroup' ? 'tools' : ((v === 'tool' || v === 'compare') ? 'toolsGroup' : 'home')))),
       pick: pick,
-      ...(v === 'list' && me ? this.familyLive(this.state.key, me) : { flOn: false, flTop: [], flDots: [], flMonths: [], flGrid: [] }),
+      ...(v === 'list' && me && !guest ? this.familyLive(this.state.key, me) : { flOn: false, flTop: [], flDots: [], flMonths: [], flGrid: [] }),
       currentName: fam.name,
       currentDesc: fam.desc,
       currentColor: fam.color,
@@ -6961,7 +6961,7 @@ class Component extends DCLogic {
         return {
           teaProds: mine.concat(others).map(pr => { const c = card(pr); const sacs = coll.filter(o => o.prodId === pr.id); const owners = sacs.map(o => o.owner).filter((x, i, arr) => arr.indexOf(x) === i); const pst = this.statsMany(sacs.map(o => o.id));
             return Object.assign(c, { line: [pr.variante, pr.marque, owners.length ? 'chez ' + owners.join(', ') : ''].filter(Boolean).join(' · '), avgColor: pst.avg != null ? this.noteColors(String(Math.round(pst.avg * 10) / 10)).noteBg : 'inherit' }); }),
-          teaNoProds: !prods.length, ...this.houseTeaStats(prods, me),
+          teaNoProds: !prods.length, ...(guest ? { hsOn: false } : this.houseTeaStats(prods, me)),
           teaHasLogs: myLogs.length > 0, teaLogsLbl: '☕ Voir mes ' + myLogs.length + ' dégustation' + (myLogs.length > 1 ? 's' : '') + ' de ce thé →',
           teaLogsOpen: () => this.setState({ view: 'logs', collView: 'logs', dq: '', dTea: tea.name, ds: 'me' }),
           teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
