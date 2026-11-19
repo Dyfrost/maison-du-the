@@ -11,3 +11,5 @@ window.MDT_LEGAL = {
   contact: 'raphaelplay35@gmail.com',  // ex. 'contact@exemple.fr' : adresse pour les demandes RGPD
   region: 'South Asia, Singapour'    // ex. 'Union européenne (Francfort, eu-central-1)' : voir Supabase → Project Settings → General
 };
+// Notifications sur le téléphone : clé publique VAPID (la clé privée va dans les secrets Supabase, jamais ici)
+window.VAPID_PUBLIC_KEY = 'BNIuQUPQTva8PKugopbqC6EyGdEf6ITPQdxBMKl-A8s63dpg1-9syA4GLubeiwP6wMTvnUlJu4symQwr0vopgPg';

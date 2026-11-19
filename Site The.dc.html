@@ -1266,6 +1266,21 @@
           <span class="set-l" style="text-transform: none; letter-spacing: 0;">Les prix payés pour tes sachets et ton matériel (et les prix au gramme qui en découlent). Toi, tu les vois toujours.</span>
         </section>
         <section class="set-card">
+          <h2 class="set-h">🔔 Notifications sur le téléphone</h2>
+          <span class="set-l" style="text-transform: none; letter-spacing: 0;">Tout est désactivé par défaut. Activez d’abord les notifications sur cet appareil (à refaire sur chaque téléphone ou ordinateur), puis choisissez ce que vous voulez recevoir.</span>
+          <sc-if value="{{ nf.nfUnsupported }}" hint-placeholder-val="{{ false }}"><span class="set-l" style="text-transform: none; letter-spacing: 0;">Ce navigateur ne gère pas les notifications. Sur iPhone / iPad : ajoutez le site à l’écran d’accueil (Partager → « Sur l’écran d’accueil ») et ouvrez-le depuis l’icône.</span></sc-if>
+          <sc-if value="{{ nf.nfSupported }}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <sc-if value="{{ nf.nfOff }}" hint-placeholder-val="{{ true }}"><button class="btn btn-primary" onClick="{{ nf.nfEnable }}" style="white-space: nowrap;">🔔 Activer sur cet appareil</button></sc-if>
+            <sc-if value="{{ nf.nfOn }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; font-weight: 600; color: #2f5b3a;">✓ Activées sur cet appareil</span><button class="btn btn-secondary" onClick="{{ nf.nfTest }}" style="white-space: nowrap;">Envoyer un test</button><button class="btn btn-ghost" onClick="{{ nf.nfDisable }}" style="white-space: nowrap;">Désactiver sur cet appareil</button></sc-if>
+          </div></sc-if>
+          <sc-if value="{{ nf.nfMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px;">{{ nf.nfMsg }}</p></sc-if>
+          <sc-for list="{{ nf.nfGroups }}" as="ng" hint-placeholder-count="3">
+            <span class="set-l" style="margin-top: 6px;">{{ ng.title }}</span>
+            <div class="set-opts"><sc-for list="{{ ng.items }}" as="ni" hint-placeholder-count="3"><button class="{{ ni.cls }}" onClick="{{ ni.toggle }}" aria-pressed="{{ ni.on }}"><b>{{ ni.label }}</b><small>{{ ni.mark }}</small></button></sc-for></div>
+          </sc-for>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 14.5px;">⏰ Heure des rappels (thé du jour, tea pet, Tea Wrapped)</span><select class="input" value="{{ nf.nfHour }}" data-val="{{ nf.nfHour }}" onChange="{{ nf.setNfHour }}" aria-label="Heure des rappels" style="width: auto; padding: 8px 14px;"><sc-for list="{{ nf.nfHours }}" as="nh" hint-placeholder-count="24"><option value="{{ nh.v }}" label="{{ nh.l }}">{{ nh.l }}</option></sc-for></select><span style="font-size: 12.5px; opacity: .6;">fuseau : {{ nf.nfTz }}</span></div>
+        </section>
+        <section class="set-card">
           <h2 class="set-h">🗄️ Mes données</h2>
           <span class="set-l" style="text-transform: none; letter-spacing: 0;">Télécharge tout ce que tu as enregistré (sachets, dégustations, matériel, profil, amis, salons) dans un fichier JSON, ou supprime ton compte.</span>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -2251,8 +2266,8 @@
               </div></sc-if>
               <sc-if value="{{ adSacOps }}" hint-placeholder-val="{{ false }}">
               <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-surface); border-radius: 14px; padding: 10px 12px;">
-                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🏪 Boutique</span><select class="input" value="{{ adBShop }}" data-val="{{ adBShop }}" onChange="{{ adSetBShop }}" aria-label="Boutique à appliquer" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adShopOpts }}" as="so" hint-placeholder-count="3"><option value="{{ so.v }}" label="{{ so.l }}">{{ so.l }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adApplyShop }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
-                  <span style="font-size: 14px; font-weight: 600; margin-left: 8px;">📍 Ville</span><select class="input" value="{{ adBCity }}" data-val="{{ adBCity }}" onChange="{{ adSetBCity }}" aria-label="Ville à appliquer" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adCityOpts }}" as="co" hint-placeholder-count="3"><option value="{{ co.v }}" label="{{ co.l }}">{{ co.l }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adApplyCity }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button><span style="font-size: 12.5px; opacity: .65;">({{ adCityHint }})</span></div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🏪 Boutique</span><select class="input" value="{{ adBShop }}" data-val="{{ adBShop }}" onChange="{{ adSetBShop }}" aria-label="Boutique à appliquer" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adShopOpts }}" as="so" hint-placeholder-count="3"><option value="{{ so.v }}" label="{{ so.l }}">{{ so.l }}</option></sc-for></select><sc-if value="{{ adBNewShop }}" hint-placeholder-val="{{ false }}"><input class="input" value="{{ adBNewVal }}" onInput="{{ setAdBNewVal }}" onKeyDown="{{ bNewKey }}" placeholder="Nouvelle boutique" aria-label="Nouvelle boutique" style="width: 170px; padding: 7px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ okBNew }}" style="white-space: nowrap; background: var(--color-bg);">OK</button></sc-if><button class="btn btn-secondary" onClick="{{ adApplyShop }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
+                  <span style="font-size: 14px; font-weight: 600; margin-left: 8px;">📍 Ville</span><select class="input" value="{{ adBCity }}" data-val="{{ adBCity }}" onChange="{{ adSetBCity }}" aria-label="Ville à appliquer" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adCityOpts }}" as="co" hint-placeholder-count="3"><option value="{{ co.v }}" label="{{ co.l }}">{{ co.l }}</option></sc-for></select><sc-if value="{{ adBNewCity }}" hint-placeholder-val="{{ false }}"><input class="input" value="{{ adBNewVal }}" onInput="{{ setAdBNewVal }}" onKeyDown="{{ bNewKey }}" placeholder="Nouvelle ville" aria-label="Nouvelle ville" style="width: 160px; padding: 7px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ okBNew }}" style="white-space: nowrap; background: var(--color-bg);">OK</button></sc-if><button class="btn btn-secondary" onClick="{{ adApplyCity }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button><span style="font-size: 12.5px; opacity: .65;">({{ adCityHint }})</span></div>
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🔁 Transférer {{ adSacWhat }} à</span><select class="input" value="{{ adGiveTo }}" data-val="{{ adGiveTo }}" onChange="{{ adSetGiveTo }}" aria-label="Nouveau propriétaire" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adUsers }}" as="u" hint-placeholder-count="2"><option value="{{ u }}" label="{{ u }}">{{ u }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adGive }}" style="white-space: nowrap; background: var(--color-bg);">Transférer</button><span style="font-size: 12.5px; opacity: .65;">Le sachet change de propriétaire (historique conservé).</span></div>
                 <sc-if value="{{ adOneSac }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🤝 Partager</span><input class="input" inputMode="decimal" value="{{ adShareG }}" onInput="{{ adSetShareG }}" placeholder="ex : 10" aria-label="Quantité à partager" style="width: 84px; padding: 7px 12px; background: var(--color-bg);"><span style="font-size: 14px;">{{ adShareUnit }} avec</span><select class="input" value="{{ adShareTo }}" data-val="{{ adShareTo }}" onChange="{{ adSetShareTo }}" aria-label="Avec qui" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adShareUsers }}" as="u" hint-placeholder-count="2"><option value="{{ u }}" label="{{ u }}">{{ u }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adShare }}" style="white-space: nowrap; background: var(--color-bg);">Partager</button><span style="font-size: 12.5px; opacity: .65;">{{ adShareInfo }}</span></div></sc-if>
               </div>
@@ -2278,7 +2293,7 @@
                           <div style="display: flex; flex-direction: column; gap: 4px; grid-column: {{ fd.span }};"><span style="font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6;">{{ fd.label }}</span>
                             <sc-if value="{{ fd.isText }}" hint-placeholder-val="{{ true }}"><input class="input" type="{{ fd.type }}" value="{{ fd.value }}" onInput="{{ fd.set }}" list="{{ fd.list }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"></sc-if>
                             <sc-if value="{{ fd.isArea }}" hint-placeholder-val="{{ false }}"><textarea class="input" rows="3" value="{{ fd.value }}" onInput="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface); border-radius: 14px; resize: vertical;"></textarea></sc-if>
-                            <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}"><select class="input" value="{{ fd.value }}" data-val="{{ fd.value }}" onChange="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"><sc-for list="{{ fd.options }}" as="fo" hint-placeholder-count="3"><option value="{{ fo.v }}" label="{{ fo.l }}">{{ fo.l }}</option></sc-for></select></sc-if>
+                            <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}"><select class="input" value="{{ fd.value }}" data-val="{{ fd.value }}" onChange="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"><sc-for list="{{ fd.options }}" as="fo" hint-placeholder-count="3"><option value="{{ fo.v }}" label="{{ fo.l }}">{{ fo.l }}</option></sc-for></select><sc-if value="{{ fd.isNew }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; margin-top: 6px;"><input class="input" value="{{ fd.newVal }}" onInput="{{ fd.setNew }}" onKeyDown="{{ fd.newKey }}" placeholder="{{ fd.newPh }}" autoFocus="{{ true }}" style="flex: 1; min-width: 0; padding: 8px 12px; font-size: 14px; background: var(--color-surface);"><button class="btn btn-primary" onClick="{{ fd.okNew }}" style="white-space: nowrap; padding: 6px 14px;">OK</button></div></sc-if></sc-if>
                             <sc-if value="{{ fd.isTags }}" hint-placeholder-val="{{ false }}"><div class="tp">
                   <div class="tp-row"><span class="tp-lbl">Intensité</span><sc-for list="{{ fd.tp.intens }}" as="c" hint-placeholder-count="4"><button type="button" class="tp-chip" onClick="{{ c.toggle }}" aria-pressed="{{ c.on }}" style="background: {{ c.bg }}; color: {{ c.fg }};">{{ c.label }}</button></sc-for></div>
                   <span class="tp-lbl" style="margin-top: 4px;">Arômes (familles de la roue)</span>
@@ -2363,6 +2378,7 @@
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🏪 Boutiques ({{ brN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Toutes les boutiques des thés du commerce. Renommez-en une (ex. un ancien code perso) : tous ses thés suivent. Les orthographes proches (majuscules, accents, espaces) sont regroupées ; les doublons probables sont signalés.</p></div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"><input class="input" value="{{ brQ }}" onInput="{{ setBrQ }}" placeholder="Rechercher une boutique ou un thé…" aria-label="Rechercher" style="flex: 1; min-width: 220px;"><sc-if value="{{ brNone }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .65;">{{ brNone }}</span></sc-if></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;"><input class="input" value="{{ brNew }}" onInput="{{ setBrNew }}" onKeyDown="{{ brNewKey }}" placeholder="Nom de la nouvelle boutique" aria-label="Nouvelle boutique" style="flex: 1; min-width: 220px;"><button class="btn btn-primary" onClick="{{ brCreate }}" style="white-space: nowrap;">＋ Créer une boutique</button></div>
             <sc-if value="{{ brMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">{{ brMsg }}</p></sc-if>
             <sc-if value="{{ brEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune boutique.</p></sc-if>
             <sc-for list="{{ brList }}" as="br" hint-placeholder-count="3">
@@ -2380,6 +2396,7 @@
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
                   <select class="input" value="{{ br.tgt }}" data-val="{{ br.tgt }}" onChange="{{ br.setTgt }}" aria-label="Boutique à garder" style="flex: 1; min-width: 180px;"><option value="">Fusionner dans…</option><sc-for list="{{ br.opts }}" as="bo" hint-placeholder-count="3"><option value="{{ bo.v }}" label="{{ bo.l }}">{{ bo.l }}</option></sc-for></select>
+                  <button class="btn btn-ghost" onClick="{{ br.del }}" style="white-space: nowrap; color: var(--color-accent-800);">🗑 Supprimer</button>
                   <button class="btn btn-secondary" onClick="{{ br.merge }}" style="white-space: nowrap;">🔀 Fusionner</button>
                 </div>
               </div>
@@ -4070,6 +4087,8 @@ class Component extends DCLogic {
   // Safari (iPad/iPhone) laisse parfois une liste déroulante vide quand ses options arrivent après sa valeur : on la resynchronise
   syncSelects() { try { document.querySelectorAll('[data-dv]').forEach(el => { if (el.__dvDone) return; const v = el.getAttribute('data-dv'); if (!v) return; el.__dvDone = true; if (el.value === '') el.value = v; }); } catch (e) {} try { document.querySelectorAll('select[data-val]').forEach(el => { const v = el.getAttribute('data-val'); if (el.value !== v && Array.from(el.options).some(o => o.value === v)) el.value = v; }); } catch (e) {} }
   componentDidMount() {
+    window.addEventListener('hashchange', () => { try { this.applyHash(); } catch (e) {} });
+    try { if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', ev => { const u = ev.data && ev.data.mdtOpen; if (u) { const h = u.indexOf('#'); if (h >= 0) { location.hash = u.slice(h); } } }); } catch (e) {}
     try { if (localStorage.getItem('mdt-asmember')) this.setState({ asMember: true }); } catch (e) {}
     setTimeout(() => this.drawWheel(), 50); setTimeout(() => this.syncSelects(), 0);
     this.watchVersion();
@@ -4641,10 +4660,14 @@ class Component extends DCLogic {
           ...(f[2] === 'tags' ? { tp: this.tagPicker(Array.isArray(draft.tags) ? draft.tags : [], tags => this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { tags: tags }) })), 'tpOpenA') } : { tp: { intens: [], fams: [], openChips: [], others: [] } }),
           ...(f[2] === 'gear' ? (() => { const cur = Array.isArray(draft.gearIds) ? draft.gearIds : (draft.gearId ? [draft.gearId] : []); const gs = (this.getAdds().gear || []).slice().sort((x, y) => (x.owner === draft.author ? 0 : 1) - (y.owner === draft.author ? 0 : 1) || String(x.owner).localeCompare(String(y.owner)) || x.name.localeCompare(y.name, 'fr'));
             return { noChips: !gs.length, chips: gs.map(g => { const on = cur.indexOf(g.id) >= 0; return { label: (on ? '✓ ' : '') + this.gearCat(g)[1] + ' ' + g.name + ' · ' + g.owner, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)',
-              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? f[2].map(o => ({ v: o[0], l: o[1] })) : [], span: f[2] === 'area' || f[2] === 'gear' || f[2] === 'tags' ? '1 / -1' : 'auto',
-          set: e => { let val = f[0] === 'marque' && e.target.tagName !== 'SELECT' ? this.upInput(e) : e.target.value;
-            if (val === '__new') { const v = window.prompt(f[0] === 'marque' ? 'Nom de la nouvelle boutique :' : 'Nom de la nouvelle ville :', ''); if (!v || !v.trim()) { this.setState({}); return; } val = f[0] === 'marque' ? this.upBrand(v) : this.cityFmt(v); }
-            this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); } })) : [],
+              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? (() => { const cur = draft[f[0]] == null ? '' : String(draft[f[0]]); const l = f[2].map(o => ({ v: o[0], l: o[1] })); if (cur && !l.some(o => o.v === cur)) l.splice(Math.max(0, l.length - 1), 0, { v: cur, l: cur + ' (nouveau)' }); return l; })() : [], span: f[2] === 'area' || f[2] === 'gear' || f[2] === 'tags' ? '1 / -1' : 'auto',
+          set: e => { const val = f[0] === 'marque' && e.target.tagName !== 'SELECT' ? this.upInput(e) : e.target.value;
+            if (val === '__new') { this.setState({ adNewField: f[0], adNewVal: '' }); return; }
+            this.setState(s0 => ({ adNewField: s0.adNewField === f[0] ? null : s0.adNewField, adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); },
+          isNew: this.state.adNewField === f[0], newVal: this.state.adNewVal || '', newPh: f[0] === 'marque' ? 'Nom de la nouvelle boutique' : 'Nom de la nouvelle ville',
+          setNew: e => { const v = f[0] === 'marque' ? this.upInput(e) : e.target.value; this.setState({ adNewVal: v }); },
+          okNew: () => { const v0 = String(this.state.adNewVal || '').trim(); if (!v0) return; const v = f[0] === 'marque' ? this.upBrand(v0) : this.cityFmt(v0); this.setState(s0 => ({ adNewField: null, adNewVal: '', adDraft: Object.assign({}, s0.adDraft, { [f[0]]: v }) })); },
+          newKey: e => { if (e.key === 'Enter') { e.preventDefault(); const v0 = String(this.state.adNewVal || '').trim(); if (!v0) return; const v = f[0] === 'marque' ? this.upBrand(v0) : this.cityFmt(v0); this.setState(s0 => ({ adNewField: null, adNewVal: '', adDraft: Object.assign({}, s0.adDraft, { [f[0]]: v }) })); } } })) : [],
         cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
         toggle: () => this.setState(s0 => { const cur = s0.adSel || []; return { adSel: cur.indexOf(r.id) >= 0 ? cur.filter(z => z !== r.id) : cur.concat([r.id]) }; }),
         open: r.open, del: () => { if (window.confirm(r.delMsg)) del(r.delFn); } }; }),
@@ -4654,7 +4677,7 @@ class Component extends DCLogic {
       adHasSel: sel.length > 0, adSelTxt: sel.length + ' élément' + (sel.length > 1 ? 's' : '') + ' sélectionné' + (sel.length > 1 ? 's' : ''),
       adClearSel: () => this.setState({ adSel: [] }),
       ...(() => {
-        if (kind !== 'sachet' || !sel.length) return { adSacOps: false, adOneSac: false, adUsers: [], adShareUsers: [], adShopOpts: [], adCityOpts: [] };
+        if (kind !== 'sachet' || !sel.length) return { adSacOps: false, adOneSac: false, adUsers: [], adShareUsers: [], adShopOpts: [], adCityOpts: [], adBNewShop: false, adBNewCity: false };
         const all = this.opts().users.filter(Boolean);
         const one = sel.length === 1 ? this.collection().find(c => c.id === sel[0]) : null;
         const users = one ? all.filter(u => u !== one.owner) : all;
@@ -4671,8 +4694,10 @@ class Component extends DCLogic {
         const cityShop = bShop || (shopsSel.length === 1 ? shopsSel[0] : '');
         const cityList = cityShop ? this.shopCities(cityShop) : Array.from(new Set(this.getAdds().sachets.map(x => x.ville).filter(Boolean))).sort((x, y) => x.localeCompare(y, 'fr'));
         const bCity = this.state.adBCity || '';
-        const pickNew = (e, key, fmt, what) => { let v = e.target.value; if (v === '__new') { const t = window.prompt('Nom de la nouvelle ' + what + ' :', ''); if (!t || !t.trim()) { this.setState({}); return; } v = fmt(t); } this.setState({ [key]: v }); };
-        const sacOps = {
+        const pickNew = (e, key, fmt, what) => { const v = e.target.value; if (v === '__new') { this.setState({ adBNew: key, adBNewVal: '' }); return; } this.setState({ [key]: v, adBNew: null }); };
+        const okBNew = () => { const k = this.state.adBNew; const t = String(this.state.adBNewVal || '').trim(); if (!k || !t) return; this.setState({ [k]: k === 'adBShop' ? this.upBrand(t) : this.cityFmt(t), adBNew: null, adBNewVal: '' }); };
+        const sacOps = { adBNewShop: this.state.adBNew === 'adBShop', adBNewCity: this.state.adBNew === 'adBCity', adBNewVal: this.state.adBNewVal || '',
+          setAdBNewVal: e => this.setState({ adBNewVal: this.state.adBNew === 'adBShop' ? this.upInput(e) : e.target.value }), okBNew: okBNew, bNewKey: e => { if (e.key === 'Enter') { e.preventDefault(); okBNew(); } },
           adShopOpts: [{ v: '', l: '— Choisir —' }].concat(this.allShops().concat(bShop && this.allShops().indexOf(bShop) < 0 ? [bShop] : []).map(x => ({ v: x, l: x })), [{ v: '__new', l: '＋ Nouvelle boutique…' }]),
           adBShop: bShop, adSetBShop: e => pickNew(e, 'adBShop', v => this.upBrand(v), 'boutique'),
           adApplyShop: () => { if (!bShop) return; const others = this.getAdds().sachets.filter(x => pids.indexOf(x.prodId) >= 0 && sel.indexOf(x.id) < 0).length;
@@ -5070,6 +5095,7 @@ class Component extends DCLogic {
     const a = this.getAdds(); const groups = {}; let none = 0;
     a.prods.forEach(p => { const m = String(p.marque || '').trim(); if (!m) { none++; return; } const k = this.brandKey(m); if (!k) { none++; return; }
       const g = groups[k] = groups[k] || { key: k, spell: {}, prods: [] }; g.spell[m] = (g.spell[m] || 0) + 1; g.prods.push(p); });
+    ((a.options || {}).shopList || []).forEach(m => { const k = this.brandKey(m); if (k && !groups[k]) groups[k] = { key: k, spell: { [this.upBrand(m)]: 0 }, prods: [] }; });
     const list = Object.values(groups).map(g => { const sp = Object.keys(g.spell).sort((x, y) => g.spell[y] - g.spell[x] || (y !== y.toLowerCase()) - (x !== x.toLowerCase()) || x.localeCompare(y)); return Object.assign(g, { name: sp[0], spells: sp }); })
       .sort((x, y) => y.prods.length - x.prods.length || x.name.localeCompare(y.name, 'fr'));
     const lev = (x, y) => { if (Math.abs(x.length - y.length) > 2) return 9; const d = []; for (let i = 0; i <= x.length; i++) { d[i] = [i]; } for (let j = 1; j <= y.length; j++) d[0][j] = j;
@@ -5081,6 +5107,11 @@ class Component extends DCLogic {
     const ed = this.state.brEdit || {}, mg = this.state.brMerge || {}, q = this.norm(this.state.brQ || '');
     const shown = list.filter(g => !q || this.norm(g.spells.join(' ')).indexOf(q) >= 0 || g.prods.some(p => this.norm(p.nom || p.the).indexOf(q) >= 0));
     return { brN: String(list.length), brNone: none ? none + ' thé' + (none > 1 ? 's' : '') + ' du commerce sans boutique.' : '', brMsg: this.state.brMsg || '', brQ: this.state.brQ || '', setBrQ: e => this.setState({ brQ: e.target.value }), brEmpty: !shown.length,
+      brNew: this.state.brNew || '', setBrNew: e => this.setState({ brNew: this.upInput(e) }),
+      brCreate: () => { const v = this.upBrand(this.state.brNew); if (!v) return; if (list.some(h => h.key === this.brandKey(v))) { this.setState({ brMsg: '« ' + v + ' » existe déjà.' }); return; }
+        const near = this.similarNames(v, list.map(h => h.name)); if (near.length && !window.confirm('« ' + v + ' » ressemble à « ' + near[0] + ' ». Créer quand même ?')) return;
+        this.setOpt('shopList', ((a.options || {}).shopList || []).concat([v])); this.setState({ brNew: '', brMsg: '✓ Boutique « ' + v + ' » créée : elle est proposée dans les listes.' }); },
+      brNewKey: e => { if (e.key === 'Enter') { e.preventDefault(); const v = this.upBrand(this.state.brNew); if (!v || list.some(h => h.key === this.brandKey(v))) return; this.setOpt('shopList', ((a.options || {}).shopList || []).concat([v])); this.setState({ brNew: '', brMsg: '✓ Boutique « ' + v + ' » créée.' }); } },
       brList: shown.map(g => { const nr = near(g); const draft = ed[g.key] != null ? ed[g.key] : g.name; const tgt = mg[g.key] || (nr[0] ? nr[0].key : '');
         const cities = {}; const gids = {}; g.prods.forEach(p => { gids[p.id] = p; }); a.sachets.forEach(sa => { const p = gids[sa.prodId]; if (!p) return; const c = String(sa.ville || p.ville || '').trim() || 'sans ville'; cities[c] = (cities[c] || 0) + 1; });
         const cl = Object.keys(cities).sort((x, y) => (x === 'sans ville') - (y === 'sans ville') || cities[y] - cities[x] || x.localeCompare(y, 'fr'));
@@ -5107,6 +5138,11 @@ class Component extends DCLogic {
             const n = setAll(other ? [g.key, other.key] : [g.key], v); this.setState(st => { const e2 = Object.assign({}, st.brEdit); delete e2[g.key]; return { brEdit: e2, brMsg: '✓ ' + n + ' thé(s) renommé(s) en « ' + v + ' ».' }; }); },
           opts: list.filter(h => h !== g).map(h => ({ v: h.key, l: h.name + ' (' + h.prods.length + ')' })), tgt: tgt,
           setTgt: e => { const v = e.target.value; this.setState(st => ({ brMerge: Object.assign({}, st.brMerge, { [g.key]: v }) })); },
+          del: () => { if (!window.confirm('Supprimer la boutique « ' + g.name + ' » ?' + (g.prods.length ? ' Ses ' + g.prods.length + ' thé(s) passeront « sans boutique » (ils ne sont pas supprimés).' : ''))) return;
+            const b = this.getAdds(); if (g.prods.length) this.setAdds(Object.assign({}, b, { prods: b.prods.map(p => this.brandKey(p.marque) === g.key ? Object.assign({}, p, { marque: '' }) : p) }));
+            const sl = ((this.getAdds().options || {}).shopList || []).filter(x => this.brandKey(x) !== g.key); this.setOpt('shopList', sl);
+            const sc = Object.assign({}, (this.getAdds().options || {}).shopCities || {}); if (sc[g.key]) { delete sc[g.key]; this.setOpt('shopCities', sc); }
+            this.modLog('a supprimé la boutique', g.name); this.setState({ brMsg: '✓ Boutique « ' + g.name + ' » supprimée.' }); },
           merge: () => { const h = list.find(x => x.key === tgt); if (!h) { this.setState({ brMsg: 'Choisissez la boutique à garder.' }); return; }
             if (!window.confirm('Réunir « ' + g.name + ' » (' + g.prods.length + ') dans « ' + h.name + ' » ?')) return;
             const n = setAll([g.key, h.key], h.name); this.setState({ brMsg: '✓ « ' + g.name + ' » fusionnée dans « ' + h.name + ' » (' + n + ' thés).' }); } }; }) };
@@ -5157,6 +5193,46 @@ class Component extends DCLogic {
   priceVisible(owner, viewer) { if (viewer === undefined) viewer = (!!this.state.cloud && !this.state.session) ? null : this.me(); return this.visAllows(this.prefsOf(owner).priceVis || 'public', owner, viewer); }
   logVisible(l, viewer) { return (viewer && this.inLog(l, viewer)) || this.contentVisible(l.author, viewer); }
   setPrefs(patch) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { prefs: Object.assign({}, (all[me] || {}).prefs, patch) }); this.setOpt('profiles', all); }
+  pushSupported() { return typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+  pushIOSHint() { const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || navigator.standalone; return ios && !standalone; }
+  async pushCheck() {
+    if (!this.pushSupported()) return; try { const reg = await navigator.serviceWorker.getRegistration(); const sub = reg && await reg.pushManager.getSubscription(); this.setState({ pushOn: !!sub, pushChecked: true }); } catch (e) { this.setState({ pushChecked: true }); }
+  }
+  async pushEnable() {
+    if (!this.v2 || !this.sb) { this.setState({ pushMsg: 'Les notifications demandent le nouveau stockage.' }); return; }
+    if (!window.VAPID_PUBLIC_KEY) { this.setState({ pushMsg: 'Clé VAPID absente de supabase-config.js.' }); return; }
+    if (this.pushIOSHint()) { this.setState({ pushMsg: 'Sur iPhone / iPad : ajoutez d’abord le site à l’écran d’accueil (Partager → « Sur l’écran d’accueil »), puis ouvrez-le depuis l’icône et revenez ici.' }); return; }
+    try {
+      this.setState({ pushMsg: 'Activation…' });
+      const reg = await navigator.serviceWorker.register('sw.js'); await navigator.serviceWorker.ready;
+      const perm = await Notification.requestPermission(); if (perm !== 'granted') { this.setState({ pushMsg: 'Autorisation refusée : réactivez les notifications pour ce site dans les réglages du navigateur.' }); return; }
+      const key = (b64 => { const p = '='.repeat((4 - b64.length % 4) % 4); const raw = atob((b64 + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(raw, c => c.charCodeAt(0)); })(window.VAPID_PUBLIC_KEY);
+      let sub = await reg.pushManager.getSubscription(); if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key });
+      const j = sub.toJSON(); const { error } = await this.sb.rpc('mdt_push_save', { e: j.endpoint, k: j.keys.p256dh, a: j.keys.auth, u: navigator.userAgent }); if (error) throw error;
+      const nf = Object.assign({}, this.prefsOf(this.me()).notif || {}); nf.tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/Paris'; this.setPrefs({ notif: nf });
+      this.setState({ pushOn: true, pushMsg: '✓ Notifications activées sur cet appareil. Choisissez ci-dessous ce que vous voulez recevoir.' });
+    } catch (e) { this.setState({ pushMsg: 'Échec : ' + (e.message || e) }); }
+  }
+  async pushDisable() {
+    try { const reg = await navigator.serviceWorker.getRegistration(); const sub = reg && await reg.pushManager.getSubscription(); if (sub) { if (this.sb) await this.sb.rpc('mdt_push_delete', { e: sub.endpoint }); await sub.unsubscribe(); } this.setState({ pushOn: false, pushMsg: 'Notifications désactivées sur cet appareil.' }); } catch (e) { this.setState({ pushMsg: 'Échec : ' + (e.message || e) }); }
+  }
+  notifView(me) {
+    if (!this.state.pushChecked && !this._pushChecking) { this._pushChecking = true; setTimeout(() => this.pushCheck(), 0); }
+    const nf = this.prefsOf(me).notif || {}; const mod = this.realMod(me), adm = this.realAdmin(me);
+    const set = patch => { const cur = Object.assign({}, this.prefsOf(me).notif || {}, patch); if (!cur.tz) cur.tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/Paris'; this.setPrefs({ notif: cur }); };
+    const T = [];
+    if (mod) T.push(['🛡️ Administration', [['adm_report', '🚩 Nouveau signalement'], ['adm_pending', '⏳ Ajout au catalogue à valider']].concat(adm ? [['adm_member', '👋 Nouveau membre inscrit']] : [])]);
+    T.push(['👥 Les autres et moi', [['friend_req', '🤝 Demande d’ami reçue'], ['salon_invite', '🏮 Invitation dans un salon'], ['log_with', '☕ Quelqu’un m’ajoute à sa dégustation'], ['gift', '🎁 Un sachet m’est offert ou attribué'], ['announce', '📣 Nouvelle annonce de la maison']]]);
+    T.push(['🏮 Mes salons', [['salon_log', '🍵 Chaque dégustation d’un membre de mes salons (peut faire beaucoup)']]]);
+    T.push(['⏰ Rappels (à l’heure choisie)', [['tea_day', '🎲 Proposition de thé du jour (un de mes sachets peu bu)'], ['pet_thirst', '💧 Mon tea pet a soif (3 jours sans thé)'], ['wrap', '🎁 Mon Tea Wrapped du mois est prêt (le 1er)']]]);
+    const hour = nf.teaHour != null ? Number(nf.teaHour) : 9;
+    return { nfSupported: this.pushSupported(), nfUnsupported: !this.pushSupported(), nfV2: !!this.v2, nfOn: !!this.state.pushOn, nfOff: !this.state.pushOn, nfMsg: this.state.pushMsg || '', nfIOS: this.pushIOSHint(),
+      nfEnable: () => this.pushEnable(), nfDisable: () => this.pushDisable(),
+      nfTest: async () => { if (!this.sb) return; const { error } = await this.sb.rpc('mdt_notif_test'); this.setState({ pushMsg: error ? 'Échec : ' + error.message : 'Notification de test envoyée : elle arrive dans la minute.' }); },
+      nfGroups: T.map(g => ({ title: g[0], items: g[1].map(t => { const on = !!nf[t[0]]; return { label: t[1], on: on, cls: on ? 'set-opt on' : 'set-opt', mark: on ? '✓ Activé' : 'Désactivé', toggle: () => set({ [t[0]]: !on }) }; }) })),
+      nfHours: Array.from({ length: 24 }, (_, h) => ({ v: String(h), l: String(h).padStart(2, '0') + ' h 00' })), nfHour: String(hour), setNfHour: e => set({ teaHour: Number(e.target.value) }),
+      nfTz: nf.tz || (Intl.DateTimeFormat().resolvedOptions().timeZone) || '' };
+  }
   exportMyData() {
     const me = this.me(); if (!me) return; const a = this.getAdds(); const o = a.options || {};
     const mine = l => l.author === me || (l.with || []).indexOf(me) >= 0;
@@ -6559,6 +6635,11 @@ class Component extends DCLogic {
   }
 
   applyHash() {
+    const g = /^#go=([\w-]+)$/.exec(location.hash || '');
+    if (g) { const k = g[1]; const adm = /^admin-(\w+)$/.exec(k);
+      if (adm) this.setState({ view: 'admin', addTab: adm[1] }); else if (k === 'wrap') this.setState({ view: 'stats', stTab: 'wrap' }); else if (k === 'log') this.setState({ view: 'log', editLogId: null });
+      else if (['friends', 'salon', 'home', 'settings', 'mine'].indexOf(k) >= 0) this.setState({ view: k });
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} return; }
     const m = /^#(prod|log)=([\w-]+)$/.exec(location.hash || '');
     if (!m) return;
     const a = this.getAdds();
@@ -7422,7 +7503,7 @@ class Component extends DCLogic {
   }
   shopOptions(cur) { const l = this.allShops(); const c = this.upBrand(cur); if (c && l.indexOf(c) < 0) l.push(c); return [['', '— Aucune —']].concat(l.map(x => [x, x]), [['__new', '＋ Nouvelle boutique…']]); }
   cityOptions(shop, cur) { const l = this.shopCities(shop); if (cur && !l.some(x => this.norm(x) === this.norm(cur))) l.push(cur); return [['', '— Aucune —']].concat(l.map(x => [x, x]), [['__new', '＋ Nouvelle ville…']]); }
-  allShops() { return Array.from(new Set(this.getAdds().prods.map(p => this.upBrand(p.marque)).filter(Boolean))).sort((x, y) => x.localeCompare(y, 'fr')); }
+  allShops() { return Array.from(new Set(this.getAdds().prods.map(p => this.upBrand(p.marque)).concat(((this.getAdds().options || {}).shopList || []).map(x => this.upBrand(x))).filter(Boolean))).sort((x, y) => x.localeCompare(y, 'fr')); }
   // villes où un thé a été acheté (une par sachet)
   prodCities(pid) { const a = this.getAdds(); const p = a.prods.find(x => x.id === pid) || {}; const out = []; a.sachets.filter(sa => sa.prodId === pid).map(sa => sa.ville || p.ville).concat([p.ville]).forEach(c => { c = String(c || '').trim(); if (c && !out.some(x => this.norm(x) === this.norm(c))) out.push(c); }); return out; }
   cityPick(shop, cur, pick) {
@@ -7975,7 +8056,7 @@ class Component extends DCLogic {
       menuMine: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
       menuProfile: () => this.setState({ menuOpen: false, view: 'profile', profUser: me, profEdit: false }),
       menuSettings: () => this.setState({ menuOpen: false, view: 'settings', setMsg: '', setDesc: null }),
-      isSettings: v === 'settings', sett: v === 'settings' ? this.settingsView(me) : {},
+      isSettings: v === 'settings', sett: v === 'settings' ? this.settingsView(me) : {}, nf: v === 'settings' && me ? this.notifView(me) : { nfGroups: [], nfHours: [] },
       isLegal: v === 'legal', lg: v === 'legal' ? this.legalView() : {}, openLegal: () => { this.setState({ view: 'legal', menuOpen: false }); try { window.scrollTo(0, 0); } catch (e) {} },
       openColl: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
       collTea: () => this.setState({ view: 'mine', collView: 'mine' }),
