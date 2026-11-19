@@ -7073,7 +7073,7 @@ class Component extends DCLogic {
       name: o.nom || o.the, the: o.the, variante: o.variante, marque: this.shopTxt(o.marque, o.ville) || '—', boutique: o.boutique || '—', prodCode: o.prodCode, tags: o.tags || [],
       achat: o.achat ? this.fmtDate(o.achat) : '—', prodDate: o.prodDate || '—', lot: o.lot || '—', format: this.formatTxt(o) || '—', prix: this.prixTxt(o) || '—', paye: (this.priceVisible(o.owner) && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + ' €' : '—',
       freq: o.freq || '—', note: o.commentaire || '',
-      subLine: [o.marque, this.formatTxt(o), o.owner ? (o.owner === me ? 'à moi' : 'à ' + o.owner) : ''].filter(Boolean).join(' · '),
+      subLine: [this.shopTxt(o.marque, o.ville), this.formatTxt(o), o.owner ? (o.owner === me ? 'à moi' : 'à ' + o.owner) : ''].filter(Boolean).join(' · '),
       avgNum: st.avg != null ? st.avg.toFixed(1).replace('.', ',') : '—', avgColor: st.avg != null ? this.noteColors(String(Math.round(st.avg * 10) / 10)).noteBg : 'var(--color-text)',
       scoreSub: st.n ? '/20 · ' + st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'pas encore dégusté',
       remainNice: rm ? '≈ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + rm.unit + ' restant' + (rm.left > 1 ? 's' : '') + (this.num(o.quantite) ? ' sur ' + String(o.quantite).replace('.', ',') + ' ' + rm.unit : '') : '',
@@ -8069,7 +8069,7 @@ class Component extends DCLogic {
       mineCount: (() => { const n = myColl.length; return n ? n + (n > 1 ? ' sachets' : ' sachet') + (scope === 'all' ? ' dans la maison.' : ' dans votre collection.') : 'Votre collection est vide : ajoutez un thé, ou ouvrez « Toute la maison » pour voir ceux des autres.'; })(),
       mineProds: this.sortList((() => {
         const q = this.norm(this.state.mq);
-        const list = myColl.filter(o => this.famOk(o)).filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.boutique, o.prodDate, o.owner].join(' ')).indexOf(q) >= 0);
+        const list = myColl.filter(o => this.famOk(o)).filter(o => !q || this.norm([o.the, o.nom, o.marque, o.ville, o.code, o.lot, o.boutique, o.prodDate, o.owner].join(' ')).indexOf(q) >= 0);
         const ids = []; list.forEach(o => { if (ids.indexOf(o.prodId) < 0) ids.push(o.prodId); });
         return ids.map(pid => {
           const sacs = list.filter(o => o.prodId === pid); const o = sacs[0]; const fk = this.famOf(o.the);
@@ -8095,10 +8095,10 @@ class Component extends DCLogic {
       vBigOn: (this.state.vmode || 'big') === 'big', vBigOff: (this.state.vmode || 'big') !== 'big', vSmallOn: this.state.vmode === 'small', vSmallOff: this.state.vmode !== 'small',
       vBig: () => { this.setState({ vmode: 'big' }); try { localStorage.setItem('the-vmode', 'big'); } catch (e) {} },
       vSmall: () => { this.setState({ vmode: 'small' }); try { localStorage.setItem('the-vmode', 'small'); } catch (e) {} },
-      mineSachets: this.sortList((() => { const q = this.norm(this.state.mq); return myColl.filter(o => this.famOk(o)).filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(y.achat || '').localeCompare(String(x.achat || '')) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(), x => x._k, 'tSort'),
+      mineSachets: this.sortList((() => { const q = this.norm(this.state.mq); return myColl.filter(o => this.famOk(o)).filter(o => !q || this.norm([o.the, o.nom, o.marque, o.ville, o.code, o.lot, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(y.achat || '').localeCompare(String(x.achat || '')) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(), x => x._k, 'tSort'),
       isPacks: v === 'packs',
       pq: this.state.pq || '', onPq: e => this.setState({ pq: e.target.value }),
-      allPacks: (() => { const q = this.norm(this.state.pq); return coll.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.code, o.lot, o.boutique, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the)) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(),
+      allPacks: (() => { const q = this.norm(this.state.pq); return coll.filter(o => !q || this.norm([o.the, o.nom, o.marque, o.ville, o.code, o.lot, o.boutique, o.prodDate, o.owner, o.variante].join(' ')).indexOf(q) >= 0).slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the)) || String(x.code).localeCompare(String(y.code))).map(o => this.sachetView(o, me)); })(),
       packsCount: (() => { const st = this.statsMany(coll.map(o => o.id)); return coll.length + (coll.length > 1 ? ' sachets' : ' sachet') + ' dans la maison' + (st.avg != null ? ' · moyenne générale ' + this.avgTxt(st) : '') + '.'; })(),
       isEditing: !!this.state.editId,
       saveLotLabel: this.state.editId ? 'Enregistrer les modifications' : 'Ajouter à ma collection',
