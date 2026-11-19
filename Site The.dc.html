@@ -263,6 +263,7 @@
           <div role="menu" class="umenu" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 41; min-width: 220px; background: var(--color-bg); border-radius: 22px; padding: 6px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 2px; animation: fadeUp .2s ease both;">
             <button role="menuitem" onClick="{{ menuProfile }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🙂 Mon profil</button>
             <button role="menuitem" onClick="{{ menuFriends }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">👥 Amis{{ friendBadge }}</button>
+            <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
@@ -6622,7 +6623,8 @@ class Component extends DCLogic {
       })(),
       gearHint: this.gearUsable(me).length ? 'Touchez tout ce que vous utilisez. Le matériel du salon s’affiche avec la case ci-dessous.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
 
-      menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frMsg: '' }),
+      menuFriends: () => this.setState({ menuOpen: false, view: 'friends', frTab: 'friends', frMsg: '' }),
+      menuSalon: () => this.setState({ menuOpen: false, view: 'friends', frTab: 'salon', frMsg: '' }),
       friendCount: ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length + this.salonInvitesFor(me).length,
       ...(() => {
         const nf = this.notifsFor(me);
