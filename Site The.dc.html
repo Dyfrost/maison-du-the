@@ -24,6 +24,7 @@
 <script src="./image-slot.js"></script>
 <script src="./supabase-config.js"></script>
 <script src="./vendor/supabase-2.119.1.js"></script>
+<script src="./vendor/qrcode-generator-1.4.4.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   body { margin: 0; }
@@ -674,7 +675,7 @@
             <h1 style="font-size: 46px; margin: 0;">Mes thés</h1>
             <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">{{ mineCount }}</p>
           </div>
-          <button class="btn btn-primary" onClick="{{ newLot }}" style="white-space: nowrap; margin-left: auto;">＋ Ajouter un thé</button>
+          <div style="display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap;"><sc-if value="{{ canQrAll }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ qrAll }}" title="Une étiquette QR par sachet (non vide) : scannée, elle lance une dégustation" style="white-space: nowrap;">🏷️ Étiquettes QR</button></sc-if><button class="btn btn-primary" onClick="{{ newLot }}" style="white-space: nowrap;">＋ Ajouter un thé</button></div>
         </div>
         <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 3px;">
           <sc-if value="{{ scopeMeOn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Les thés de {{ me }}</button></sc-if><sc-if value="{{ scopeMeOff }}" hint-placeholder-val="{{ false }}"><button onClick="{{ scopeMe }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Les thés de {{ me }}</button></sc-if>
@@ -755,7 +756,7 @@
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
                       <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
-                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle lance une dégustation</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sac-logs">
@@ -814,7 +815,7 @@
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
                       <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
-                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle lance une dégustation</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sac-logs">
@@ -912,7 +913,7 @@
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
                       <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
-                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle lance une dégustation</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sac-logs">
@@ -1000,7 +1001,7 @@
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
                       <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
-                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle lance une dégustation</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sac-logs">
@@ -1071,7 +1072,7 @@
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
                       <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
-                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle lance une dégustation</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sac-logs">
@@ -1413,6 +1414,21 @@
             </section>
           </sc-if>
 
+          <sc-if value="{{ sl.tabWish }}" hint-placeholder-val="{{ false }}">
+            <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+              <p style="margin: 0; font-size: 14px; opacity: .7;">Les thés qui font envie aux membres du salon. Pour ajouter les vôtres : votre profil → Liste d’envies.</p>
+              <sc-if value="{{ sl.noWish }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune envie notée pour l’instant.</p></sc-if>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+                <sc-for list="{{ sl.wishes }}" as="wi" hint-placeholder-count="2">
+                  <div style="background: var(--color-bg); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 12.5px; opacity: .6;">🎁 {{ wi.who }}</span><b style="font-size: 16px;">{{ wi.name }}</b>
+                    <sc-if value="{{ wi.hasMeta }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .75;">{{ wi.meta }}</span></sc-if>
+                    <sc-if value="{{ wi.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .85;">{{ wi.note }}</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </sc-if>
           <sc-if value="{{ sl.tabFil }}" hint-placeholder-val="{{ false }}">
             <div class="feed">
               <sc-if value="{{ sl.noFeed }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien pour l’instant : la prochaine dégustation d’un membre apparaîtra ici.</p></sc-if>
@@ -1511,6 +1527,29 @@
               <sc-if value="{{ pf.isMe }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pf.edit }}" style="align-self: flex-start; white-space: nowrap;">Modifier la description</button></sc-if>
             </sc-if>
           </section>
+          <sc-if value="{{ wl.show }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">🎁 Liste d’envies</span>
+            <sc-if value="{{ wl.empty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; opacity: .7;">{{ wl.emptyTxt }}</p></sc-if>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
+              <sc-for list="{{ wl.list }}" as="wi" hint-placeholder-count="2">
+                <div style="background: var(--color-bg); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+                  <b style="font-size: 16px;">{{ wi.name }}</b>
+                  <sc-if value="{{ wi.hasMeta }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .75;">{{ wi.meta }}</span></sc-if>
+                  <sc-if value="{{ wi.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .85; white-space: pre-wrap;">{{ wi.note }}</span></sc-if>
+                  <sc-if value="{{ wi.isMe }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap;"><button class="btn btn-secondary" onClick="{{ wi.bought }}" style="white-space: nowrap; font-size: 13.5px; padding: 5px 12px;">✓ Acheté → ajouter</button><button class="btn btn-ghost" onClick="{{ wi.del }}" style="white-space: nowrap; font-size: 13.5px;">Retirer</button></div></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ wl.isMe }}" hint-placeholder-val="{{ false }}"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; align-items: end;">
+              <input class="input" list="liste-thes" value="{{ wl.d.name }}" onInput="{{ wl.set.name }}" placeholder="Thé (ex. Da Hong Pao)" aria-label="Thé" style="padding: 9px 14px;">
+              <input class="input" list="liste-boutiques" value="{{ wl.d.shop }}" onInput="{{ wl.set.shop }}" placeholder="Boutique" aria-label="Boutique" style="padding: 9px 14px;">
+              <input class="input" value="{{ wl.d.price }}" onInput="{{ wl.set.price }}" placeholder="Prix vu (ex. 12 € / 50 g)" aria-label="Prix" style="padding: 9px 14px;">
+              <input class="input" value="{{ wl.d.note }}" onInput="{{ wl.set.note }}" placeholder="Pourquoi / conseillé par…" aria-label="Note" style="padding: 9px 14px;">
+              <button class="btn btn-primary" onClick="{{ wl.add }}" style="white-space: nowrap;">＋ Ajouter à mes envies</button>
+            </div><span style="font-size: 12.5px; opacity: .6;">Visible par les membres de vos salons et vos amis : pratique pour une idée de cadeau ou un achat groupé.</span></sc-if>
+          </section>
+          </sc-if>
           <sc-if value="{{ pf.showGear }}" hint-placeholder-val="{{ false }}">
           <section style="display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="font-size: 26px; margin: 0;">Matériel en vitrine</h2><sc-if value="{{ pf.isMe }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ pf.gearPickToggle }}" style="white-space: nowrap; font-size: 14px;">{{ pf.gearPickBtn }}</button></sc-if></div>
@@ -1879,6 +1918,14 @@
           <sc-for list="{{ stTabs }}" as="tt" hint-placeholder-count="2"><button role="tab" aria-selected="{{ tt.on }}" onClick="{{ tt.go }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ tt.bg }}; color: {{ tt.fg }};">{{ tt.label }}</button></sc-for>
         </div>
         <sc-if value="{{ stTabNum }}" hint-placeholder-val="{{ true }}">
+          <section class="sts" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="sts-h"><h3 style="margin: 0; font-family: var(--font-heading); font-weight: 400; font-size: 22px; line-height: 1.2;">📆 Mon calendrier de thé</h3><span>chaque case = un jour, plus c’est vert plus il y a eu de dégustations</span></div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;"><sc-for list="{{ cal.calKpis }}" as="ck" hint-placeholder-count="4"><div style="background: var(--color-bg); border-radius: 16px; padding: 8px 14px; display: flex; flex-direction: column;"><span style="font-size: 12px; opacity: .65;">{{ ck.icon }} {{ ck.label }}</span><b style="font-size: 18px;">{{ ck.value }}</b></div></sc-for></div>
+            <div style="overflow-x: auto; padding-bottom: 4px;"><div style="display: grid; grid-template-columns: repeat({{ cal.calCols }}, 12px); grid-template-rows: 14px repeat(7, 12px); gap: 3px; width: max-content;">
+              <sc-for list="{{ cal.calMonths }}" as="cm" hint-placeholder-count="12"><span style="grid-row: 1; grid-column: {{ cm.col }} / span 4; font-size: 10.5px; opacity: .6; white-space: nowrap;">{{ cm.l }}</span></sc-for>
+              <sc-for list="{{ cal.calCells }}" as="cc" hint-placeholder-count="30"><span title="{{ cc.t }}" style="grid-row: calc({{ cc.row }} + 1); grid-column: {{ cc.col }}; width: 12px; height: 12px; border-radius: 3px; background: {{ cc.bg }}; box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);"></span></sc-for>
+            </div></div>
+          </section>
           <div class="stk-grid">
             <sc-for list="{{ st.kpis }}" as="k" hint-placeholder-count="8">
               <div class="stk"><span class="stk-ic" aria-hidden="true">{{ k.icon }}</span><span class="stk-l">{{ k.label }}</span><b class="stk-v">{{ k.value }}</b><sc-if value="{{ k.sub }}" hint-placeholder-val="{{ false }}"><span class="stk-s">{{ k.sub }}</span></sc-if></div>
@@ -3241,7 +3288,7 @@
                       <sc-if value="{{ sa.isGuest }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .75;">{{ sa.guestTxt }}</span><sc-if value="{{ sa.notEmpty }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button></sc-if></sc-if>
                       <sc-if value="{{ sa.mineFull }}" hint-placeholder-val="{{ true }}"><button class="btn btn-secondary sac-taste" onClick="{{ sa.taste }}">Déguster</button><button class="btn btn-secondary" onClick="{{ sa.edit }}">Modifier</button></sc-if><sc-if value="{{ sa.mineEmpty }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ sa.toggleEmpty }}">Il en reste finalement</button></sc-if>
                       <sc-if value="{{ sa.hasLogs }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sa.toggleLogs }}" class="sac-logs-btn">{{ sa.logsLbl }}</button></sc-if>
-                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
+                      <sc-if value="{{ sa.mine }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ sa.menuToggle }}" aria-haspopup="true" aria-expanded="{{ sa.menuOpen }}" aria-label="Plus d’actions">⋯</button><sc-if value="{{ sa.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ sa.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu"><button role="menuitem" onClick="{{ sa.menuShare }}">🤝 Partager une part<small>Donner quelques grammes à un ami</small></button><button role="menuitem" onClick="{{ sa.menuGive }}">🎁 Offrir le sachet<small>Il passe entièrement chez quelqu’un d’autre</small></button><button role="menuitem" onClick="{{ sa.menuQr }}">🏷️ Étiquette QR<small>À coller sur le sachet : scannée, elle lance une dégustation</small></button><button role="menuitem" class="danger" onClick="{{ sa.menuRemove }}">🗑 Supprimer</button></div></sc-if></div></sc-if>
                     </div>
                     <sc-if value="{{ sa.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sac-logs">
@@ -4007,7 +4054,7 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate() {
-    this.drawWheel(); this.syncSelects();
+    this.drawWheel(); this.syncSelects(); this.sessionWake();
     if (this.state.view === 'login') this.drawCaptcha();
     // Nouvelle page → on remonte en haut (sinon, sur téléphone, la page suivante garde le scroll de la précédente)
     const S = this.state; const pk = [S.view, S.key, S.prodId, S.gearId, S.group, S.sub, S.profUser, S.sharedLogId, S.sessionId, S.cerIdx, S.ii, S.ci].join('|');
@@ -4088,6 +4135,7 @@ class Component extends DCLogic {
   syncSelects() { try { document.querySelectorAll('[data-dv]').forEach(el => { if (el.__dvDone) return; const v = el.getAttribute('data-dv'); if (!v) return; el.__dvDone = true; if (el.value === '') el.value = v; }); } catch (e) {} try { document.querySelectorAll('select[data-val]').forEach(el => { const v = el.getAttribute('data-val'); if (el.value !== v && Array.from(el.options).some(o => o.value === v)) el.value = v; }); } catch (e) {} }
   componentDidMount() {
     window.addEventListener('hashchange', () => { try { this.applyHash(); } catch (e) {} });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { this._swake = null; this.sessionWake(); } });
     try { if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', ev => { const u = ev.data && ev.data.mdtOpen; if (u) { const h = u.indexOf('#'); if (h >= 0) { location.hash = u.slice(h); } } }); } catch (e) {}
     try { if (localStorage.getItem('mdt-asmember')) this.setState({ asMember: true }); } catch (e) {}
     setTimeout(() => this.drawWheel(), 50); setTimeout(() => this.syncSelects(), 0);
@@ -5233,6 +5281,44 @@ class Component extends DCLogic {
       nfHours: Array.from({ length: 24 }, (_, h) => ({ v: String(h), l: String(h).padStart(2, '0') + ' h 00' })), nfHour: String(hour), setNfHour: e => set({ teaHour: Number(e.target.value) }),
       nfTz: nf.tz || (Intl.DateTimeFormat().resolvedOptions().timeZone) || '' };
   }
+  // ---------- Étiquettes QR : un code par sachet ; scanné, il ouvre une dégustation de ce sachet
+  printLabels(ids, title) {
+    const coll = this.collection(); const list = ids.map(id => coll.find(o => o.id === id)).filter(Boolean);
+    if (!list.length) { this.flash('Aucun sachet à imprimer.'); return; }
+    if (!window.qrcode) { this.flash('Générateur de QR codes indisponible : rechargez la page.'); return; }
+    const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const base = this.siteUrl();
+    const cards = list.map(o => { const q = window.qrcode(0, 'M'); q.addData(base + '#sac=' + o.id); q.make();
+      const shop = this.shopTxt(o.marque, o.ville);
+      return '<div class="lb"><button class="x" onclick="this.parentNode.remove()" title="Retirer">×</button>' + q.createSvgTag({ cellSize: 3, margin: 1, scalable: true }) +
+        '<div class="tx"><b>' + esc(o.nom || o.the) + '</b>' + (o.nom && o.the && o.nom !== o.the ? '<span>' + esc(o.the) + '</span>' : '') + (shop ? '<span>' + esc(shop) + '</span>' : '') +
+        '<span class="c">' + esc(o.code || '') + '</span><span class="o">' + esc(o.owner) + (o.achat ? ' · ' + esc(this.fmtDate(o.achat)) : '') + '</span></div></div>'; }).join('');
+    const html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(title || 'Étiquettes QR') + ' — Maison du Thé</title><style>' +
+      'body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:16px;color:#2b2118;background:#fff}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.bar button{font:inherit;padding:8px 16px;border-radius:999px;border:1px solid #c9b89a;background:#f5ead8;cursor:pointer}.bar span{font-size:13px;opacity:.7}' +
+      '.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(62mm,1fr));gap:4mm}.lb{position:relative;display:flex;gap:3mm;align-items:center;border:1px dashed #bbb;border-radius:3mm;padding:3mm;break-inside:avoid;page-break-inside:avoid}.lb svg{width:24mm;height:24mm;flex:none}' +
+      '.tx{display:flex;flex-direction:column;gap:1mm;font-size:9pt;line-height:1.2;min-width:0}.tx b{font-size:11pt}.tx .c{font-family:ui-monospace,Menlo,monospace;font-size:7.5pt;opacity:.75;word-break:break-all}.tx .o{font-size:8pt;opacity:.65}' +
+      '.x{position:absolute;top:1mm;right:1.5mm;border:none;background:none;font-size:16px;cursor:pointer;opacity:.5}@media print{.bar,.x{display:none}body{margin:6mm}.lb{border-color:#ddd}}</style></head><body>' +
+      '<div class="bar"><button onclick="window.print()">🖨️ Imprimer</button><span>' + list.length + ' étiquette(s) · cliquez × pour en retirer une avant d’imprimer. Scannée avec le téléphone, une étiquette ouvre une nouvelle dégustation de ce sachet.</span></div><div class="g">' + cards + '</div></body></html>';
+    const w = window.open('', '_blank');
+    if (w) { w.document.open(); w.document.write(html); w.document.close(); return; }
+    const blob = new Blob([html], { type: 'text/html' }); const u = URL.createObjectURL(blob); const el = document.createElement('a'); el.href = u; el.download = 'etiquettes-qr.html'; document.body.appendChild(el); el.click(); el.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+  }
+  wishesOf(u) { return (((((this.getAdds().options || {}).profiles || {})[u]) || {}).wishes) || []; }
+  setWishes(list) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { wishes: list }); this.setOpt('profiles', all); }
+  wishCards(u, me) {
+    const isMe = u === me;
+    return this.wishesOf(u).slice().sort((x, y) => String(y.at || '').localeCompare(String(x.at || ''))).map(w => ({ name: w.name, meta: [this.shopTxt(w.shop, w.city), w.price ? w.price + (/€/.test(w.price) ? '' : ' €') : ''].filter(Boolean).join(' · '), hasMeta: !!(w.shop || w.price), note: w.note || '', hasNote: !!w.note, who: u, isMe: isMe,
+      bought: () => { this.setWishes(this.wishesOf(me).filter(x => x.id !== w.id)); const fk = this.famOf(w.name); this.setState(s0 => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s0.form, { prodId: '', the: fk ? w.name : '', nomFour: fk ? '' : w.name, marque: w.shop || '', ville: w.city || '', prixPaye: String(w.price || '').replace(/[^\d.,]/g, ''), commentaire: w.note || '' }), formRev: (s0.formRev || 0) + 1 })); this.flash('Ajoutez le sachet que vous venez d’acheter 🎉'); },
+      del: () => this.setWishes(this.wishesOf(me).filter(x => x.id !== w.id)) }));
+  }
+  wishView(u, me) {
+    const isMe = u === me; const d = this.state.wishDraft || {};
+    return { show: isMe || this.salonMates(me).indexOf(u) >= 0 || this.friendsOf(me).indexOf(u) >= 0 || this.isAdmin(me), isMe: isMe, list: this.wishCards(u, me), empty: !this.wishesOf(u).length,
+      emptyTxt: isMe ? 'Rien pour l’instant : notez ici les thés qui vous font envie (vus en boutique, conseillés par un ami…).' : u + ' n’a rien noté pour l’instant.',
+      d: { name: d.name || '', shop: d.shop || '', price: d.price || '', note: d.note || '' },
+      set: ['name', 'shop', 'price', 'note'].reduce((o, k) => { o[k] = e => { const v = k === 'shop' ? this.upInput(e) : e.target.value; this.setState(s0 => ({ wishDraft: Object.assign({}, s0.wishDraft, { [k]: v }) })); }; return o; }, {}),
+      add: () => { const n = String(d.name || '').trim(); if (!n) return; this.setWishes(this.wishesOf(me).concat([{ id: 'w' + Date.now().toString(36), name: n, shop: this.upBrand(d.shop || ''), price: String(d.price || '').trim(), note: String(d.note || '').trim().slice(0, 300), at: new Date().toISOString() }])); this.setState({ wishDraft: {} }); } };
+  }
   exportMyData() {
     const me = this.me(); if (!me) return; const a = this.getAdds(); const o = a.options || {};
     const mine = l => l.author === me || (l.with || []).indexOf(me) >= 0;
@@ -5618,8 +5704,8 @@ class Component extends DCLogic {
     const friends = this.friendsOf(me);
     const invitable = friends.filter(u => (mine.members || []).indexOf(u) < 0 && (mine.invites || []).indexOf(u) < 0);
     const n = mine.members.length;
-    const tab = this.state.slTab === 'mem' ? 'mem' : this.state.slTab === 'fil' ? 'fil' : (this.state.slTab === 'opt' && isChief) ? 'opt' : 'acc';
-    const tabs = [['acc', '🏠 Accueil'], ['fil', '📰 Fil'], ['mem', '👥 Membres · ' + n]].concat(isChief ? [['opt', '⚙️ Options']] : []).map(t => ({ label: t[1], on: tab === t[0], bg: tab === t[0] ? 'var(--color-accent)' : 'transparent', fg: tab === t[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ slTab: t[0], slMenu: '', slMsg: '' }) }));
+    const tab = this.state.slTab === 'mem' ? 'mem' : this.state.slTab === 'fil' ? 'fil' : this.state.slTab === 'wish' ? 'wish' : (this.state.slTab === 'opt' && isChief) ? 'opt' : 'acc';
+    const tabs = [['acc', '🏠 Accueil'], ['fil', '📰 Fil'], ['wish', '🎁 Envies'], ['mem', '👥 Membres · ' + n]].concat(isChief ? [['opt', '⚙️ Options']] : []).map(t => ({ label: t[1], on: tab === t[0], bg: tab === t[0] ? 'var(--color-accent)' : 'transparent', fg: tab === t[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ slTab: t[0], slMenu: '', slMsg: '' }) }));
     const sc = this.salonColor(mine);
     const pets = (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet' && mine.members.indexOf(g.owner) >= 0);
     // stats par membre (dans ce salon)
@@ -5638,7 +5724,7 @@ class Component extends DCLogic {
     const isMain = !!main && main.id === mine.id;
     return Object.assign(base, addPart, { isMain: isMain, notMain: !isMain, mainName: main ? main.name : '',
       makeMain: () => { this.setMainSalon(mine.id); this.setState({ slMsg: '⭐ « ' + mine.name + ' » est maintenant votre salon principal : son nom s’affiche à côté du vôtre et vos stats « Dans mon salon » portent sur lui.' }); },
-      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt', tabFil: tab === 'fil', feed: tab === 'fil' ? this.salonFeed(mine, me) : [], noFeed: tab === 'fil' && !this.salonFeed(mine, me).length,
+      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabMem: tab === 'mem', tabOpt: tab === 'opt', tabWish: tab === 'wish', wishes: tab === 'wish' ? (mine.members || []).reduce((t, u) => t.concat(this.wishCards(u, me)), []) : [], noWish: tab === 'wish' && !(mine.members || []).some(u => this.wishesOf(u).length), tabFil: tab === 'fil', feed: tab === 'fil' ? this.salonFeed(mine, me) : [], noFeed: tab === 'fil' && !this.salonFeed(mine, me).length,
       ...(() => {
         const ps = pets.map(g => ({ g: g, st: this.petStats(g) })).sort((x, y) => y.st.lvl - x.st.lvl || y.st.xp - x.st.xp || x.g.name.localeCompare(y.g.name, 'fr'));
         const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
@@ -6640,6 +6726,11 @@ class Component extends DCLogic {
       if (adm) this.setState({ view: 'admin', addTab: adm[1] }); else if (k === 'wrap') this.setState({ view: 'stats', stTab: 'wrap' }); else if (k === 'log') this.setState({ view: 'log', editLogId: null });
       else if (['friends', 'salon', 'home', 'settings', 'mine'].indexOf(k) >= 0) this.setState({ view: k });
       try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} return; }
+    const sq = /^#sac=([\w-]+)$/.exec(location.hash || '');
+    if (sq) { const o = this.collection().find(x => x.id === sq[1]); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+      if (!o) { this.flash('Sachet introuvable (ou pas visible avec ce compte).'); return; }
+      if (this.state.cloud && !this.state.session) { this.setState({ view: 'login' }); this.flash('Connectez-vous pour noter une dégustation de ' + (o.nom || o.the) + '.'); return; }
+      this.setState({ view: 'log', editLogId: null, logMsg: '', lf: this.lfWithLot({ date: mdtToday() }, o.id) }); this.flash('🏷️ ' + (o.nom || o.the) + (o.code ? ' · ' + o.code : '')); return; }
     const m = /^#(prod|log)=([\w-]+)$/.exec(location.hash || '');
     if (!m) return;
     const a = this.getAdds();
@@ -6724,6 +6815,14 @@ class Component extends DCLogic {
   pauseTimer() { const tm = this._tm; if (!tm || !tm.running) return; tm.left = Math.max(0, (tm.endAt - Date.now()) / 1000); tm.running = false; clearInterval(this._tmI); this.releaseWake(); this.setState({ tmRun: false }); setTimeout(() => this.paintTimer(), 0); }
   stopTimer(silent) { clearInterval(this._tmI); this._tm = null; this.releaseWake(); if (!silent) { this.setState({ tmRun: false, tmDone: false }); setTimeout(() => this.paintTimer(), 0); } }
   releaseWake() { try { if (this._wake) { this._wake.release(); this._wake = null; } } catch (e) {} }
+  // pendant une séance, l'écran ne se met pas en veille (relancé si on revient sur l'onglet)
+  sessionWake() {
+    const on = this.state.view === 'session';
+    try {
+      if (on && navigator.wakeLock && !this._swake && !this._swakeAsk) { this._swakeAsk = true; navigator.wakeLock.request('screen').then(w => { this._swake = w; this._swakeAsk = false; w.addEventListener('release', () => { this._swake = null; }); }).catch(() => { this._swakeAsk = false; }); }
+      if (!on && this._swake) { this._swake.release(); this._swake = null; }
+    } catch (e) {}
+  }
   sessionView(me) {
     const a = this.getAdds(); const l = a.logs.find(x => x.id === this.state.sessionId);
     if (!l) return { ok: false, missing: true, pills: [], presets: [] };
@@ -7005,6 +7104,27 @@ class Component extends DCLogic {
 
   logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: this.shopTxt(o.marque, o.ville) || '—', canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
+  calView(me) {
+    const a = this.getAdds(); const days = {};
+    a.logs.forEach(l => { if (/^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && (l.author === me || (l.with || []).indexOf(me) >= 0)) days[l.date] = (days[l.date] || 0) + 1; });
+    const key = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const today = new Date(); today.setHours(12, 0, 0, 0);
+    const start = new Date(today); start.setDate(start.getDate() - 364); start.setDate(start.getDate() - ((start.getDay() + 6) % 7));   // lundi
+    const cells = []; const months = []; let lastM = -1, col = 0;
+    for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
+      const k = key(d), n = days[k] || 0; const dow = (d.getDay() + 6) % 7; if (dow === 0) col++;
+      if (d.getDate() <= 7 && dow === 0 && d.getMonth() !== lastM) { lastM = d.getMonth(); months.push({ l: d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', ''), col: String(col) }); }
+      cells.push({ bg: n === 0 ? 'var(--color-bg)' : n === 1 ? '#c8d9b4' : n === 2 ? '#8fb37a' : '#4f7a3d', t: d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' }) + ' : ' + (n ? n + ' dégustation' + (n > 1 ? 's' : '') : 'pas de thé'), row: String(dow + 1), col: String(col) });
+    }
+    const all = Object.keys(days).sort(); const set = new Set(all);
+    let cur = 0; { const d = new Date(today); if (!set.has(key(d))) d.setDate(d.getDate() - 1); while (set.has(key(d))) { cur++; d.setDate(d.getDate() - 1); } }
+    let best = 0, run = 0, prev = null; all.forEach(k => { const d = new Date(k + 'T12:00:00'); if (prev && Math.round((d - prev) / 864e5) === 1) run++; else run = 1; if (run > best) best = run; prev = d; });
+    const yearDays = cells.filter(c => c.bg !== 'var(--color-bg)').length;
+    const wd = [0, 0, 0, 0, 0, 0, 0]; all.forEach(k => { wd[(new Date(k + 'T12:00:00').getDay() + 6) % 7] += days[k]; });
+    const WD = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']; const bw = wd.indexOf(Math.max.apply(null, wd));
+    return { calCells: cells, calMonths: months, calCols: String(col), calEmpty: !all.length,
+      calKpis: [['📅', 'Jours de thé (12 mois)', String(yearDays)], ['🔥', 'Série en cours', cur + ' jour' + (cur > 1 ? 's' : '')], ['🏆', 'Record', best + ' jour' + (best > 1 ? 's' : '') + ' d’affilée'], ['🗓️', 'Jour préféré', all.length ? WD[bw] : '—']].map(k => ({ icon: k[0], label: k[1], value: k[2] })) };
+  }
   computeStats(coll, me) {
     coll = coll.map(o => this.priceVisible(o.owner) ? o : Object.assign({}, o, { prixPaye: '' }));
     const a = this.getAdds();
@@ -7426,6 +7546,7 @@ class Component extends DCLogic {
       menuOpen: this.state.sacMenu === o.id, menuToggle: () => this.setState(s0 => ({ sacMenu: s0.sacMenu === o.id ? null : o.id })),
       menuShare: () => { this.setState({ sacMenu: null }); if (shareCtl.shareToggle) shareCtl.shareToggle(); },
       menuGive: () => { this.setState({ sacMenu: null }); give.giveToggle(); },
+      menuQr: () => { this.setState({ sacMenu: null }); this.printLabels([o.id], 'Étiquette ' + (o.code || '')); },
       get hasFacts() { return this.facts2.length > 0; }, facts2: [['Acheté le', o.achat ? this.fmtDate(o.achat) : ''], ['Production', o.prodDate], ['Lot', o.lot], ['Payé', (this.priceVisible(o.owner) && o.prixPaye) ? String(o.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(o.prixPaye)) ? ' €' : '') + (this.prixTxt(o) ? ' (' + this.prixTxt(o) + ')' : '') : this.prixTxt(o)], ['Fréquence', o.freq ? ((this.opts().freqs.find(f => String(f.code) === String(o.freq)) || {}).label || o.freq) : ''], ['Boutique', o.boutique]].filter(x => x[1] && String(x[1]).trim() && x[1] !== '—').map(x => ({ k: x[0], v: String(x[1]).replace(/^(\d)/, '$1') })),
       noRemainCtl: o.owner === me && !rm && !portions.length,
       get noRemainCtl2() { return this.noRemainCtl && !this.isEmpty; }, get showStock() { return this.hasRemain && !this.isEmpty; },
@@ -8076,6 +8197,7 @@ class Component extends DCLogic {
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
       shareToast: this.state.shareToast || '',
+      canQrAll: !!me && this.collection().some(o => o.owner === me && !this.isEmptySachet(o)), qrAll: () => this.printLabels(this.collection().filter(o => o.owner === me && !this.isEmptySachet(o)).sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr')).map(o => o.id), 'Mes étiquettes'),
       teaBtnTxt: this.isMod(me) ? 'Ajouter au catalogue' : 'Proposer au catalogue', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
       ...(() => { const ann = (this.getAdds().options || {}).announce || {}; let hidden = false; try { hidden = !!ann.at && localStorage.getItem('mdt-ann') === ann.at; } catch (e) {}
         return { annShow: !!ann.text && !hidden && !this.state.annHidden, annText: ann.text || '', annHide: () => { try { localStorage.setItem('mdt-ann', ann.at || ''); } catch (e) {} this.setState({ annHidden: true }); },
@@ -8218,7 +8340,7 @@ class Component extends DCLogic {
       frTitle: 'Amis',
       frIntro: 'Ajoutez quelqu’un avec son identifiant (par exemple Maël#0002). Une fois la demande acceptée, vous voyez son profil.',
       isProfile: v === 'profile',
-      pf: v === 'profile' ? this.profileView(me) : {},
+      pf: v === 'profile' ? this.profileView(me) : {}, wl: v === 'profile' && me ? this.wishView(this.state.profUser || me, me) : { list: [], d: {}, set: {} },
       pfSafe: (() => { const u = this.state.profUser || me; if (v !== 'profile' || !me || !this.state.session || u === me) return { show: false }; const bl = this.blockedOf(me).indexOf(u) >= 0;
         const pdesc = ((((this.getAdds().options || {}).profiles || {})[u]) || {}).desc;
         return { canClear: this.isMod(me) && !!pdesc, clear: () => { if (!window.confirm('Effacer la description de ' + u + ' ?')) return; const pr = Object.assign({}, (this.getAdds().options || {}).profiles || {}); pr[u] = Object.assign({}, pr[u], { desc: '' }); this.setOpt('profiles', pr); this.modLog('a effacé la description de', u); this.flash('Description de ' + u + ' effacée.'); },
@@ -8257,7 +8379,7 @@ class Component extends DCLogic {
           jExport: () => this.exportJournal()
         };
       })(),
-      st: v === 'stats' ? this.computeStats(coll.filter(o => !this.isEmptySachet(o)), me) : {},
+      st: v === 'stats' ? this.computeStats(coll.filter(o => !this.isEmptySachet(o)), me) : {}, cal: v === 'stats' && me && this.state.stTab !== 'wrap' ? this.calView(me) : { calCells: [], calMonths: [], calKpis: [] },
       isLogs: v === 'logs',
       saveLogLabel: this.state.editLogId ? 'Enregistrer les modifications' : ((this.state.lfMode || 'full') === 'gong' ? '▶ Commencer la séance' : 'Enregistrer la dégustation'),
       editingLog: !!this.state.editLogId,
