@@ -3536,6 +3536,10 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     this.drawWheel();
+    // Nouvelle page → on remonte en haut (sinon, sur téléphone, la page suivante garde le scroll de la précédente)
+    const S = this.state; const pk = [S.view, S.key, S.prodId, S.gearId, S.group, S.sub, S.profUser, S.sharedLogId, S.sessionId, S.cerIdx, S.ii, S.ci].join('|');
+    if (this._pageKey !== undefined && this._pageKey !== pk) { try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {} }
+    this._pageKey = pk;
     if (this.state.editLogId && this.state.view !== 'log') this.setState({ editLogId: null, lf: { lotId: '', with: [], date: mdtToday() } });
   }
 
