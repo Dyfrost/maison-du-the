@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="./i18n.js"></script>
+<script src="./vendor/resources.js"></script>
 <script src="./support.js"></script>
 <script src="./teapets.js"></script>
 <script src="./savoir.js"></script>
@@ -22,7 +23,7 @@
 <script src="_ds/organic-c107f2b2-6e10-450d-ab8a-cbfbcee7c3a5/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
 <script src="./supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="./vendor/supabase-2.119.1.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   body { margin: 0; }
@@ -182,6 +183,8 @@
   .gs-histl { display: flex; gap: 8px; flex-wrap: wrap; }
   .gs-h { font-size: 13.5px; border-radius: 999px; padding: 5px 12px; background: var(--color-surface); }
   .gs-h.ok b { color: #2f5b3a; } .gs-h.ko b { color: #a8432e; }
+  .legal p, .legal ul { margin: 0; font-size: 15.5px; line-height: 1.65; }
+  .legal ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
   .set-card { background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
   .set-h { margin: 0; font-size: 22px; }
   .set-l { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; opacity: .65; line-height: 1.45; }
@@ -384,7 +387,7 @@
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
             <button role="menuitem" onClick="{{ menuSettings }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">⚙️ Paramètres</button>
-            <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
+            <sc-if value="{{ isModMenu }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">{{ admMenuTxt }}</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
           </div>
@@ -433,14 +436,19 @@
               <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Maël" value="{{ af.nom }}" onChange="{{ setA.nom }}">
             </label>
           </sc-if>
+          <sc-if value="{{ isNewPass }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px;">Choisissez votre nouveau mot de passe.</p></sc-if>
+          <sc-if value="{{ notNewPass }}" hint-placeholder-val="{{ true }}">
           <label style="display: flex; flex-direction: column; gap: 6px;">
             <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">E-mail</span>
             <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" type="email" autoComplete="email" placeholder="vous@exemple.fr" value="{{ af.email }}" onChange="{{ setA.email }}">
           </label>
+          </sc-if>
           <label style="display: flex; flex-direction: column; gap: 6px;">
             <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Mot de passe</span>
             <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" type="password" autoComplete="current-password" placeholder="6 caractères minimum" value="{{ af.pass }}" onChange="{{ setA.pass }}" onKeyDown="{{ authKey }}">
           </label>
+          <sc-if value="{{ hasCaptcha }}" hint-placeholder-val="{{ false }}"><div id="mdt-captcha" style="min-height: 65px;"></div></sc-if>
+          <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 12.5px; opacity: .7; line-height: 1.45;">En créant un compte, vous acceptez les <button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: var(--color-accent-700); text-decoration: underline;">conditions et la politique de confidentialité</button>.</p></sc-if>
           <sc-if value="{{ authMsg }}" hint-placeholder-val="{{ false }}">
             <p style="margin: 0; font-size: 14px; color: var(--color-accent-800); text-wrap: pretty;">{{ authMsg }}</p>
           </sc-if>
@@ -1251,6 +1259,52 @@
           <div class="set-opts"><sc-for list="{{ sett.setPrice }}" as="o" hint-placeholder-count="4"><button class="{{ o.cls }}" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div>
           <span class="set-l" style="text-transform: none; letter-spacing: 0;">Les prix payés pour tes sachets et ton matériel (et les prix au gramme qui en découlent). Toi, tu les vois toujours.</span>
         </section>
+        <section class="set-card">
+          <h2 class="set-h">🗄️ Mes données</h2>
+          <span class="set-l" style="text-transform: none; letter-spacing: 0;">Télécharge tout ce que tu as enregistré (sachets, dégustations, matériel, profil, amis, salons) dans un fichier JSON, ou supprime ton compte.</span>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onClick="{{ sett.exportMe }}" style="white-space: nowrap;">⬇️ Télécharger mes données</button>
+            <button class="btn btn-secondary" onClick="{{ sett.deleteMe }}" style="white-space: nowrap; color: var(--color-accent-800);">🗑 Supprimer mon compte</button>
+            <button class="btn btn-ghost" onClick="{{ openLegal }}" style="white-space: nowrap;">Confidentialité et mentions légales</button>
+          </div>
+          <sc-if value="{{ sett.delNote }}" hint-placeholder-val="{{ false }}"><span class="set-l" style="text-transform: none; letter-spacing: 0;">{{ sett.delNote }}</span></sc-if>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLegal }}" hint-placeholder-val="{{ false }}">
+      <div class="legal" style="display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both; max-width: 860px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;"><h1 style="font-size: 46px; margin: 0;">Confidentialité</h1><p style="font-size: 16px; opacity: .72; margin: 0;">Mentions légales, données personnelles et cookies. Dernière mise à jour : {{ lg.date }}.</p></div>
+        <section class="set-card">
+          <h2 class="set-h">Mentions légales</h2>
+          <p><b>Éditeur du site :</b> {{ lg.editor }}<br><b>Contact :</b> {{ lg.contact }}<br><b>Directeur de la publication :</b> {{ lg.editor }}</p>
+          <p><b>Hébergement du site :</b> GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.<br><b>Hébergement des données :</b> Supabase Inc. (base de données et comptes), région {{ lg.region }}.</p>
+          <p>Maison du Thé est un site associatif et non commercial, sans publicité.</p>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">Données que nous enregistrons</h2>
+          <ul>
+            <li><b>Compte :</b> adresse e-mail, prénom choisi, mot de passe (chiffré par Supabase, jamais visible par nous).</li>
+            <li><b>Ce que tu saisis :</b> thés, sachets, prix payés, dégustations et notes, matériel, photos, profil, amis, salons, réactions, parties de jeu, signalements.</li>
+            <li><b>Journal technique :</b> en cas d’erreur du site, le message d’erreur, la page et le type de navigateur, pour corriger les bugs.</li>
+          </ul>
+          <p><b>Pourquoi :</b> faire fonctionner le service que tu utilises (exécution du service, art. 6.1.b du RGPD) et assurer sa sécurité (intérêt légitime, art. 6.1.f). Aucune donnée n’est vendue, ni utilisée pour de la publicité ou du profilage.</p>
+          <p><b>Qui les voit :</b> les autres membres, selon tes réglages dans ⚙️ Paramètres (public, salons et amis, amis seulement, privé). Ces règles sont appliquées par la base de données elle-même. Les administrateurs du site peuvent tout voir pour la maintenance et la modération.</p>
+          <p><b>Combien de temps :</b> tant que ton compte existe. À la suppression du compte, tes éléments personnels sont effacés ; les thés que tu as ajoutés au catalogue commun restent, sans ton nom dans les dégustations des autres. Le journal technique est purgé régulièrement.</p>
+          <p><b>Transferts hors UE :</b> GitHub et Supabase sont des sociétés américaines, encadrées par des clauses contractuelles types de la Commission européenne.</p>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">Tes droits</h2>
+          <p>Tu peux à tout moment accéder à tes données, les corriger, les télécharger (portabilité) ou les supprimer : tout se fait dans ⚙️ Paramètres → Mes données. Pour toute autre demande (opposition, limitation, question), écris à {{ lg.contact }}. Si tu estimes que tes droits ne sont pas respectés, tu peux saisir la CNIL (cnil.fr).</p>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">Cookies et stockage</h2>
+          <p>Le site n’utilise aucun cookie publicitaire ni de mesure d’audience. Il garde seulement dans ton navigateur ta session de connexion et une copie des données pour s’afficher plus vite (stockage local), ce qui est indispensable au service et ne demande pas de consentement.{{ lg.captcha }}</p>
+        </section>
+        <section class="set-card">
+          <h2 class="set-h">Règles de la maison</h2>
+          <p>Reste courtois. Pas de contenu illégal, insultant, discriminatoire ou de publicité. Tout contenu peut être signalé avec 🚩 ; les modérateurs peuvent le retirer et un compte qui ne respecte pas ces règles peut être supprimé.</p>
+        </section>
       </div>
     </sc-if>
 
@@ -1348,7 +1402,7 @@
                     <div class="feed-top"><span><b>{{ fd.who }}</b> {{ fd.txt }}</span><sc-if value="{{ fd.hasNote }}" hint-placeholder-val="{{ false }}"><span class="feed-note" style="background: {{ fd.noteBg }};">{{ fd.note }}</span></sc-if></div>
                     <sc-if value="{{ fd.hasQuote }}" hint-placeholder-val="{{ false }}"><p class="feed-q">« {{ fd.quote }} »</p></sc-if>
                     <div class="feed-foot"><span class="feed-when">{{ fd.icon }} {{ fd.when }}</span><sc-if value="{{ fd.link }}" hint-placeholder-val="{{ false }}"><button class="feed-open" onClick="{{ fd.open }}">Voir →</button></sc-if>
-                      <span class="feed-re"><sc-for list="{{ fd.reacts }}" as="re" hint-placeholder-count="4"><button onClick="{{ re.toggle }}" title="{{ re.title }}" style="background: {{ re.bg }}; box-shadow: {{ re.ring }};">{{ re.em }}<small>{{ re.n }}</small></button></sc-for></span></div>
+                      <span class="feed-re"><sc-for list="{{ fd.reacts }}" as="re" hint-placeholder-count="4"><button onClick="{{ re.toggle }}" title="{{ re.title }}" style="background: {{ re.bg }}; box-shadow: {{ re.ring }};">{{ re.em }}<small>{{ re.n }}</small></button></sc-for><sc-if value="{{ fd.canReport }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fd.report }}" title="Signaler aux modérateurs" aria-label="Signaler" style="background: transparent; box-shadow: none; opacity: .45;">🚩</button></sc-if></span></div>
                   </div>
                 </article>
               </sc-for>
@@ -1500,6 +1554,13 @@
               </sc-for>
             </div>
           </section>
+        </sc-if>
+        <sc-if value="{{ pfSafe.show }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; align-items: center;">
+            <sc-if value="{{ pfSafe.blocked }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .7; margin-right: auto;">🚫 Vous avez bloqué {{ pfSafe.name }}.</span></sc-if>
+            <button class="btn btn-ghost" onClick="{{ pfSafe.report }}" style="white-space: nowrap; font-size: 14px;">🚩 Signaler</button>
+            <button class="btn btn-ghost" onClick="{{ pfSafe.block }}" style="white-space: nowrap; font-size: 14px;">{{ pfSafe.blockTxt }}</button>
+          </div>
         </sc-if>
       </div>
     </sc-if>
@@ -2144,6 +2205,12 @@
         </sc-if>
 
         <sc-if value="{{ tabNewOn }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ v2Offer }}" hint-placeholder-val="{{ false }}"><section style="background: #d9e8e8; border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="font-size: 24px; margin: 0;">🔐 Passer au nouveau stockage</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 1.55;">Le nouveau stockage est prêt dans Supabase. La migration copie chaque thé, sachet, dégustation, objet et profil sur sa propre ligne : la base appliquera elle-même les réglages de confidentialité, et deux téléphones ne s’écraseront plus. L’ancienne fiche est ensuite verrouillée (elle reste en sauvegarde dans Supabase). Prévenez les autres de recharger la page juste après.</p>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ v2Migrate }}" style="white-space: nowrap;">🚀 Lancer la migration</button><sc-if value="{{ v2Msg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ v2Msg }}</span></sc-if></div>
+          </section></sc-if>
+          <sc-if value="{{ v2On }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .75;">🔐 Stockage v2 actif : droits appliqués par la base, une ligne par élément.</p></sc-if>
           <section style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
               <sc-for list="{{ adKinds }}" as="ak" hint-placeholder-count="4">
@@ -2217,8 +2284,8 @@
               <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
                 <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; flex: none;">{{ au.initial }}</span>
                 <div style="display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ au.tag }}</span><span style="font-size: 12px; opacity: .65;">{{ au.sub }}</span></div>
-                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if>
-                <sc-if value="{{ au.idle }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.ask }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if><sc-if value="{{ au.canRemove }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer le compte</button></sc-if></sc-if>
+                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if><sc-if value="{{ au.isModo }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #d9e5f1; color: #2c4a6b;">🧹 Modérateur</span></sc-if>
+                <sc-if value="{{ au.idle }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ au.canModo }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.toggleModo }}" style="white-space: nowrap;">{{ au.modoTxt }}</button></sc-if><sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.ask }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if><sc-if value="{{ au.canRemove }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer le compte</button></sc-if></sc-if>
                 <sc-if value="{{ au.asking }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; background: var(--color-accent-100); border-radius: 14px; padding: 8px 12px;"><span style="font-size: 14px; margin-right: auto;">{{ au.askTxt }}</span><button class="btn btn-primary" onClick="{{ au.confirm }}" style="white-space: nowrap;">{{ au.confirmTxt }}</button><button class="btn btn-ghost" onClick="{{ au.cancel }}" style="white-space: nowrap;">Annuler</button></div></sc-if>
               </div>
             </sc-for>
@@ -2263,6 +2330,48 @@
             <button onClick="{{ toggleMsSum }}" aria-pressed="{{ msSum }}" style="align-self: flex-start; cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ msSumBg }}; color: {{ msSumFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">➕ Additionner les quantités (deux vrais sachets réunis)</button>
             <sc-if value="{{ msPreview }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 18px; padding: 12px 16px;">{{ msPreview }}</p></sc-if>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ msRun }}" style="white-space: nowrap;">🔀 Fusionner les sachets</button><sc-if value="{{ msMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ msMsg }}</span></sc-if></div>
+          </section>
+        </sc-if>
+        <sc-if value="{{ tabErrOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🐞 Erreurs du site ({{ erN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les plantages rencontrés par les membres, enregistrés automatiquement (gardés 30 jours).</p></div>
+              <button class="btn btn-secondary" onClick="{{ erReload }}" style="white-space: nowrap; background: var(--color-bg);">↻ Actualiser</button><button class="btn btn-secondary" onClick="{{ erClear }}" style="white-space: nowrap; background: var(--color-bg);">🧹 Tout effacer</button></div>
+            <sc-if value="{{ erMsg }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .8;">{{ erMsg }}</p></sc-if>
+            <sc-if value="{{ erEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune erreur enregistrée. ✨</p></sc-if>
+            <sc-for list="{{ erList }}" as="er" hint-placeholder-count="2">
+              <div style="background: var(--color-bg); border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
+                <button onClick="{{ er.toggle }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); color: var(--color-text); display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;"><span style="font-size: 13px; opacity: .6; white-space: nowrap;">{{ er.when }} · {{ er.who }}</span><span style="font-size: 15px; font-family: ui-monospace, Menlo, monospace; word-break: break-word;">{{ er.msg }}</span></button>
+                <sc-if value="{{ er.isOpen }}" hint-placeholder-val="{{ false }}"><pre style="margin: 0; font-size: 12px; white-space: pre-wrap; word-break: break-word; opacity: .8;">{{ er.stack }}</pre><span style="font-size: 12px; opacity: .6; word-break: break-all;">{{ er.meta }}</span></sc-if>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
+        <sc-if value="{{ tabModOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🚩 Signalements ({{ mdNRep }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Ce que les membres vous ont signalé. Supprimez le contenu s’il pose problème, sinon classez le signalement.</p></div>
+            <sc-if value="{{ mdNoReports }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun signalement en attente. 🍃</p></sc-if>
+            <sc-for list="{{ mdReports }}" as="md" hint-placeholder-count="2">
+              <div class="sac mb-card"><div class="sac-head" style="flex-wrap: wrap;">
+                <span class="mb-av" style="background: var(--color-accent-800); font-size: 20px;">🚩</span>
+                <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 17px;">{{ md.label }}</span><span class="mb-role">{{ md.kind }}</span></div><span class="sac-sub">{{ md.sub }}</span><span style="font-size: 14.5px; margin-top: 4px;">« {{ md.reason }} »</span></div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <sc-if value="{{ md.hasWho }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ md.goWho }}" style="white-space: nowrap; background: var(--color-bg);">{{ md.who }}</button></sc-if>
+                  <sc-if value="{{ md.canRemove }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ md.remove }}" style="white-space: nowrap; background: var(--color-bg); color: var(--color-accent-800);">{{ md.removeTxt }}</button></sc-if>
+                  <button class="btn btn-secondary" onClick="{{ md.close }}" style="white-space: nowrap; background: var(--color-bg);">✓ Classer</button>
+                </div>
+              </div></div>
+            </sc-for>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">⏳ Ajouts au catalogue à valider ({{ mdNPend }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les thés et variantes ajoutés par les membres n’apparaissent pour tous qu’une fois validés.</p></div>
+            <sc-if value="{{ mdV1 }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">La validation s’active avec le nouveau stockage (Données → Passer au nouveau stockage).</p></sc-if>
+            <sc-if value="{{ mdNoPending }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien à valider.</p></sc-if>
+            <sc-for list="{{ mdPending }}" as="mp" hint-placeholder-count="2">
+              <div class="sac mb-card"><div class="sac-head" style="flex-wrap: wrap;">
+                <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 17px;">{{ mp.label }}</span></div><span class="sac-sub">{{ mp.sub }}</span></div>
+                <div style="display: flex; gap: 8px;"><button class="btn btn-primary" onClick="{{ mp.ok }}" style="white-space: nowrap;">✅ Valider</button><button class="btn btn-secondary" onClick="{{ mp.no }}" style="white-space: nowrap; background: var(--color-bg); color: var(--color-accent-800);">✖ Refuser</button></div>
+              </div></div>
+            </sc-for>
           </section>
         </sc-if>
         <sc-if value="{{ tabJeuOn }}" hint-placeholder-val="{{ false }}">
@@ -3595,6 +3704,7 @@
       </div>
     </sc-if>
 
+    <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--color-divider); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 13px; opacity: .65;"><span>Maison du Thé</span><button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: inherit; text-decoration: underline;">Confidentialité et mentions légales</button></footer>
   </main>
 </div>
 
@@ -3754,6 +3864,7 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     this.drawWheel();
+    if (this.state.view === 'login') this.drawCaptcha();
     // Nouvelle page → on remonte en haut (sinon, sur téléphone, la page suivante garde le scroll de la précédente)
     const S = this.state; const pk = [S.view, S.key, S.prodId, S.gearId, S.group, S.sub, S.profUser, S.sharedLogId, S.sessionId, S.cerIdx, S.ii, S.ci].join('|');
     if (this._pageKey !== undefined && this._pageKey !== pk) { if (this.state.pfMsg) setTimeout(() => this.setState({ pfMsg: '' }), 0); try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch (e) {} }
@@ -4587,6 +4698,8 @@ class Component extends DCLogic {
 
   admins(o) { o = o || this.getAdds().options || {}; return Array.isArray(o.admins) ? o.admins : ['Raph', 'Maël']; }
   isAdmin(u) { return !!u && this.admins().indexOf(u) >= 0; }
+  isMod(u) { return this.isAdmin(u) || (!!u && ((this.getAdds().options || {}).mods || []).indexOf(u) >= 0); }
+  async setRole(u, r) { if (!this.v2) return; const { error } = await this.sb.rpc('mdt_set_role', { n: u, r: r }); if (error) { window.alert(error.message); return; } this._members = null; this._v2Since = null; this.pullV2(true); }
 
   salonColors() {
     return { terre: ['Terre', 'var(--color-accent-100)', 'var(--color-accent-800)'], jade: ['Jade', '#dcebd8', '#2f5b3a'], ciel: ['Ciel', '#d9e5f1', '#2c4a6b'], lavande: ['Lavande', '#e7def2', '#523d73'],
@@ -4596,9 +4709,66 @@ class Component extends DCLogic {
 
   salons() { return ((this.getAdds().options || {}).salons) || []; }
   prefsOf(u) { return (((((this.getAdds().options || {}).profiles || {})[u]) || {}).prefs) || {}; }
+  // ---------- Blocage et signalements
+  blockedOf(u) { return this.prefsOf(u).blocked || []; }
+  isBlocked(a, b) { return !!a && !!b && a !== b && (this.blockedOf(a).indexOf(b) >= 0 || this.blockedOf(b).indexOf(a) >= 0); }
+  toggleBlock(u) {
+    const me = this.me(); if (!me || u === me) return; const bl = this.blockedOf(me); const on = bl.indexOf(u) >= 0;
+    if (!on && !window.confirm('Bloquer ' + u + ' ? Vous ne verrez plus ses thés, dégustations et messages, il ne verra plus les vôtres, et votre amitié (ou demande d’ami) sera retirée.')) return;
+    this.setPrefs({ blocked: on ? bl.filter(x => x !== u) : bl.concat([u]) });
+    if (!on) { const all = (this.getAdds().options || {}).friends || []; const left = all.filter(f => !((f.from === u && f.to === me) || (f.from === me && f.to === u))); if (left.length !== all.length) this.setFriends(left); }
+    this.flash(on ? u + ' est débloqué.' : u + ' est bloqué.');
+  }
+  reports() { return ((this.getAdds().options || {}).reports) || []; }
+  report(t) {
+    const me = this.me(); if (!me) return;
+    const why = window.prompt('Signaler ' + t.label + ' aux modérateurs.\nQue se passe-t-il ? (facultatif)', ''); if (why === null) return;
+    this.setOpt('reports', this.reports().concat([{ id: 'r' + Date.now().toString(36), by: me, t: t.t, tid: t.id || '', who: t.who || '', label: t.label, reason: String(why).trim().slice(0, 500), at: new Date().toISOString(), status: 'open' }]));
+    this.flash('Merci, le signalement a été envoyé aux modérateurs.');
+  }
+  async loadErrors() {
+    if (!this.sb || !this._v2Tables) { this.setState({ errList: [], errMsg: 'Le journal d’erreurs s’active avec le nouveau stockage (script supabase-v2.sql).' }); return; }
+    this._errLoading = true;
+    try { await this.sb.from('mdt_errors').delete().lt('ts', new Date(Date.now() - 30 * 864e5).toISOString()); } catch (e) {}
+    const { data, error } = await this.sb.from('mdt_errors').select('id,ts,who,msg,stack,url,ua').order('ts', { ascending: false }).limit(200);
+    this._errLoading = false; this.setState({ errList: data || [], errMsg: error ? error.message : '', errAt: Date.now() });
+  }
+  errView() {
+    if (this.state.errAt == null && !this._errLoading) setTimeout(() => this.loadErrors(), 0);
+    const L = this.state.errList || []; const open = this.state.errOpen;
+    return { erList: L.map(e => ({ when: new Date(e.ts).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }), who: e.who || 'visiteur', msg: e.msg || '', isOpen: open === e.id, stack: e.stack || '(pas de trace)', meta: (e.url || '') + ' · ' + (e.ua || ''), toggle: () => this.setState({ errOpen: open === e.id ? null : e.id }) })),
+      erEmpty: !L.length, erMsg: this.state.errMsg || '', erN: String(L.length), erReload: () => this.loadErrors(),
+      erClear: async () => { if (!L.length || !window.confirm('Effacer tout le journal d’erreurs ?')) return; const { error } = await this.sb.from('mdt_errors').delete().gte('id', 0); if (error) window.alert(error.message); this.loadErrors(); } };
+  }
+  modView() {
+    const me = this.me(); const a = this.getAdds();
+    const fmt = d => { try { return new Date(d).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } };
+    const setR = (id, patch) => this.setOpt('reports', this.reports().map(r => r.id === id ? Object.assign({}, r, patch, { doneBy: me, doneAt: new Date().toISOString() }) : r));
+    const open = this.reports().filter(r => r.status === 'open').sort((x, y) => String(y.at).localeCompare(String(x.at)));
+    const T = { user: '👤 Profil', log: '☕ Dégustation', event: '💬 Message du fil' };
+    const rows = open.map(r => {
+      const exists = r.t === 'log' ? a.logs.some(l => l.id === r.tid) : r.t === 'event' ? (a.events || []).some(e => e.id === r.tid) : r.t === 'user' ? !!(((a.options || {}).profiles || {})[r.who] || {}).desc : false;
+      return { kind: T[r.t] || r.t, label: r.label, sub: 'Signalé par ' + r.by + ' · ' + fmt(r.at), reason: r.reason || '(pas de précision)', hasWho: !!r.who,
+        who: r.who ? 'Voir le profil de ' + r.who : '', goWho: () => this.setState({ view: 'profile', profUser: r.who, profEdit: false }),
+        canRemove: exists, removeTxt: r.t === 'user' ? '🧽 Effacer sa description' : '🗑 Supprimer le contenu',
+        remove: () => { if (!window.confirm('Supprimer ce contenu pour tout le monde ?')) return; const b = this.getAdds();
+          if (r.t === 'log') this.setAdds(Object.assign({}, b, { logs: b.logs.filter(l => l.id !== r.tid) }));
+          else if (r.t === 'event') this.setAdds(Object.assign({}, b, { events: (b.events || []).filter(e => e.id !== r.tid) }));
+          else if (r.t === 'user') { const pr = Object.assign({}, (b.options || {}).profiles || {}); pr[r.who] = Object.assign({}, pr[r.who], { desc: '' }); this.setOpt('profiles', pr); }
+          setR(r.id, { status: 'done', action: 'supprimé' }); },
+        close: () => setR(r.id, { status: 'done', action: 'classé' }) }; });
+    const pend = [];
+    (a.teas || []).forEach(t => { if (t.pending) pend.push({ label: '🍵 ' + t.nom, sub: 'Thé · famille ' + ((this.families[t.famille] || {}).name || t.famille) + (t.origine || t.pays ? ' · ' + [t.origine, t.pays].filter(Boolean).join(', ') : ''), list: 'teas', ref: t }); });
+    (a.decl || []).forEach(d => { if (d.pending) pend.push({ label: '🌿 ' + d.nom, sub: 'Variante de « ' + d.the + ' »', list: 'decl', ref: d }); });
+    return { mdReports: rows, mdNoReports: !rows.length, mdNRep: String(rows.length),
+      mdPending: pend.map(x => ({ label: x.label, sub: x.sub,
+        ok: () => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).map(z => { if (z !== x.ref) return z; const c = Object.assign({}, z); delete c.pending; return c; }) })); },
+        no: () => { if (!window.confirm('Refuser et retirer « ' + x.ref.nom + ' » du catalogue ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).filter(z => z !== x.ref) })); } })),
+      mdNoPending: !pend.length, mdNPend: String(pend.length), mdV1: !this.v2 };
+  }
   // visibilité : 'public' (toute la maison), 'salons' (mes salons + mes amis), 'friends' (mes amis seulement), 'private'
   visAllows(vis, owner, viewer) {
-    if (!owner || owner === viewer) return true; if (vis === 'public') return true; if (!viewer || vis === 'private') return false;
+    if (!owner || owner === viewer) return true; if (this.isBlocked(owner, viewer)) return false; if (vis === 'public') return true; if (!viewer || vis === 'private') return false;
     if (this.friendsOf(owner).indexOf(viewer) >= 0) return true;
     return vis === 'salons' && this.salonMates(owner).indexOf(viewer) >= 0;
   }
@@ -4608,6 +4778,37 @@ class Component extends DCLogic {
   priceVisible(owner, viewer) { if (viewer === undefined) viewer = (!!this.state.cloud && !this.state.session) ? null : this.me(); return this.visAllows(this.prefsOf(owner).priceVis || 'public', owner, viewer); }
   logVisible(l, viewer) { return (viewer && this.inLog(l, viewer)) || this.contentVisible(l.author, viewer); }
   setPrefs(patch) { const me = this.me(); const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { prefs: Object.assign({}, (all[me] || {}).prefs, patch) }); this.setOpt('profiles', all); }
+  exportMyData() {
+    const me = this.me(); if (!me) return; const a = this.getAdds(); const o = a.options || {};
+    const mine = l => l.author === me || (l.with || []).indexOf(me) >= 0;
+    const sach = a.sachets.filter(x => x.owner === me || (x.shares || []).some(z => z.to === me));
+    const data = { format: 'maison-du-the-export', exportedAt: new Date().toISOString(), compte: { prenom: me, email: (this.state.session && this.state.session.user && this.state.session.user.email) || '' },
+      profil: (o.profiles || {})[me] || {}, sachets: sach, thes: a.prods.filter(p => sach.some(x => x.prodId === p.id)), degustations: a.logs.filter(mine),
+      materiel: a.gear.filter(g => g.owner === me), amis: (o.friends || []).filter(f => f.from === me || f.to === me), salons: (o.salons || []).filter(x => (x.members || []).indexOf(me) >= 0),
+      fil: (a.events || []).filter(e => e.who === me), signalements: (o.reports || []).filter(r => r.by === me),
+      reactions: Object.keys(o.reacts || {}).filter(k => (o.reacts[k] || {})[me]).map(k => ({ sur: k, emoji: o.reacts[k][me] })),
+      ajoutsEnAttente: (a.teas || []).filter(t => t.pending) };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const u = URL.createObjectURL(blob); const el = document.createElement('a'); el.href = u; el.download = 'maison-du-the-mes-donnees-' + mdtToday() + '.json'; document.body.appendChild(el); el.click(); el.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000);
+    this.setState({ setMsg: 'Fichier téléchargé ✓' });
+  }
+  async deleteMyAccount() {
+    const me = this.me(); if (!me || !this.sb || !this.state.session) return;
+    if (!this.v2) { window.alert('La suppression automatique arrive avec le nouveau stockage. En attendant, demandez à un administrateur de supprimer votre compte.'); return; }
+    const t = window.prompt('Supprimer définitivement votre compte ? Vos sachets, dégustations, matériel, profil et amis seront effacés. Cette action est irréversible.\n\nPour confirmer, tapez votre prénom : ' + me, '');
+    if (t === null) return; if (String(t).trim().toLowerCase() !== String(me).toLowerCase()) { window.alert('Le prénom ne correspond pas : rien n’a été supprimé.'); return; }
+    const { error } = await this.sb.rpc('mdt_delete_me');
+    if (error) { window.alert('La suppression a échoué : ' + error.message); return; }
+    try { localStorage.removeItem('the-ajouts'); } catch (e) {}
+    try { await this.sb.auth.signOut(); } catch (e) {}
+    window.alert('Votre compte a été supprimé. Merci d’être passé par la Maison du Thé 🍵');
+    window.location.href = this.siteUrl();
+  }
+  legalView() {
+    const L = window.MDT_LEGAL || {};
+    return { date: '19 novembre 2026', editor: L.editor || '[nom de l’éditeur à compléter]', contact: L.contact || '[adresse e-mail de contact à compléter]', region: L.region || 'Union européenne (à vérifier dans Supabase)',
+      captcha: window.TURNSTILE_SITE_KEY ? ' À l’inscription et à la connexion, un contrôle anti-robot Cloudflare Turnstile vérifie que tu n’es pas un robot (sans cookie publicitaire).' : '' };
+  }
   settingsView(me) {
     const pr = this.prefsOf(me); const prof = ((((this.getAdds().options || {}).profiles || {})[me]) || {});
     const VIS4 = [['public', '🌍', 'Public', 'Tous les membres de la maison'], ['salons', '🏮', 'Mes salons et mes amis', 'Les membres de tes salons + tes amis'], ['friends', '🤝', 'Mes amis seulement', 'Uniquement les personnes de ta liste d’amis'], ['private', '🔒', 'Privé', 'Personne d’autre que toi']];
@@ -4617,7 +4818,9 @@ class Component extends DCLogic {
       setDesc: this.state.setDesc != null ? this.state.setDesc : (prof.desc || ''), onSetDesc: e => this.setState({ setDesc: e.target.value }),
       saveDesc: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { desc: String(this.state.setDesc != null ? this.state.setDesc : prof.desc || '').trim() }); this.setOpt('profiles', all); this.setState({ setDesc: null, setMsg: 'Description enregistrée ✓' }); },
       setTag: this.userTag(me), setMsg: this.state.setMsg || '', openProfile: () => this.setState({ view: 'profile', profUser: me, profEdit: false }),
-      openSalon: () => this.setState({ view: 'salon' }), setSalon: (this.salonOf(me) || {}).name || 'aucun' };
+      openSalon: () => this.setState({ view: 'salon' }), setSalon: (this.salonOf(me) || {}).name || 'aucun',
+      exportMe: () => this.exportMyData(), deleteMe: () => this.deleteMyAccount(),
+      delNote: this.v2 ? '' : 'La suppression automatique du compte arrive avec le nouveau stockage ; en attendant, demande-la à un administrateur.' };
   }
   salonsOf(u) { return this.salons().filter(x => (x.members || []).indexOf(u) >= 0); }
   // Salon principal d'une personne (profil.salonMain) : c'est lui qui sert pour le tag, les stats « Dans mon salon », etc.
@@ -4654,7 +4857,7 @@ class Component extends DCLogic {
     items.sort((x, y) => y.ts - x.ts);
     const EMO = ['🍵', '❤️', '🤯', '😂'];
     return items.slice(0, 40).map(it => { const r = R[it.key] || {};
-      return Object.assign({}, it, { initial: String(it.who).charAt(0).toUpperCase(), when: this.relTime(it.ts), hasNote: !!it.note, hasQuote: !!it.quote, link: !!it.open, plain: !it.open, open: it.open || (() => {}),
+      return Object.assign({}, it, { canReport: !!me && !!this.state.session && it.who !== me && /^[le]:/.test(it.key), report: () => this.report({ t: it.key.charAt(0) === 'l' ? 'log' : 'event', id: it.key.slice(2), who: it.who, label: (it.who + ' · ' + it.txt).slice(0, 90) }), initial: String(it.who).charAt(0).toUpperCase(), when: this.relTime(it.ts), hasNote: !!it.note, hasQuote: !!it.quote, link: !!it.open, plain: !it.open, open: it.open || (() => {}),
         reacts: EMO.map(em => { const who = Object.keys(r).filter(u => r[u] === em); const mine = r[me] === em;
           return { em: em, n: who.length ? String(who.length) : '', title: who.length ? who.join(', ') : 'Réagir', bg: mine ? 'var(--color-accent-100)' : 'transparent', ring: mine ? 'inset 0 0 0 1.5px var(--color-accent-700)' : 'inset 0 0 0 1px var(--color-divider)',
             toggle: () => { const all = Object.assign({}, (this.getAdds().options || {}).reacts || {}); const cur = Object.assign({}, all[it.key] || {}); if (cur[me] === em) delete cur[me]; else cur[me] = em; all[it.key] = cur; this.setOpt('reacts', all); } }; }) }); });
@@ -5439,7 +5642,7 @@ class Component extends DCLogic {
       if (prev !== a && this.state.session) {
         const ev = this.diffEvents(prev, a);
         if (ev.length && this.state.view === 'admin') ev.forEach(e => { e.adm = true; });
-        if (ev.length) a = Object.assign({}, a, { events: (a.events || prev.events || []).concat(ev).slice(-400) });
+        if (ev.length) a = Object.assign({}, a, { events: (a.events || prev.events || []).concat(ev).slice(this.v2 ? -5000 : -400) });
       }
     } catch (e) {}
     this._adds = a;
@@ -5456,11 +5659,17 @@ class Component extends DCLogic {
     if (!url || !key || !window.supabase) { this.setState({ cloud: false, cloudReady: true }); return; }
     this.sb = window.supabase.createClient(url, key);
     const { data } = await this.sb.auth.getSession();
-    this.setState({ cloud: true, cloudReady: true, session: data.session || null });
+    try { const { data: st, error: stErr } = await this.sb.from('mdt_items').select('data').eq('kind', 'opt').eq('id', 'storage').maybeSingle(); if (!stErr) { this._v2Tables = true; if (st && st.data && st.data.v === 2) this.v2 = true; } } catch (e) {}
+    window.addEventListener('error', ev => this.logError(ev.message, ev.error && ev.error.stack));
+    window.addEventListener('unhandledrejection', ev => this.logError('Promesse : ' + ((ev.reason && ev.reason.message) || ev.reason), ev.reason && ev.reason.stack));
+    if (this.v2 && data.session) { try { const { data: reg } = await this.sb.rpc('mdt_register'); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) this._regName = reg.nom; } catch (e) {} }
+    this.setState({ cloud: true, cloudReady: true, session: data.session || null, v2: !!this.v2, v2Tables: !!this._v2Tables });
+    if (/[?&]confirmed=1/.test(window.location.search)) { try { history.replaceState(null, '', this.siteUrl() + window.location.hash); } catch (e) {} this.setState({ view: data.session ? 'home' : 'login', authMode: 'signin' }); this.flash(data.session ? 'Adresse e-mail confirmée, bienvenue ! 🍵' : 'Adresse e-mail confirmée : vous pouvez vous connecter.'); }
     this.pullCloud(!!data.session);
     this.sb.auth.onAuthStateChange((ev, session) => {
       this.setState({ session: session || null });
-      if (session && ev === 'SIGNED_IN') this.pullCloud(true);
+      if (ev === 'PASSWORD_RECOVERY') this.setState({ view: 'login', authMode: 'newpass', authMsg: '', af: {} });
+      if (session && ev === 'SIGNED_IN') { if (this.v2) this.sb.rpc('mdt_register').then(({ data: reg }) => { if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) this._regName = reg.nom; this.pullCloud(true); }); else this.pullCloud(true); }
     });
     this._onFocus = () => this.pullCloud(false);
     window.addEventListener('focus', this._onFocus);
@@ -5468,8 +5677,151 @@ class Component extends DCLogic {
     this._gPoll = setInterval(() => { if (!document.hidden && this.state.view === 'guess' && this.state.gsId) this.pullCloud(false); }, 3000);
   }
 
+  // ================= Stockage v2 : une ligne par élément (table mdt_items), droits appliqués par la base =================
+  v2Key(t) { return this.norm(String(t || '')).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  // payload (format historique de l'appli) → lignes { kind, id, owner?, data }
+  v2Explode(a) {
+    const rows = new Map(); const put = (kind, id, data, owner) => { if (id == null || id === '') return; rows.set(kind + '/' + id, { kind: kind, id: String(id), owner: owner, data: data }); };
+    (a.prods || []).forEach(x => put('prod', x.id, x));
+    (a.sachets || []).forEach(x => { const d = Object.assign({}, x); const pr = d.prixPaye; delete d.prixPaye; put('sachet', x.id, d); if (pr != null && String(pr).trim() !== '') put('price', 'sachet:' + x.id, { v: pr }, x.owner); });
+    (a.gear || []).forEach(x => { const d = Object.assign({}, x); const pr = d.prix; delete d.prix; put('gear', x.id, d); if (pr != null && String(pr).trim() !== '') put('price', 'gear:' + x.id, { v: pr }, x.owner); });
+    (a.logs || []).forEach(x => put('log', x.id, x));
+    (a.events || []).forEach(x => put('event', x.id || this.v2Key('e|' + (x.ts || '') + '|' + (x.who || '') + '|' + (x.text || '')).slice(0, 120), x));
+    (a.teas || []).forEach(x => put('cat', this.v2Key((x.famille || '') + '|' + (x.nom || '')), x));
+    (a.decl || []).forEach(x => put('decl', this.v2Key((x.the || '') + '|' + (x.nom || '')), x));
+    Object.keys(a.over || {}).forEach(k => put('over', k, { v: a.over[k] }));
+    if ((a.owned || []).length) put('opt', 'owned', { v: a.owned });
+    const o = a.options || {};
+    Object.keys(o.profiles || {}).forEach(u => put('profile', u, o.profiles[u]));
+    (o.friends || []).forEach(f => put('friend', f.from + '>' + f.to, f));
+    (o.salons || []).forEach(x => put('salon', x.id, x));
+    const del = o.guessDeleted || [];
+    Object.keys(o.guessGames || {}).forEach(k => { if (del.indexOf(k) < 0) put('game', k, o.guessGames[k]); });
+    Object.keys(o.reacts || {}).forEach(k => Object.keys(o.reacts[k] || {}).forEach(u => put('react', k + '|' + u, { k: k, u: u, e: o.reacts[k][u] }, u)));
+    (o.reports || []).forEach(r => put('report', r.id, r, r.by));
+    const SKIP = ['profiles', 'friends', 'salons', 'guessGames', 'guessDeleted', 'reacts', 'reports', 'users', 'userIds', 'admins', 'mods'];
+    Object.keys(o).forEach(k => { if (SKIP.indexOf(k) < 0) put('opt', k, { v: o[k] }); });
+    return rows;
+  }
+  // lignes serveur → payload
+  v2Assemble(rows, members) {
+    const a = { prods: [], sachets: [], gear: [], logs: [], events: [], teas: [], decl: [], over: {}, owned: [], options: { profiles: {}, friends: [], salons: [], guessGames: {}, reacts: {}, reports: [] } };
+    const price = {}; const live = [];
+    rows.forEach(r => { if (!r.deleted) live.push(r); });
+    live.forEach(r => { if (r.kind === 'price') price[r.id] = r.data && r.data.v; });
+    live.sort((x, y) => String(x.id).localeCompare(String(y.id)));
+    live.forEach(r => {
+      const d = r.data || {};
+      switch (r.kind) {
+        case 'prod': a.prods.push(d); break;
+        case 'sachet': { const x = Object.assign({}, d); if (price['sachet:' + r.id] != null) x.prixPaye = price['sachet:' + r.id]; a.sachets.push(x); break; }
+        case 'gear': { const x = Object.assign({}, d); if (price['gear:' + r.id] != null) x.prix = price['gear:' + r.id]; a.gear.push(x); break; }
+        case 'log': a.logs.push(d); break;
+        case 'event': a.events.push(d); break;
+        case 'cat': a.teas.push(d); break;
+        case 'decl': a.decl.push(d); break;
+        case 'over': a.over[r.id] = d.v; break;
+        case 'profile': a.options.profiles[r.id] = d; break;
+        case 'friend': a.options.friends.push(d); break;
+        case 'salon': a.options.salons.push(d); break;
+        case 'game': a.options.guessGames[r.id] = d; break;
+        case 'react': (a.options.reacts[d.k] = a.options.reacts[d.k] || {})[d.u] = d.e; break;
+        case 'report': a.options.reports.push(d); break;
+        case 'opt': if (r.id === 'owned') a.owned = d.v || []; else if (r.id !== 'storage') a.options[r.id] = d.v; break;
+      }
+    });
+    a.events.sort((x, y) => String(x.ts || '').localeCompare(String(y.ts || '')));
+    a.logs.sort((x, y) => (this.logTs(x) || 0) - (this.logTs(y) || 0));
+    const M = members || [];
+    a.options.users = M.map(m => m.nom);
+    a.options.userIds = {}; M.forEach(m => { if (m.num) a.options.userIds[m.nom] = m.num; });
+    a.options.admins = M.filter(m => m.role === 'admin').map(m => m.nom);
+    a.options.mods = M.filter(m => m.role === 'moderator').map(m => m.nom);
+    return a;
+  }
+  async v2FetchAll(since) {
+    const out = []; const step = 1000;
+    for (let from = 0; from < 100000; from += step) {
+      let q = this.sb.from('mdt_items').select('kind,id,owner,data,deleted,updated_at').order('updated_at', { ascending: true }).range(from, from + step - 1);
+      if (since) q = q.gt('updated_at', since);
+      const { data, error } = await q; if (error) throw error;
+      out.push(...data); if (data.length < step) break;
+    }
+    return out;
+  }
+  async v2Members() { const { data, error } = await this.sb.rpc('mdt_members'); if (error) throw error; this._members = data || []; return this._members; }
+  async pullV2(first) {
+    if (this._dirty || this._v2Pulling) return; this._v2Pulling = true;
+    try {
+      const full = first || !this._v2Rows || !this._v2Since || (Date.now() - (this._v2Full || 0) > 120000);
+      if (full || !this._members) await this.v2Members();
+      const chg = this._chg || 0;
+      const rows = await this.v2FetchAll(full ? null : this._v2Since);
+      if (this._dirty || (this._chg || 0) !== chg) return;
+      if (full) { this._v2Rows = new Map(); this._v2Full = Date.now(); }
+      let perms = false;
+      rows.forEach(r => { this._v2Rows.set(r.kind + '/' + r.id, r); if (!this._v2Since || r.updated_at > this._v2Since) this._v2Since = r.updated_at; if (['friend', 'salon', 'profile'].indexOf(r.kind) >= 0) perms = true; });
+      if (!full && !rows.length && this._adds) return;
+      if (!full && perms) { this._v2Pulling = false; return this.pullV2(true); }
+      const a = this.v2Assemble(this._v2Rows, this._members);
+      this._adds = a; this._v2Synced = this.v2Snapshot(a);
+      try { localStorage.setItem('the-ajouts', JSON.stringify(a)); } catch (e) {}
+      if (!this._hashDone) { this._hashDone = true; try { this.applyHash(); } catch (e) { console.warn(e); } }
+      this.setState({ syncAt: new Date(), syncErr: '' });
+    } catch (e) { console.warn(e); this.setState({ syncErr: String(e.message || e) }); }
+    finally { this._v2Pulling = false; }
+  }
+  v2Snapshot(a) { const m = new Map(); this.v2Explode(a).forEach((r, k) => m.set(k, JSON.stringify([r.data, r.owner || null]))); return m; }
+  pushV2() {
+    this._dirty = true; clearTimeout(this._pushT);
+    const seq = this._seq = (this._seq || 0) + 1;
+    this._pushT = setTimeout(async () => {
+      const next = this.v2Explode(this.getAdds()); const prev = this._v2Synced || new Map();
+      const ups = [], dels = [];
+      next.forEach((r, k) => { const j = JSON.stringify([r.data, r.owner || null]); if (prev.get(k) !== j) ups.push(r); });
+      prev.forEach((j, k) => { if (!next.has(k)) { const i = k.indexOf('/'); dels.push({ kind: k.slice(0, i), id: k.slice(i + 1) }); } });
+      const errs = [];
+      // parties de Devine le thé : fusion avec la version serveur pour ne pas écraser les réponses des autres
+      for (const r of ups) if (r.kind === 'game') { try { const { data } = await this.sb.from('mdt_items').select('data').eq('kind', 'game').eq('id', r.id).maybeSingle(); if (data && data.data) r.data = this.mergeGuessGames({ [r.id]: r.data }, { [r.id]: data.data })[r.id] || r.data; } catch (e) {} }
+      const send = async list => { const { error } = await this.sb.from('mdt_items').upsert(list.map(r => Object.assign({ kind: r.kind, id: r.id, data: r.data, deleted: false }, r.owner ? { owner: r.owner } : {})), { onConflict: 'kind,id' }); return error; };
+      if (ups.length) { const e1 = await send(ups); if (e1) for (const r of ups) { const e2 = await send([r]); if (e2) errs.push(e2.message); } }
+      for (const d of dels) { const { error } = await this.sb.from('mdt_items').update({ deleted: true }).eq('kind', d.kind).eq('id', d.id); if (error) errs.push(error.message); }
+      if (seq === this._seq) this._dirty = false;
+      if (errs.length) { const m = /row-level security|permission denied/i.test(errs[0]) ? 'vous n’avez pas le droit de modifier cet élément.' : errs[0]; this.setState({ syncErr: m }); window.alert('Modification refusée : ' + m); this._v2Since = null; this.pullV2(true); return; }
+      this._v2Synced = this.v2Snapshot(this.getAdds());
+      this.setState({ syncAt: new Date(), syncErr: '' });
+    }, 400);
+  }
+  // Migration (admin) : ancienne fiche → lignes ; puis verrouillage de l'ancienne fiche
+  async migrateToV2() {
+    if (!this.isAdmin(this.me())) return;
+    if (!window.confirm('Passer au nouveau stockage ? Toutes les données vont être copiées ligne par ligne, puis l’ancienne fiche sera verrouillée (elle reste en sauvegarde dans Supabase). Les autres devront recharger la page.')) return;
+    this.setState({ v2Msg: 'Copie en cours…' });
+    try {
+      const { data: cur, error: e0 } = await this.sb.from('the_data').select('payload').eq('id', 'maison').maybeSingle(); if (e0) throw e0;
+      const a = (cur && cur.payload) || this.getAdds();
+      const rows = Array.from(this.v2Explode(a).values());
+      for (let i = 0; i < rows.length; i += 200) {
+        const chunk = rows.slice(i, i + 200).map(r => Object.assign({ kind: r.kind, id: r.id, data: r.data, deleted: false }, r.owner ? { owner: r.owner } : {}));
+        const { error } = await this.sb.from('mdt_items').upsert(chunk, { onConflict: 'kind,id' }); if (error) throw error;
+        this.setState({ v2Msg: 'Copie en cours… ' + Math.min(rows.length, i + 200) + ' / ' + rows.length });
+      }
+      const { error: e2 } = await this.sb.from('mdt_items').upsert({ kind: 'opt', id: 'storage', data: { v: 2, at: new Date().toISOString(), by: this.me(), n: rows.length } }, { onConflict: 'kind,id' }); if (e2) throw e2;
+      const { error: e3 } = await this.sb.rpc('mdt_lock_v1'); if (e3) console.warn(e3);
+      this.setState({ v2Msg: 'Terminé : ' + rows.length + ' éléments copiés. Rechargement…' });
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (e) { this.setState({ v2Msg: 'Échec : ' + (e.message || e) + ' (rien n’a été verrouillé, vous pouvez réessayer).' }); }
+  }
+  logError(msg, stack) {
+    try { if (!this.sb || !this._v2Tables) return; const k = String(msg).slice(0, 200); this._errSeen = this._errSeen || {}; if (this._errSeen[k]) return; this._errSeen[k] = 1;
+      this.sb.from('mdt_errors').insert({ who: this.state.session ? this.sessionName() : null, msg: String(msg).slice(0, 1900), stack: String(stack || '').slice(0, 5900), url: window.location.href.slice(0, 500), ua: navigator.userAgent.slice(0, 300) }).then(() => {}); } catch (e) {}
+  }
+
   async pullCloud(first) {
+    if (this.v2) return this.pullV2(first);
     if (!this.sb || this._dirty) return;
+    // l'admin a basculé sur le nouveau stockage pendant que la page était ouverte → recharger
+    if (this._v2Tables && !first) { try { const { data: st } = await this.sb.from('mdt_items').select('data').eq('kind', 'opt').eq('id', 'storage').maybeSingle(); if (st && st.data && st.data.v === 2) { window.location.reload(); return; } } catch (e) {} }
     const chg = this._chg || 0;
     const { data, error } = await this.sb.from('the_data').select('payload, updated_at').eq('id', 'maison').maybeSingle();
     if (error) { if (this.state.session) this.setState({ syncErr: error.message }); return; }
@@ -5490,6 +5842,7 @@ class Component extends DCLogic {
   }
 
   pushCloud() {
+    if (this.v2) return this.pushV2();
     this._dirty = true;
     clearTimeout(this._pushT);
     const seq = this._seq = (this._seq || 0) + 1;
@@ -5517,23 +5870,44 @@ class Component extends DCLogic {
   sessionName() {
     const s = this.state.session;
     if (!s || !s.user) return '';
+    if (this._regName) return this._regName;
     const m = s.user.user_metadata || {};
     return m.nom || (s.user.email || '').split('@')[0];
+  }
+
+  flash(msg) { this.setState({ shareToast: msg }); clearTimeout(this._toastT); this._toastT = setTimeout(() => this.setState({ shareToast: '' }), 4500); }
+  siteUrl() { return window.location.origin + window.location.pathname; }
+  captchaOpts() { return this._captcha ? { captchaToken: this._captcha } : {}; }
+  captchaReset() { this._captcha = null; try { if (window.turnstile && this._capW != null) window.turnstile.reset(this._capW); } catch (e) {} }
+  drawCaptcha() {
+    const key = window.TURNSTILE_SITE_KEY; const el = document.getElementById('mdt-captcha');
+    if (!key || !el || el.dataset.done) return;
+    const go = () => { try { el.dataset.done = '1'; this._capW = window.turnstile.render(el, { sitekey: key, language: 'fr', callback: t => { this._captcha = t; }, 'expired-callback': () => { this._captcha = null; } }); } catch (e) { console.warn(e); } };
+    if (window.turnstile) go(); else if (!document.getElementById('mdt-ts')) { const sc = document.createElement('script'); sc.id = 'mdt-ts'; sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.onload = go; document.head.appendChild(sc); }
   }
 
   async authSubmit() {
     const af = this.state.af || {};
     const mode = this.state.authMode || 'signin';
+    if (mode === 'newpass') {
+      if (!af.pass || af.pass.length < 6) { this.setState({ authMsg: 'Choisissez un mot de passe de 6 caractères minimum.' }); return; }
+      const { error } = await this.sb.auth.updateUser({ password: af.pass });
+      if (error) { this.setState({ authMsg: this.authErr(error) }); return; }
+      this.setState({ af: {}, authMode: 'signin', view: 'home' }); this.flash('Mot de passe modifié ✓'); return;
+    }
     if (!af.email || !af.pass) { this.setState({ authMsg: 'E-mail et mot de passe requis.' }); return; }
+    if (window.TURNSTILE_SITE_KEY && !this._captcha) { this.setState({ authMsg: 'Cochez d’abord la vérification anti-robot.' }); return; }
     this.setState({ authMsg: '' });
     if (mode === 'signup') {
       if (!String(af.nom || '').trim()) { this.setState({ authMsg: 'Indiquez votre prénom.' }); return; }
       if (this.opts().users.some(u => this.norm(u) === this.norm(af.nom.trim()))) { this.setState({ authMsg: 'Ce prénom est déjà pris : ajoutez une initiale (ex. ' + af.nom.trim() + ' B.).' }); return; }
-      const { data, error } = await this.sb.auth.signUp({ email: af.email.trim(), password: af.pass, options: { data: { nom: af.nom.trim() } } });
+      const { data, error } = await this.sb.auth.signUp({ email: af.email.trim(), password: af.pass, options: Object.assign({ data: { nom: af.nom.trim() }, emailRedirectTo: this.siteUrl() + '?confirmed=1' }, this.captchaOpts()) });
+      this.captchaReset();
       if (error) { this.setState({ authMsg: this.authErr(error) }); return; }
       if (!data.session) this.setState({ authMsg: 'Compte créé. Confirmez votre adresse via l\'e-mail reçu, puis connectez-vous.', authMode: 'signin' });
     } else {
-      const { error } = await this.sb.auth.signInWithPassword({ email: af.email.trim(), password: af.pass });
+      const { error } = await this.sb.auth.signInWithPassword({ email: af.email.trim(), password: af.pass, options: this.captchaOpts() });
+      this.captchaReset();
       if (error) this.setState({ authMsg: this.authErr(error) });
       else this.setState(s => ({ af: {}, view: s.view === 'login' ? 'home' : s.view }));
     }
@@ -6728,7 +7102,7 @@ class Component extends DCLogic {
     const sheet = this.state.sheet || {};
     const base = (sheet[k] && sheet[k].length) ? sheet[k] : ((this.families[k] || {}).teas || []);
     const adds = this.getAdds();
-    const extra = adds.teas.filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.traduction || undefined, gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
+    const extra = adds.teas.filter(t => t.famille === k).map(t => ({ name: t.nom, origin: [t.origine, t.pays].filter(Boolean).join(', '), pays: t.pays, fr: t.pending ? '⏳ en attente de validation' + (t.traduction ? ' · ' + t.traduction : '') : (t.traduction || undefined), gout: t.gout || undefined, recolte: t.recolte || undefined, added: true }));
     const tov = this.catOv().tea;
     return base.concat(extra).map(t => Object.assign({}, t, { orig: t.name }, tov[t.name] || {})).filter(t => !t.hidden).map(t => {
       if (raw) return t;
@@ -6833,10 +7207,10 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = ['new', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf', 'jeu'];
-      if (this.state.view === 'admin' && !this.isAdmin(me0)) this.state.view = 'home';
+    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['new', 'mod', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf', 'jeu', 'err'] : ['mod'];
+      if (this.state.view === 'admin' && !this.isMod(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
-      if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = 'new'; }
+      if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = ADM[0]; }
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
@@ -7092,10 +7466,11 @@ class Component extends DCLogic {
       isAdd: v === 'add' || v === 'admin', isAdminView: v === 'admin', isAddView: v === 'add',
       addMaxW: v === 'admin' ? '1240px' : '860px',
       addModes: [['lot', '🛍️', 'Un thé et son sachet', 'Ce que vous avez acheté'], ['tea', '📖', 'Un thé au catalogue', 'Nouveau type de thé ou nouvelle variante']].map(x => { const on = (this.state.addTab || 'lot') === x[0]; return { icon: x[1], name: x[2], sub: x[3], on: on, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
-      menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: 'new', addMsg: '' }),
+      menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: this.isAdmin(this.me()) ? 'new' : 'mod', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé']].map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération', 'Signalements, ajouts à valider'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
@@ -7112,6 +7487,7 @@ class Component extends DCLogic {
       menuProfile: () => this.setState({ menuOpen: false, view: 'profile', profUser: me, profEdit: false }),
       menuSettings: () => this.setState({ menuOpen: false, view: 'settings', setMsg: '', setDesc: null }),
       isSettings: v === 'settings', sett: v === 'settings' ? this.settingsView(me) : {},
+      isLegal: v === 'legal', lg: v === 'legal' ? this.legalView() : {}, openLegal: () => { this.setState({ view: 'legal', menuOpen: false }); try { window.scrollTo(0, 0); } catch (e) {} },
       openColl: () => this.setState(s => ({ menuOpen: false, view: s.collView || 'mine' })),
       collTea: () => this.setState({ view: 'mine', collView: 'mine' }),
       collLog: () => this.setState({ view: 'logs', collView: 'logs' }),
@@ -7268,8 +7644,10 @@ class Component extends DCLogic {
       frIntro: 'Ajoutez quelqu’un avec son identifiant (par exemple Maël#0002). Une fois la demande acceptée, vous voyez son profil.',
       isProfile: v === 'profile',
       pf: v === 'profile' ? this.profileView(me) : {},
+      pfSafe: (() => { const u = this.state.profUser || me; if (v !== 'profile' || !me || !this.state.session || u === me) return { show: false }; const bl = this.blockedOf(me).indexOf(u) >= 0;
+        return { show: true, name: u, blocked: bl, blockTxt: bl ? 'Débloquer' : '🚫 Bloquer', block: () => this.toggleBlock(u), report: () => this.report({ t: 'user', who: u, label: 'le profil de ' + u }) }; })(),
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
-      tabInfOn: this.state.addTab === 'inf',
+      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabErrOn: this.state.addTab === 'err', ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
       infTempers: this.petTempers.map(t => ({ icon: t.icon, name: t.name, desc: t.desc, grace: t.grace + ' j', rate: '×' + String(t.rate).replace('.', ','), loss: '≈ ' + String(Math.round(9 * t.rate * 10) / 10).replace('.', ',') + ' PV/j', heal: '+' + t.heal + ' PV', bonus: t.bonus })),
       infLevels: [1, 2, 3, 4, 5, 6, 7, 8].map(L => ({ lvl: 'Nv. ' + L, xp: String(15 * L * (L - 1)) + ' XP', red: '−' + Math.round(Math.min(0.55, (L - 1) * 0.07) * 100) + ' %' })),
       tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',
@@ -7330,14 +7708,14 @@ class Component extends DCLogic {
       logout: async () => { this.setState({ menuOpen: false }); if (this.sb) await this.sb.auth.signOut(); this.setState({ session: null, view: 'home' }); },
       af: Object.assign({ nom: '', email: '', pass: '' }, this.state.af),
       setA: ['nom', 'email', 'pass'].reduce((o, k) => { o[k] = e => { const val = e.target.value; this.setState(s => ({ af: Object.assign({}, s.af, { [k]: val }) })); }; return o; }, {}),
-      isSignup: authMode === 'signup', isSignin: authMode !== 'signup',
-      authTitle: authMode === 'signup' ? 'Créer un compte' : 'Connexion',
-      authCta: authMode === 'signup' ? 'Créer mon compte' : 'Se connecter',
+      isSignup: authMode === 'signup', isSignin: authMode === 'signin' || !authMode, isNewPass: authMode === 'newpass', notNewPass: authMode !== 'newpass', hasCaptcha: !!window.TURNSTILE_SITE_KEY && authMode !== 'newpass',
+      authTitle: authMode === 'signup' ? 'Créer un compte' : authMode === 'newpass' ? 'Nouveau mot de passe' : 'Connexion',
+      authCta: authMode === 'signup' ? 'Créer mon compte' : authMode === 'newpass' ? 'Enregistrer' : 'Se connecter',
       authSwitchTxt: authMode === 'signup' ? "J'ai déjà un compte" : 'Créer un compte',
       authSwitch: () => this.setState({ authMode: authMode === 'signup' ? 'signin' : 'signup', authMsg: '' }),
       authSubmit: () => this.authSubmit(),
       authKey: e => { if (e.key === 'Enter') this.authSubmit(); },
-      authReset: async () => { const em = String((this.state.af || {}).email || '').trim(); if (!em) { this.setState({ authMsg: "Tapez d'abord votre e-mail." }); return; } const { error } = await this.sb.auth.resetPasswordForEmail(em); this.setState({ authMsg: error ? this.authErr(error) : 'E-mail de réinitialisation envoyé.' }); },
+      authReset: async () => { const em = String((this.state.af || {}).email || '').trim(); if (!em) { this.setState({ authMsg: "Tapez d'abord votre e-mail." }); return; } if (window.TURNSTILE_SITE_KEY && !this._captcha) { this.setState({ authMsg: 'Cochez d’abord la vérification anti-robot.' }); return; } const { error } = await this.sb.auth.resetPasswordForEmail(em, Object.assign({ redirectTo: this.siteUrl() }, this.captchaOpts())); this.captchaReset(); this.setState({ authMsg: error ? this.authErr(error) : 'E-mail envoyé : cliquez sur le lien reçu pour choisir un nouveau mot de passe.' }); },
       authMsg: this.state.authMsg || '',
       cloudStatus: !this.state.cloud ? 'Mode local : les données restent dans ce navigateur. Remplissez supabase-config.js pour activer les comptes en ligne.' : (this.state.syncErr ? 'Erreur de synchronisation : ' + this.state.syncErr : 'Comptes en ligne actifs · synchronisé' + (this.state.syncAt ? ' à ' + this.state.syncAt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '') + '. Les comptes apparaissent ici dès la première connexion.'),
       me: me,
@@ -7345,7 +7723,7 @@ class Component extends DCLogic {
       scopeMe: () => this.setState({ scope: 'me' }), scopeAll: () => this.setState({ scope: 'all' }),
       scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
-      isAdmin: this.isAdmin(me),
+      isAdmin: this.isAdmin(me), isModMenu: this.isMod(me), admMenuTxt: this.isAdmin(me) ? '🛡️ Administration' : '🚩 Modération',
       lfSpecOn: this.isAdmin(me) && !this.state.editLogId,
       admQ: this.state.admQ || '', setAdmQ: e => this.setState({ admQ: e.target.value }),
       ...(() => {
@@ -7364,7 +7742,8 @@ class Component extends DCLogic {
             ask: () => this.setState({ admAsk: u }), cancel: () => this.setState({ admAsk: null }),
             askTxt: isAdm ? 'Retirer l’accès admin à ' + u + ' ? Il ne verra plus l’administration.' : 'Donner l’accès admin à ' + u + ' ? Il pourra modifier le catalogue, les réglages et les accès.',
             confirmTxt: isAdm ? 'Oui, retirer' : 'Oui, donner l’accès',
-            confirm: () => { this.setState({ admAsk: null }); this.setOpt('admins', isAdm ? adm.filter(x => x !== u) : adm.concat([u])); },
+            confirm: () => { this.setState({ admAsk: null }); if (this.v2) this.setRole(u, isAdm ? 'member' : 'admin'); else this.setOpt('admins', isAdm ? adm.filter(x => x !== u) : adm.concat([u])); },
+            isModo: !isAdm && this.isMod(u), canModo: !!this.v2 && !isAdm, modoTxt: this.isMod(u) && !isAdm ? 'Retirer modérateur' : 'Nommer modérateur', toggleModo: () => this.setRole(u, this.isMod(u) ? 'member' : 'moderator'),
             canRemove: u !== me && !isAdm,
             remove: () => { if (!window.confirm('Retirer le compte « ' + u + ' » de la liste ? Ses thés et dégustations restent dans la collection.')) return; this.setOpt('users', this.opts().users.filter(x => x !== u)); } };
         }) };
@@ -7627,8 +8006,9 @@ class Component extends DCLogic {
         if (!String(fm.nom || '').trim()) { this.setState({ addMsg: 'Indiquez au moins un nom.' }); return; }
         const a = this.getAdds();
         if (this.famOf(fm.nom.trim())) { this.setState({ addMsg: 'Ce thé existe déjà dans le catalogue.' }); return; }
-        this.setAdds(Object.assign({}, a, { teas: a.teas.concat([{ famille: fm.famille, nom: fm.nom.trim(), traduction: fm.traduction, origine: fm.origine, pays: fm.pays, province: fm.province, gout: fm.gout, recolte: fm.recolte }]) }));
-        this.setState(s => ({ addMsg: '« ' + fm.nom.trim() + ' » ajouté à la famille ' + this.families[fm.famille].name + '.', form: Object.assign({}, s.form, { nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '' }) }));
+        const pend = !!this.v2 && !this.isMod(this.me());
+        this.setAdds(Object.assign({}, a, { teas: a.teas.concat([Object.assign({ famille: fm.famille, nom: fm.nom.trim(), traduction: fm.traduction, origine: fm.origine, pays: fm.pays, province: fm.province, gout: fm.gout, recolte: fm.recolte }, pend ? { pending: true } : {})]) }));
+        this.setState(s => ({ addMsg: '« ' + fm.nom.trim() + (pend ? ' » envoyé aux modérateurs : il apparaîtra pour tous une fois validé.' : ' » ajouté à la famille ' + this.families[fm.famille].name + '.'), form: Object.assign({}, s.form, { nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '' }) }));
       },
       saveLot: () => {
         const fm = this.state.form || {};
