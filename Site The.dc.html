@@ -2395,19 +2395,26 @@
         </sc-if>
         <sc-if value="{{ tabUsrOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Utilisateurs et accès admin</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les admins voient les onglets Catalogue, Options, Gérer, Tags et Journal. Les autres peuvent seulement ajouter leurs thés, leurs sachets et leurs dégustations.</p></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Utilisateurs</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Rôles, suspension et suppression : menu ⋯ de chaque membre.</p></div>
             <input class="input" type="search" value="{{ admQ }}" onInput="{{ setAdmQ }}" placeholder="🔎 Rechercher un utilisateur (prénom ou #0003)" aria-label="Rechercher un utilisateur">
             <sc-if value="{{ admEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun utilisateur ne correspond.</p></sc-if>
-            <p style="margin: 0; font-size: 13px; opacity: .7; text-wrap: pretty;">{{ cloudStatus }} Chacun crée son propre compte depuis l’écran de connexion ; il apparaît ici dès sa première connexion.</p>
+            <p style="margin: 0; font-size: 13px; opacity: .6;">{{ admCount }}</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
             <sc-for list="{{ admUsers }}" as="au" hint-placeholder-count="3">
-              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
-                <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; flex: none;">{{ au.initial }}</span>
-                <div style="display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ au.tag }}</span><span style="font-size: 12px; opacity: .65;">{{ au.sub }}</span></div>
-                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if><sc-if value="{{ au.isModo }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #d9e5f1; color: #2c4a6b;">🧹 Modérateur</span></sc-if><sc-if value="{{ au.isSusp }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #fbebeb; color: #7a1f16;">⛔ Suspendu</span></sc-if>
-                <sc-if value="{{ au.idle }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ au.canSusp }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.toggleSusp }}" style="white-space: nowrap;">{{ au.suspTxt }}</button></sc-if><sc-if value="{{ au.canDelUser }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.delUser }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer le compte</button></sc-if><sc-if value="{{ au.canModo }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.toggleModo }}" style="white-space: nowrap;">{{ au.modoTxt }}</button></sc-if><sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.ask }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if><sc-if value="{{ au.canRemove }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer le compte</button></sc-if></sc-if>
-                <sc-if value="{{ au.asking }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; background: var(--color-accent-100); border-radius: 14px; padding: 8px 12px;"><span style="font-size: 14px; margin-right: auto;">{{ au.askTxt }}</span><button class="btn btn-primary" onClick="{{ au.confirm }}" style="white-space: nowrap;">{{ au.confirmTxt }}</button><button class="btn btn-ghost" onClick="{{ au.cancel }}" style="white-space: nowrap;">Annuler</button></div></sc-if>
-              </div>
+              <div class="sac mb-card"><div class="sac-head">
+                <span class="mb-av" style="background: {{ au.avBg }};">{{ au.initial }}</span>
+                <div class="sac-ttl"><div class="sac-nm"><button class="sac-name" onClick="{{ au.open }}">{{ au.tag }}</button>
+                  <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: var(--color-accent); color: var(--color-bg); box-shadow: none;">🛡️ Admin</span></sc-if>
+                  <sc-if value="{{ au.isModo }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: #d9e5f1; color: #2c4a6b; box-shadow: none;">🧹 Modérateur</span></sc-if>
+                  <sc-if value="{{ au.isSusp }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: #fbebeb; color: #7a1f16; box-shadow: none;">⛔ Suspendu</span></sc-if>
+                  <sc-if value="{{ au.isMe }}" hint-placeholder-val="{{ false }}"><span class="mb-role">vous</span></sc-if></div>
+                  <span class="sac-sub">{{ au.sub }}</span></div>
+                <sc-if value="{{ au.hasActions }}" hint-placeholder-val="{{ true }}"><div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ au.menuToggle }}" aria-haspopup="true" aria-expanded="{{ au.menuOpen }}" aria-label="Actions">⋯</button><sc-if value="{{ au.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ au.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu" role="menu">
+                  <sc-for list="{{ au.actions }}" as="ua" hint-placeholder-count="3"><button role="menuitem" class="{{ ua.cls }}" onClick="{{ ua.go }}">{{ ua.label }}<small>{{ ua.sub }}</small></button></sc-for>
+                </div></sc-if></div></sc-if>
+              </div></div>
             </sc-for>
+            </div>
           </section>
         </sc-if>
         <sc-if value="{{ tabMrgOn }}" hint-placeholder-val="{{ false }}">
@@ -8303,7 +8310,7 @@ class Component extends DCLogic {
         this.loadAdminCounts(true); this.setState({ asMember: false, menuOpen: false, view: 'admin', addTab: this.realAdmin(this.me()) ? 'dash' : 'mod', addMsg: '' }); },
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['dash', '🏠', 'Accueil', 'À traiter, annonce, mots interdits'], ['dev', '🛠️', 'Développement' + (this.state.admBugs ? ' (' + this.state.admBugs + ')' : ''), 'Bugs signalés par les membres'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0) > 0 ? ' (' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0)) + ')' : ''), 'Signalements, ajouts à valider'], ['scan', '🔍', 'Textes à vérifier', 'Insultes, liens, contacts…'], ['qual', '🧽', 'Qualité', 'Données à compléter'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['dash', '🏠', 'Accueil', 'À traiter, annonce, mots interdits'], ['dev', '🛠️', 'Développement' + (this.state.admBugs ? ' (' + this.state.admBugs + ')' : ''), 'Bugs signalés par les membres'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0) > 0 ? ' (' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0)) + ')' : ''), 'Signalements, ajouts à valider'], ['scan', '🔍', 'Textes à vérifier', 'Insultes, liens, contacts…'], ['qual', '🧽', 'Qualité', 'Données à compléter'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
@@ -8582,14 +8589,14 @@ class Component extends DCLogic {
         const adm = this.admins();
         const list = this.opts().users.filter(u => u && (!q || this.norm(u + ' ' + (ids[u] || '')).indexOf(q) >= 0 || (ids[u] || '').indexOf(q) >= 0))
           .sort((x, y) => (ids[x] || '9999').localeCompare(ids[y] || '9999'));
-        return { admEmpty: !list.length, admUsers: list.map(u => {
+        return { admEmpty: !list.length, admCount: list.length + (list.length > 1 ? ' membres' : ' membre') + (this.state.syncErr ? ' · erreur de synchro : ' + this.state.syncErr : ''), admUsers: list.map(u => {
           const isAdm = adm.indexOf(u) >= 0;
           const n = this.getAdds().sachets.filter(o => o.owner === u).length;
           const nl = this.getAdds().logs.filter(l => l.author === u).length; const mi = this.memberInfo(u);
           const nrep = this.reports().filter(r => r.who === u).length;
           const ago = t => { if (!t) return ''; const d = Math.floor((Date.now() - Date.parse(t)) / 864e5); return d <= 0 ? 'aujourd’hui' : d === 1 ? 'hier' : 'il y a ' + d + ' j'; };
-          return { tag: this.userTag(u), initial: u.slice(0, 1).toUpperCase(), isAdm: isAdm,
-            sub: [n + (n > 1 ? ' sachets' : ' sachet'), nl + (nl > 1 ? ' dégustations' : ' dégustation'), mi.created_at ? 'inscrit le ' + new Date(mi.created_at).toLocaleDateString('fr-FR') : '', mi.last_seen ? 'vu ' + ago(mi.last_seen) : '', nrep ? '🚩 ' + nrep + ' signalement' + (nrep > 1 ? 's' : '') : '', u === me ? 'vous' : ''].filter(Boolean).join(' · '),
+          return { u: u, isMe: u === me, tag: this.userTag(u), initial: u.slice(0, 1).toUpperCase(), isAdm: isAdm,
+            sub: [n + (n > 1 ? ' sachets' : ' sachet'), nl + (nl > 1 ? ' dégustations' : ' dégustation'), mi.created_at ? 'inscrit le ' + new Date(mi.created_at).toLocaleDateString('fr-FR') : '', mi.last_seen ? 'vu ' + ago(mi.last_seen) : '', nrep ? '🚩 ' + nrep + ' signalement' + (nrep > 1 ? 's' : '') : ''].filter(Boolean).join(' · '),
             isSusp: !!mi.suspended, canSusp: !!this.v2 && !isAdm && u !== me, suspTxt: mi.suspended ? 'Réactiver' : 'Suspendre',
             toggleSusp: async () => { const on = !mi.suspended; if (on && !window.confirm('Suspendre ' + u + ' ? Il pourra toujours consulter le site mais plus rien ajouter ni modifier.')) return;
               const { error } = await this.sb.rpc('mdt_set_suspended', { n: u, s: on }); if (error) { window.alert(error.message); return; } this.modLog(on ? 'a suspendu le compte' : 'a réactivé le compte', u); this._members = null; this.pullV2(true); },
@@ -8606,6 +8613,18 @@ class Component extends DCLogic {
             isModo: !isAdm && this.isMod(u), canModo: !!this.v2 && !isAdm, modoTxt: this.isMod(u) && !isAdm ? 'Retirer modérateur' : 'Nommer modérateur', toggleModo: () => { this.modLog(this.isMod(u) ? 'a retiré le rôle modérateur' : 'a nommé modérateur', u); this.setRole(u, this.isMod(u) ? 'member' : 'moderator'); },
             canRemove: u !== me && !isAdm,
             remove: () => { if (!window.confirm('Retirer le compte « ' + u + ' » de la liste ? Ses thés et dégustations restent dans la collection.')) return; this.setOpt('users', this.opts().users.filter(x => x !== u)); } };
+        }).map(o => {
+          const u = o.u, close = f => async () => { this.setState({ usrMenu: '' }); await f(); };
+          const acts = [{ label: '🙂 Voir le profil', sub: 'Ses thés, son matériel, ses badges', cls: '', go: close(() => this.setState({ view: 'profile', profUser: u, profEdit: false })) }];
+          if (o.canModo) acts.push({ label: o.isModo ? '🧹 Retirer modérateur' : '🧹 Nommer modérateur', sub: o.isModo ? 'Redevient membre' : 'Accès à l’onglet Modération', cls: '', go: close(o.toggleModo) });
+          if (o.canToggle) acts.push({ label: o.isAdm ? '🛡️ Retirer l’accès admin' : '🛡️ Donner l’accès admin', sub: o.isAdm ? 'Ne verra plus l’administration' : 'Toute l’administration et les accès', cls: '', go: close(() => { if (window.confirm(o.askTxt)) o.confirm(); }) });
+          if (o.canSusp) acts.push({ label: o.isSusp ? '✅ Réactiver le compte' : '⛔ Suspendre', sub: o.isSusp ? 'Peut de nouveau ajouter et modifier' : 'Lecture seule, plus aucun ajout', cls: o.isSusp ? '' : 'danger', go: close(o.toggleSusp) });
+          if (o.canDelUser) acts.push({ label: '🗑️ Supprimer le compte', sub: 'Définitif, avec ses données personnelles', cls: 'danger', go: close(o.delUser) });
+          if (!this.v2 && o.canRemove) acts.push({ label: '✕ Retirer de la liste', sub: 'Ses thés restent dans la collection', cls: 'danger', go: close(o.remove) });
+          const mo = this.state.usrMenu === u;
+          return Object.assign(o, { actions: acts, hasActions: acts.length > 0, menuOpen: mo, menuToggle: () => this.setState({ usrMenu: mo ? '' : u }),
+            open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
+            avBg: o.isAdm ? 'var(--color-accent-700)' : o.isSusp ? '#9a8f80' : 'var(--color-accent-2-600)' });
         }) };
       })(),
       tabOptOn: this.state.addTab === 'opt', tabOptOff: this.state.addTab !== 'opt',
