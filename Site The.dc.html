@@ -1070,7 +1070,7 @@
               <div class="tp-team" aria-label="Équipe de tea pets">
                 <sc-for list="{{ sl.petCards }}" as="pc" hint-placeholder-count="3">
                   <div class="tp-card" role="button" tabindex="0" onClick="{{ pc.ping }}" style="opacity: {{ pc.cardOp }};" title="Cliquer pour le retrouver dans l’enclos">
-                    <div class="tp-card-pic"><sc-if value="{{ pc.sprite }}" hint-placeholder-val="{{ false }}"><img src="{{ pc.sprite }}" alt=""></sc-if><sc-if value="{{ pc.noSprite }}" hint-placeholder-val="{{ true }}"><span style="font-size: 28px;">🐸</span></sc-if></div>
+                    <div class="{{ pc.picCls }}"><sc-if value="{{ pc.sprite }}" hint-placeholder-val="{{ false }}"><img src="{{ pc.sprite }}" alt=""></sc-if><sc-if value="{{ pc.noSprite }}" hint-placeholder-val="{{ true }}"><span style="font-size: 28px;">🐸</span></sc-if><sc-if value="{{ pc.shiny }}" hint-placeholder-val="{{ false }}"><i class="tp-shine" style="-webkit-mask-image: {{ pc.mask }}; mask-image: {{ pc.mask }};"></i><b class="tp-spark s1">✦</b><b class="tp-spark s2">✦</b></sc-if></div>
                     <div class="tp-card-main">
                       <div class="tp-card-top"><button class="tp-card-name" onClick="{{ pc.open }}">{{ pc.name }}</button><sc-if value="{{ pc.crown }}" hint-placeholder-val="{{ false }}"><span title="Chef de l’enclos">👑</span></sc-if><span class="tp-card-lvl">{{ pc.lvl }}</span></div>
                       <div class="tp-hp"><span class="tp-hp-lbl">PV</span><span class="tp-hp-bar"><i style="width: {{ pc.hpPct }}; background: {{ pc.hpColor }};"></i></span><span class="tp-hp-num">{{ pc.hp }}</span></div>
@@ -4444,7 +4444,7 @@ class Component extends DCLogic {
         const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
         return {
           petsJson: JSON.stringify(ps.map(x => ({ id: x.g.id, name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', hp: x.st.hp, ko: x.st.ko, mood: x.st.mood, lvl: x.st.lvl, crown: x.g.id === crown }))),
-          petCards: ps.map(x => ({ name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', noSprite: !x.g.sprite, lvl: 'Nv. ' + x.st.lvl, crown: x.g.id === crown,
+          petCards: ps.map(x => ({ name: x.g.name, owner: x.g.owner, sprite: x.g.sprite || '', noSprite: !x.g.sprite, lvl: 'Nv. ' + x.st.lvl, crown: x.g.id === crown, picCls: x.g.id === crown ? 'tp-card-pic tp-crowned' : 'tp-card-pic', shiny: x.g.id === crown, mask: x.g.sprite ? 'url(' + x.g.sprite + ')' : 'none',
             hp: x.st.hp + ' / 100', hpPct: x.st.hp + '%', hpColor: x.st.hpColor, xpTxt: 'XP ' + x.st.xpIn + ' / ' + x.st.xpNeed, xpPct: x.st.xpPct + '%',
             status: x.st.status, sub: x.st.lastTxt + ' · ' + x.st.temper, levelUp: x.st.levelUp, ko: x.st.ko, cardOp: x.st.ko ? '.7' : '1',
             ping: () => { if (window.mdtPetPing) window.mdtPetPing(x.g.id); }, open: () => this.setState({ view: 'gearItem', gearId: x.g.id }) })),

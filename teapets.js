@@ -118,7 +118,10 @@
         pet.tx = pet.x; pet.ty = pet.y;
       }
       var body = pet.el.querySelector('.tp-body');
-      body.innerHTML = p.sprite ? '<img alt="" src="' + p.sprite + '">' : '<span class="tp-emoji">🐸</span>';
+      var shine = p.crown ? (p.sprite ? '<i class="tp-shine" style="-webkit-mask-image:url(' + p.sprite + ');mask-image:url(' + p.sprite + ')"></i>' : '') + '<b class="tp-spark s1">\u2726</b><b class="tp-spark s2">\u2726</b><b class="tp-spark s3">\u2726</b>' : '';
+      var html = (p.sprite ? '<img alt="" src="' + p.sprite + '">' : '<span class="tp-emoji">🐸</span>') + shine;
+      if (body.innerHTML !== html) body.innerHTML = html;
+      pet.el.classList.toggle('tp-crowned', !!p.crown);
       pet.el.querySelector('.tp-tag').textContent = (p.crown ? '👑 ' : '') + p.name + ' · Nv. ' + (p.lvl || 1) + ' · ' + (p.hp != null ? p.hp : 100) + ' PV';
       pet.el.querySelector('.tp-mood').textContent = p.mood || '';
       pet.hp = p.hp != null ? p.hp : 100; pet.ko = !!p.ko;
@@ -167,6 +170,16 @@
     '.tp-pet:hover .tp-tag, .tp-pet:focus .tp-tag, .tp-ping .tp-tag { opacity: 1; }',
     '.tp-mood { position: absolute; left: 50%; top: -14px; transform: translateX(-50%); font-size: 16px; line-height: 1; pointer-events: none; animation: tpFloat 2.4s ease-in-out infinite; }',
     '.tp-ko .tp-body { filter: grayscale(.85) brightness(.9); }',
+    '.tp-crowned .tp-body img, .tp-card-pic.tp-crowned img { filter: drop-shadow(0 0 1px #fff6c8) drop-shadow(0 0 4px rgba(255,200,60,.85)); animation: tpGlow 2.4s ease-in-out infinite; }',
+    '.tp-shine { position: absolute; inset: 0; pointer-events: none; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; background: linear-gradient(115deg, transparent 0 38%, rgba(255,255,255,.95) 44%, rgba(255,236,150,.9) 50%, rgba(255,255,255,.6) 54%, transparent 60% 100%); background-size: 300% 100%; background-repeat: no-repeat; animation: tpShine 2.8s steps(14) infinite; mix-blend-mode: screen; }',
+    '.tp-spark { position: absolute; pointer-events: none; font-style: normal; font-weight: 400; color: #fff; text-shadow: 0 0 3px #ffd54a, 0 0 6px #ffb300; font-size: 12px; line-height: 1; opacity: 0; animation: tpTwinkle 1.8s steps(4) infinite; }',
+    '.tp-spark.s1 { left: 6%; top: 8%; } .tp-spark.s2 { right: 4%; top: 30%; font-size: 9px; animation-delay: .6s; } .tp-spark.s3 { left: 30%; bottom: 4%; font-size: 10px; animation-delay: 1.2s; }',
+    '.tp-card-pic.tp-crowned { position: relative; background: linear-gradient(135deg, #f6e7a6, #cfe3a8 55%, #f3d97a); box-shadow: inset 0 0 0 2px rgba(201,150,40,.7); }',
+    '.tp-card-pic .tp-shine { inset: 3px; }',
+    '@keyframes tpShine { 0% { background-position: 130% 0; } 55%, 100% { background-position: -30% 0; } }',
+    '@keyframes tpTwinkle { 0%, 100% { opacity: 0; transform: scale(.4) rotate(0); } 40% { opacity: 1; transform: scale(1.1) rotate(20deg); } 70% { opacity: .6; transform: scale(.8) rotate(45deg); } }',
+    '@keyframes tpGlow { 0%, 100% { filter: drop-shadow(0 0 1px #fff6c8) drop-shadow(0 0 3px rgba(255,200,60,.6)); } 50% { filter: drop-shadow(0 0 1px #fff6c8) drop-shadow(0 0 7px rgba(255,200,60,1)); } }',
+    '@media (prefers-reduced-motion: reduce) { .tp-shine, .tp-spark, .tp-crowned .tp-body img { animation: none; } .tp-spark { opacity: .8; } }',
     '.tp-ping .tp-shadow { box-shadow: 0 0 0 4px rgba(255,230,120,.8); }',
     '@keyframes tpFloat { 0%, 100% { transform: translate(-50%, 0); opacity: .95; } 50% { transform: translate(-50%, -5px); opacity: .7; } }'
   ].join('\n');
