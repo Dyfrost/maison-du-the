@@ -852,7 +852,7 @@
                   </div>
                   <button onClick="{{ m.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ m.the }} →</button>
                   <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px;">
-                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque :</span> {{ m.marque }}</span>
+                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Boutique :</span> {{ m.marque }}</span>
                     <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix moyen :</span> {{ m.prix }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
@@ -940,7 +940,7 @@
                   </div>
                   <button onClick="{{ m.openCat }}" style="cursor: pointer; align-self: flex-start; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;" style-hover="opacity: 1; color: var(--color-accent-700);">{{ m.the }} →</button>
                   <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px;">
-                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Marque :</span> {{ m.marque }}</span>
+                    <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Boutique :</span> {{ m.marque }}</span>
                     <span><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Prix moyen :</span> {{ m.prix }}</span>
                   </div>
                   <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ m.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent" style="white-space: nowrap;">{{ tg }}</span></sc-for></div>
@@ -1580,7 +1580,7 @@
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.type }}" data-val="{{ gf.type }}" onChange="{{ setG.type }}"><sc-for list="{{ gearTypes }}" as="gt" hint-placeholder-count="6"><option value="{{ gt.v }}" label="{{ gt.l }}">{{ gt.l }}</option></sc-for></select></label><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Modèle</span><select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ gf.model }}" data-val="{{ gf.model }}" onChange="{{ setG.model }}"><option value="">—</option><sc-for list="{{ gearModelGroups }}" as="mg" hint-placeholder-count="2"><optgroup label="{{ mg.label }}"><sc-for list="{{ mg.items }}" as="gm" hint-placeholder-count="4"><option value="{{ gm }}" label="{{ gm }}">{{ gm }}</option></sc-for></optgroup></sc-for></select></label>
               <sc-if value="{{ gfVol }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Contenance (ml)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 120" defaultValue="{{ gf.volume }}" onInput="{{ setGz.volume }}" key="{{ gfKey }}-volume"></label></sc-if>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Matière</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfMatPh }}" defaultValue="{{ gf.material }}" onInput="{{ setGz.material }}" key="{{ gfKey }}-material"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque / origine</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" defaultValue="{{ gf.origin }}" onInput="{{ setGz.origin }}" key="{{ gfKey }}-origin"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Boutique</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="{{ gfOrigPh }}" defaultValue="{{ gf.origin }}" onInput="{{ setGz.origin }}" key="{{ gfKey }}-origin"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date d’achat</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="" value="{{ gf.achat }}" onInput="{{ setG.achat }}"></label>
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Prix (€)</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 45" defaultValue="{{ gf.prix }}" onInput="{{ setGz.prix }}" key="{{ gfKey }}-prix"></label>
             </div>
@@ -2335,10 +2335,10 @@
         </sc-if>
         <sc-if value="{{ tabMrqOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🏷️ Marques ({{ brN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Toutes les marques des thés du commerce. Renommez-en une (ex. un ancien code perso) : tous ses thés suivent. Les orthographes proches (majuscules, accents, espaces) sont regroupées ; les doublons probables sont signalés.</p></div>
-            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"><input class="input" value="{{ brQ }}" onInput="{{ setBrQ }}" placeholder="Rechercher une marque ou un thé…" aria-label="Rechercher" style="flex: 1; min-width: 220px;"><sc-if value="{{ brNone }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .65;">{{ brNone }}</span></sc-if></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🏪 Boutiques ({{ brN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Toutes les boutiques des thés du commerce. Renommez-en une (ex. un ancien code perso) : tous ses thés suivent. Les orthographes proches (majuscules, accents, espaces) sont regroupées ; les doublons probables sont signalés.</p></div>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"><input class="input" value="{{ brQ }}" onInput="{{ setBrQ }}" placeholder="Rechercher une boutique ou un thé…" aria-label="Rechercher" style="flex: 1; min-width: 220px;"><sc-if value="{{ brNone }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .65;">{{ brNone }}</span></sc-if></div>
             <sc-if value="{{ brMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">{{ brMsg }}</p></sc-if>
-            <sc-if value="{{ brEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune marque.</p></sc-if>
+            <sc-if value="{{ brEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune boutique.</p></sc-if>
             <sc-for list="{{ brList }}" as="br" hint-placeholder-count="3">
               <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 18px;">{{ br.name }}</b><span style="font-size: 14px; opacity: .65;">{{ br.n }}</span><sc-if value="{{ br.hasNear }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">{{ br.nearTxt }}</span></sc-if></div>
@@ -2349,7 +2349,7 @@
                   <button class="btn btn-secondary" onClick="{{ br.rename }}" style="white-space: nowrap;">✏️ Renommer</button>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                  <select class="input" value="{{ br.tgt }}" data-val="{{ br.tgt }}" onChange="{{ br.setTgt }}" aria-label="Marque à garder" style="flex: 1; min-width: 180px;"><option value="">Fusionner dans…</option><sc-for list="{{ br.opts }}" as="bo" hint-placeholder-count="3"><option value="{{ bo.v }}" label="{{ bo.l }}">{{ bo.l }}</option></sc-for></select>
+                  <select class="input" value="{{ br.tgt }}" data-val="{{ br.tgt }}" onChange="{{ br.setTgt }}" aria-label="Boutique à garder" style="flex: 1; min-width: 180px;"><option value="">Fusionner dans…</option><sc-for list="{{ br.opts }}" as="bo" hint-placeholder-count="3"><option value="{{ bo.v }}" label="{{ bo.l }}">{{ bo.l }}</option></sc-for></select>
                   <button class="btn btn-secondary" onClick="{{ br.merge }}" style="white-space: nowrap;">🔀 Fusionner</button>
                 </div>
               </div>
@@ -2690,7 +2690,7 @@
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Le nom donné par le fournisseur" defaultValue="{{ form.nomFour }}" onInput="{{ setFz.nomFour }}" key="{{ formKey }}-nomFour">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Marque</span>
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Boutique</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : Maison X" defaultValue="{{ form.marque }}" onInput="{{ setFz.marque }}" key="{{ formKey }}-marque">
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
@@ -3045,10 +3045,9 @@
           <h2 style="font-size: 22px; margin: 0;">✏️ Modifier « {{ pv.name }} »</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 14px;">
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Nom chez le fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.nom }}" onInput="{{ pe.set.nom }}" key="{{ pe.key }}-nom"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Marque / fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.marque }}" onInput="{{ pe.set.marque }}" key="{{ pe.key }}-marque"></label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.marque }}" onInput="{{ pe.set.marque }}" key="{{ pe.key }}-marque"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.ref }}" onInput="{{ pe.set.ref }}" key="{{ pe.key }}-ref"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.variante }}" onInput="{{ pe.set.variante }}" key="{{ pe.key }}-variante"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" defaultValue="{{ pe.boutique }}" onInput="{{ pe.set.boutique }}" key="{{ pe.key }}-boutique"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">🌡 Temp. conseillée (fabricant)<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 95" defaultValue="{{ pe.recoTemp }}" onInput="{{ pe.set.recoTemp }}" key="{{ pe.key }}-recoTemp"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⚖️ Quantité conseillée<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 5 g / 100 ml" defaultValue="{{ pe.recoQty }}" onInput="{{ pe.set.recoQty }}" key="{{ pe.key }}-recoQty"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⏱ Temps conseillés<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 20/30/45" defaultValue="{{ pe.recoTimes }}" onInput="{{ pe.set.recoTimes }}" key="{{ pe.key }}-recoTimes"></label>
@@ -4450,10 +4449,10 @@ class Component extends DCLogic {
     const delCat = ids => b => ({ teas: b.teas.filter((t, i) => ids.indexOf('t' + i) < 0), decl: (b.decl || []).filter((d, i) => ids.indexOf('d' + i) < 0) });
     let cols = [], rows = [];
     if (kind === 'prod') {
-      cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Marque'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
+      cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Boutique'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
       rows = a.prods.map(p => { const sacs = a.sachets.filter(x => x.prodId === p.id); const nl = sacs.reduce((t, x) => t + (logsBySac[x.id] || []).length, 0); const ts = this.idTs(p.id);
         return { id: p.id, v: { nom: p.nom || p.the, the: p.the + (p.variante ? ' · ' + p.variante : ''), fam: famName(p.the), marque: p.marque || '—', nSac: sacs.length, nLog: nl, who: creator('pid', p.id) || (sacs[0] || {}).owner || '—', date: ts },
-          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Marque / fournisseur'], ['ref', 'Référence'], ['boutique', 'Boutique'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
+          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique'], ['ref', 'Référence'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
           save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
           open: () => this.openProd(p.id), delMsg: 'Supprimer « ' + (p.nom || p.the) + ' » ? ' + sacs.length + ' sachet(s) et ' + nl + ' dégustation(s) seront aussi supprimés.', delFn: delProds([p.id]) }; });
     } else if (kind === 'sachet') {
@@ -4494,7 +4493,7 @@ class Component extends DCLogic {
     const K = [['prod', '🍵', 'Thés du commerce', a.prods.length], ['sachet', '🛍️', 'Sachets', a.sachets.length], ['log', '☕', 'Dégustations', a.logs.length], ['cat', '📖', 'Catalogue ajouté', a.teas.length + (a.decl || []).length]];
     const kindName = { prod: 'les thés du commerce', sachet: 'les sachets', log: 'les dégustations', cat: 'le catalogue ajouté' }[kind];
     return {
-      adKinds: K.map(x => { const on = x[0] === kind; return { icon: x[1], name: x[2], n: String(x[3]), sub: x[0] === 'sachet' ? a.sachets.filter(z => { const o = this.collection().find(c => c.id === z.id); return o && this.isEmptySachet(o); }).length + ' vides' : x[0] === 'log' ? new Set(a.logs.map(l => l.author)).size + ' auteurs' : x[0] === 'prod' ? new Set(a.prods.map(p => p.marque).filter(Boolean)).size + ' marques' : 'ajouts des membres', on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', pick: () => this.setState({ adKind: x[0], adSel: [], adQ: '' }) }; }),
+      adKinds: K.map(x => { const on = x[0] === kind; return { icon: x[1], name: x[2], n: String(x[3]), sub: x[0] === 'sachet' ? a.sachets.filter(z => { const o = this.collection().find(c => c.id === z.id); return o && this.isEmptySachet(o); }).length + ' vides' : x[0] === 'log' ? new Set(a.logs.map(l => l.author)).size + ' auteurs' : x[0] === 'prod' ? new Set(a.prods.map(p => p.marque).filter(Boolean)).size + ' boutiques' : 'ajouts des membres', on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', pick: () => this.setState({ adKind: x[0], adSel: [], adQ: '' }) }; }),
       adKindName: kindName, adQ: this.state.adQ || '', setAdQ: e => this.setState({ adQ: e.target.value }),
       adCount: list.length + ' ligne' + (list.length > 1 ? 's' : '') + (q ? ' sur ' + rows.length : ''),
       adMore: list.length > 500 ? 'Seules les 500 premières lignes sont affichées : affinez la recherche.' : '',
@@ -4783,18 +4782,18 @@ class Component extends DCLogic {
       return n; };
     const ed = this.state.brEdit || {}, mg = this.state.brMerge || {}, q = this.norm(this.state.brQ || '');
     const shown = list.filter(g => !q || this.norm(g.spells.join(' ')).indexOf(q) >= 0 || g.prods.some(p => this.norm(p.nom || p.the).indexOf(q) >= 0));
-    return { brN: String(list.length), brNone: none ? none + ' thé' + (none > 1 ? 's' : '') + ' du commerce sans marque.' : '', brMsg: this.state.brMsg || '', brQ: this.state.brQ || '', setBrQ: e => this.setState({ brQ: e.target.value }), brEmpty: !shown.length,
+    return { brN: String(list.length), brNone: none ? none + ' thé' + (none > 1 ? 's' : '') + ' du commerce sans boutique.' : '', brMsg: this.state.brMsg || '', brQ: this.state.brQ || '', setBrQ: e => this.setState({ brQ: e.target.value }), brEmpty: !shown.length,
       brList: shown.map(g => { const nr = near(g); const draft = ed[g.key] != null ? ed[g.key] : g.name; const tgt = mg[g.key] || (nr[0] ? nr[0].key : '');
         return { name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
           ex: g.prods.slice(0, 5).map(p => p.nom || p.the).join(' · ') + (g.prods.length > 5 ? '…' : ''),
           hasNear: nr.length > 0, nearTxt: nr.length ? '⚠️ Doublon probable de « ' + nr.map(h => h.name).join(' », « ') + ' »' : '',
           draft: draft, setDraft: e => { const v = this.upInput(e); this.setState(st => ({ brEdit: Object.assign({}, st.brEdit, { [g.key]: v }) })); },
           rename: () => { const v = String(draft).trim(); if (!v) { this.setState({ brMsg: 'Le nom ne peut pas être vide.' }); return; } const other = list.find(h => h !== g && h.key === this.brandKey(v));
-            if (other && !window.confirm('« ' + v + ' » existe déjà : les deux marques seront réunies. Continuer ?')) return;
+            if (other && !window.confirm('« ' + v + ' » existe déjà : les deux boutiques seront réunies. Continuer ?')) return;
             const n = setAll(other ? [g.key, other.key] : [g.key], v); this.setState(st => { const e2 = Object.assign({}, st.brEdit); delete e2[g.key]; return { brEdit: e2, brMsg: '✓ ' + n + ' thé(s) renommé(s) en « ' + v + ' ».' }; }); },
           opts: list.filter(h => h !== g).map(h => ({ v: h.key, l: h.name + ' (' + h.prods.length + ')' })), tgt: tgt,
           setTgt: e => { const v = e.target.value; this.setState(st => ({ brMerge: Object.assign({}, st.brMerge, { [g.key]: v }) })); },
-          merge: () => { const h = list.find(x => x.key === tgt); if (!h) { this.setState({ brMsg: 'Choisissez la marque à garder.' }); return; }
+          merge: () => { const h = list.find(x => x.key === tgt); if (!h) { this.setState({ brMsg: 'Choisissez la boutique à garder.' }); return; }
             if (!window.confirm('Réunir « ' + g.name + ' » (' + g.prods.length + ') dans « ' + h.name + ' » ?')) return;
             const n = setAll([g.key, h.key], h.name); this.setState({ brMsg: '✓ « ' + g.name + ' » fusionnée dans « ' + h.name + ' » (' + n + ' thés).' }); } }; }) };
   }
@@ -5477,7 +5476,7 @@ class Component extends DCLogic {
       { key: 'harsh', v: harsh, unit: 'notes ≤ 6/20', tiers: [[1, '🧂', 'Palais exigeant'], [5, '🧐', 'Critique redouté']] },
       { key: 'writer', v: writer, unit: 'avis détaillés', tiers: [[5, '✍️', 'Plume'], [25, '📝', 'Chroniqueur'], [100, '📜', 'Encre de Chine']] },
       { key: 'pays', v: pays, unit: 'pays d’origine goûtés', tiers: [[3, '🧳', 'Voyageur'], [6, '✈️', 'Grand voyageur'], [10, '🌐', 'Route du thé']] },
-      { key: 'brands', v: brands, unit: 'marques différentes', tiers: [[3, '🏪', 'Curieux des boutiques'], [8, '🛒', 'Chineur'], [15, '🗺️', 'Fin connaisseur']] },
+      { key: 'brands', v: brands, unit: 'boutiques différentes', tiers: [[3, '🏪', 'Curieux des boutiques'], [8, '🛒', 'Chineur'], [15, '🗺️', 'Fin connaisseur']] },
       { key: 'faithful', v: faithful, unit: 'dégustations d’un même thé', tiers: [[10, '💍', 'Fidèle'], [25, '❤️', 'Grand amour'], [50, '♾️', 'Pour la vie']] },
       { key: 'dark', v: dark, unit: 'dégustations de thé sombre', tiers: [[5, '🖤', 'Ami du pu’er'], [20, '🌑', 'Côté sombre'], [50, '🐉', 'Maître du pu’er']] },
       { key: 'old', v: oldest, unit: 'ans pour votre plus vieux thé', tiers: [[5, '⏳', 'Thé qui a vécu'], [10, '🏛️', 'Vieille cave'], [20, '🦕', 'Trésor ancien']] },
@@ -5515,7 +5514,7 @@ class Component extends DCLogic {
   fieldChanges(o, n, kind, names) {
     const L = { log: { lotId: 'Sachet', author: 'Auteur', with: 'Participants', date: 'Date', heure: 'Heure', note: 'Note', infusion: 'Infusions', temps: 'Temps', temperature: 'Température', qty: 'Quantité', technique: 'Technique', repas: 'Moment', avis: 'Avis', nez: 'Nez', gearIds: 'Matériel', tags: 'Tags', endTs: 'Fin', startTs: 'Début' },
       sachet: { code: 'Code', owner: 'Propriétaire', prodId: 'Thé du commerce', achat: 'Date d’achat', prodDate: 'Année de production', lot: 'Lot', quantite: 'Quantité', prixMode: 'Vendu à', prixPaye: 'Prix payé', freq: 'Fréquence', commentaire: 'Commentaire', empty: 'Vide', sachetPhoto: 'Photo' },
-      prod: { nom: 'Nom', the: 'Thé du catalogue', variante: 'Variante', marque: 'Marque', ref: 'Référence', boutique: 'Boutique', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
+      prod: { nom: 'Nom', the: 'Thé du catalogue', variante: 'Variante', marque: 'Boutique', ref: 'Référence', boutique: 'Lieu d’achat', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
       gear: { name: 'Nom', type: 'Type', owner: 'Propriétaire', prix: 'Prix', marque: 'Marque', matiere: 'Matière', contenance: 'Contenance', photo: 'Photo', desc: 'Description', vitrine: 'Vitrine' },
       cat: { nom: 'Nom', famille: 'Famille', traduction: 'Traduction', origine: 'Origine', pays: 'Pays', province: 'Province', gout: 'Goût', recolte: 'Récolte' } }[kind] || {};
     const SKIP = ['history', 'adjust', 'shares', 'gearId', 'live', 'rev', 'id', 'pending'];
@@ -6260,7 +6259,7 @@ class Component extends DCLogic {
     const rm = sa.id ? this.remainFor(sa) : null;
     const pst = this.statsMany(this.collection().filter(o => o.prodId === p.id).map(o => o.id));
     const freq = sa.freq ? ((this.opts().freqs.find(f => String(f.code) === String(sa.freq)) || {}).label || sa.freq) : '';
-    const sac = [['Propriétaire', sa.owner], ['Marque', p.marque || sa.marque], ['Réf. fournisseur', p.ref || sa.ref], ['Boutique', p.boutique || sa.boutique], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', (this.priceVisible(sa.owner) && sa.prixPaye) ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
+    const sac = [['Propriétaire', sa.owner], ['Boutique', p.marque || sa.marque || p.boutique || sa.boutique], ['Réf. fournisseur', p.ref || sa.ref], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', (this.priceVisible(sa.owner) && sa.prixPaye) ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const tea = [['Thé du catalogue', p.the], ['Variante', p.variante], ['Famille', fk ? this.families[fk].name : ''], ['Origine', cat ? (cat.origin || cat.pays || '') : ''], ['Moyenne de ce thé', pst.n ? this.avgTxt(pst) + ' (' + pst.n + ')' : '']].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const join = me ? this.joinInfo(l, me) : {};
     const canEdit = !!me && !!this.state.session && this.canEditLog(l, me); const canDel = canEdit && this.norm(l.author || '') === this.norm(me);
@@ -7091,6 +7090,13 @@ class Component extends DCLogic {
   fixLogWith() {
     if (!this.isAdmin(this.me())) return; const a = this.getAdds();
     if (a.prods.some(p => p.marque && p.marque !== this.upBrand(p.marque))) { this.setAdds(Object.assign({}, a)); return this.fixLogWith(); }
+    // l'ancien champ « boutique » est fusionné dans « marque » (renommé Boutique)
+    if (a.prods.some(p => String(p.boutique || '').trim())) {
+      this.setAdds(Object.assign({}, a, { prods: a.prods.map(p => { const bq = String(p.boutique || '').trim(); if (!bq) return p; const c = Object.assign({}, p); delete c.boutique;
+        if (!String(c.marque || '').trim()) c.marque = bq; else if (this.brandKey(c.marque) !== this.brandKey(bq)) c.commentaire = (c.commentaire ? c.commentaire + '\n' : '') + 'Acheté chez : ' + bq;
+        return c; }) }));
+      return this.fixLogWith();
+    }
     const bad = a.logs.filter(l => (l.with || []).some((w, i, arr) => w === l.author || arr.indexOf(w) !== i)); if (!bad.length) return;
     this.setAdds(Object.assign({}, a, { logs: a.logs.map(l => bad.indexOf(l) < 0 ? l : Object.assign({}, l, { with: (l.with || []).filter((w, i, arr) => w !== l.author && arr.indexOf(w) === i) })) }));
   }
@@ -7517,7 +7523,7 @@ class Component extends DCLogic {
         const fk = this.state.key; const t = this.listFor(fk)[this.state.idx || 0] || {};
         const a = this.getAdds();
         const prods = a.prods.filter(p => this.norm(p.the) === this.norm(t.name || ''));
-        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Marque : ' + p.marque : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
+        return { teaGuestEmpty: !prods.length, teaGuestLots: prods.map(p => { const sacs = this.collection().filter(o => o.prodId === p.id); return { name: p.nom || p.the, sub: [p.variante ? 'Variante : ' + p.variante : '', p.marque ? 'Boutique : ' + p.marque : '', p.ref ? 'Réf. ' + p.ref : ''].filter(Boolean).join(' · '), prix: this.avgPrice(sacs) || '', open: () => this.openProd(p.id) }; }) };
       })(),
       ...(() => {
         const a = this.getAdds();
@@ -7590,7 +7596,7 @@ class Component extends DCLogic {
       menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: this.isAdmin(this.me()) ? 'new' : 'mod', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération', 'Signalements, ajouts à valider'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏷️', 'Marques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération', 'Signalements, ajouts à valider'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
