@@ -138,6 +138,30 @@
   .mdt-tip.on { opacity: 1; transform: none; }
   .mdt-tip b { font-size: 12px; letter-spacing: .04em; }
   .tag-accent { cursor: help; }
+  .stk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  @media (max-width: 720px) { .stk { padding: 14px; min-height: 92px; } .stk-v { font-size: 24px; } .stk-ic { font-size: 20px; } }
+  .stk { position: relative; overflow: hidden; background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-height: 104px; }
+  .stk-ic { position: absolute; right: 12px; top: 10px; font-size: 26px; opacity: .35; }
+  .stk-l { font-size: 12.5px; font-weight: 600; letter-spacing: .04em; opacity: .7; padding-right: 30px; line-height: 1.3; }
+  .stk-v { font-family: var(--font-heading); font-weight: 400; font-size: 30px; line-height: 1.1; margin-top: auto; }
+  .stk-s { font-size: 13px; line-height: 1.4; opacity: .72; }
+  .stg { display: flex; flex-direction: column; gap: 12px; }
+  .stg-t { font-size: 26px; margin: 8px 0 0; }
+  .stg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 14px; }
+  .sts { background: var(--color-surface); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .sts-h { display: flex; flex-direction: column; gap: 3px; }
+  .sts-h h3 { margin: 0; font-family: var(--font-heading); font-weight: 400; font-size: 21px; }
+  .sts-h span { font-size: 13.5px; line-height: 1.4; opacity: .7; }
+  .sts-e { margin: 0; font-size: 14px; opacity: .65; }
+  .stb-list { display: flex; flex-direction: column; gap: 11px; }
+  .stb { display: flex; flex-direction: column; gap: 5px; }
+  .stb-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 15px; line-height: 1.35; }
+  .stb-l { min-width: 0; overflow-wrap: anywhere; display: inline-flex; align-items: baseline; gap: 7px; }
+  .stb-l i { flex: none; width: 10px; height: 10px; border-radius: 50%; transform: translateY(1px); }
+  .stb-top b { flex: none; font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; opacity: .85; text-align: right; }
+  .stb-bar { display: block; height: 8px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden; }
+  .stb-bar span { display: block; height: 100%; border-radius: 999px; transition: width .5s ease; }
+  .sts-facts { gap: 10px; }
   .wrap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
   .wrap-card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px 22px 20px; min-height: 170px; display: flex; flex-direction: column; gap: 6px; box-shadow: var(--shadow-sm); animation: wrapIn .55s cubic-bezier(.2,.9,.3,1.2) both; }
   .wrap-card:first-child { grid-column: span 2; min-height: 200px; }
@@ -303,7 +327,6 @@
             <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon{{ salonBadge }}</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
-            <button role="menuitem" onClick="{{ menuWrap }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🎁 Tea Wrapped</button>
             <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🛡️ Administration</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
             <button role="menuitem" onClick="{{ logout }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-accent-700); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">Se déconnecter</button>
@@ -386,7 +409,6 @@
             <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
             <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
           </div>
-          <sc-if value="{{ wrapReady }}" hint-placeholder-val="{{ false }}"><button onClick="{{ menuWrap }}" class="wrap-banner"><span>{{ wrapReadyTxt }}</span><b>Le découvrir →</b></button></sc-if>
           <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ true }}">
           <div style="position: relative; overflow: hidden; background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
             <span aria-hidden="true" style="position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: {{ sugColor }}; opacity: .35;"></span>
@@ -1063,30 +1085,6 @@
 
 
 
-    <sc-if value="{{ isWrap }}" hint-placeholder-val="{{ false }}">
-      <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
-        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-          <div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><span style="font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .6;">🎁 Tea Wrapped</span><h1 style="font-size: 46px; margin: 0; text-transform: capitalize;">{{ wr.wTitle }}<span style="font-size: 18px; text-transform: none; opacity: .6;">{{ wr.wRunning }}</span></h1></div>
-          <button class="btn btn-secondary" onClick="{{ wr.wPrev }}" aria-label="Mois précédent" style="white-space: nowrap;">‹ Mois précédent</button>
-          <sc-if value="{{ wr.wCanNext }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ wr.wNext }}" aria-label="Mois suivant" style="white-space: nowrap;">Mois suivant ›</button></sc-if>
-        </div>
-        <sc-if value="{{ wr.wEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; opacity: .75;">Aucune dégustation ce mois-là… la théière a fait la grève 🫖</p></sc-if>
-        <sc-if value="{{ wr.wHas }}" hint-placeholder-val="{{ true }}">
-          <div class="wrap-grid">
-            <sc-for list="{{ wr.wCards }}" as="wc" hint-placeholder-count="8">
-              <div class="wrap-card" style="background: {{ wc.bg }}; color: {{ wc.fg }}; animation-delay: {{ wc.delay }};">
-                <span class="wrap-ic">{{ wc.icon }}</span>
-                <span class="wrap-k">{{ wc.k }}</span>
-                <b class="wrap-big">{{ wc.big }}</b>
-                <span class="wrap-sub">{{ wc.sub }}</span>
-              </div>
-            </sc-for>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ wr.wShare }}" style="white-space: nowrap;">↗ Partager mon résumé</button><sc-if value="{{ wr.wMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 14px;">{{ wr.wMsg }}</span></sc-if></div>
-        </sc-if>
-      </div>
-    </sc-if>
-
     <sc-if value="{{ isSalon }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 20px; animation: fadeUp .45s ease both;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -1615,177 +1613,62 @@
           <h1 style="font-size: 46px; margin: 0;">Stats pour les nerds</h1>
           <p style="font-size: 17px; opacity: .72; margin: 0;">{{ st.tagline }}</p>
         </div>
-        <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
-          <sc-for list="{{ st.kpis }}" as="k" hint-placeholder-count="8">
-            <div style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ k.label }}</span>
-              <span style="font-family: var(--font-heading); font-size: 28px; line-height: 1.1;">{{ k.value }}</span>
-              <sc-if value="{{ k.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .65;">{{ k.sub }}</span></sc-if>
+        <div role="tablist" aria-label="Chiffres ou Tea Wrapped" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px;">
+          <sc-for list="{{ stTabs }}" as="tt" hint-placeholder-count="2"><button role="tab" aria-selected="{{ tt.on }}" onClick="{{ tt.go }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-heading); font-size: 15px; padding: 9px 18px; border-radius: 999px; background: {{ tt.bg }}; color: {{ tt.fg }};">{{ tt.label }}</button></sc-for>
+        </div>
+        <sc-if value="{{ stTabNum }}" hint-placeholder-val="{{ true }}">
+          <div class="stk-grid">
+            <sc-for list="{{ st.kpis }}" as="k" hint-placeholder-count="8">
+              <div class="stk"><span class="stk-ic" aria-hidden="true">{{ k.icon }}</span><span class="stk-l">{{ k.label }}</span><b class="stk-v">{{ k.value }}</b><sc-if value="{{ k.sub }}" hint-placeholder-val="{{ false }}"><span class="stk-s">{{ k.sub }}</span></sc-if></div>
+            </sc-for>
+          </div>
+          <sc-for list="{{ st.groups }}" as="gr" hint-placeholder-count="3">
+            <div class="stg">
+              <h2 class="stg-t"><span aria-hidden="true">{{ gr.icon }}</span> {{ gr.title }}</h2>
+              <div class="stg-grid">
+                <sc-for list="{{ gr.sections }}" as="sc" hint-placeholder-count="3">
+                  <section class="sts">
+                    <div class="sts-h"><h3 style="margin: 0; font-family: var(--font-heading); font-weight: 400; font-size: 22px; line-height: 1.2;">{{ sc.title }}</h3><span>{{ sc.sub }}</span></div>
+                    <sc-if value="{{ sc.empty }}" hint-placeholder-val="{{ false }}"><p class="sts-e">Pas encore assez de données.</p></sc-if>
+                    <div class="stb-list">
+                      <sc-for list="{{ sc.bars }}" as="b" hint-placeholder-count="4">
+                        <div class="stb">
+                          <div class="stb-top"><span class="stb-l"><sc-if value="{{ b.hasDot }}" hint-placeholder-val="{{ false }}"><i style="background: {{ b.dot }};"></i></sc-if>{{ b.label }}</span><b>{{ b.txt }}</b></div>
+                          <span class="stb-bar" aria-hidden="true"><span style="width: {{ b.pct }}%; background: {{ sc.color }};"></span></span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </section>
+                </sc-for>
+              </div>
             </div>
           </sc-for>
+          <section class="sts sts-facts">
+            <div class="sts-h"><h3 style="margin: 0; font-family: var(--font-heading); font-weight: 400; font-size: 22px;">💡 Le saviez-vous ?</h3></div>
+            <sc-for list="{{ st.facts }}" as="f" hint-placeholder-count="3"><p style="margin: 0; font-size: 15.5px; line-height: 1.6;">• {{ f }}</p></sc-for>
+          </section>
+        </sc-if>
+        <sc-if value="{{ stTabWrap }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><span style="font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .6;">🎁 Tea Wrapped</span><h1 style="font-size: 46px; margin: 0; text-transform: capitalize;">{{ wr.wTitle }}<span style="font-size: 18px; text-transform: none; opacity: .6;">{{ wr.wRunning }}</span></h1></div>
+          <button class="btn btn-secondary" onClick="{{ wr.wPrev }}" aria-label="Mois précédent" style="white-space: nowrap;">‹ Mois précédent</button>
+          <sc-if value="{{ wr.wCanNext }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ wr.wNext }}" aria-label="Mois suivant" style="white-space: nowrap;">Mois suivant ›</button></sc-if>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 14px;">
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Le podium</h2><span style="font-size: 13px; opacity: .65;">Thés les mieux notés (moyenne de toutes les dégustations)</span></div>
-            <sc-if value="{{ st.topEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.top }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Membres</h2><span style="font-size: 13px; opacity: .65;">Dégustations par personne · moyenne donnée</span></div>
-            <sc-if value="{{ st.membersEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.members }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Familles</h2><span style="font-size: 13px; opacity: .65;">Sachets par famille de thé</span></div>
-            <sc-if value="{{ st.famsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.fams }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Tags</h2><span style="font-size: 13px; opacity: .65;">Les profils qui reviennent le plus</span></div>
-            <sc-if value="{{ st.tagsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.tags }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Jours de la semaine</h2><span style="font-size: 13px; opacity: .65;">Quand est-ce qu’on boit ?</span></div>
-            <sc-if value="{{ st.logsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.days }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Heures</h2><span style="font-size: 13px; opacity: .65;">Dégustations par tranche horaire</span></div>
-            <sc-if value="{{ st.hoursEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.hours }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Rapport qualité/prix</h2><span style="font-size: 13px; opacity: .65;">Points sur 20 par euro payé pour 100 g</span></div>
-            <sc-if value="{{ st.valueEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.value }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Bientôt vides</h2><span style="font-size: 13px; opacity: .65;">Sachets avec le moins de thé restant</span></div>
-            <sc-if value="{{ st.lowEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.low }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Rituels</h2><span style="font-size: 13px; opacity: .65;">Techniques d’infusion les plus utilisées</span></div>
-            <sc-if value="{{ st.ritualsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.rituals }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent-2-600); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Matériel le plus utilisé</h2><span style="font-size: 13px; opacity: .65;">Nombre de dégustations par pièce</span></div>
-            <sc-if value="{{ st.gearEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.gearBars }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Le matériel de la maison</h2><span style="font-size: 13px; opacity: .65;">Pièces par catégorie</span></div>
-            <sc-if value="{{ st.gearCatEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.gearCatBars }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 22px; margin: 0;">Le monde dans la tasse</h2><span style="font-size: 13px; opacity: .65;">Pays d’origine des sachets</span></div>
-            <sc-if value="{{ st.countriesEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .65;">Pas encore assez de données.</p></sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <sc-for list="{{ st.countries }}" as="b" hint-placeholder-count="4">
-                <div style="display: grid; grid-template-columns: minmax(90px, 34%) 1fr auto; align-items: center; gap: 10px; font-size: 14px;">
-                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ b.label }}">{{ b.label }}</span>
-                  <span aria-hidden="true" style="height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden;"><span style="display: block; height: 100%; width: {{ b.pct }}%; background: var(--color-accent); border-radius: 999px;"></span></span>
-                  <span style="font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px;">{{ b.txt }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-        </div>
-        <section style="background: var(--color-surface); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-          <h2 style="font-size: 22px; margin: 0;">Le saviez-vous ?</h2>
-          <sc-for list="{{ st.facts }}" as="f" hint-placeholder-count="3"><p style="margin: 0; font-size: 15px; line-height: 1.6;">• {{ f }}</p></sc-for>
-        </section>
+        <sc-if value="{{ wr.wEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; opacity: .75;">Aucune dégustation ce mois-là… la théière a fait la grève 🫖</p></sc-if>
+        <sc-if value="{{ wr.wHas }}" hint-placeholder-val="{{ true }}">
+          <div class="wrap-grid">
+            <sc-for list="{{ wr.wCards }}" as="wc" hint-placeholder-count="8">
+              <div class="wrap-card" style="background: {{ wc.bg }}; color: {{ wc.fg }}; animation-delay: {{ wc.delay }};">
+                <span class="wrap-ic">{{ wc.icon }}</span>
+                <span class="wrap-k">{{ wc.k }}</span>
+                <b class="wrap-big" style="font-size: {{ wc.bigFs }};">{{ wc.big }}</b>
+                <span class="wrap-sub">{{ wc.sub }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ wr.wShare }}" style="white-space: nowrap;">↗ Partager mon résumé</button><sc-if value="{{ wr.wMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 14px;">{{ wr.wMsg }}</span></sc-if></div>
+        </sc-if>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -4601,7 +4484,7 @@ class Component extends DCLogic {
     const pets = {}; logs.forEach(l => this.logGears(l).forEach(g => { if (this.gearCatKey(g.type) === 'teapet') pets[g.name] = (pets[g.name] || 0) + 1; }));
     const pet = Object.keys(pets).sort((x, y) => pets[y] - pets[x])[0];
     const delta = logs.length - prevN;
-    const C = (icon, k, big, sub, bg, fg) => ({ icon: icon, k: k, big: big, sub: sub, bg: bg, fg: fg || '#2b2118' });
+    const C = (icon, k, big, sub, bg, fg) => ({ icon: icon, k: k, big: big, sub: sub, bg: bg, fg: fg || '#2b2118', bigFs: String(big).length > 26 ? '22px' : String(big).length > 16 ? '27px' : '' });
     const cards = [
       C('🍵', 'Ton mois en tasses', pl(logs.length, 'dégustation'), (prevN && M !== cur ? (delta > 0 ? '+' + delta + ' par rapport à ' + label(shift(M, -1)).split(' ')[0] : delta < 0 ? delta + ' par rapport à ' + label(shift(M, -1)).split(' ')[0] : 'autant que le mois dernier') + ' · ' : '') + pl(teas.length, 'thé') + ' différent' + (teas.length > 1 ? 's' : ''), '#f3d3a0'),
       C('⚖️', 'Feuilles infusées', (grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g'), infs ? pl(infs, 'infusion') + ' en Gong Fu' : 'de thé sec, au total', '#d8e6c4'),
@@ -5080,6 +4963,12 @@ class Component extends DCLogic {
     });
     // demandes en attente
     ((a.options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).forEach(f => items.push({ key: 'fr:' + f.from, icon: '👥', txt: f.from + ' vous a envoyé une demande d’ami', when: f.ts ? fmtW(f.ts) : '', ts: f.ts ? new Date(f.ts).getTime() : Date.now(), unread: (!f.ts || new Date(f.ts).getTime() > seen) && readK.indexOf('fr:' + f.from) < 0, friends: true }));
+    // Tea Wrapped : le dernier jour du mois (mois en cours) puis les 7 premiers jours (mois écoulé)
+    { const t = mdtToday(); const d = +t.slice(8, 10); const tomorrow = mdtDayKey(new Date(Date.now() + 864e5));
+      const mk = tomorrow.slice(8, 10) === '01' ? t.slice(0, 7) : d <= 7 ? this.wrapDefaultMonth() : null;
+      if (mk && a.logs.some(l => (l.author === me || (l.with || []).indexOf(me) >= 0) && String(l.date || '').slice(0, 7) === mk)) {
+        const MO = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+        items.push({ key: 'wrap:' + mk, icon: '🎁', txt: 'Ton Tea Wrapped de ' + MO[+mk.slice(5, 7) - 1] + ' est prêt : ton mois de thé en un coup d’œil', when: '', ts: Date.now() - 1, unread: lowSeen.indexOf('wrap:' + mk) < 0, wrap: mk }); } }
     this.salonInvitesFor(me).forEach(x => items.push({ key: 'sal:' + x.id, icon: '🏮', txt: x.chief + ' vous invite dans le salon « ' + x.name + ' »', when: '', ts: Date.now(), unread: lowSeen.indexOf('sal:' + x.id) < 0, salon: true }));
     const vis = items.filter(x => hidden.indexOf(x.key) < 0);
     vis.sort((x, y) => (y.unread - x.unread) || (y.ts - x.ts));
@@ -5891,7 +5780,30 @@ class Component extends DCLogic {
     const dated = coll.filter(o => /\d{4}/.test(o.prodDate || ''));
     if (dated.length) { const oldest = dated.slice().sort((x, y) => +/\d{4}/.exec(x.prodDate)[0] - +/\d{4}/.exec(y.prodDate)[0])[0]; facts.push('Le plus vieux sachet de la maison : ' + (oldest.nom || oldest.the) + ', année de production ' + oldest.prodDate + '.'); }
     if (!facts.length) facts.push('Ajoutez des sachets et des dégustations : les anecdotes apparaîtront ici.');
-    return { tagline: logs.length ? logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' passée' + (logs.length > 1 ? 's' : '') + ' au crible. Aucune n’a été maltraitée.' : 'Des chiffres sur tout et n’importe quoi, dès que la maison commencera à boire.',
+    const bar1 = (pairs, fmt, dots) => bars(pairs, fmt).map((x, i) => Object.assign(x, { dot: dots ? dots[i] : 'transparent', hasDot: !!dots }));
+    const arom = this.aromaCounts(logs, a.prods.filter(pr => coll.some(o => o.prodId === pr.id))).slice(0, 10);
+    const aromB = bar1(arom.map(x => [x.w, x.n]), p => p[1] + ' mention' + (p[1] > 1 ? 's' : ''), arom.map(x => x.c));
+    const INT = ((window.MDT_SAVOIR || {}).intens || []).map(x => x.t);
+    const intB = bars(INT.map(t => [t, a.prods.filter(pr => (pr.tags || []).indexOf(t) >= 0).length]).filter(x => x[1] > 0), p => p[1] + ' thé' + (p[1] > 1 ? 's' : ''));
+    const gf = logs.filter(l => this.infsOf(l).length > 0);
+    const gfByTea = count([].concat(...gf.map(l => { const o = sacOf(l); return o ? [o.nom || o.the] : []; })));
+    const gfAvg = gfByTea.slice(0, 8).map(x => { const ls = gf.filter(l => { const o = sacOf(l); return o && (o.nom || o.the) === x[0]; }); return [x[0], Math.round(avg(ls.map(l => this.infsOf(l).length)) * 10) / 10, ls.length]; }).sort((x, y) => y[1] - x[1]);
+    const gfB = bars(gfAvg.map(x => [x[0], x[1], x[2]]), p => f1(p[1]) + ' infusions · ' + p[2] + ' séance' + (p[2] > 1 ? 's' : ''));
+    const petsL = (a.gear || []).filter(g => this.gearCatKey(g.type) === 'teapet').map(g => { const stt = this.petStats(g); return [g.name + (users.length > 1 ? ' (' + g.owner + ')' : ''), stt.lvl, stt]; }).sort((x, y) => y[1] - x[1] || y[2].xp - x[2].xp);
+    const petB = bars(petsL.slice(0, 8).map(x => [x[0], x[1], x[2]]), p => 'Nv. ' + p[1] + (this.petStage(p[1]).k ? ' · ' + this.petStage(p[1]).icon + ' ' + this.petStage(p[1]).name : '') + ' · ' + p[2].hp + ' PV');
+    const salB = bars(this.salons().map(x => [x.name, a.logs.filter(l => [l.author].concat(l.with || []).some(u => (x.members || []).indexOf(u) >= 0)).length, x]).filter(x => x[1] > 0).sort((x, y) => y[1] - x[1]), p => p[1] + ' dégust. · ' + (p[2].members || []).length + ' membre' + ((p[2].members || []).length > 1 ? 's' : ''));
+    const sec = (title, sub, list, color) => ({ title: title, sub: sub, bars: list, empty: !list.length, color: color || 'var(--color-accent)' });
+    const A1 = 'var(--color-accent)', A2 = 'var(--color-accent-2-600)';
+    const groups = [
+      { icon: '🍵', title: 'Les thés', sections: [sec('Le podium', 'Thés les mieux notés, moyenne de toutes les dégustations (nombre de notes)', top, A1), sec('Arômes les plus cités', 'Dans les avis, le nez, les notes d’infusion et les tags', aromB, A2), sec('Familles', 'Sachets par famille de thé', fams, A2), sec('Intensité', 'Tags Subtil → Puissant posés sur les thés', intB, A1), sec('Le monde dans la tasse', 'Pays d’origine des sachets', countries, A2)] },
+      { icon: '🕰️', title: 'Les habitudes', sections: [sec('Membres', 'Dégustations par personne · note moyenne donnée', members, A2), sec('Jours de la semaine', 'Quand est-ce qu’on boit ?', logs.length ? daysB : [], A1), sec('Heures', 'Dégustations par tranche horaire', hoursB, A2), sec('Rituels', 'Techniques d’infusion les plus utilisées', rituals, A1), sec('Séances Gong Fu', 'Nombre moyen d’infusions par thé', gfB, A2)] },
+      { icon: '💶', title: 'Le stock et le porte-monnaie', sections: [sec('Rapport qualité/prix', 'Points sur 20 par euro payé pour 100 g', value, A1), sec('Bientôt vides', 'Sachets avec le moins de thé restant', low, A2)] },
+      { icon: '🫖', title: 'Le matériel', sections: [sec('Matériel le plus utilisé', 'Nombre de dégustations par pièce', gearBars, A1), sec('Le matériel de la maison', 'Pièces par catégorie', gearCatBars, A2), sec('Tea pets', 'Classement par niveau', petB, '#5b9a3c')] },
+      { icon: '🏮', title: 'Les salons', sections: [sec('Salons', 'Dégustations où au moins un membre était présent', salB, A2)] }
+    ].map(g => Object.assign(g, { sections: g.sections.filter(x => !x.empty) })).filter(g => g.sections.length);
+    if (gf.length) kpis.push({ label: 'Séances Gong Fu', value: String(gf.length), sub: f1(avg(gf.map(l => this.infsOf(l).length))) + ' infusions en moyenne' });
+    kpis.forEach((k, i) => { k.icon = ['🍵', '☕', '⭐', '⚖️', '💶', '🧾', '🔥', '👥', '🫖', '🌀'][i] || '•'; });
+    return { groups: groups, tagline: logs.length ? logs.length + ' dégustation' + (logs.length > 1 ? 's' : '') + ' passée' + (logs.length > 1 ? 's' : '') + ' au crible. Aucune n’a été maltraitée.' : 'Des chiffres sur tout et n’importe quoi, dès que la maison commencera à boire.',
       kpis: kpis, top: top, topEmpty: !top.length, members: members, membersEmpty: !members.length, fams: fams, famsEmpty: !fams.length, tags: tags, tagsEmpty: !tags.length,
       days: logs.length ? daysB : [], logsEmpty: !logs.length, hours: hoursB, hoursEmpty: !hoursB.length, value: value, valueEmpty: !value.length, low: low, lowEmpty: !low.length,
       gearBars: gearBars, gearEmpty: !gearBars.length, gearCatBars: gearCatBars, gearCatEmpty: !gearCatBars.length,
@@ -6527,7 +6439,7 @@ class Component extends DCLogic {
     this.applyFamOv();
     const guest = !!this.state.cloud && !this.state.session;
     const wanted = this.state.view || 'home';
-    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'wrap', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
+    const v = (guest && ['mine', 'log', 'add', 'friends', 'salon', 'profile', 'session'].indexOf(wanted) >= 0) ? 'login' : (!guest && wanted === 'login' ? 'home' : wanted);
     const authMode = this.state.authMode || 'signin';
     const fam = this.families[this.state.key] || {};
     const sheet = this.state.sheet || {};
@@ -6807,10 +6719,10 @@ class Component extends DCLogic {
       menuLog: () => this.setState(s => ({ menuOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
       menuPacks: () => this.setState({ menuOpen: false, view: 'packs' }),
       menuLogs: () => this.setState({ menuOpen: false, view: 'logs' }),
-      menuStats: () => this.setState({ menuOpen: false, view: 'stats' }),
-      menuWrap: () => this.setState({ menuOpen: false, view: 'wrap', wrapM: null, wrapMsg: '' }),
-      isWrap: v === 'wrap', wr: v === 'wrap' ? this.wrapView(me) : {},
-      wrapReady: +mdtToday().slice(8, 10) <= 7 && this.getAdds().logs.some(l => (l.author === me || (l.with || []).indexOf(me) >= 0) && String(l.date || '').slice(0, 7) === this.wrapDefaultMonth()), wrapReadyTxt: '🎁 Ton Tea Wrapped de ' + ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'][+this.wrapDefaultMonth().slice(5, 7) - 1] + ' est prêt',
+      menuStats: () => this.setState({ menuOpen: false, view: 'stats', stTab: 'num' }),
+      wr: v === 'stats' && this.state.stTab === 'wrap' ? this.wrapView(me) : {},
+      stTabNum: this.state.stTab !== 'wrap', stTabWrap: this.state.stTab === 'wrap',
+      stTabs: [['num', '📊 Les chiffres'], ['wrap', '🎁 Tea Wrapped']].map(t => { const on = (this.state.stTab === 'wrap' ? 'wrap' : 'num') === t[0]; return { label: t[1], on: on, bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ stTab: t[0], wrapMsg: '' }) }; }),
       isStats: v === 'stats',
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
@@ -6925,7 +6837,7 @@ class Component extends DCLogic {
         const sacById = {}; this.getAdds().sachets.forEach(x => { sacById[x.id] = x; });
         const NL = nf.items.map(x => ({ icon: x.icon, txt: x.txt.replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'), when: x.when, dot: x.unread ? 'var(--color-accent)' : 'transparent', bg: x.unread ? 'var(--color-accent-100)' : 'transparent', unread: x.unread,
             del: () => this.hideNotif(me, x.key), delLbl: 'Supprimer la notification',
-            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.logId) this.openLogDetail(x.logId); else if (x.friends || x.salon) this.setState(x.salon ? { view: 'salon', slAdd: true } : { view: 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
+            go: () => { this.setState({ notifOpen: false }); if (x.unread) this.markRead(me, [x.key]); if (x.wrap) this.setState({ view: 'stats', stTab: 'wrap', wrapM: x.wrap, wrapMsg: '' }); else if (x.logId) this.openLogDetail(x.logId); else if (x.friends || x.salon) this.setState(x.salon ? { view: 'salon', slAdd: true } : { view: 'friends' }); else if (x.sid && sacById[x.sid]) this.openProd(sacById[x.sid].prodId); } }));
         return { notifCount: nf.unread, hasNotifCount: nf.unread > 0, notifOpen: open, notifEmpty: !nf.items.length,
           notifLabel: nf.unread ? nf.unread + ' notification' + (nf.unread > 1 ? 's' : '') + ' non lue' + (nf.unread > 1 ? 's' : '') : 'Notifications',
           toggleNotif: () => this.setState(st => ({ notifOpen: !st.notifOpen, menuOpen: false })),
