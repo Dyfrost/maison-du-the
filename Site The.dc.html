@@ -6829,7 +6829,7 @@ class Component extends DCLogic {
     const sq = /^#sac=([\w-]+)$/.exec(location.hash || '');
     if (sq) { const o = this.collection().find(x => x.id === sq[1]); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
       if (!o) { this.flash('Sachet introuvable (ou pas visible avec ce compte).'); return; }
-      if (this.state.cloud && !this.state.session) { this.setState({ view: 'login' }); this.flash('Connectez-vous pour noter une dégustation de ' + (o.nom || o.the) + '.'); return; }
+      if (this.state.cloud && !this.state.session) { this.setState({ view: 'prod', prodId: o.prodId, prodBack: 'home' }); try { window.scrollTo(0, 0); } catch (e) {} this.flash('🏷️ ' + (o.nom || o.the) + ' — connectez-vous pour noter une dégustation.'); return; }
       this.setState({ view: 'log', editLogId: null, logMsg: '', lf: this.lfWithLot({ date: mdtToday() }, o.id) }); this.flash('🏷️ ' + (o.nom || o.the) + (o.code ? ' · ' + o.code : '')); return; }
     const m = /^#(prod|log)=([\w-]+)$/.exec(location.hash || '');
     if (!m) return;
