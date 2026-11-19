@@ -989,32 +989,43 @@
           <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="font-size: 24px; margin: 0;">Demandes reçues</h2>
             <sc-for list="{{ fr.incoming }}" as="rq" hint-placeholder-count="1">
-              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <span style="font-family: var(--font-heading); font-size: 19px; margin-right: auto;">{{ rq.tag }}</span>
+              <div class="sac mb-card"><div class="sac-head" style="flex-wrap: wrap;">
+                <span class="mb-av" style="background: var(--color-accent-700);">{{ rq.initial }}</span>
+                <div class="sac-ttl"><span class="sac-name" style="cursor: default;">{{ rq.tag }}</span><span class="sac-sub">veut devenir votre ami</span></div>
                 <button class="btn btn-primary" onClick="{{ rq.accept }}" style="white-space: nowrap;">Accepter</button>
-                <button class="btn btn-ghost" onClick="{{ rq.refuse }}" style="white-space: nowrap;">Refuser</button>
-              </div>
+                <button class="btn btn-secondary" onClick="{{ rq.refuse }}" style="white-space: nowrap; background: var(--color-bg);">Refuser</button>
+              </div></div>
             </sc-for>
           </section>
         </sc-if>
         <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
           <h2 style="font-size: 24px; margin: 0;">Mes amis</h2>
           <sc-if value="{{ fr.noFriends }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Pas encore d’ami ajouté.</p></sc-if>
-          <sc-for list="{{ fr.friends }}" as="f" hint-placeholder-count="1">
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-              <button onClick="{{ f.open }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 19px; color: var(--color-text); margin-right: auto;" style-hover="color: var(--color-accent-700);">{{ f.tag }}<sc-if value="{{ f.salon }}" hint-placeholder-val="{{ false }}"> <span style="font-family: var(--font-body); font-size: 13px; padding: 2px 8px; border-radius: 999px; background: {{ f.salonC.bg }}; color: {{ f.salonC.fg }};">{{ f.salon }}</span></sc-if><sc-if value="{{ f.badge }}" hint-placeholder-val="{{ false }}"> <span style="font-family: var(--font-body); font-size: 13px; padding: 2px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--color-accent);">{{ f.badge }}</span></sc-if> →</button>
-              <button class="btn btn-ghost" onClick="{{ f.remove }}" style="white-space: nowrap; font-size: 13px; color: var(--color-accent-800);">Retirer</button>
-            </div>
+          <sc-for list="{{ fr.friends }}" as="f" hint-placeholder-count="2">
+            <div class="sac mb-card"><div class="sac-head">
+              <span class="mb-av" style="background: {{ f.avBg }};">{{ f.initial }}</span>
+              <div class="sac-ttl">
+                <div class="sac-nm"><button class="sac-name" onClick="{{ f.open }}">{{ f.tag }}</button><sc-if value="{{ f.badge }}" hint-placeholder-val="{{ false }}"><span style="font-size: 16px;">{{ f.badge }}</span></sc-if><sc-if value="{{ f.salon }}" hint-placeholder-val="{{ false }}"><span class="mb-role" style="background: {{ f.salonBg }}; color: {{ f.salonFg }}; box-shadow: none;">{{ f.salon }}</span></sc-if></div>
+                <span class="sac-sub">{{ f.sub }}</span>
+              </div>
+              <div class="sac-score"><b>{{ f.nLogs }}</b><span>{{ f.nLbl }}</span></div>
+              <div class="sac-more"><button class="btn btn-secondary sac-dots" onClick="{{ f.menuToggle }}" aria-haspopup="true" aria-expanded="{{ f.menuOpen }}" aria-label="Actions">⋯</button><sc-if value="{{ f.menuOpen }}" hint-placeholder-val="{{ false }}"><button class="sac-bd" onClick="{{ f.menuToggle }}" aria-label="Fermer"></button><div class="sac-menu mb-menu" role="menu">
+                <button role="menuitem" onClick="{{ f.open }}">🙂 Voir le profil<small>Ses thés, son matériel, ses badges</small></button>
+                <sc-for list="{{ f.invites }}" as="fi" hint-placeholder-count="0"><button role="menuitem" onClick="{{ fi.go }}">{{ fi.label }}<small>Vous en êtes le chef</small></button></sc-for>
+                <button role="menuitem" class="danger" onClick="{{ f.remove }}">✕ Retirer des amis</button>
+              </div></sc-if></div>
+            </div></div>
           </sc-for>
         </section>
         <sc-if value="{{ fr.hasOut }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 28px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="font-size: 24px; margin: 0;">Demandes envoyées</h2>
             <sc-for list="{{ fr.outgoing }}" as="rq" hint-placeholder-count="1">
-              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <span style="font-size: 17px; margin-right: auto;">{{ rq.tag }} <span style="opacity: .6;">· en attente</span></span>
-                <button class="btn btn-ghost" onClick="{{ rq.cancel }}" style="white-space: nowrap; font-size: 13px;">Annuler</button>
-              </div>
+              <div class="sac mb-card"><div class="sac-head" style="flex-wrap: wrap;">
+                <span class="mb-av" style="background: var(--color-neutral-400, #b9ad9a);">{{ rq.initial }}</span>
+                <div class="sac-ttl"><span class="sac-name" style="cursor: default;">{{ rq.tag }}</span><span class="sac-sub">en attente de réponse</span></div>
+                <button class="btn btn-secondary" onClick="{{ rq.cancel }}" style="white-space: nowrap; background: var(--color-bg);">Annuler</button>
+              </div></div>
             </sc-for>
           </section>
         </sc-if>
@@ -4610,11 +4621,26 @@ class Component extends DCLogic {
     return { meTag: this.userTag(me), meInitial: (me || '?').slice(0, 1).toUpperCase(), openMe: () => this.setState({ view: 'profile', profUser: me, profEdit: false }),
       q: this.state.frQ || '', setQ: e => this.setState({ frQ: e.target.value, frMsg: '' }), send: send, msg: this.state.frMsg || '',
       hasIn: incoming.length > 0, hasOut: outgoing.length > 0,
-      incoming: incoming.map(f => ({ tag: this.userTag(f.from), accept: () => this.setFriends(all.map(x => x === f ? Object.assign({}, x, { status: 'ok' }) : x)), refuse: () => this.setFriends(others(f)) })),
-      outgoing: outgoing.map(f => ({ tag: this.userTag(f.to), cancel: () => this.setFriends(others(f)) })),
+      incoming: incoming.map(f => ({ initial: String(f.from).charAt(0).toUpperCase(), tag: this.userTag(f.from), accept: () => this.setFriends(all.map(x => x === f ? Object.assign({}, x, { status: 'ok' }) : x)), refuse: () => this.setFriends(others(f)) })),
+      outgoing: outgoing.map(f => ({ initial: String(f.to).charAt(0).toUpperCase(), tag: this.userTag(f.to), cancel: () => this.setFriends(others(f)) })),
       noFriends: !fs.length,
-      friends: fs.map(u => ({ tag: this.userTag(u), badge: this.badgeOf(u), salon: (this.salonOf(u) || {}).name || '', salonC: this.salonColor(this.salonOf(u)), open: () => this.setState({ view: 'profile', profUser: u, profEdit: false }),
-        remove: () => { if (window.confirm('Retirer ' + u + ' de vos amis ?')) this.setFriends(all.filter(f => !(f.status === 'ok' && ((f.from === u && f.to === me) || (f.from === me && f.to === u))))); } })) };
+      friends: fs.slice().sort((x, y) => x.localeCompare(y, 'fr')).map(u => {
+        const a = this.getAdds(); const sal = this.salonOf(u); const sc = this.salonColor(sal);
+        const ls = a.logs.filter(l => l.author === u || (l.with || []).indexOf(u) >= 0);
+        const together = ls.filter(l => l.author === me || (l.with || []).indexOf(me) >= 0).length;
+        const last = ls.map(l => l.date).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d || '')).sort().pop();
+        const sacs = a.sachets.filter(o => o.owner === u && !o.empty).length;
+        const common = this.salonsOf(me).filter(x => (x.members || []).indexOf(u) >= 0).length;
+        const invSalons = this.salonsOf(me).filter(x => x.chief === me && (x.members || []).indexOf(u) < 0 && (x.invites || []).indexOf(u) < 0 && this.salonsOf(u).length < 5);
+        const open = this.state.frMenu === u;
+        return { tag: this.userTag(u), initial: String(u).charAt(0).toUpperCase(), badge: this.badgeOf(u), salon: sal ? (sal.chief === u ? '👑 ' : '') + sal.name : '', salonBg: sc.bg, salonFg: sc.fg,
+          avBg: common ? 'var(--color-accent-2-600)' : 'var(--color-accent-700)',
+          sub: [together + ' ensemble', sacs + ' sachet' + (sacs > 1 ? 's' : ''), common ? common + ' salon' + (common > 1 ? 's' : '') + ' en commun' : '', last ? 'dernière le ' + this.fmtDate(last) : 'pas encore de dégustation'].filter(Boolean).join(' · '),
+          nLogs: String(ls.length), nLbl: ls.length > 1 ? 'dégustations' : 'dégustation',
+          menuOpen: open, menuToggle: () => this.setState({ frMenu: open ? '' : u }),
+          open: () => this.setState({ view: 'profile', profUser: u, profEdit: false, frMenu: '' }),
+          invites: invSalons.map(x => ({ label: '🏮 Inviter dans « ' + x.name + ' »', go: () => { this.setSalons(this.salons().map(y => y.id === x.id ? Object.assign({}, y, { invites: (y.invites || []).concat([u]) }) : y)); this.setState({ frMenu: '', frMsg: 'Invitation dans « ' + x.name + ' » envoyée à ' + u + '.' }); } })),
+          remove: () => { this.setState({ frMenu: '' }); if (window.confirm('Retirer ' + u + ' de vos amis ?')) this.setFriends(all.filter(f => !(f.status === 'ok' && ((f.from === u && f.to === me) || (f.from === me && f.to === u))))); } }; }) };
   }
 
   profileView(me) {
@@ -6744,7 +6770,7 @@ class Component extends DCLogic {
       toggleLang: () => window.mdtSetLang && window.mdtSetLang(window.mdtLang === 'en' ? 'fr' : 'en'),
       meSalon: (this.salonOf(me) || {}).name || '', meSalonC: this.salonColor(this.salonOf(me)),
       meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
-      friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n + this.salonInvitesFor(me).length; return m ? ' (' + m + ')' : ''; })(),
+      friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n; return m ? ' (' + m + ')' : ''; })(),
       isFriends: v === 'friends', isSalon: v === 'salon',
       fr: v === 'friends' ? this.friendsView(me) : {},
       sl: v === 'salon' ? this.salonView(me) : {},
