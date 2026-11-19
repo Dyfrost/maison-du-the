@@ -2449,6 +2449,18 @@
             </ul>
           </section>
           <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 22px; margin: 0;">🛠️ Gérer les tea pets</h2>
+            <p style="margin: 0; font-size: 14px; opacity: .7;">Remettre un tea pet à zéro (niveau 1, 0 XP, 100 PV : seules les dégustations suivantes comptent) ou lui choisir un autre caractère.</p>
+            <sc-for list="{{ infPets }}" as="ip" hint-placeholder-count="3">
+              <div style="background: var(--color-bg); border-radius: 18px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 2px; margin-right: auto; min-width: 200px;"><b style="font-size: 16px;">🐸 {{ ip.name }} <span style="font-weight: 400; opacity: .65;">· {{ ip.owner }}</span></b><span style="font-size: 13.5px; opacity: .75;">{{ ip.sub }}</span></div>
+                <select class="input" value="{{ ip.tval }}" data-val="{{ ip.tval }}" onChange="{{ ip.setT }}" aria-label="Caractère" style="width: auto; padding: 7px 12px; background: var(--color-surface);"><sc-for list="{{ ip.topts }}" as="to" hint-placeholder-count="8"><option value="{{ to.v }}" label="{{ to.l }}">{{ to.l }}</option></sc-for></select>
+                <button class="btn btn-secondary" onClick="{{ ip.reset }}" style="white-space: nowrap; background: var(--color-surface);">↺ Remettre à zéro</button>
+                <sc-if value="{{ ip.hasReset }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ ip.undo }}" style="white-space: nowrap; font-size: 13.5px;">Annuler la remise à zéro</button></sc-if>
+              </div>
+            </sc-for>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="font-size: 22px; margin: 0;">Les caractères</h2>
             <div style="overflow-x: auto;"><div role="table" style="display: grid; grid-template-columns: minmax(140px, 1fr) 70px 80px 100px 90px minmax(200px, 2fr); min-width: 720px;">
               <span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Caractère</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Répit</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Soif</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Perte (Nv. 1)</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Soin</span><span role="columnheader" style="text-align: left; padding: 8px 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; font-weight: 600;">Bonus</span>
@@ -4669,7 +4681,7 @@ class Component extends DCLogic {
     { key: 'grognon', name: 'Grognon', icon: '😤', grace: 1, rate: 1.15, heal: 40, desc: 'Difficile à contenter, a vite soif.', bonus: '+10 XP (au lieu de +5) quand la note est ≥ 16' },
     { key: 'gourmand', name: 'Gourmand', icon: '🍩', grace: 1, rate: 1.3, heal: 55, desc: 'A très vite soif mais se régale.', bonus: '+55 PV par dégustation (au lieu de +40)' }
   ];
-  petTemper(g) { let h = 0; String(g.id).split('').forEach(c => { h = (h * 33 + c.charCodeAt(0)) >>> 0; }); return this.petTempers[(h >> 7) % this.petTempers.length]; }
+  petTemper(g) { if (g.temper) { const t = this.petTempers.find(x => x.key === g.temper); if (t) return t; } let h = 0; String(g.id).split('').forEach(c => { h = (h * 33 + c.charCodeAt(0)) >>> 0; }); return this.petTempers[(h >> 7) % this.petTempers.length]; }
   petStage(lvl) { return lvl >= 10 ? { k: 2, name: 'Vénérable', icon: '🎋' } : lvl >= 5 ? { k: 1, name: 'Culotté', icon: '🍃' } : { k: 0, name: 'Argile neuve', icon: '' }; }
   petLevel(xp) { let L = 1; while (15 * (L + 1) * L <= xp) L++; return L; }
   petStats(g) {
@@ -4678,7 +4690,8 @@ class Component extends DCLogic {
     const T = this.petTemper(g);
     const grace = T.grace, rate = T.rate, temper = T.icon + ' ' + T.name.toLowerCase();
     const seenTea = {};
-    const logs = this.gearLogs(g).filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || ''));
+    const rs = g.petReset || null;   // remise à zéro par un admin : seules les dégustations d'après comptent
+    const logs = this.gearLogs(g).filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && (!rs || l.date > rs.day || (l.date === rs.day && this.logTs(l) > rs.ts)));
     const byDay = {}; logs.forEach(l => { (byDay[l.date] = byDay[l.date] || []).push(l); });
     const ownerDays = {}; this.getAdds().logs.forEach(l => { if (/^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && (l.author === g.owner || (l.with || []).indexOf(g.owner) >= 0)) ownerDays[l.date] = 1; });
     const sacs = this.getAdds().sachets;
@@ -4687,7 +4700,7 @@ class Component extends DCLogic {
       if (T.key === 'curieux') { const pid = (sacs.find(z => z.id === l.lotId) || {}).prodId || l.lotId; if (!seenTea[pid]) { seenTea[pid] = 1; x += 5; } }
       if (T.key === 'farceur') { const wd = new Date(l.date).getUTCDay(); if (wd === 0 || wd === 6) x += 5; }
       return x; };
-    const created = this.idTs(g.id);
+    const created = rs ? rs.ts : this.idTs(g.id);
     const days = Object.keys(byDay).sort();
     let start = created ? new Date(mdtDayKey(new Date(created))) : (days[0] ? new Date(days[0]) : today);
     if (days[0] && new Date(days[0]) < start) start = new Date(days[0]);
@@ -7876,6 +7889,13 @@ class Component extends DCLogic {
           show: true, name: u, blocked: bl, blockTxt: bl ? 'Débloquer' : '🚫 Bloquer', block: () => this.toggleBlock(u), report: () => this.report({ t: 'user', who: u, label: 'le profil de ' + u }) }; })(),
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
       tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
+      infPets: this.state.addTab !== 'inf' ? [] : (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet').sort((x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearAlpha(x, y)).map(g => { const st = this.petStats(g); const T = this.petTemper(g);
+        const upd = patch => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: b.gear.map(x => { if (x.id !== g.id) return x; const c = Object.assign({}, x, patch); Object.keys(patch).forEach(k => { if (patch[k] == null) delete c[k]; }); return c; }) })); };
+        return { name: g.name, owner: g.owner, sub: 'Nv. ' + st.lvl + ' · ' + st.xp + ' XP · ' + st.hp + ' PV · ' + T.icon + ' ' + T.name + (g.temper ? ' (choisi)' : ' (tiré au hasard)') + (g.petReset ? ' · remis à zéro le ' + this.fmtDate(g.petReset.day) : ''),
+          tval: g.temper || '', topts: [{ v: '', l: '🎲 Hasard (d’origine)' }].concat(this.petTempers.map(t => ({ v: t.key, l: t.icon + ' ' + t.name }))),
+          setT: e => { const v = e.target.value; upd({ temper: v || null }); this.flash(g.name + ' : caractère ' + (v ? this.petTempers.find(t => t.key === v).name.toLowerCase() : 'd’origine') + '.'); },
+          reset: () => { if (!window.confirm('Remettre ' + g.name + ' (' + g.owner + ') au niveau 1, 0 XP et 100 PV ? Les dégustations passées ne compteront plus pour lui.')) return; upd({ petReset: { day: mdtToday(), ts: Date.now() } }); this.flash(g.name + ' repart de zéro.'); },
+          hasReset: !!g.petReset, undo: () => { upd({ petReset: null }); this.flash('Remise à zéro de ' + g.name + ' annulée.'); } }; }),
       infTempers: this.petTempers.map(t => ({ icon: t.icon, name: t.name, desc: t.desc, grace: t.grace + ' j', rate: '×' + String(t.rate).replace('.', ','), loss: '≈ ' + String(Math.round(9 * t.rate * 10) / 10).replace('.', ',') + ' PV/j', heal: '+' + t.heal + ' PV', bonus: t.bonus })),
       infLevels: [1, 2, 3, 4, 5, 6, 7, 8].map(L => ({ lvl: 'Nv. ' + L, xp: String(15 * L * (L - 1)) + ' XP', red: '−' + Math.round(Math.min(0.55, (L - 1) * 0.07) * 100) + ' %' })),
       tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',
