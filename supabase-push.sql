@@ -1,7 +1,7 @@
 -- ============================================================================================
 -- Maison du Thé — notifications sur le téléphone (à coller dans Supabase → SQL Editor → Run)
 -- À lancer APRÈS supabase-v2.sql. Peut être relancé sans risque.
--- Les notifications partent d'une petite fonction Supabase (« push », voir supabase/functions/push)
+-- Les notifications partent d'une petite fonction Supabase (slug « bright-endpoint », code dans supabase/functions/push)
 -- appelée chaque minute par pg_cron.
 -- ============================================================================================
 
@@ -233,6 +233,6 @@ create extension if not exists pg_cron;
 create extension if not exists pg_net;
 select cron.unschedule(jobid) from cron.job where jobname = 'mdt-push';
 select cron.schedule('mdt-push', '* * * * *', $cron$
-  select net.http_post(url := 'https://hnyomaobuftunuhwkzox.supabase.co/functions/v1/push',
+  select net.http_post(url := 'https://hnyomaobuftunuhwkzox.supabase.co/functions/v1/bright-endpoint',
                        headers := '{"Content-Type": "application/json"}'::jsonb, body := '{}'::jsonb);
 $cron$);
