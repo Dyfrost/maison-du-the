@@ -4394,7 +4394,7 @@ class Component extends DCLogic {
         return { adSacOps: true, adOneSac: !!one && shareUsers.length > 0, adUsers: users, adGiveTo: giveTo || '', adSetGiveTo: e => this.setState({ adGiveTo: e.target.value }),
           adSacWhat: sel.length > 1 ? 'les ' + sel.length + ' sachets' : 'ce sachet' + (one ? ' (' + one.owner + ')' : ''),
           adGive: () => { if (!giveTo) return; if (!window.confirm('Offrir ' + (sel.length > 1 ? sel.length + ' sachets' : 'ce sachet') + ' à ' + giveTo + ' ?')) return;
-            const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(x => sel.indexOf(x.id) >= 0 && x.owner !== giveTo ? Object.assign({}, x, { owner: giveTo, history: (x.history || []).concat([{ from: x.owner, to: giveTo, date: mdtToday() }]) }) : x) })); this.setState({ adSel: [] }); },
+            const b = this.getAdds(); this.setAdds(Object.assign({}, b, { sachets: b.sachets.map(x => sel.indexOf(x.id) >= 0 && x.owner !== giveTo ? Object.assign({}, x, { owner: giveTo, history: (x.history || []).concat([{ from: x.owner, to: giveTo, date: mdtToday(), adm: true }]) }) : x) })); this.setState({ adSel: [] }); },
           adShareUsers: shareUsers, adShareTo: shareTo || '', adSetShareTo: e => this.setState({ adShareTo: e.target.value }),
           adShareG: this.state.adShareG || '', adSetShareG: e => this.setState({ adShareG: e.target.value }), adShareUnit: unit === 'u' ? 'unités' : 'g',
           adShareInfo: rm ? 'reste ≈ ' + (Math.round(rm.left * 10) / 10).toString().replace('.', ',') + ' ' + (unit === 'u' ? 'u' : 'g') : '',
@@ -5326,8 +5326,11 @@ class Component extends DCLogic {
     const fmtW = ts => { const d = new Date(ts); return isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); };
     const sacById = {}; a.sachets.forEach(x => { sacById[x.id] = x; });
     (a.events || []).forEach(e => {
-      if (e.to !== me || e.who === me || ['give', 'share', 'join'].indexOf(e.type) < 0) return;
+      if (e.to !== me || (e.who === me && !e.adm) || ['give', 'share', 'join'].indexOf(e.type) < 0) return;
+      if (e.adm && e.type === 'join') return;
       const t = new Date(e.ts).getTime();
+      const tName = (e.text.match(/« .*? »/) || [''])[0];
+      if (e.adm) { items.push({ key: e.id, icon: '📦', txt: e.type === 'give' ? 'Un sachet' + (tName ? ' de ' + tName : '') + ' vous a été attribué' : 'Une portion' + (tName ? ' de ' + tName : '') + ' vous a été attribuée', when: fmtW(e.ts), ts: t, unread: t > seen && readK.indexOf(e.id) < 0, sid: e.sid }); return; }
       const txt = e.type === 'give' ? e.who + ' vous a donné un sachet' + (e.text.match(/« .* »/) ? ' de ' + e.text.match(/« .*? »/)[0] : '') : e.type === 'share' ? e.who + ' ' + e.text.replace(/ avec .*$/, '') + ' avec vous' : e.who + ' s’est ajouté à votre dégustation' + (e.text.match(/\(« .* »\)/) ? ' ' + e.text.match(/\(« .* »\)/)[0] : '');
       items.push({ key: e.id, icon: e.icon, txt: txt, when: fmtW(e.ts), ts: t, unread: t > seen && readK.indexOf(e.id) < 0, sid: e.sid });
     });
@@ -6454,7 +6457,7 @@ class Component extends DCLogic {
         this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { owner: u, history: (x.history || []).concat([{ from: o.owner, to: u, date: mdtToday() }]) }) : x) }));
         this.setState({ giveId: null });
       } })),
-      fromTxt: (() => { const h = (o.history || [])[(o.history || []).length - 1]; return h && !h.hidden ? 'Donné par ' + h.from + ' le ' + this.fmtDate(h.date) : ''; })(),
+      fromTxt: (() => { const h = (o.history || [])[(o.history || []).length - 1]; return h && !h.hidden && !h.adm ? 'Donné par ' + h.from + ' le ' + this.fmtDate(h.date) : ''; })(),
       canUntag: (() => { const h = (o.history || [])[(o.history || []).length - 1]; return !!h && !h.hidden && h.from === me; })(),
       untag: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { sachets: a.sachets.map(x => x.id === o.id ? Object.assign({}, x, { history: (x.history || []).map((h, i, arr) => i === arr.length - 1 ? Object.assign({}, h, { hidden: true }) : h) }) : x) })); }
     };
