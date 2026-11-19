@@ -2749,7 +2749,8 @@
               </label>
             </div>
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-              <button class="btn btn-primary" onClick="{{ saveTea }}" style="white-space: nowrap;">Ajouter au catalogue</button>
+              <button class="btn btn-primary" onClick="{{ saveTea }}" style="white-space: nowrap;">{{ teaBtnTxt }}</button>
+              <span style="font-size: 13.5px; opacity: .75; flex-basis: 100%;">{{ teaValidTxt }}</span>
               <sc-if value="{{ addMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ addMsg }}</span></sc-if>
             </div>
           </div>
@@ -7994,6 +7995,7 @@ class Component extends DCLogic {
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
       shareToast: this.state.shareToast || '',
+      teaBtnTxt: this.isMod(me) ? 'Ajouter au catalogue' : 'Proposer au catalogue', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
       ...(() => { const ann = (this.getAdds().options || {}).announce || {}; let hidden = false; try { hidden = !!ann.at && localStorage.getItem('mdt-ann') === ann.at; } catch (e) {}
         return { annShow: !!ann.text && !hidden && !this.state.annHidden, annText: ann.text || '', annHide: () => { try { localStorage.setItem('mdt-ann', ann.at || ''); } catch (e) {} this.setState({ annHidden: true }); },
           suspShow: !!this.state.suspended }; })(),
