@@ -1598,6 +1598,23 @@
             </div>
           </section>
           </sc-if>
+          <sc-if value="{{ pf.tsOpen }}" hint-placeholder-val="{{ false }}"><div class="bug-ov" role="dialog" aria-modal="true" aria-label="{{ pf.tsTitle }}"><button class="bug-bd" onClick="{{ pf.tsClose }}" aria-label="Fermer"></button>
+            <div class="bug-box" style="width: min(680px, 100%);">
+              <div style="display: flex; align-items: center; gap: 10px;"><h2 style="margin: 0; font-size: 24px; margin-right: auto;">🍵 {{ pf.tsTitle }}</h2><button onClick="{{ pf.tsClose }}" aria-label="Fermer" style="cursor: pointer; border: none; background: transparent; font-size: 20px; color: var(--color-text);">✕</button></div>
+              <p style="margin: 0; font-size: 13px; opacity: .7;">{{ pf.tsSub }}</p>
+              <input class="input" type="search" value="{{ pf.tsQ }}" onInput="{{ pf.tsSetQ }}" placeholder="🔎 Filtrer (thé, boutique, famille…)" aria-label="Filtrer les thés">
+              <sc-if value="{{ pf.tsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun thé ne correspond.</p></sc-if>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ pf.tsList }}" as="t" hint-placeholder-count="4">
+                <div class="sac mb-card" style="opacity: {{ t.dim }};"><div class="sac-head" style="align-items: center;">
+                  <div class="sac-ttl"><div class="sac-nm"><button class="sac-name" onClick="{{ t.open }}">{{ t.name }}</button><sc-if value="{{ t.fam }}" hint-placeholder-val="{{ false }}"><span class="mb-role">{{ t.fam }}</span></sc-if></div>
+                    <span class="sac-sub">{{ t.meta }}</span></div>
+                  <sc-if value="{{ t.canWish }}" hint-placeholder-val="{{ false }}"><button class="{{ t.wishCls }}" onClick="{{ t.wish }}" style="white-space: nowrap; flex: none;">{{ t.wishTxt }}</button></sc-if>
+                  <sc-if value="{{ t.haveIt }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6; white-space: nowrap; flex: none;">✓ Vous l’avez</span></sc-if>
+                </div></div>
+              </sc-for>
+              </div>
+            </div></div></sc-if>
           <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px;">
             <sc-for list="{{ pf.kpis }}" as="k" hint-placeholder-count="8">
               <sc-if value="{{ k.plain }}" hint-placeholder-val="{{ true }}">
@@ -5929,7 +5946,7 @@ class Component extends DCLogic {
     }
     const a = this.getAdds();
     const prof = ((a.options || {}).profiles || {})[u] || {};
-    const sacs = a.sachets.filter(o => o.owner === u);
+    const sacs = a.sachets.filter(o => o.owner === u || (o.shares || []).some(x => x.to === u));
     const prodOf = id => { const sa = a.sachets.find(o => o.id === id); return sa ? a.prods.find(p => p.id === sa.prodId) : null; };
     const logs = a.logs.filter(l => l.author === u || (l.with || []).indexOf(u) >= 0);
     const by = {};
@@ -5954,7 +5971,7 @@ class Component extends DCLogic {
       { label: 'Thé préféré', open: fav ? () => this.openProd(fav.p.id) : null, value: fav ? nm(fav.p) : '—', sub: fav ? f1(fav.avg) + '/20 sur ' + fav.notes.length + ' note' + (fav.notes.length > 1 ? 's' : '') : '' },
       { label: 'Famille favorite', open: topFam ? () => this.openFamily(topFam) : null, value: topFam ? this.families[topFam].name : '—', sub: topFam ? fam[topFam] + ' dégustations' : '' },
       { label: 'Dégustations', value: String(logs.length), sub: allNotes.length ? 'moyenne ' + f1(allNotes.reduce((t, n) => t + n, 0) / allNotes.length) + '/20' : '' },
-      { label: 'Sachets', value: String(sacs.length), sub: new Set(sacs.map(o => o.prodId)).size + ' thés différents' },
+      { label: 'Sachets', open: sacs.length ? () => this.setState({ pfTeas: true, pfTeasU: u, pfTeasQ: '' }) : null, value: String(sacs.length), sub: new Set(sacs.map(o => o.prodId)).size + ' thés différents' + (sacs.length ? ' · voir →' : '') },
       { label: 'Thé consommé', value: grams ? (grams >= 1000 ? f1(grams / 1000) + ' kg' : Math.round(grams) + ' g') : '—', sub: 'd’après les quantités notées' },
       { label: 'Dernière dégustation', open: lastP ? () => this.openProd(lastP.id) : null, value: lastP ? nm(lastP) : '—', sub: last ? this.fmtDate(last.date) : '' },
       { label: 'Thés goûtés', value: String(arr.length), sub: 'thés différents dégustés' }
@@ -5969,6 +5986,23 @@ class Component extends DCLogic {
       cancel: () => this.setState({ profEdit: false }),
       save: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[u] = Object.assign({}, all[u], { desc: String(this.state.profDraft || '').trim() }); this.setOpt('profiles', all); this.setState({ profEdit: false }); },
       kpis: kpis.map(k => Object.assign({ link: !!k.open, plain: !k.open }, k)),
+      ...(() => {
+        if (!this.state.pfTeas || this.state.pfTeasU !== u) return { tsOpen: false, tsList: [] };
+        const q = this.norm(this.state.pfTeasQ || ''); const g = {};
+        sacs.forEach(o => { const p = a.prods.find(x => x.id === o.prodId); if (!p) return; const b = g[p.id] = g[p.id] || { p: p, n: 0, full: 0 }; b.n++; if (!this.emptyFor(o, u)) b.full++; });
+        const mine = new Set(a.sachets.filter(o => o.owner === me || (o.shares || []).some(x => x.to === me)).map(o => o.prodId));
+        const list = Object.keys(g).map(k => g[k]).map(b => { const p = b.p, name = p.nom || p.the, fk = this.famOf(p.the);
+          return { name: name, sort: this.norm(name), fam: fk ? this.families[fk].name : '', the: p.nom && p.the !== p.nom ? p.the : '', hasThe: !!(p.nom && p.the !== p.nom),
+            meta: [this.shopTxt(p.marque, this.prodCities(p.id).join('/')), b.n + (b.n > 1 ? ' sachets' : ' sachet') + (b.full ? '' : ' · vide')].filter(Boolean).join(' · '),
+            dim: b.full ? '1' : '.6', open: () => { this.setState({ pfTeas: false }); this.openProd(p.id); },
+            canWish: !isMe && !!me && !mine.has(p.id), haveIt: !isMe && mine.has(p.id),
+            wishTxt: this.isWished(name) ? '✓ Dans mes envies' : '🎁 Envie', wishCls: this.isWished(name) ? 'btn btn-secondary' : 'btn btn-ghost',
+            wish: () => this.toggleWish({ name: name, shop: p.marque || '', city: this.prodCities(p.id)[0] || '', price: '', note: 'Vu chez ' + u }) };
+        }).filter(x => !q || this.norm(x.name + ' ' + x.the + ' ' + x.meta + ' ' + x.fam).indexOf(q) >= 0).sort((x, y) => x.sort.localeCompare(y.sort));
+        return { tsOpen: true, tsList: list, tsEmpty: !list.length, tsTitle: isMe ? 'Mes thés' : 'Les thés de ' + u, tsQ: this.state.pfTeasQ || '',
+          tsSetQ: e => this.setState({ pfTeasQ: e.target.value }), tsClose: () => this.setState({ pfTeas: false }),
+          tsSub: Object.keys(g).length + ' thés · ' + sacs.length + ' sachets' + (isMe ? '' : ' · ajoutez ceux qui vous tentent à vos envies') };
+      })(),
       ...(() => {
         const gAll = (a.gear || []).filter(g => g.owner === u);
         const ids = (prof.gearShow || []).filter(id => gAll.some(g => g.id === id)).slice(0, 3);
