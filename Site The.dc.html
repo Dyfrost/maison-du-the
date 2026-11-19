@@ -2332,6 +2332,29 @@
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ msRun }}" style="white-space: nowrap;">🔀 Fusionner les sachets</button><sc-if value="{{ msMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="font-size: 15px;">{{ msMsg }}</span></sc-if></div>
           </section>
         </sc-if>
+        <sc-if value="{{ tabMrqOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🏷️ Marques ({{ brN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Toutes les marques des thés du commerce. Renommez-en une (ex. un ancien code perso) : tous ses thés suivent. Les orthographes proches (majuscules, accents, espaces) sont regroupées ; les doublons probables sont signalés.</p></div>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;"><input class="input" value="{{ brQ }}" onInput="{{ setBrQ }}" placeholder="Rechercher une marque ou un thé…" aria-label="Rechercher" style="flex: 1; min-width: 220px;"><sc-if value="{{ brNone }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .65;">{{ brNone }}</span></sc-if></div>
+            <sc-if value="{{ brMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">{{ brMsg }}</p></sc-if>
+            <sc-if value="{{ brEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune marque.</p></sc-if>
+            <sc-for list="{{ brList }}" as="br" hint-placeholder-count="3">
+              <div style="background: var(--color-bg); border-radius: 22px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 18px;">{{ br.name }}</b><span style="font-size: 14px; opacity: .65;">{{ br.n }}</span><sc-if value="{{ br.hasNear }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">{{ br.nearTxt }}</span></sc-if></div>
+                <span style="font-size: 13.5px; opacity: .7;">{{ br.ex }}</span>
+                <sc-if value="{{ br.multi }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .8;">{{ br.spells }}</span></sc-if>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                  <input class="input" value="{{ br.draft }}" onInput="{{ br.setDraft }}" aria-label="Nouveau nom" style="flex: 1; min-width: 180px;">
+                  <button class="btn btn-secondary" onClick="{{ br.rename }}" style="white-space: nowrap;">✏️ Renommer</button>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                  <select class="input" value="{{ br.tgt }}" onChange="{{ br.setTgt }}" aria-label="Marque à garder" style="flex: 1; min-width: 180px;"><option value="">Fusionner dans…</option><sc-for list="{{ br.opts }}" as="bo" hint-placeholder-count="3"><option value="{{ bo.v }}">{{ bo.l }}</option></sc-for></select>
+                  <button class="btn btn-secondary" onClick="{{ br.merge }}" style="white-space: nowrap;">🔀 Fusionner</button>
+                </div>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabErrOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🐞 Erreurs du site ({{ erN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les plantages rencontrés par les membres, enregistrés automatiquement (gardés 30 jours).</p></div>
@@ -4441,8 +4464,8 @@ class Component extends DCLogic {
       rows = a.logs.map(l => { const sa = sacBy[l.lotId] || {}; const p = prodBy[sa.prodId] || {};
         return { id: l.id, v: { date: l.date || '', nom: p.nom || p.the || '?', author: (l.author || '?') + ((l.with || []).length ? ' + ' + l.with.join(', ') : ''), note: this.num(String(l.note || '').replace(/[A-Za-z]/g, '')) , qty: l.qty || '—', avis: String(l.avis || '').slice(0, 60) + (String(l.avis || '').length > 60 ? '…' : '') },
           disp: { date: l.date ? this.fmtDate(l.date) : '—', note: l.note || '—' },
-          raw: Object.assign({}, l, { gearIds: this.logGears(l).map(g => g.id) }), fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')'])], ['gearIds', 'Matériel', 'gear'], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Matériel (texte libre)'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
-          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(z => z.id === l.id ? Object.assign({}, z, { gearIds: (d.gearIds || []).slice(), gearId: undefined, author: d.author, lotId: d.lotId, date: d.date, heure: d.heure, note: d.note, infusion: d.infusion, temps: d.temps, temperature: d.temperature, qty: d.qty, technique: d.technique, repas: d.repas, avis: d.avis }) : z) })); },
+          raw: Object.assign({}, l, { gearIds: this.logGears(l).map(g => g.id), withTxt: (l.with || []).join(', ') }), fields: [['author', 'Auteur', this.opts().users.map(u => [u, u])], ['withTxt', 'Participants (séparés par des virgules)'], ['lotId', 'Sachet', a.sachets.map(z => [z.id, ((prodBy[z.prodId] || {}).nom || (prodBy[z.prodId] || {}).the || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')'])], ['gearIds', 'Matériel', 'gear'], ['date', 'Date', 'date'], ['heure', 'Heure'], ['note', 'Note'], ['infusion', 'Matériel (texte libre)'], ['temps', 'Temps'], ['temperature', 'Température'], ['qty', 'Quantité'], ['technique', 'Technique'], ['repas', 'Moment'], ['avis', 'Avis', 'area']],
+          save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(z => z.id === l.id ? Object.assign({}, z, { with: (d.withTxt != null ? String(d.withTxt).split(/[,;&]+/) : (z.with || [])).map(w => this.canonUser(String(w).trim())).filter((w, i, arr) => w && w !== d.author && arr.indexOf(w) === i), gearIds: (d.gearIds || []).slice(), gearId: undefined, author: d.author, lotId: d.lotId, date: d.date, heure: d.heure, note: d.note, infusion: d.infusion, temps: d.temps, temperature: d.temperature, qty: d.qty, technique: d.technique, repas: d.repas, avis: d.avis }) : z) })); },
           open: () => p.id && this.openProd(p.id), delMsg: 'Supprimer la dégustation de ' + (l.author || '?') + ' du ' + (l.date ? this.fmtDate(l.date) : '?') + ' ?', delFn: delLogs([l.id]) }; });
     } else {
       cols = [['nom', 'Nom'], ['type', 'Type'], ['fam', 'Famille / parent'], ['used', 'Thés du commerce'], ['who', 'Ajouté par']];
@@ -4739,6 +4762,37 @@ class Component extends DCLogic {
     return { erList: L.map(e => ({ when: new Date(e.ts).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }), who: e.who || 'visiteur', msg: e.msg || '', isOpen: open === e.id, stack: e.stack || '(pas de trace)', meta: (e.url || '') + ' · ' + (e.ua || ''), toggle: () => this.setState({ errOpen: open === e.id ? null : e.id }) })),
       erEmpty: !L.length, erMsg: this.state.errMsg || '', erN: String(L.length), erReload: () => this.loadErrors(),
       erClear: async () => { if (!L.length || !window.confirm('Effacer tout le journal d’erreurs ?')) return; const { error } = await this.sb.from('mdt_errors').delete().gte('id', 0); if (error) window.alert(error.message); this.loadErrors(); } };
+  }
+  canonUser(n) { const u = this.opts().users.find(x => this.norm(x) === this.norm(n)); return u || n; }
+  brandKey(m) { return this.norm(m).replace(/[^a-z0-9]/g, ''); }
+  brandView() {
+    const a = this.getAdds(); const groups = {}; let none = 0;
+    a.prods.forEach(p => { const m = String(p.marque || '').trim(); if (!m) { none++; return; } const k = this.brandKey(m); if (!k) { none++; return; }
+      const g = groups[k] = groups[k] || { key: k, spell: {}, prods: [] }; g.spell[m] = (g.spell[m] || 0) + 1; g.prods.push(p); });
+    const list = Object.values(groups).map(g => { const sp = Object.keys(g.spell).sort((x, y) => g.spell[y] - g.spell[x] || (y !== y.toLowerCase()) - (x !== x.toLowerCase()) || x.localeCompare(y)); return Object.assign(g, { name: sp[0], spells: sp }); })
+      .sort((x, y) => y.prods.length - x.prods.length || x.name.localeCompare(y.name, 'fr'));
+    const lev = (x, y) => { if (Math.abs(x.length - y.length) > 2) return 9; const d = []; for (let i = 0; i <= x.length; i++) { d[i] = [i]; } for (let j = 1; j <= y.length; j++) d[0][j] = j;
+      for (let i = 1; i <= x.length; i++) for (let j = 1; j <= y.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (x[i - 1] === y[j - 1] ? 0 : 1)); return d[x.length][y.length]; };
+    const near = g => list.filter(h => h !== g && h.prods.length >= g.prods.length && ((g.key.length >= 4 && h.key.length >= 4 && (h.key.indexOf(g.key) >= 0 || g.key.indexOf(h.key) >= 0)) || (g.key.length >= 5 && lev(g.key, h.key) <= 1)));
+    const setAll = (keys, name) => { const b = this.getAdds(); const nm = String(name || '').trim(); let n = 0;
+      this.setAdds(Object.assign({}, b, { prods: b.prods.map(p => { if (keys.indexOf(this.brandKey(p.marque || '')) < 0 || !String(p.marque || '').trim()) return p; n++; return Object.assign({}, p, { marque: nm }); }) }));
+      return n; };
+    const ed = this.state.brEdit || {}, mg = this.state.brMerge || {}, q = this.norm(this.state.brQ || '');
+    const shown = list.filter(g => !q || this.norm(g.spells.join(' ')).indexOf(q) >= 0 || g.prods.some(p => this.norm(p.nom || p.the).indexOf(q) >= 0));
+    return { brN: String(list.length), brNone: none ? none + ' thé' + (none > 1 ? 's' : '') + ' du commerce sans marque.' : '', brMsg: this.state.brMsg || '', brQ: this.state.brQ || '', setBrQ: e => this.setState({ brQ: e.target.value }), brEmpty: !shown.length,
+      brList: shown.map(g => { const nr = near(g); const draft = ed[g.key] != null ? ed[g.key] : g.name; const tgt = mg[g.key] || (nr[0] ? nr[0].key : '');
+        return { name: g.name, n: g.prods.length + ' thé' + (g.prods.length > 1 ? 's' : ''), multi: g.spells.length > 1, spells: 'Orthographes : ' + g.spells.map(x => '« ' + x + ' » (' + g.spell[x] + ')').join(', '),
+          ex: g.prods.slice(0, 5).map(p => p.nom || p.the).join(' · ') + (g.prods.length > 5 ? '…' : ''),
+          hasNear: nr.length > 0, nearTxt: nr.length ? '⚠️ Doublon probable de « ' + nr.map(h => h.name).join(' », « ') + ' »' : '',
+          draft: draft, setDraft: e => { const v = e.target.value; this.setState(st => ({ brEdit: Object.assign({}, st.brEdit, { [g.key]: v }) })); },
+          rename: () => { const v = String(draft).trim(); if (!v) { this.setState({ brMsg: 'Le nom ne peut pas être vide.' }); return; } const other = list.find(h => h !== g && h.key === this.brandKey(v));
+            if (other && !window.confirm('« ' + v + ' » existe déjà : les deux marques seront réunies. Continuer ?')) return;
+            const n = setAll(other ? [g.key, other.key] : [g.key], v); this.setState(st => { const e2 = Object.assign({}, st.brEdit); delete e2[g.key]; return { brEdit: e2, brMsg: '✓ ' + n + ' thé(s) renommé(s) en « ' + v + ' ».' }; }); },
+          opts: list.filter(h => h !== g).map(h => ({ v: h.key, l: h.name + ' (' + h.prods.length + ')' })), tgt: tgt,
+          setTgt: e => { const v = e.target.value; this.setState(st => ({ brMerge: Object.assign({}, st.brMerge, { [g.key]: v }) })); },
+          merge: () => { const h = list.find(x => x.key === tgt); if (!h) { this.setState({ brMsg: 'Choisissez la marque à garder.' }); return; }
+            if (!window.confirm('Réunir « ' + g.name + ' » (' + g.prods.length + ') dans « ' + h.name + ' » ?')) return;
+            const n = setAll([g.key, h.key], h.name); this.setState({ brMsg: '✓ « ' + g.name + ' » fusionnée dans « ' + h.name + ' » (' + n + ' thés).' }); } }; }) };
   }
   modView() {
     const me = this.me(); const a = this.getAdds();
@@ -5768,6 +5822,7 @@ class Component extends DCLogic {
       try { localStorage.setItem('the-ajouts', JSON.stringify(a)); } catch (e) {}
       if (!this._hashDone) { this._hashDone = true; try { this.applyHash(); } catch (e) { console.warn(e); } }
       this.setState({ syncAt: new Date(), syncErr: '' });
+      if (!this._v2Fixed && this.state.session) { this._v2Fixed = true; setTimeout(() => { try { this.fixLogWith(); } catch (e) {} }, 0); }
     } catch (e) { console.warn(e); this.setState({ syncErr: String(e.message || e) }); }
     finally { this._v2Pulling = false; }
   }
@@ -5837,7 +5892,7 @@ class Component extends DCLogic {
     }
     this.ensureMember();
     if (!this._hashDone) { this._hashDone = true; try { this.applyHash(); } catch (e) { console.warn(e); } }
-    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} try { this.migrateGear4(); } catch (e) {} try { this.migrateTags2(); } catch (e) { console.warn(e); } }
+    if (first) { try { this.migrateGear1(); } catch (e) {} try { this.migrateGear2(); } catch (e) {} try { this.migrateGear3(); } catch (e) {} try { this.migrateGear4(); } catch (e) {} try { this.migrateTags2(); } catch (e) { console.warn(e); } try { this.fixLogWith(); } catch (e) {} }
     this.setState({ syncAt: new Date(), syncErr: '' });
   }
 
@@ -6057,7 +6112,7 @@ class Component extends DCLogic {
 
   joinInfo(l, me) {
     const author = l.author || '';
-    const can = this.norm(author) !== this.norm(me) && this.salonMates(me).indexOf(author) >= 0;
+    const can = !!me && this.norm(author) !== this.norm(me) && (this.salonMates(me).indexOf(author) >= 0 || this.friendsOf(me).indexOf(author) >= 0 || (l.with || []).indexOf(me) >= 0);
     const joined = (l.with || []).indexOf(me) >= 0;
     return { canJoin: can, joinTxt: joined ? '✓ J’y étais (me retirer)' : '＋ J’y étais aussi',
       toggleJoin: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => x.id === l.id ? Object.assign({}, x, { with: joined ? (x.with || []).filter(w => w !== me) : (x.with || []).concat([me]) }) : x) })); } };
@@ -6973,6 +7028,12 @@ class Component extends DCLogic {
       openChips: ow ? [chip(ow.n, ow.n)].concat(ow.a.map(x => chip(x, x))) : [], others: others, hasOthers: others.length > 0,
       summary: picked.length ? picked.join(' · ') : 'Aucun arôme choisi : ouvre une famille pour préciser.' };
   }
+  // une dégustation ne peut pas avoir son auteur parmi les participants (ex. auteur changé dans l'admin)
+  fixLogWith() {
+    if (!this.isAdmin(this.me())) return; const a = this.getAdds();
+    const bad = a.logs.filter(l => (l.with || []).some((w, i, arr) => w === l.author || arr.indexOf(w) !== i)); if (!bad.length) return;
+    this.setAdds(Object.assign({}, a, { logs: a.logs.map(l => bad.indexOf(l) < 0 ? l : Object.assign({}, l, { with: (l.with || []).filter((w, i, arr) => w !== l.author && arr.indexOf(w) === i) })) }));
+  }
   migrateTags2() {
     const a = this.getAdds(); if (!this.isAdmin(this.sessionName()) || ((a.options || {}).tagVer || 0) >= 3) return;
     const dropped = Object.assign({}, (a.options || {}).tagDropped || {});
@@ -7207,7 +7268,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['new', 'mod', 'cat', 'mrg', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf', 'jeu', 'err'] : ['mod'];
+    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['new', 'mod', 'cat', 'mrg', 'mrq', 'usr', 'opt', 'man', 'tag', 'jrn', 'inf', 'jeu', 'err'] : ['mod'];
       if (this.state.view === 'admin' && !this.isMod(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = ADM[0]; }
@@ -7469,7 +7530,7 @@ class Component extends DCLogic {
       menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: this.isAdmin(this.me()) ? 'new' : 'mod', addMsg: '' }),
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération', 'Signalements, ajouts à valider'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération', 'Signalements, ajouts à valider'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏷️', 'Marques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['man', '📥', 'Import', 'Importer un fichier'], ['tag', '🏷️', 'Tags', 'Tags de profil'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['inf', 'ℹ️', 'Informations', 'Règles des tea pets'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
@@ -7647,7 +7708,7 @@ class Component extends DCLogic {
       pfSafe: (() => { const u = this.state.profUser || me; if (v !== 'profile' || !me || !this.state.session || u === me) return { show: false }; const bl = this.blockedOf(me).indexOf(u) >= 0;
         return { show: true, name: u, blocked: bl, blockTxt: bl ? 'Débloquer' : '🚫 Bloquer', block: () => this.toggleBlock(u), report: () => this.report({ t: 'user', who: u, label: 'le profil de ' + u }) }; })(),
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
-      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabErrOn: this.state.addTab === 'err', ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
+      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
       infTempers: this.petTempers.map(t => ({ icon: t.icon, name: t.name, desc: t.desc, grace: t.grace + ' j', rate: '×' + String(t.rate).replace('.', ','), loss: '≈ ' + String(Math.round(9 * t.rate * 10) / 10).replace('.', ',') + ' PV/j', heal: '+' + t.heal + ' PV', bonus: t.bonus })),
       infLevels: [1, 2, 3, 4, 5, 6, 7, 8].map(L => ({ lvl: 'Nv. ' + L, xp: String(15 * L * (L - 1)) + ' XP', red: '−' + Math.round(Math.min(0.55, (L - 1) * 0.07) * 100) + ' %' })),
       tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',

@@ -142,7 +142,7 @@ create policy "mdt ajout" on public.mdt_items for insert to authenticated with c
 drop policy if exists "mdt modif" on public.mdt_items;
 create policy "mdt modif" on public.mdt_items for update to authenticated
   using (public.mdt_is_admin() or public.mdt_me() = any(parties) or kind = 'prod'
-         or (kind = 'log' and public.mdt_same_salon(owner, public.mdt_me()))
+         or (kind = 'log' and (public.mdt_same_salon(owner, public.mdt_me()) or public.mdt_are_friends(owner, public.mdt_me())))
          or (kind in ('cat', 'decl', 'over', 'report', 'profile', 'event', 'log') and public.mdt_is_mod())
          or (kind in ('cat', 'decl') and owner = public.mdt_me()))
   with check (true);
@@ -230,6 +230,16 @@ begin
   if new.kind = 'gear' and old.owner is distinct from me then raise exception 'Vous ne pouvez pas modifier le matériel de %.', old.owner; end if;
   if new.kind = 'price' and old.owner is distinct from me and new.data is distinct from old.data then raise exception 'Prix réservé au propriétaire.'; end if;
   if new.kind = 'log' and new.owner is distinct from old.owner then raise exception 'L''auteur d''une dégustation ne change pas.'; end if;
+  -- « J'y étais » : un ami / membre du salon non participant ne peut que s'ajouter ou se retirer
+  if new.kind = 'log' and not modr and old.owner is distinct from me and not (me = any(old.parties)) then
+    if (d - 'with') is distinct from (coalesce(old.data, '{}'::jsonb) - 'with')
+       or exists (select 1 from (
+            (select x from jsonb_array_elements_text(coalesce(d->'with', '[]'::jsonb)) x except select y from jsonb_array_elements_text(coalesce(old.data->'with', '[]'::jsonb)) y)
+            union (select y from jsonb_array_elements_text(coalesce(old.data->'with', '[]'::jsonb)) y except select x from jsonb_array_elements_text(coalesce(d->'with', '[]'::jsonb)) x)) z(v)
+          where v is distinct from me) then
+      raise exception 'Vous pouvez seulement vous ajouter à cette dégustation.';
+    end if;
+  end if;
   if new.kind in ('cat', 'decl') and not modr then
     if old.owner is distinct from me or coalesce(old.data->>'pending', 'false') <> 'true' then raise exception 'Seuls les modérateurs modifient le catalogue.'; end if;
     new.data := d || '{"pending": true}'::jsonb;
