@@ -2468,7 +2468,7 @@
             <sc-for list="{{ jrn }}" as="ev" hint-placeholder-count="6">
               <div style="display: flex; gap: 12px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--color-border, rgba(0,0,0,.08));">
                 <span style="font-size: 18px; width: 24px; flex: none;">{{ ev.icon }}</span>
-                <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 15px; text-wrap: pretty;"><b>{{ ev.who }}</b> {{ ev.text }}</span><span style="font-size: 12px; opacity: .6;">{{ ev.when }}</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 15px; text-wrap: pretty;"><b>{{ ev.who }}</b> {{ ev.text }}</span><sc-if value="{{ ev.hasCh }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 2px; margin: 4px 0 2px; padding: 6px 10px; border-radius: 12px; background: var(--color-bg); font-size: 13.5px;"><sc-for list="{{ ev.changes }}" as="ch" hint-placeholder-count="2"><span style="word-break: break-word;"><span style="opacity: .65;">{{ ch.f }} :</span> {{ ch.txt }}</span></sc-for></div></sc-if><span style="font-size: 12px; opacity: .6;">{{ ev.when }}</span></div>
               </div>
             </sc-for>
           </section>
@@ -5509,6 +5509,26 @@ class Component extends DCLogic {
     return a ? a.emoji + ' ' + a.name : '';
   }
 
+  // détail des champs modifiés, pour le journal : [{ f: 'Note', a: '14', b: '15' }]
+  fieldChanges(o, n, kind, names) {
+    const L = { log: { lotId: 'Sachet', author: 'Auteur', with: 'Participants', date: 'Date', heure: 'Heure', note: 'Note', infusion: 'Infusions', temps: 'Temps', temperature: 'Température', qty: 'Quantité', technique: 'Technique', repas: 'Moment', avis: 'Avis', nez: 'Nez', gearIds: 'Matériel', tags: 'Tags', endTs: 'Fin', startTs: 'Début' },
+      sachet: { code: 'Code', owner: 'Propriétaire', prodId: 'Thé du commerce', achat: 'Date d’achat', prodDate: 'Année de production', lot: 'Lot', quantite: 'Quantité', prixMode: 'Vendu à', prixPaye: 'Prix payé', freq: 'Fréquence', commentaire: 'Commentaire', empty: 'Vide', sachetPhoto: 'Photo' },
+      prod: { nom: 'Nom', the: 'Thé du catalogue', variante: 'Variante', marque: 'Marque', ref: 'Référence', boutique: 'Boutique', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
+      gear: { name: 'Nom', type: 'Type', owner: 'Propriétaire', prix: 'Prix', marque: 'Marque', matiere: 'Matière', contenance: 'Contenance', photo: 'Photo', desc: 'Description', vitrine: 'Vitrine' },
+      cat: { nom: 'Nom', famille: 'Famille', traduction: 'Traduction', origine: 'Origine', pays: 'Pays', province: 'Province', gout: 'Goût', recolte: 'Récolte' } }[kind] || {};
+    const SKIP = ['history', 'adjust', 'shares', 'gearId', 'live', 'rev', 'id', 'pending'];
+    const PRICE = ['prixPaye', 'prix'];
+    const fmt = (k, v) => { if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '∅'; if (names && names[k]) v = names[k](v);
+      if (Array.isArray(v)) v = v.map(x => typeof x === 'object' ? JSON.stringify(x) : x).join(', '); else if (typeof v === 'object') v = JSON.stringify(v); else if (typeof v === 'boolean') v = v ? 'oui' : 'non';
+      v = String(v); if (/^data:|^blob:/.test(v) || v.length > 400) return '(image)'; return v.length > 90 ? v.slice(0, 88) + '…' : v; };
+    const keys = Array.from(new Set(Object.keys(o || {}).concat(Object.keys(n || {})))).filter(k => SKIP.indexOf(k) < 0);
+    const out = [];
+    keys.forEach(k => { const a = (o || {})[k], b = (n || {})[k]; if (JSON.stringify(a == null ? '' : a) === JSON.stringify(b == null ? '' : b)) return;
+      const f = L[k] || k; if (PRICE.indexOf(k) >= 0) { out.push({ f: f, a: '', b: 'modifié', hide: true }); return; }
+      if (/photo/i.test(k)) { out.push({ f: f, a: '', b: b ? 'changée' : 'retirée', hide: true }); return; }
+      out.push({ f: f, a: fmt(k, a), b: fmt(k, b) }); });
+    return out.slice(0, 12);
+  }
   diffEvents(prev, next) {
     const who = this.sessionName() || this.state.me || '?';
     const ts = new Date().toISOString();
@@ -5532,7 +5552,7 @@ class Component extends DCLogic {
       const o = pL[k], n = nL[k];
       const onlyWith = JSON.stringify(Object.assign({}, o, { with: [] })) === JSON.stringify(Object.assign({}, n, { with: [] }));
       if (onlyWith && n.author !== who) ev.push({ type: 'join', icon: '🫖', to: (n.with || []).indexOf(who) >= 0 ? n.author : null, sid: n.lotId, text: ((n.with || []).indexOf(who) >= 0 ? 's’est ajouté à la dégustation de ' : 's’est retiré de la dégustation de ') + n.author + ' (« ' + sname(n.lotId) + ' »)' });
-      else ev.push({ type: 'edit', icon: '✏️', text: 'a modifié une dégustation de « ' + sname(n.lotId) + ' »' });
+      else ev.push({ type: 'edit', icon: '✏️', text: 'a modifié une dégustation de « ' + sname(n.lotId) + ' »' + (n.author !== who ? ' (auteur : ' + n.author + ')' : ''), changes: this.fieldChanges(o, n, 'log', { lotId: sname, gearIds: ids => ids.map(id => ((next.gear || []).find(g => g.id === id) || {}).name || id) }) });
     });
     Object.keys(nS).filter(k => pS[k] && pS[k] !== nS[k]).forEach(k => {
       const o = pS[k], n = nS[k];
@@ -5542,11 +5562,17 @@ class Component extends DCLogic {
       else if (!!o.empty !== !!n.empty && o.owner === n.owner) ev.push({ type: 'empty', icon: '📭', text: n.empty ? 'a marqué son sachet de « ' + sname(k) + ' » comme vide' : 'a retiré la mention vide du sachet de « ' + sname(k) + ' »' });
       else if (o.owner !== n.owner) ev.push({ type: 'give', icon: '🎁', to: n.owner, sid: k, text: 'a donné un sachet de « ' + sname(k) + ' » à ' + n.owner });
       else if (JSON.stringify(o.adjust || null) !== JSON.stringify(n.adjust || null)) ev.push({ type: 'qty', icon: '⚖️', text: n.adjust ? 'a mis à jour la quantité restante de « ' + sname(k) + ' » : ' + n.adjust.left + ' ' + (n.prixMode === 'unite' ? 'unités' : 'g') : 'a remis le calcul automatique de « ' + sname(k) + ' »' });
-      else if (JSON.stringify(o) !== JSON.stringify(n)) ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le sachet de « ' + sname(k) + ' »' });
+      else if (JSON.stringify(o) !== JSON.stringify(n)) ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le sachet de « ' + sname(k) + ' »' + (n.code ? ' (' + n.code + ')' : '') + (n.owner !== who ? ' de ' + n.owner : ''), changes: this.fieldChanges(o, n, 'sachet', { prodId: pname }) });
     });
-    Object.keys(nP).filter(k => pP[k] && pP[k] !== nP[k] && JSON.stringify(pP[k]) !== JSON.stringify(nP[k])).forEach(k => ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le thé « ' + pname(k) + ' »' }));
+    Object.keys(nP).filter(k => pP[k] && pP[k] !== nP[k] && JSON.stringify(pP[k]) !== JSON.stringify(nP[k])).forEach(k => ev.push({ type: 'edit', icon: '✏️', text: 'a modifié le thé « ' + pname(k) + ' »', changes: this.fieldChanges(pP[k], nP[k], 'prod') }));
     const pG = {}; (prev.gear || []).forEach(g => { pG[g.id] = g; });
     (next.gear || []).filter(g => !pG[g.id]).forEach(g => ev.push({ type: 'gear', icon: '🫖', text: 'a ajouté « ' + g.name + ' » à son matériel' }));
+    const nG = {}; (next.gear || []).forEach(g => { nG[g.id] = g; });
+    (next.gear || []).filter(g => pG[g.id] && pG[g.id] !== g && JSON.stringify(pG[g.id]) !== JSON.stringify(g)).forEach(g => { const ch = this.fieldChanges(pG[g.id], g, 'gear'); if (ch.length) ev.push({ type: 'edit', icon: '✏️', text: 'a modifié « ' + g.name + ' »' + (g.owner !== who ? ' de ' + g.owner : ''), changes: ch }); });
+    (prev.gear || []).filter(g => !nG[g.id]).forEach(g => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé « ' + g.name + ' »' + (g.owner !== who ? ' de ' + g.owner : '') + ' du matériel' }));
+    { const key = t => (t.famille || '') + '|' + (t.nom || ''); const pTm = {}; (prev.teas || []).forEach((t, i) => { pTm[i] = t; });
+      if ((prev.teas || []).length === (next.teas || []).length) (next.teas || []).forEach((t, i) => { const o = pTm[i]; if (o && o !== t && JSON.stringify(o) !== JSON.stringify(t)) { const ch = this.fieldChanges(o, t, 'cat'); if (ch.length) ev.push({ type: 'edit', icon: '📖', text: 'a modifié « ' + (o.nom || t.nom) + ' » dans le catalogue', changes: ch }); } });
+      else (prev.teas || []).filter(o => !(next.teas || []).some(t => key(t) === key(o))).forEach(o => { if ((next.teas || []).length < (prev.teas || []).length) ev.push({ type: 'del', icon: '🗑️', text: 'a retiré « ' + o.nom + ' » du catalogue' }); }); }
     const pT = (prev.teas || []).length, nT = (next.teas || []).length;
     if (nT > pT && !(addP.length > 5)) (next.teas || []).slice(pT).forEach(t => ev.push({ type: 'cat', icon: '📖', name: t.nom, fam: t.famille, text: 'a ajouté « ' + t.nom + ' » au catalogue' }));
     const pD = (prev.decl || []).length, nD = (next.decl || []).length;
@@ -5662,7 +5688,8 @@ class Component extends DCLogic {
     return this.journalFiltered().slice(0, 300).map(e => {
       const d = new Date(e.ts);
       const when = isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      return { icon: e.icon || '•', who: e.who, text: e.text, when: when };
+      const ch = (e.changes || []).map(c => ({ f: c.f, txt: c.hide ? c.b : c.a + ' → ' + c.b }));
+      return { icon: e.icon || '•', who: e.who + (e.adm ? ' (admin)' : ''), text: e.text, when: when, changes: ch, hasCh: ch.length > 0 };
     });
   }
 
@@ -5672,7 +5699,7 @@ class Component extends DCLogic {
     const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
     const lines = [['Date', 'Heure', 'Utilisateur', 'Action', 'Détail'].map(esc).join(';')].concat(rows.map(e => {
       const d = new Date(e.ts);
-      return [isNaN(d) ? '' : d.toLocaleDateString('fr-FR'), isNaN(d) ? '' : d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), e.who, (lab[e.type] || e.type || '').replace(/^\S+\s/, ''), e.text].map(esc).join(';');
+      return [isNaN(d) ? '' : d.toLocaleDateString('fr-FR'), isNaN(d) ? '' : d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), e.who, (lab[e.type] || e.type || '').replace(/^\S+\s/, ''), e.text + ((e.changes || []).length ? ' — ' + e.changes.map(c => c.f + ' : ' + (c.hide ? c.b : c.a + ' → ' + c.b)).join(' ; ') : '')].map(esc).join(';');
     }));
     const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
