@@ -4972,7 +4972,7 @@ class Component extends DCLogic {
       const url = /(https?:\/\/|www\.)\S+|\b[a-z0-9-]+\.(com|fr|net|org|io|ly|ru|xyz|shop|link)\b/i.exec(t.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, m0 => ' '.repeat(m0.length))); if (url) { why.push('🔗 lien'); if (at < 0) { at = url.index; len = url[0].length; } }
       const mail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.exec(t); if (mail) { why.push('✉️ adresse e-mail'); if (at < 0) { at = mail.index; len = mail[0].length; } }
       const tel = /(\+?\d[\d .-]{8,}\d)/.exec(t); if (tel && tel[1].replace(/\D/g, '').length >= 9 && !/^\d{1,3}([.,]\d+)?(\/\d+)*$/.test(tel[1].trim())) { why.push('📞 numéro de téléphone ?'); if (at < 0) { at = tel.index; len = tel[0].length; } }
-      const letters = t.replace(/[^A-Za-zÀ-ÿ]/g, ''); if (letters.length >= 12 && letters === letters.toUpperCase()) why.push('📢 tout en majuscules');
+      const letters = t.replace(/[^A-Za-zÀ-ÿ]/g, ''); if (!meta.noCaps && letters.length >= 12 && letters === letters.toUpperCase()) why.push('📢 tout en majuscules');
       if (/(.)\1{5,}/.test(t) || /([!?])\1{3,}/.test(t)) why.push('🔁 caractères répétés');
       if (t.length > 1500) why.push('📏 texte très long (' + t.length + ' caractères)');
       if (!why.length) return;
@@ -4983,7 +4983,7 @@ class Component extends DCLogic {
     (a.logs || []).forEach(l => { check(l.avis, { kind: 'log', id: l.id, field: 'avis', who: l.author, where: 'Avis · ' + pname(l.lotId) + (l.date ? ' · ' + this.fmtDate(l.date) : ''), canClear: true });
       check(l.nez, { kind: 'log', id: l.id, field: 'nez', who: l.author, where: 'Nez · ' + pname(l.lotId), canClear: true });
       (l.infusions || []).forEach((f, i) => check(f && f.note, { kind: 'log', id: l.id, field: 'inf' + i, who: l.author, where: 'Note d’infusion n° ' + (i + 1) + ' · ' + pname(l.lotId), canClear: false })); });
-    (a.prods || []).forEach(p => { check(p.nom, { kind: 'prod', id: p.id, field: 'nom', who: '', where: 'Nom d’un thé du commerce', canClear: false }); check(p.commentaire, { kind: 'prod', id: p.id, field: 'commentaire', who: '', where: 'Description · ' + (p.nom || p.the), canClear: true }); check(p.marque, { kind: 'prod', id: p.id, field: 'marque', who: '', where: 'Boutique · ' + (p.nom || p.the), canClear: false }); });
+    (a.prods || []).forEach(p => { check(p.nom, { kind: 'prod', id: p.id, field: 'nom', who: '', where: 'Nom d’un thé du commerce', canClear: false }); check(p.commentaire, { kind: 'prod', id: p.id, field: 'commentaire', who: '', where: 'Description · ' + (p.nom || p.the), canClear: true }); check(p.marque, { kind: 'prod', id: p.id, field: 'marque', who: '', where: 'Boutique · ' + (p.nom || p.the), canClear: false, noCaps: true }); });
     (a.sachets || []).forEach(x => check(x.commentaire, { kind: 'sachet', id: x.id, field: 'commentaire', who: x.owner, where: 'Commentaire du sachet · ' + pname(x.id), canClear: true }));
     (a.gear || []).forEach(g => { check(g.name, { kind: 'gear', id: g.id, field: 'name', who: g.owner, where: 'Nom de matériel', canClear: false }); check(g.desc || g.description, { kind: 'gear', id: g.id, field: g.desc != null ? 'desc' : 'description', who: g.owner, where: 'Description · ' + g.name, canClear: true }); });
     (o.salons || []).forEach(x => { check(x.name, { kind: 'salon', id: x.id, field: 'name', who: x.chief || x.creator, where: 'Nom de salon', canClear: false }); check(x.desc, { kind: 'salon', id: x.id, field: 'desc', who: x.chief || x.creator, where: 'Description du salon « ' + x.name + ' »', canClear: true }); });
