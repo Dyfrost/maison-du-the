@@ -47,6 +47,7 @@
   .sac-name { cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-heading); font-size: 21px; line-height: 1.15; color: var(--color-text); }
   .sac-name:hover { color: var(--color-accent-700); }
   .city-tag { display: inline-flex; align-items: center; gap: 3px; font-family: var(--font-body); font-size: 12.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: #d9e5f1; color: #2c4a6b; white-space: nowrap; line-height: 1.3; }
+  .ubtn[data-dot="true"]::after { content: ''; position: absolute; top: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; background: #c0392b; box-shadow: 0 0 0 2px var(--color-bg); }
   .sac-cat { cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text); opacity: .65; text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px; }
   .sac-cat:hover { opacity: 1; color: var(--color-accent-700); }
   .sac-sub { font-size: 14px; opacity: .75; }
@@ -376,7 +377,7 @@
     </sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
       <div style="position: relative;">
-        <button class="ubtn" onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
+        <button class="ubtn" onClick="{{ toggleMenu }}" aria-haspopup="true" aria-expanded="{{ menuOpen }}" data-dot="{{ admDot }}" style="position: relative; z-index: 42; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; background: var(--color-surface); border-radius: 999px; padding: 3px 12px 3px 3px; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap;" style-hover="background: var(--color-accent-100);">
           <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ meInitial }}</span>{{ me }}<sc-if value="{{ meSalon }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: {{ meSalonC.bg }}; color: {{ meSalonC.fg }};">{{ meSalon }}</span></sc-if><sc-if value="{{ meBadge }}" hint-placeholder-val="{{ false }}"><span class="nav-badge" title="{{ meBadge }}" style="font-size: 16px; line-height: 1;">{{ meBadgeEmoji }}</span></sc-if>
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ menuRot }}deg); transition: transform .2s ease;"><path d="m6 9 6 6 6-6"/></svg>
         </button>
@@ -418,6 +419,8 @@
   </sc-if>
 
   <main class="page" style="flex: 1; width: 100%; max-width: max(1140px, 75vw); box-sizing: border-box; margin: 0 auto; padding: 16px 40px 80px; display: flex; flex-direction: column;">
+    <sc-if value="{{ annShow }}" hint-placeholder-val="{{ false }}"><div role="status" style="display: flex; gap: 12px; align-items: center; background: #d9e5f1; color: #2c4a6b; border-radius: 18px; padding: 10px 14px 10px 18px; margin: 0 0 18px; font-size: 15px;"><span style="flex: 1; white-space: pre-wrap;">📣 {{ annText }}</span><button onClick="{{ annHide }}" aria-label="Masquer l’annonce" style="cursor: pointer; border: none; background: transparent; font-size: 18px; color: inherit; padding: 2px 6px;">✕</button></div></sc-if>
+    <sc-if value="{{ suspShow }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #fbebeb; color: #7a1f16; border-radius: 18px; padding: 10px 18px; margin: 0 0 18px; font-size: 15px;">⛔ Votre compte est suspendu : vous pouvez consulter le site mais plus rien modifier. Contactez un administrateur.</div></sc-if>
     <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
       <button class="btn btn-secondary" style="white-space: nowrap; align-self: flex-start; margin: -8px 0 22px;" onClick="{{ goBack }}">← Retour</button>
     </sc-if>
@@ -2226,6 +2229,7 @@
               </sc-for>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+              <sc-if value="{{ adHasFilters }}" hint-placeholder-val="{{ false }}"><select class="input" value="{{ adFilter }}" data-val="{{ adFilter }}" onChange="{{ setAdFilter }}" aria-label="Filtrer" style="flex: 0 1 220px; padding: 9px 14px;"><sc-for list="{{ adFilterOpts }}" as="fo2" hint-placeholder-count="3"><option value="{{ fo2.v }}" label="{{ fo2.l }}">{{ fo2.l }}</option></sc-for></select></sc-if>
               <input class="input" type="search" value="{{ adQ }}" onInput="{{ setAdQ }}" placeholder="🔎 Rechercher dans {{ adKindName }}…" aria-label="Rechercher" style="flex: 1 1 240px; min-width: 0; padding: 10px 16px; font-size: 14px;">
               <span style="font-size: 13px; opacity: .7;">{{ adCount }}</span>
               <button class="btn btn-secondary" onClick="{{ adExport }}" style="white-space: nowrap;">⬇ CSV</button>
@@ -2236,6 +2240,14 @@
                 <button class="btn btn-ghost" onClick="{{ adClearSel }}" style="white-space: nowrap;">Désélectionner</button>
                 <button class="btn btn-primary" onClick="{{ adDelSel }}" style="white-space: nowrap; background: var(--color-accent-800);">🗑 Supprimer la sélection</button>
               </div>
+              <sc-if value="{{ adLogOps }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-surface); border-radius: 14px; padding: 10px 12px;">
+                <span style="font-size: 14px; font-weight: 600;">✍️ Auteur</span><select class="input" value="{{ adBAuth }}" data-val="{{ adBAuth }}" onChange="{{ setAdBAuth }}" aria-label="Auteur à appliquer" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adAuthOpts }}" as="ao" hint-placeholder-count="2"><option value="{{ ao.v }}" label="{{ ao.l }}">{{ ao.l }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adApplyAuth }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
+                <span style="font-size: 14px; font-weight: 600; margin-left: 8px;">🛍️ Sachet</span><select class="input" value="{{ adBLot }}" data-val="{{ adBLot }}" onChange="{{ setAdBLot }}" aria-label="Sachet à appliquer" style="width: auto; max-width: 340px; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adLotOpts }}" as="lo" hint-placeholder-count="3"><option value="{{ lo.v }}" label="{{ lo.l }}">{{ lo.l }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adApplyLot }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
+              </div></sc-if>
+              <sc-if value="{{ adProdOps }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-surface); border-radius: 14px; padding: 10px 12px;">
+                <span style="font-size: 14px; font-weight: 600;">📖 Thé du catalogue</span><input class="input" list="liste-thes" value="{{ adBThe }}" onInput="{{ setAdBThe }}" placeholder="ex : Da Hong Pao" aria-label="Thé du catalogue à appliquer" style="width: 220px; padding: 7px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ adApplyThe }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
+                <span style="font-size: 14px; font-weight: 600; margin-left: 8px;">🏷️ Tag</span><select class="input" value="{{ adBTag }}" data-val="{{ adBTag }}" onChange="{{ setAdBTag }}" aria-label="Tag" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adTagOpts }}" as="to2" hint-placeholder-count="3"><option value="{{ to2.v }}" label="{{ to2.l }}">{{ to2.l }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adAddTag }}" style="white-space: nowrap; background: var(--color-bg);">＋ Ajouter</button><button class="btn btn-ghost" onClick="{{ adDelTag }}" style="white-space: nowrap;">− Retirer</button>
+              </div></sc-if>
               <sc-if value="{{ adSacOps }}" hint-placeholder-val="{{ false }}">
               <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-surface); border-radius: 14px; padding: 10px 12px;">
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 14px; font-weight: 600;">🏪 Boutique</span><select class="input" value="{{ adBShop }}" data-val="{{ adBShop }}" onChange="{{ adSetBShop }}" aria-label="Boutique à appliquer" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adShopOpts }}" as="so" hint-placeholder-count="3"><option value="{{ so.v }}" label="{{ so.l }}">{{ so.l }}</option></sc-for></select><button class="btn btn-secondary" onClick="{{ adApplyShop }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
@@ -2298,8 +2310,8 @@
               <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 10px 14px;">
                 <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent-2-600); color: var(--color-bg); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; flex: none;">{{ au.initial }}</span>
                 <div style="display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0;"><span style="font-family: var(--font-heading); font-size: 17px;">{{ au.tag }}</span><span style="font-size: 12px; opacity: .65;">{{ au.sub }}</span></div>
-                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if><sc-if value="{{ au.isModo }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #d9e5f1; color: #2c4a6b;">🧹 Modérateur</span></sc-if>
-                <sc-if value="{{ au.idle }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ au.canModo }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.toggleModo }}" style="white-space: nowrap;">{{ au.modoTxt }}</button></sc-if><sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.ask }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if><sc-if value="{{ au.canRemove }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer le compte</button></sc-if></sc-if>
+                <sc-if value="{{ au.isAdm }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">🛡️ Admin</span></sc-if><sc-if value="{{ au.isModo }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #d9e5f1; color: #2c4a6b;">🧹 Modérateur</span></sc-if><sc-if value="{{ au.isSusp }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #fbebeb; color: #7a1f16;">⛔ Suspendu</span></sc-if>
+                <sc-if value="{{ au.idle }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ au.canSusp }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.toggleSusp }}" style="white-space: nowrap;">{{ au.suspTxt }}</button></sc-if><sc-if value="{{ au.canDelUser }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.delUser }}" style="white-space: nowrap; color: var(--color-accent-800);">Supprimer le compte</button></sc-if><sc-if value="{{ au.canModo }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.toggleModo }}" style="white-space: nowrap;">{{ au.modoTxt }}</button></sc-if><sc-if value="{{ au.canToggle }}" hint-placeholder-val="{{ true }}"><button class="{{ au.btnClass }}" onClick="{{ au.ask }}" style="white-space: nowrap;">{{ au.btnTxt }}</button></sc-if><sc-if value="{{ au.canRemove }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ au.remove }}" style="white-space: nowrap; color: var(--color-accent-800);">Retirer le compte</button></sc-if></sc-if>
                 <sc-if value="{{ au.asking }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; background: var(--color-accent-100); border-radius: 14px; padding: 8px 12px;"><span style="font-size: 14px; margin-right: auto;">{{ au.askTxt }}</span><button class="btn btn-primary" onClick="{{ au.confirm }}" style="white-space: nowrap;">{{ au.confirmTxt }}</button><button class="btn btn-ghost" onClick="{{ au.cancel }}" style="white-space: nowrap;">Annuler</button></div></sc-if>
               </div>
             </sc-for>
@@ -2373,6 +2385,38 @@
             </sc-for>
           </section>
         </sc-if>
+        <sc-if value="{{ tabDashOn }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+            <sc-for list="{{ dbCards }}" as="dc" hint-placeholder-count="6"><button onClick="{{ dc.go }}" style="cursor: pointer; text-align: left; border: none; border-radius: 22px; padding: 16px 18px; background: {{ dc.bg }}; box-shadow: {{ dc.ring }}; font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 14px; opacity: .75;">{{ dc.icon }} {{ dc.label }}</span><span style="font-family: var(--font-heading); font-size: 32px; line-height: 1.1;">{{ dc.n }}</span><span style="font-size: 12.5px; opacity: .6;">{{ dc.sub }}</span></button></sc-for>
+          </div>
+          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="font-size: 22px; margin: 0;">📣 Annonce pour tout le monde</h2>
+            <p style="margin: 0; font-size: 14px; opacity: .7;">Un message affiché en haut du site pour chaque membre (qui peut le masquer). Ex. « Nouveauté : les villes des boutiques ! » ou « Maintenance ce soir à 21 h ».</p>
+            <textarea class="input" rows="2" value="{{ annDraft }}" onInput="{{ setAnnDraft }}" maxLength="400" placeholder="Votre annonce…" style="border-radius: 18px; resize: vertical;"></textarea>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ annPublish }}" style="white-space: nowrap;">Publier</button><sc-if value="{{ annOn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ annRemove }}" style="white-space: nowrap;">Retirer l’annonce</button></sc-if><span style="font-size: 13px; opacity: .65;">{{ annInfo }}</span></div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="font-size: 22px; margin: 0;">🚫 Mots interdits</h2>
+            <p style="margin: 0; font-size: 14px; opacity: .7;">{{ bwNote }}</p>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ bwList }}" as="bw" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px 4px 12px; border-radius: 999px; background: var(--color-bg); font-size: 14px;">{{ bw.w }}<button onClick="{{ bw.del }}" aria-label="Retirer" style="cursor: pointer; border: none; background: transparent; color: var(--color-accent-800); font-size: 13px;">✕</button></span></sc-for><sc-if value="{{ bwEmpty }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .6;">Aucun mot pour l’instant.</span></sc-if></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;"><input class="input" value="{{ bwDraft }}" onInput="{{ setBwDraft }}" onKeyDown="{{ bwKey }}" placeholder="Ajouter (plusieurs : séparés par des virgules)" aria-label="Ajouter un mot interdit" style="flex: 1; min-width: 220px;"><button class="btn btn-secondary" onClick="{{ bwAdd }}" style="white-space: nowrap;">＋ Ajouter</button></div>
+          </section>
+        </sc-if>
+        <sc-if value="{{ tabQualOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🧽 Qualité des données ({{ qTotal }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Ce qui manque ou cloche. « Corriger » ouvre l’élément dans Données ; « Tout voir » ouvre le tableau déjà filtré, pour corriger plusieurs lignes d’un coup.</p></div>
+            <sc-if value="{{ qHasF }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; margin-right: auto;">{{ qFTxt }}</span><button class="btn btn-secondary" onClick="{{ qConvF }}" style="white-space: nowrap;">F → L</button></div></sc-if>
+            <sc-for list="{{ qGroups }}" as="qg" hint-placeholder-count="5">
+              <div style="background: var(--color-bg); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 16px; margin-right: auto;">{{ qg.title }} <span style="font-weight: 400; opacity: .6;">{{ qg.n }}</span></b><sc-if value="{{ qg.hasItems }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ qg.filterAll }}" style="white-space: nowrap; font-size: 14px;">Tout voir →</button></sc-if></div>
+                <sc-if value="{{ qg.none }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .6;">✓ Rien à corriger.</span></sc-if>
+                <sc-if value="{{ qg.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">{{ qg.hint }}</span></sc-if>
+                <div style="display: flex; flex-direction: column; gap: 2px;"><sc-for list="{{ qg.items }}" as="qi" hint-placeholder-count="2"><div style="display: flex; gap: 10px; align-items: center; font-size: 14px; padding: 3px 0; border-top: 1px solid var(--color-divider);"><span style="margin-right: auto; min-width: 0;">{{ qi.label }}</span><button onClick="{{ qi.fix }}" style="cursor: pointer; border: none; background: transparent; color: var(--color-accent-700); font-family: var(--font-body); font-size: 14px; white-space: nowrap;">Corriger →</button></div></sc-for></div>
+                <sc-if value="{{ qg.hasMore }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6;">{{ qg.more }}</span></sc-if>
+              </div>
+            </sc-for>
+          </section>
+        </sc-if>
         <sc-if value="{{ tabErrOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🐞 Erreurs du site ({{ erN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les plantages rencontrés par les membres, enregistrés automatiquement (gardés 30 jours).</p></div>
@@ -2411,8 +2455,15 @@
               <div class="sac mb-card"><div class="sac-head" style="flex-wrap: wrap;">
                 <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 17px;">{{ mp.label }}</span></div><span class="sac-sub">{{ mp.sub }}</span></div>
                 <div style="display: flex; gap: 8px;"><button class="btn btn-primary" onClick="{{ mp.ok }}" style="white-space: nowrap;">✅ Valider</button><button class="btn btn-secondary" onClick="{{ mp.no }}" style="white-space: nowrap; background: var(--color-bg); color: var(--color-accent-800);">✖ Refuser</button></div>
-              </div></div>
+              </div>
+              <sc-if value="{{ mp.isTea }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 0 16px 12px;"><sc-if value="{{ mp.sim }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">⚠️ Ressemble à : {{ mp.sim }}</span></sc-if><input class="input" list="liste-thes" value="{{ mp.mgVal }}" onInput="{{ mp.setMg }}" placeholder="C’est en fait… (thé du catalogue)" aria-label="Fusionner dans" style="flex: 1; min-width: 200px; padding: 7px 12px;"><button class="btn btn-secondary" onClick="{{ mp.merge }}" style="white-space: nowrap;">🔀 Fusionner</button></div></sc-if>
+              </div>
             </sc-for>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="font-size: 22px; margin: 0;">🗒️ Historique de modération</h2>
+            <sc-if value="{{ mdNoHist }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune action pour l’instant.</p></sc-if>
+            <sc-for list="{{ mdHist }}" as="mh" hint-placeholder-count="3"><div style="display: flex; gap: 12px; font-size: 14px; padding: 4px 0; border-top: 1px solid var(--color-divider);"><span style="opacity: .6; white-space: nowrap;">{{ mh.when }}</span><span>{{ mh.txt }}</span></div></sc-for>
           </section>
         </sc-if>
         <sc-if value="{{ tabJeuOn }}" hint-placeholder-val="{{ false }}">
@@ -4521,7 +4572,16 @@ class Component extends DCLogic {
     const q = this.norm(this.state.adQ || '');
     const st = this.state.adSort || {};
     const sk = st.kind === kind ? st.key : (kind === 'log' ? 'date' : kind === 'cat' ? 'nom' : 'date'), sd = st.kind === kind ? st.dir : (kind === 'cat' ? 'asc' : 'desc');
-    let list = rows.filter(r => !q || this.norm(Object.values(r.v).join(' ')).indexOf(q) >= 0);
+    const fopts = kind === 'prod' ? [['noShop', 'Sans boutique'], ['noTags', 'Sans tags']].concat(this.allShops().map(x => ['s:' + x, '🏪 ' + x]))
+      : kind === 'sachet' ? [['noCity', 'Sans ville']].concat(this.opts().users.map(u => ['u:' + u, '👤 ' + u]), this.allShops().map(x => ['s:' + x, '🏪 ' + x]))
+      : kind === 'log' ? [['noNote', 'Sans note'], ['oddNote', 'Note au format inhabituel']].concat(this.opts().users.map(u => ['u:' + u, '👤 ' + u])) : [];
+    const flt = fopts.some(f => f[0] === this.state.adFilter) ? this.state.adFilter : '';
+    const fOk = r => { if (!flt) return true; const x = r.raw || {};
+      if (kind === 'prod') { if (flt === 'noShop') return !String(x.marque || '').trim(); if (flt === 'noTags') return !(x.tags || []).length; return this.upBrand(x.marque) === flt.slice(2); }
+      if (kind === 'sachet') { if (flt === 'noCity') return !String(x.ville || '').trim(); if (flt.indexOf('u:') === 0) return x.owner === flt.slice(2); return this.upBrand((prodBy[x.prodId] || {}).marque) === flt.slice(2); }
+      if (kind === 'log') { if (flt === 'noNote') return !String(x.note || '').trim(); if (flt === 'oddNote') return !!String(x.note || '').trim() && !/^[LR]{0,2}\d{1,2}([.,]\d{1,2})?$/i.test(String(x.note).trim()); return x.author === flt.slice(2); }
+      return true; };
+    let list = rows.filter(r => fOk(r) && (!q || this.norm(Object.values(r.v).join(' ')).indexOf(q) >= 0));
     list.sort((x, y) => { const A = x.v[sk], B = y.v[sk]; const na = A == null || A === '' || A === '—', nb = B == null || B === '' || B === '—'; if (na && nb) return 0; if (na) return 1; if (nb) return -1; const c = typeof A === 'number' && typeof B === 'number' ? A - B : String(A).localeCompare(String(B), 'fr', { numeric: true, sensitivity: 'base' }); return sd === 'asc' ? c : -c; });
     const sel = (this.state.adSel || []).filter(id => list.some(r => r.id === id));
     const shown = list.slice(0, 500);
@@ -4531,6 +4591,25 @@ class Component extends DCLogic {
     return {
       adKinds: K.map(x => { const on = x[0] === kind; return { icon: x[1], name: x[2], n: String(x[3]), sub: x[0] === 'sachet' ? a.sachets.filter(z => { const o = this.collection().find(c => c.id === z.id); return o && this.isEmptySachet(o); }).length + ' vides' : x[0] === 'log' ? new Set(a.logs.map(l => l.author)).size + ' auteurs' : x[0] === 'prod' ? new Set(a.prods.map(p => p.marque).filter(Boolean)).size + ' boutiques' : 'ajouts des membres', on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', pick: () => this.setState({ adKind: x[0], adSel: [], adQ: '' }) }; }),
       adKindName: kindName, adQ: this.state.adQ || '', setAdQ: e => this.setState({ adQ: e.target.value }),
+      adHasFilters: fopts.length > 0, adFilterOpts: [{ v: '', l: 'Tout afficher' }].concat(fopts.map(f => ({ v: f[0], l: f[1] }))), adFilter: flt, setAdFilter: e => this.setState({ adFilter: e.target.value, adSel: [] }),
+      ...(() => {
+        if (!sel.length || (kind !== 'log' && kind !== 'prod')) return { adLogOps: false, adProdOps: false, adAuthOpts: [], adLotOpts: [], adTagOpts: [] };
+        if (kind === 'log') {
+          const users = this.opts().users.filter(Boolean); const au = users.indexOf(this.state.adBAuth) >= 0 ? this.state.adBAuth : users[0];
+          const lots = a.sachets.map(z => ({ v: z.id, l: (((prodBy[z.prodId] || {}).nom) || ((prodBy[z.prodId] || {}).the) || '?') + ' — ' + (z.code || '') + ' (' + z.owner + ')' })).sort((x, y) => x.l.localeCompare(y.l, 'fr'));
+          const lot = lots.some(x => x.v === this.state.adBLot) ? this.state.adBLot : '';
+          return { adLogOps: true, adProdOps: false, adAuthOpts: users.map(u => ({ v: u, l: u })), adBAuth: au || '', setAdBAuth: e => this.setState({ adBAuth: e.target.value }),
+            adApplyAuth: () => { if (!au || !window.confirm('Mettre ' + au + ' comme auteur de ' + sel.length + ' dégustation(s) ? Il est retiré des participants s’il y était.')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => sel.indexOf(l.id) >= 0 ? Object.assign({}, l, { author: au, with: (l.with || []).filter(w => w !== au) }) : l) })); this.setState({ adSel: [], addMsg: '✓ Auteur appliqué.' }); },
+            adLotOpts: [{ v: '', l: '— Choisir un sachet —' }].concat(lots), adBLot: lot, setAdBLot: e => this.setState({ adBLot: e.target.value }),
+            adApplyLot: () => { if (!lot) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => sel.indexOf(l.id) >= 0 ? Object.assign({}, l, { lotId: lot }) : l) })); this.setState({ adSel: [], addMsg: '✓ Sachet appliqué.' }); }, adTagOpts: [] };
+        }
+        const tags = this.canonTags(); const tg = tags.indexOf(this.state.adBTag) >= 0 ? this.state.adBTag : '';
+        return { adLogOps: false, adProdOps: true, adAuthOpts: [], adLotOpts: [], adBThe: this.state.adBThe || '', setAdBThe: e => this.setState({ adBThe: e.target.value }),
+          adApplyThe: () => { const t = String(this.state.adBThe || '').trim(); if (!t) return; if (!this.famOf(t)) { window.alert('« ' + t + ' » n’est pas dans le catalogue.'); return; } const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 ? Object.assign({}, pp, { the: t, variante: '' }) : pp) })); this.setState({ adSel: [], adBThe: '', addMsg: '✓ Thé du catalogue appliqué.' }); },
+          adTagOpts: [{ v: '', l: '— Choisir un tag —' }].concat(tags.map(t => ({ v: t, l: t }))), adBTag: tg, setAdBTag: e => this.setState({ adBTag: e.target.value }),
+          adAddTag: () => { if (!tg) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 && (pp.tags || []).indexOf(tg) < 0 ? Object.assign({}, pp, { tags: (pp.tags || []).concat([tg]) }) : pp) })); this.setState({ addMsg: '✓ Tag « ' + tg + ' » ajouté.' }); },
+          adDelTag: () => { if (!tg) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 && (pp.tags || []).indexOf(tg) >= 0 ? Object.assign({}, pp, { tags: pp.tags.filter(x => x !== tg) }) : pp) })); this.setState({ addMsg: '✓ Tag « ' + tg + ' » retiré.' }); } };
+      })(),
       adCount: list.length + ' ligne' + (list.length > 1 ? 's' : '') + (q ? ' sur ' + rows.length : ''),
       adMore: list.length > 500 ? 'Seules les 500 premières lignes sont affichées : affinez la recherche.' : '',
       adCols: cols.map(c => ({ label: c[1], arrow: sk === c[0] ? (sd === 'asc' ? ' ↑' : ' ↓') : '', sort: () => this.setState({ adSort: { kind: kind, key: c[0], dir: sk === c[0] && sd === 'desc' ? 'asc' : sk === c[0] ? 'desc' : (c[0] === 'nom' || c[0] === 'code' ? 'asc' : 'desc') } }) })),
@@ -4826,6 +4905,73 @@ class Component extends DCLogic {
       erClear: async () => { if (!L.length || !window.confirm('Effacer tout le journal d’erreurs ?')) return; const { error } = await this.sb.from('mdt_errors').delete().gte('id', 0); if (error) window.alert(error.message); this.loadErrors(); } };
   }
   canonUser(n) { const u = this.opts().users.find(x => this.norm(x) === this.norm(n)); return u || n; }
+  memberInfo(u) { return (this._members || []).find(m => m.nom === u) || {}; }
+  modLog(action, target) {
+    const me = this.me(); if (!me || !this.isMod(me)) return;
+    const all = ((this.getAdds().options || {}).modlog || []).concat([{ id: 'm' + Date.now().toString(36) + Math.floor(Math.random() * 1000), by: me, at: new Date().toISOString(), action: action, target: target || '' }]);
+    this.setOpt('modlog', this.v2 ? all : all.slice(-300));
+  }
+  async loadAdminCounts(force) {
+    if (!this.sb || !this._v2Tables || !this.isAdmin(this.me())) return; if (!force && Date.now() - (this._admCntAt || 0) < 300000) return; this._admCntAt = Date.now();
+    try { const { count } = await this.sb.from('mdt_errors').select('id', { count: 'exact', head: true }).gt('ts', new Date(Date.now() - 864e5).toISOString()); this.setState({ admErr24: count || 0 }); } catch (e) {}
+  }
+  admAlerts() {
+    const me = this.me(); if (!me || !this.isMod(me)) return 0; const a = this.getAdds();
+    const rep = this.reports().filter(r => r.status === 'open').length;
+    const pend = (a.teas || []).filter(t => t.pending).length + (a.decl || []).filter(d => d.pending).length;
+    return rep + pend + (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0);
+  }
+  similarNames(name, list) {
+    const n = this.norm(name).replace(/[^a-z0-9]/g, ''); if (n.length < 3) return [];
+    const lev = (x, y) => { if (Math.abs(x.length - y.length) > 2) return 9; const d = []; for (let i = 0; i <= x.length; i++) d[i] = [i]; for (let j = 1; j <= y.length; j++) d[0][j] = j;
+      for (let i = 1; i <= x.length; i++) for (let j = 1; j <= y.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (x[i - 1] === y[j - 1] ? 0 : 1)); return d[x.length][y.length]; };
+    return list.filter(x => { const k = this.norm(x).replace(/[^a-z0-9]/g, ''); return k && k !== n && ((k.length >= 4 && (k.indexOf(n) >= 0 || n.indexOf(k) >= 0)) || (n.length >= 5 && lev(k, n) <= 2)); });
+  }
+  allCatalogNames() { const out = []; Object.keys(this.families).forEach(k => this.listFor(k, true).forEach(t => { if (out.indexOf(t.name) < 0) out.push(t.name); })); return out; }
+  dashView() {
+    const me = this.me(); const a = this.getAdds();
+    const rep = this.reports().filter(r => r.status === 'open').length;
+    const pend = (a.teas || []).filter(t => t.pending).length + (a.decl || []).filter(d => d.pending).length;
+    const M = this._members || []; const week = Date.now() - 7 * 864e5;
+    const fresh = M.filter(m => m.created_at && Date.parse(m.created_at) > week);
+    const active = M.filter(m => m.last_seen && Date.parse(m.last_seen) > week).length;
+    const qual = this.qualityView(true);
+    const go = t => () => this.setState({ addTab: t, addMsg: '' });
+    const card = (icon, n, label, sub, tab, warn) => ({ icon: icon, n: String(n), label: label, sub: sub, go: go(tab), bg: warn && n ? '#fbebeb' : 'var(--color-bg)', ring: warn && n ? 'inset 0 0 0 1.5px #c0392b55' : 'inset 0 0 0 1px var(--color-divider)' });
+    const ann = (a.options || {}).announce || {}; const bw = (a.options || {}).bannedWords || [];
+    return { dbCards: [card('🚩', rep, 'Signalements ouverts', 'à traiter', 'mod', true), card('⏳', pend, 'Ajouts à valider', 'thés et variantes', 'mod', true),
+        card('🐞', this.state.admErr24 || 0, 'Erreurs (24 h)', this._v2Tables ? 'plantages remontés' : 'nouveau stockage requis', 'err', true),
+        card('👋', fresh.length, 'Nouveaux membres', '7 derniers jours' + (fresh.length ? ' : ' + fresh.map(m => m.nom).join(', ') : ''), 'usr', false),
+        card('🟢', active, 'Membres actifs', 'venus ces 7 jours', 'usr', false), card('🧽', qual.total, 'À compléter', 'données à corriger', 'qual', false)],
+      annDraft: this.state.annDraft != null ? this.state.annDraft : (ann.text || ''), setAnnDraft: e => this.setState({ annDraft: e.target.value }), annOn: !!ann.text,
+      annInfo: ann.text ? 'En ligne depuis le ' + this.fmtDate(String(ann.at || '').slice(0, 10)) + (ann.by ? ' (' + ann.by + ')' : '') : 'Aucune annonce en ligne.',
+      annPublish: () => { const t = String(this.state.annDraft != null ? this.state.annDraft : ann.text || '').trim(); if (!t) return; this.setOpt('announce', { text: t.slice(0, 400), at: new Date().toISOString(), by: me }); this.setState({ annDraft: null }); this.flash('Annonce publiée.'); },
+      annRemove: () => { this.setOpt('announce', {}); this.setState({ annDraft: null }); this.flash('Annonce retirée.'); },
+      bwList: bw.map(w => ({ w: w, del: () => this.setOpt('bannedWords', bw.filter(x => x !== w)) })), bwEmpty: !bw.length,
+      bwDraft: this.state.bwDraft || '', setBwDraft: e => this.setState({ bwDraft: e.target.value }),
+      bwAdd: () => { const ws = String(this.state.bwDraft || '').split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(x => x.length >= 2 && bw.indexOf(x) < 0); if (!ws.length) return; this.setOpt('bannedWords', bw.concat(ws)); this.setState({ bwDraft: '' }); },
+      bwKey: e => { if (e.key === 'Enter') { e.preventDefault(); const ws = String(this.state.bwDraft || '').split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(x => x.length >= 2 && bw.indexOf(x) < 0); if (ws.length) { this.setOpt('bannedWords', bw.concat(ws)); this.setState({ bwDraft: '' }); } } },
+      bwNote: this.v2 ? 'Appliqué par la base : tout texte (avis, description, nom de salon, prénom à l’inscription…) contenant un de ces mots est refusé.' : 'Sera appliqué par la base une fois le script supabase-v2.sql relancé.' };
+  }
+  qualityView(countOnly) {
+    const a = this.getAdds(); const prodBy = {}; a.prods.forEach(p => { prodBy[p.id] = p; });
+    const name = p => (p && (p.nom || p.the)) || '?';
+    const fix = (kind, q) => () => this.setState({ addTab: 'new', adKind: kind, adQ: q, adSel: [], adFilter: '' });
+    const groups = [
+      { k: 'noCity', title: '📍 Sachets sans ville', items: a.sachets.filter(x => !String(x.ville || '').trim()).map(x => ({ label: name(prodBy[x.prodId]) + ' — ' + (x.code || '') + ' (' + x.owner + ')', fix: fix('sachet', x.code || name(prodBy[x.prodId])) })), bulk: 'Sélectionnez-les dans Données → Sachets (filtre « Sans ville ») puis « 📍 Ville → Appliquer ».', filter: ['sachet', 'noCity'] },
+      { k: 'noShop', title: '🏪 Thés sans boutique', items: a.prods.filter(p => !String(p.marque || '').trim()).map(p => ({ label: name(p), fix: fix('prod', name(p)) })), filter: ['prod', 'noShop'] },
+      { k: 'noTags', title: '🏷️ Thés sans tags de goût', items: a.prods.filter(p => !(p.tags || []).length).map(p => ({ label: name(p) + (p.marque ? ' · ' + p.marque : ''), fix: fix('prod', name(p)) })), filter: ['prod', 'noTags'] },
+      { k: 'noNote', title: '⭐ Dégustations sans note', items: a.logs.filter(l => !String(l.note || '').trim() && !l.live).map(l => ({ label: (l.date ? this.fmtDate(l.date) + ' · ' : '') + l.author + ' · ' + name(prodBy[(a.sachets.find(x => x.id === l.lotId) || {}).prodId]), fix: fix('log', l.author) })), filter: ['log', 'noNote'] },
+      { k: 'oddNote', title: '🔢 Notes au format inhabituel', items: a.logs.filter(l => String(l.note || '').trim() && !/^[LR]{0,2}\d{1,2}([.,]\d{1,2})?$/i.test(String(l.note).trim())).map(l => ({ label: '« ' + l.note + ' » · ' + (l.date ? this.fmtDate(l.date) + ' · ' : '') + l.author, fix: fix('log', String(l.note)) })), filter: ['log', 'oddNote'] }
+    ];
+    const total = groups.reduce((t, g) => t + g.items.length, 0);
+    if (countOnly) return { total: total };
+    const fNotes = a.logs.filter(l => /^F/i.test(String(l.note || '').trim()));
+    return { qTotal: String(total), qGroups: groups.map(g => ({ title: g.title, n: String(g.items.length), none: !g.items.length, items: g.items.slice(0, 30), more: g.items.length > 30 ? '… et ' + (g.items.length - 30) + ' autres' : '', hasMore: g.items.length > 30, hint: g.bulk || '', hasHint: !!g.bulk && g.items.length > 0,
+        filterAll: () => this.setState({ addTab: 'new', adKind: g.filter[0], adFilter: g.filter[1], adQ: '', adSel: [] }), hasItems: g.items.length > 0 })),
+      qHasF: fNotes.length > 0, qFTxt: fNotes.length + ' note' + (fNotes.length > 1 ? 's' : '') + ' commencent par F (ancien code « loupé » ?)',
+      qConvF: () => { if (!window.confirm('Remplacer le F par L (loupé) sur ' + fNotes.length + ' note(s) ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => /^F/i.test(String(l.note || '').trim()) ? Object.assign({}, l, { note: this.noteJoin(this.noteSplit(String(l.note).trim()).pre.replace(/F/g, 'L'), this.noteSplit(String(l.note).trim()).num) }) : l) })); this.flash('Notes converties.'); } };
+  }
   brandKey(m) { return this.norm(m).replace(/[^a-z0-9]/g, ''); }
   brandView() {
     const a = this.getAdds(); const groups = {}; let none = 0;
@@ -4887,16 +5033,24 @@ class Component extends DCLogic {
           if (r.t === 'log') this.setAdds(Object.assign({}, b, { logs: b.logs.filter(l => l.id !== r.tid) }));
           else if (r.t === 'event') this.setAdds(Object.assign({}, b, { events: (b.events || []).filter(e => e.id !== r.tid) }));
           else if (r.t === 'user') { const pr = Object.assign({}, (b.options || {}).profiles || {}); pr[r.who] = Object.assign({}, pr[r.who], { desc: '' }); this.setOpt('profiles', pr); }
-          setR(r.id, { status: 'done', action: 'supprimé' }); },
-        close: () => setR(r.id, { status: 'done', action: 'classé' }) }; });
+          setR(r.id, { status: 'done', action: 'supprimé' }); this.modLog(r.t === 'user' ? 'a effacé la description (signalement)' : 'a supprimé le contenu signalé', r.label); },
+        close: () => { setR(r.id, { status: 'done', action: 'classé' }); this.modLog('a classé le signalement', r.label); } }; });
     const pend = [];
     (a.teas || []).forEach(t => { if (t.pending) pend.push({ label: '🍵 ' + t.nom, sub: 'Thé · famille ' + ((this.families[t.famille] || {}).name || t.famille) + (t.origine || t.pays ? ' · ' + [t.origine, t.pays].filter(Boolean).join(', ') : ''), list: 'teas', ref: t }); });
     (a.decl || []).forEach(d => { if (d.pending) pend.push({ label: '🌿 ' + d.nom, sub: 'Variante de « ' + d.the + ' »', list: 'decl', ref: d }); });
     return { mdReports: rows, mdNoReports: !rows.length, mdNRep: String(rows.length),
       mdPending: pend.map(x => ({ label: x.label, sub: x.sub,
-        ok: () => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).map(z => { if (z !== x.ref) return z; const c = Object.assign({}, z); delete c.pending; return c; }) })); },
-        no: () => { if (!window.confirm('Refuser et retirer « ' + x.ref.nom + ' » du catalogue ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).filter(z => z !== x.ref) })); } })),
-      mdNoPending: !pend.length, mdNPend: String(pend.length), mdV1: !this.v2 };
+        ok: () => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).map(z => { if (z !== x.ref) return z; const c = Object.assign({}, z); delete c.pending; return c; }) })); this.modLog('a validé l’ajout au catalogue', x.ref.nom); },
+        no: () => { if (!window.confirm('Refuser et retirer « ' + x.ref.nom + ' » du catalogue ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).filter(z => z !== x.ref) })); this.modLog('a refusé l’ajout au catalogue', x.ref.nom); },
+        isTea: x.list === 'teas', sim: x.list === 'teas' ? this.similarNames(x.ref.nom, this.allCatalogNames().filter(n => n !== x.ref.nom)).slice(0, 3).join(', ') : '',
+        mgVal: ((this.state.mdMerge || {})[x.ref.nom]) || '', setMg: e => { const v = e.target.value; this.setState(st => ({ mdMerge: Object.assign({}, st.mdMerge, { [x.ref.nom]: v }) })); },
+        merge: () => { const tgt = String(((this.state.mdMerge || {})[x.ref.nom]) || '').trim(); if (!tgt) { window.alert('Choisissez le thé du catalogue à garder.'); return; }
+          if (this.allCatalogNames().indexOf(tgt) < 0) { window.alert('« ' + tgt + ' » n’est pas dans le catalogue.'); return; }
+          if (!window.confirm('Fusionner « ' + x.ref.nom + ' » dans « ' + tgt + ' » ? Les thés du commerce rattachés passeront sur « ' + tgt + ' ».')) return;
+          const b = this.getAdds(); this.setAdds(Object.assign({}, b, { teas: (b.teas || []).filter(z => z !== x.ref), prods: b.prods.map(pp => this.norm(pp.the) === this.norm(x.ref.nom) ? Object.assign({}, pp, { the: tgt }) : pp), decl: (b.decl || []).map(dd => this.norm(dd.the) === this.norm(x.ref.nom) ? Object.assign({}, dd, { the: tgt }) : dd) }));
+          this.modLog('a fusionné un ajout au catalogue', x.ref.nom + ' → ' + tgt); } })),
+      mdHist: (((a.options || {}).modlog) || []).slice().sort((x, y) => String(y.at).localeCompare(String(x.at))).slice(0, 60).map(h => ({ txt: h.by + ' ' + h.action + (h.target ? ' : ' + h.target : ''), when: (() => { try { return new Date(h.at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } })() })),
+      mdNoPending: !pend.length, mdNPend: String(pend.length), mdV1: !this.v2, mdNoHist: !(((a.options || {}).modlog) || []).length };
   }
   // visibilité : 'public' (toute la maison), 'salons' (mes salons + mes amis), 'friends' (mes amis seulement), 'private'
   visAllows(vis, owner, viewer) {
@@ -4989,7 +5143,7 @@ class Component extends DCLogic {
     items.sort((x, y) => y.ts - x.ts);
     const EMO = ['🍵', '❤️', '🤯', '😂'];
     return items.slice(0, 40).map(it => { const r = R[it.key] || {};
-      return Object.assign({}, it, { goWho: () => { this.setState({ view: 'profile', profUser: it.who, profEdit: false }); try { window.scrollTo(0, 0); } catch (e) {} }, canModDel: this.isMod(me) && /^[le]:/.test(it.key), modDel: () => { if (!window.confirm('Supprimer cet élément du fil pour tout le monde ?')) return; const b = this.getAdds(); const id = it.key.slice(2); if (it.key.charAt(0) === 'l') this.setAdds(Object.assign({}, b, { logs: b.logs.filter(x => x.id !== id) })); else this.setAdds(Object.assign({}, b, { events: (b.events || []).filter(x => x.id !== id) })); }, canReport: !!me && !!this.state.session && it.who !== me && /^[le]:/.test(it.key), report: () => this.report({ t: it.key.charAt(0) === 'l' ? 'log' : 'event', id: it.key.slice(2), who: it.who, label: (it.who + ' · ' + it.txt).slice(0, 90) }), initial: String(it.who).charAt(0).toUpperCase(), when: this.relTime(it.ts), hasNote: !!it.note, hasQuote: !!it.quote, link: !!it.open, plain: !it.open, open: it.open || (() => {}),
+      return Object.assign({}, it, { goWho: () => { this.setState({ view: 'profile', profUser: it.who, profEdit: false }); try { window.scrollTo(0, 0); } catch (e) {} }, canModDel: this.isMod(me) && /^[le]:/.test(it.key), modDel: () => { if (!window.confirm('Supprimer cet élément du fil pour tout le monde ?')) return; const b = this.getAdds(); const id = it.key.slice(2); if (it.key.charAt(0) === 'l') this.setAdds(Object.assign({}, b, { logs: b.logs.filter(x => x.id !== id) })); else this.setAdds(Object.assign({}, b, { events: (b.events || []).filter(x => x.id !== id) })); if (it.who !== me) this.modLog('a supprimé du fil', it.who + ' · ' + String(it.txt).slice(0, 60)); }, canReport: !!me && !!this.state.session && it.who !== me && /^[le]:/.test(it.key), report: () => this.report({ t: it.key.charAt(0) === 'l' ? 'log' : 'event', id: it.key.slice(2), who: it.who, label: (it.who + ' · ' + it.txt).slice(0, 90) }), initial: String(it.who).charAt(0).toUpperCase(), when: this.relTime(it.ts), hasNote: !!it.note, hasQuote: !!it.quote, link: !!it.open, plain: !it.open, open: it.open || (() => {}),
         reacts: EMO.map(em => { const who = Object.keys(r).filter(u => r[u] === em); const mine = r[me] === em;
           return { em: em, n: who.length ? String(who.length) : '', title: who.length ? who.join(', ') : 'Réagir', bg: mine ? 'var(--color-accent-100)' : 'transparent', ring: mine ? 'inset 0 0 0 1.5px var(--color-accent-700)' : 'inset 0 0 0 1px var(--color-divider)',
             toggle: () => { const all = Object.assign({}, (this.getAdds().options || {}).reacts || {}); const cur = Object.assign({}, all[it.key] || {}); if (cur[me] === em) delete cur[me]; else cur[me] = em; all[it.key] = cur; this.setOpt('reacts', all); } }; }) }); });
@@ -5823,7 +5977,7 @@ class Component extends DCLogic {
     try { const { data: st, error: stErr } = await this.sb.from('mdt_items').select('data').eq('kind', 'opt').eq('id', 'storage').maybeSingle(); if (!stErr) { this._v2Tables = true; if (st && st.data && st.data.v === 2) this.v2 = true; } } catch (e) {}
     window.addEventListener('error', ev => this.logError(ev.message, ev.error && ev.error.stack));
     window.addEventListener('unhandledrejection', ev => this.logError('Promesse : ' + ((ev.reason && ev.reason.message) || ev.reason), ev.reason && ev.reason.stack));
-    if (this.v2 && data.session) { try { const { data: reg } = await this.sb.rpc('mdt_register'); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) this._regName = reg.nom; } catch (e) {} }
+    if (this.v2 && data.session) { try { const { data: reg } = await this.sb.rpc('mdt_register'); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) { this._regName = reg.nom; if (reg.suspended) this.setState({ suspended: true }); } } catch (e) {} }
     this.setState({ cloud: true, cloudReady: true, session: data.session || null, v2: !!this.v2, v2Tables: !!this._v2Tables });
     if (/[?&]confirmed=1/.test(window.location.search)) { try { history.replaceState(null, '', this.siteUrl() + window.location.hash); } catch (e) {} this.setState({ view: data.session ? 'home' : 'login', authMode: 'signin' }); this.flash(data.session ? 'Adresse e-mail confirmée, bienvenue ! 🍵' : 'Adresse e-mail confirmée : vous pouvez vous connecter.'); }
     this.pullCloud(!!data.session);
@@ -5860,13 +6014,14 @@ class Component extends DCLogic {
     Object.keys(o.guessGames || {}).forEach(k => { if (del.indexOf(k) < 0) put('game', k, o.guessGames[k]); });
     Object.keys(o.reacts || {}).forEach(k => Object.keys(o.reacts[k] || {}).forEach(u => put('react', k + '|' + u, { k: k, u: u, e: o.reacts[k][u] }, u)));
     (o.reports || []).forEach(r => put('report', r.id, r, r.by));
-    const SKIP = ['profiles', 'friends', 'salons', 'guessGames', 'guessDeleted', 'reacts', 'reports', 'users', 'userIds', 'admins', 'mods'];
+    (o.modlog || []).forEach(r => put('modlog', r.id, r, r.by));
+    const SKIP = ['profiles', 'friends', 'salons', 'guessGames', 'guessDeleted', 'reacts', 'reports', 'modlog', 'users', 'userIds', 'admins', 'mods'];
     Object.keys(o).forEach(k => { if (SKIP.indexOf(k) < 0) put('opt', k, { v: o[k] }); });
     return rows;
   }
   // lignes serveur → payload
   v2Assemble(rows, members) {
-    const a = { prods: [], sachets: [], gear: [], logs: [], events: [], teas: [], decl: [], over: {}, owned: [], options: { profiles: {}, friends: [], salons: [], guessGames: {}, reacts: {}, reports: [] } };
+    const a = { prods: [], sachets: [], gear: [], logs: [], events: [], teas: [], decl: [], over: {}, owned: [], options: { profiles: {}, friends: [], salons: [], guessGames: {}, reacts: {}, reports: [], modlog: [] } };
     const price = {}; const live = [];
     rows.forEach(r => { if (!r.deleted) live.push(r); });
     live.forEach(r => { if (r.kind === 'price') price[r.id] = r.data && r.data.v; });
@@ -5888,6 +6043,7 @@ class Component extends DCLogic {
         case 'game': a.options.guessGames[r.id] = d; break;
         case 'react': (a.options.reacts[d.k] = a.options.reacts[d.k] || {})[d.u] = d.e; break;
         case 'report': a.options.reports.push(d); break;
+        case 'modlog': a.options.modlog.push(d); break;
         case 'opt': if (r.id === 'owned') a.owned = d.v || []; else if (r.id !== 'storage') a.options[r.id] = d.v; break;
       }
     });
@@ -5929,6 +6085,7 @@ class Component extends DCLogic {
       try { localStorage.setItem('the-ajouts', JSON.stringify(a)); } catch (e) {}
       if (!this._hashDone) { this._hashDone = true; try { this.applyHash(); } catch (e) { console.warn(e); } }
       this.setState({ syncAt: new Date(), syncErr: '' });
+      this.loadAdminCounts();
       if (!this._v2Fixed && this.state.session) { this._v2Fixed = true; setTimeout(() => { try { this.fixLogWith(); } catch (e) {} }, 0); }
     } catch (e) { console.warn(e); this.setState({ syncErr: String(e.message || e) }); }
     finally { this._v2Pulling = false; }
@@ -7445,7 +7602,7 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['new', 'mod', 'cat', 'mrg', 'mrq', 'usr', 'opt', 'jrn', 'jeu', 'err', 'inf'] : ['mod'];
+    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['dash', 'new', 'mod', 'qual', 'cat', 'mrg', 'mrq', 'usr', 'opt', 'jrn', 'jeu', 'err', 'inf'] : ['mod'];
       if (this.state.view === 'admin' && !this.isMod(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = ADM[0]; }
@@ -7704,10 +7861,10 @@ class Component extends DCLogic {
       isAdd: v === 'add' || v === 'admin', isAdminView: v === 'admin', isAddView: v === 'add',
       addMaxW: v === 'admin' ? '1240px' : '860px',
       addModes: [['lot', '🛍️', 'Un thé et son sachet', 'Ce que vous avez acheté'], ['tea', '📖', 'Un thé au catalogue', 'Nouveau type de thé ou nouvelle variante']].map(x => { const on = (this.state.addTab || 'lot') === x[0]; return { icon: x[1], name: x[2], sub: x[3], on: on, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
-      menuAdmin: () => this.setState({ menuOpen: false, view: 'admin', addTab: this.isAdmin(this.me()) ? 'new' : 'mod', addMsg: '' }),
+      menuAdmin: () => { this.loadAdminCounts(true); this.setState({ menuOpen: false, view: 'admin', addTab: this.isAdmin(this.me()) ? 'dash' : 'mod', addMsg: '' }); },
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération', 'Signalements, ajouts à valider'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: [['dash', '🏠', 'Accueil', 'À traiter, annonce, mots interdits'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations'], ['mod', '🚩', 'Modération' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0) > 0 ? ' (' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0)) + ')' : ''), 'Signalements, ajouts à valider'], ['qual', '🧽', 'Qualité', 'Données à compléter'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Accès admin'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
@@ -7744,6 +7901,9 @@ class Component extends DCLogic {
       pe: v === 'prod' ? this.prodEditVals() : { set: {}, chips: [] },
       isSharedLog: v === 'sharedLog', sh: v === 'sharedLog' ? this.sharedLogView(me) : { details: [] },
       shareToast: this.state.shareToast || '',
+      ...(() => { const ann = (this.getAdds().options || {}).announce || {}; let hidden = false; try { hidden = !!ann.at && localStorage.getItem('mdt-ann') === ann.at; } catch (e) {}
+        return { annShow: !!ann.text && !hidden && !this.state.annHidden, annText: ann.text || '', annHide: () => { try { localStorage.setItem('mdt-ann', ann.at || ''); } catch (e) {} this.setState({ annHidden: true }); },
+          suspShow: !!this.state.suspended }; })(),
       dlShops: Array.from(new Set(this.getAdds().prods.map(p => p.marque).filter(Boolean))).sort(), dlCities: Array.from(new Set(this.getAdds().prods.map(p => p.ville).filter(Boolean).concat(Object.values(((this.getAdds().options || {}).shopCities) || {}).reduce((t, l) => t.concat(l), [])))).sort((x, y) => x.localeCompare(y, 'fr')), newVer: !!this.state.newVer, doUpdate: () => this.applyUpdate(true),
       menuGear: () => this.setState({ menuOpen: false, view: 'gear', gearEdit: null, gearMsg: '' }),
       isGear: v === 'gear', isGearItem: v === 'gearItem',
@@ -7885,10 +8045,10 @@ class Component extends DCLogic {
       pf: v === 'profile' ? this.profileView(me) : {},
       pfSafe: (() => { const u = this.state.profUser || me; if (v !== 'profile' || !me || !this.state.session || u === me) return { show: false }; const bl = this.blockedOf(me).indexOf(u) >= 0;
         const pdesc = ((((this.getAdds().options || {}).profiles || {})[u]) || {}).desc;
-        return { canClear: this.isMod(me) && !!pdesc, clear: () => { if (!window.confirm('Effacer la description de ' + u + ' ?')) return; const pr = Object.assign({}, (this.getAdds().options || {}).profiles || {}); pr[u] = Object.assign({}, pr[u], { desc: '' }); this.setOpt('profiles', pr); this.flash('Description de ' + u + ' effacée.'); },
+        return { canClear: this.isMod(me) && !!pdesc, clear: () => { if (!window.confirm('Effacer la description de ' + u + ' ?')) return; const pr = Object.assign({}, (this.getAdds().options || {}).profiles || {}); pr[u] = Object.assign({}, pr[u], { desc: '' }); this.setOpt('profiles', pr); this.modLog('a effacé la description de', u); this.flash('Description de ' + u + ' effacée.'); },
           show: true, name: u, blocked: bl, blockTxt: bl ? 'Débloquer' : '🚫 Bloquer', block: () => this.toggleBlock(u), report: () => this.report({ t: 'user', who: u, label: 'le profil de ' + u }) }; })(),
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
-      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
+      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabDashOn: this.state.addTab === 'dash', ...(v === 'admin' && this.state.addTab === 'dash' ? this.dashView() : { dbCards: [], bwList: [] }), tabQualOn: this.state.addTab === 'qual', ...(v === 'admin' && this.state.addTab === 'qual' ? this.qualityView() : { qGroups: [] }), tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
       infPets: this.state.addTab !== 'inf' ? [] : (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet').sort((x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearAlpha(x, y)).map(g => { const st = this.petStats(g); const T = this.petTemper(g);
         const upd = patch => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: b.gear.map(x => { if (x.id !== g.id) return x; const c = Object.assign({}, x, patch); Object.keys(patch).forEach(k => { if (patch[k] == null) delete c[k]; }); return c; }) })); };
         return { name: g.name, owner: g.owner, sub: 'Nv. ' + st.lvl + ' · ' + st.xp + ' XP · ' + st.hp + ' PV · ' + T.icon + ' ' + T.name + (g.temper ? ' (choisi)' : ' (tiré au hasard)') + (g.petReset ? ' · remis à zéro le ' + this.fmtDate(g.petReset.day) : ''),
@@ -7971,7 +8131,7 @@ class Component extends DCLogic {
       scopeMe: () => this.setState({ scope: 'me' }), scopeAll: () => this.setState({ scope: 'all' }),
       scopeMeOn: scope === 'me', scopeMeOff: scope !== 'me', scopeAllOn: scope === 'all', scopeAllOff: scope !== 'all',
       tabOpt: () => this.setState({ addTab: 'opt', addMsg: '' }),
-      isAdmin: this.isAdmin(me), isModMenu: this.isMod(me), admMenuTxt: this.isAdmin(me) ? '🛡️ Administration' : '🚩 Modération',
+      isAdmin: this.isAdmin(me), isModMenu: this.isMod(me), admMenuTxt: (this.isAdmin(me) ? '🛡️ Administration' : '🚩 Modération') + (this.admAlerts() ? ' · ' + this.admAlerts() + ' à traiter' : ''), admDot: this.admAlerts() > 0,
       lfSpecOn: this.isAdmin(me) && !this.state.editLogId,
       admQ: this.state.admQ || '', setAdmQ: e => this.setState({ admQ: e.target.value }),
       ...(() => {
@@ -7983,7 +8143,17 @@ class Component extends DCLogic {
         return { admEmpty: !list.length, admUsers: list.map(u => {
           const isAdm = adm.indexOf(u) >= 0;
           const n = this.getAdds().sachets.filter(o => o.owner === u).length;
-          return { tag: this.userTag(u), initial: u.slice(0, 1).toUpperCase(), isAdm: isAdm, sub: n + (n > 1 ? ' sachets' : ' sachet') + (u === me ? ' · vous' : ''),
+          const nl = this.getAdds().logs.filter(l => l.author === u).length; const mi = this.memberInfo(u);
+          const nrep = this.reports().filter(r => r.who === u).length;
+          const ago = t => { if (!t) return ''; const d = Math.floor((Date.now() - Date.parse(t)) / 864e5); return d <= 0 ? 'aujourd’hui' : d === 1 ? 'hier' : 'il y a ' + d + ' j'; };
+          return { tag: this.userTag(u), initial: u.slice(0, 1).toUpperCase(), isAdm: isAdm,
+            sub: [n + (n > 1 ? ' sachets' : ' sachet'), nl + (nl > 1 ? ' dégustations' : ' dégustation'), mi.created_at ? 'inscrit le ' + new Date(mi.created_at).toLocaleDateString('fr-FR') : '', mi.last_seen ? 'vu ' + ago(mi.last_seen) : '', nrep ? '🚩 ' + nrep + ' signalement' + (nrep > 1 ? 's' : '') : '', u === me ? 'vous' : ''].filter(Boolean).join(' · '),
+            isSusp: !!mi.suspended, canSusp: !!this.v2 && !isAdm && u !== me, suspTxt: mi.suspended ? 'Réactiver' : 'Suspendre',
+            toggleSusp: async () => { const on = !mi.suspended; if (on && !window.confirm('Suspendre ' + u + ' ? Il pourra toujours consulter le site mais plus rien ajouter ni modifier.')) return;
+              const { error } = await this.sb.rpc('mdt_set_suspended', { n: u, s: on }); if (error) { window.alert(error.message); return; } this.modLog(on ? 'a suspendu le compte' : 'a réactivé le compte', u); this._members = null; this.pullV2(true); },
+            canDelUser: !!this.v2 && !isAdm && u !== me,
+            delUser: async () => { const t = window.prompt('Supprimer définitivement le compte de ' + u + ' et ses données personnelles (sachets, dégustations, matériel, profil, amis) ? Irréversible.\n\nTapez son prénom pour confirmer :', ''); if (t == null) return; if (t.trim().toLowerCase() !== u.toLowerCase()) { window.alert('Le prénom ne correspond pas : rien n’a été supprimé.'); return; }
+              const { error } = await this.sb.rpc('mdt_delete_user', { n: u }); if (error) { window.alert(error.message); return; } this.modLog('a supprimé le compte', u); this._members = null; this._v2Since = null; this.pullV2(true); this.flash('Compte de ' + u + ' supprimé.'); },
             canToggle: !(isAdm && (u === me || adm.length <= 1)),
             btnTxt: isAdm ? 'Retirer l’accès admin' : 'Donner l’accès admin', btnClass: isAdm ? 'btn btn-ghost' : 'btn btn-secondary',
             idle: this.state.admAsk !== u, asking: this.state.admAsk === u,
@@ -7991,7 +8161,7 @@ class Component extends DCLogic {
             askTxt: isAdm ? 'Retirer l’accès admin à ' + u + ' ? Il ne verra plus l’administration.' : 'Donner l’accès admin à ' + u + ' ? Il pourra modifier le catalogue, les réglages et les accès.',
             confirmTxt: isAdm ? 'Oui, retirer' : 'Oui, donner l’accès',
             confirm: () => { this.setState({ admAsk: null }); if (this.v2) this.setRole(u, isAdm ? 'member' : 'admin'); else this.setOpt('admins', isAdm ? adm.filter(x => x !== u) : adm.concat([u])); },
-            isModo: !isAdm && this.isMod(u), canModo: !!this.v2 && !isAdm, modoTxt: this.isMod(u) && !isAdm ? 'Retirer modérateur' : 'Nommer modérateur', toggleModo: () => this.setRole(u, this.isMod(u) ? 'member' : 'moderator'),
+            isModo: !isAdm && this.isMod(u), canModo: !!this.v2 && !isAdm, modoTxt: this.isMod(u) && !isAdm ? 'Retirer modérateur' : 'Nommer modérateur', toggleModo: () => { this.modLog(this.isMod(u) ? 'a retiré le rôle modérateur' : 'a nommé modérateur', u); this.setRole(u, this.isMod(u) ? 'member' : 'moderator'); },
             canRemove: u !== me && !isAdm,
             remove: () => { if (!window.confirm('Retirer le compte « ' + u + ' » de la liste ? Ses thés et dégustations restent dans la collection.')) return; this.setOpt('users', this.opts().users.filter(x => x !== u)); } };
         }) };
@@ -8261,6 +8431,7 @@ class Component extends DCLogic {
         if (!String(fm.nom || '').trim()) { this.setState({ addMsg: 'Indiquez au moins un nom.' }); return; }
         const a = this.getAdds();
         if (this.famOf(fm.nom.trim())) { this.setState({ addMsg: 'Ce thé existe déjà dans le catalogue.' }); return; }
+        { const sim = this.similarNames(fm.nom.trim(), this.allCatalogNames()); if (sim.length && !window.confirm('« ' + fm.nom.trim() + ' » ressemble à : ' + sim.slice(0, 3).join(', ') + '.\nC’est bien un thé différent ? (Annuler pour vérifier)')) return; }
         const pend = !!this.v2 && !this.isMod(this.me());
         this.setAdds(Object.assign({}, a, { teas: a.teas.concat([Object.assign({ famille: fm.famille, nom: fm.nom.trim(), traduction: fm.traduction, origine: fm.origine, pays: fm.pays, province: fm.province, gout: fm.gout, recolte: fm.recolte }, pend ? { pending: true } : {})]) }));
         this.setState(s => ({ addMsg: '« ' + fm.nom.trim() + (pend ? ' » envoyé aux modérateurs : il apparaîtra pour tous une fois validé.' : ' » ajouté à la famille ' + this.families[fm.famille].name + '.'), form: Object.assign({}, s.form, { nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '' }) }));
@@ -8270,6 +8441,7 @@ class Component extends DCLogic {
         if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez la famille de thé.' }); return; }
         if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
         const a = this.getAdds();
+        if (String(fm.marque || '').trim() && this.allShops().indexOf(this.upBrand(fm.marque)) < 0) { const near = this.similarNames(fm.marque, this.allShops()); if (near.length && window.confirm('Boutique « ' + this.upBrand(fm.marque) + ' » : vouliez-vous dire « ' + near[0] + ' » ?\nOK = utiliser « ' + near[0] + ' », Annuler = garder votre saisie.')) fm.marque = near[0]; }
         const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], recoTemp: String(fm.recoTemp || '').trim(), recoQty: String(fm.recoQty || '').trim(), recoTimes: String(fm.recoTimes || '').trim(), commentaire: fm.prodComment || '' };
         let prods = a.prods.slice(), prodId = fm.prodId;
         if (prodId && prods.some(x => x.id === prodId)) {

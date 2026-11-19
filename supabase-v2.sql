@@ -19,6 +19,8 @@ create table if not exists public.maison_members (
 );
 alter table public.maison_members add column if not exists role text not null default 'member';
 alter table public.maison_members add column if not exists num text;
+alter table public.maison_members add column if not exists last_seen timestamptz;
+alter table public.maison_members add column if not exists suspended boolean not null default false;
 alter table public.maison_members enable row level security;
 revoke all on public.maison_members from anon, authenticated;
 
@@ -124,6 +126,7 @@ begin
   if k in ('cat', 'decl') and pending = 'true' then return o = me or public.mdt_is_mod(); end if;
   if k in ('prod', 'cat', 'decl', 'over', 'opt') then return true; end if;
   if k = 'report' then return o = me or public.mdt_is_mod(); end if;
+  if k = 'modlog' then return public.mdt_is_mod(); end if;        -- historique de modération
   if me is not null and me = any(p) then return true; end if;
   if k in ('sachet', 'log', 'gear') then return public.mdt_vis_ok(public.mdt_pref(o, 'contentVis', 'public'), o, me); end if;
   if k = 'price' then return public.mdt_vis_ok(public.mdt_pref(o, 'priceVis', 'public'), o, me); end if;
@@ -204,6 +207,20 @@ begin
 
   if auth.uid() is null or adm then return new; end if;            -- SQL Editor / admin
   if me is null then raise exception 'Compte non lié à un prénom : reconnectez-vous.'; end if;
+  -- garde-fous anti-abus
+  if exists (select 1 from public.maison_members where user_id = auth.uid() and suspended) then
+    raise exception 'Votre compte est suspendu : contactez un administrateur.';
+  end if;
+  if octet_length(d::text) > 100000 then raise exception 'Élément trop volumineux (texte ou image trop lourds).'; end if;
+  if tg_op = 'INSERT' and (select count(*) from public.mdt_items where updated_by = me and updated_at > now() - interval '1 minute') > 60 then
+    raise exception 'Trop d''ajouts en une minute : patientez un peu.';
+  end if;
+  if new.kind in ('profile', 'log', 'event', 'salon', 'cat', 'decl', 'prod', 'gear', 'sachet') and (tg_op = 'INSERT' or new.data is distinct from old.data) then
+    declare w text := public.mdt_banned(d::text); begin
+      if w is not null then raise exception 'Mot non autorisé : « % ».', w; end if;
+    end;
+  end if;
+  if new.kind = 'modlog' and (not modr or tg_op = 'UPDATE') then raise exception 'Réservé à la modération.'; end if;
 
   if tg_op = 'INSERT' then
     -- upsert sur une ligne existante : les contrôles se font dans la partie UPDATE (déclenchée juste après)
@@ -259,6 +276,18 @@ drop trigger if exists mdt_items_guard on public.mdt_items;
 create trigger mdt_items_guard before insert or update on public.mdt_items
 for each row execute function public.mdt_items_guard();
 
+-- ---------- Mots interdits (Administration → Accueil) : renvoie le premier mot trouvé, sinon null
+create or replace function public.mdt_banned(txt text) returns text
+language plpgsql stable security definer set search_path = public as $$
+declare w text;
+begin
+  for w in select jsonb_array_elements_text(coalesce((select data->'v' from public.mdt_items where kind = 'opt' and id = 'bannedWords' and not deleted), '[]'::jsonb)) loop
+    w := lower(regexp_replace(w, '[^[:alnum:] ''-]', '', 'g'));
+    if length(w) >= 2 and lower(txt) ~ ('(^|[^[:alnum:]])' || w || '($|[^[:alnum:]])') then return w; end if;
+  end loop;
+  return null;
+end $$;
+
 -- ---------- Fonctions appelées par le site
 -- Lie le compte connecté à son prénom (premier arrivé), renvoie { nom, role, num } ou une erreur si le prénom est pris
 create or replace function public.mdt_register() returns jsonb
@@ -274,17 +303,32 @@ begin
     if exists (select 1 from public.maison_members where lower(nom) = lower(wanted)) then
       return jsonb_build_object('error', 'Le prénom « ' || wanted || ' » est déjà pris par un autre compte.');
     end if;
+    if public.mdt_banned(wanted) is not null then
+      return jsonb_build_object('error', 'Ce prénom n''est pas autorisé.');
+    end if;
     insert into public.maison_members (nom, user_id, num)
     values (wanted, uid, lpad((coalesce((select max(num::int) from public.maison_members where num ~ '^\d+$'), 0) + 1)::text, 4, '0'))
     returning * into m;
   end if;
-  return jsonb_build_object('nom', m.nom, 'role', m.role, 'num', m.num);
+  update public.maison_members set last_seen = now() where user_id = uid;
+  return jsonb_build_object('nom', m.nom, 'role', m.role, 'num', m.num, 'suspended', m.suspended);
 end $$;
 
-create or replace function public.mdt_members() returns table (nom text, role text, num text)
+drop function if exists public.mdt_members();
+create or replace function public.mdt_members() returns table (nom text, role text, num text, created_at timestamptz, last_seen timestamptz, suspended boolean)
 language sql stable security definer set search_path = public as $$
-  select nom, role, num from public.maison_members order by created_at
+  select m.nom, m.role, m.num, m.created_at,
+         case when public.mdt_is_admin() then m.last_seen end,
+         case when public.mdt_is_admin() then m.suspended else false end
+  from public.maison_members m order by m.created_at
 $$;
+
+create or replace function public.mdt_set_suspended(n text, s boolean) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.mdt_is_admin() then raise exception 'Réservé aux admins.'; end if;
+  update public.maison_members set suspended = s where nom = n and role <> 'admin';
+end $$;
 
 create or replace function public.mdt_set_role(n text, r text) returns void
 language plpgsql security definer set search_path = public as $$
@@ -304,12 +348,11 @@ begin
   execute 'drop policy if exists "visiteurs lisent" on public.the_data';
 end $$;
 
--- RGPD : supprime le compte connecté et ses données personnelles
-create or replace function public.mdt_delete_me() returns void
+-- RGPD : supprime un compte et ses données personnelles (appelée par mdt_delete_me / mdt_delete_user)
+create or replace function public.mdt_purge_user(me text, uid uuid) returns void
 language plpgsql security definer set search_path = public as $$
-declare me text := public.mdt_me(); uid uuid := auth.uid();
 begin
-  if uid is null or me is null then raise exception 'Non connecté.'; end if;
+  if uid is null or me is null then raise exception 'Compte introuvable.'; end if;
   perform set_config('mdt.purge', '1', true);
   -- ses éléments personnels : effacés
   update public.mdt_items set deleted = true, data = '{}'::jsonb
@@ -328,7 +371,26 @@ begin
   perform set_config('mdt.purge', '0', true);
 end $$;
 
-revoke all on function public.mdt_register(), public.mdt_members(), public.mdt_set_role(text, text), public.mdt_lock_v1(), public.mdt_delete_me() from public;
-grant execute on function public.mdt_register(), public.mdt_set_role(text, text), public.mdt_lock_v1(), public.mdt_delete_me() to authenticated;
+create or replace function public.mdt_delete_me() returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null or public.mdt_me() is null then raise exception 'Non connecté.'; end if;
+  perform public.mdt_purge_user(public.mdt_me(), auth.uid());
+end $$;
+
+create or replace function public.mdt_delete_user(n text) returns void
+language plpgsql security definer set search_path = public as $$
+declare u uuid;
+begin
+  if not public.mdt_is_admin() then raise exception 'Réservé aux admins.'; end if;
+  select user_id into u from public.maison_members where nom = n and role <> 'admin';
+  if u is null then raise exception 'Compte introuvable (ou administrateur).'; end if;
+  perform public.mdt_purge_user(n, u);
+end $$;
+
+revoke all on function public.mdt_register(), public.mdt_members(), public.mdt_set_role(text, text), public.mdt_lock_v1(), public.mdt_delete_me(),
+  public.mdt_set_suspended(text, boolean), public.mdt_delete_user(text), public.mdt_purge_user(text, uuid), public.mdt_banned(text) from public;
+grant execute on function public.mdt_register(), public.mdt_set_role(text, text), public.mdt_lock_v1(), public.mdt_delete_me(),
+  public.mdt_set_suspended(text, boolean), public.mdt_delete_user(text) to authenticated;
 grant execute on function public.mdt_members() to anon, authenticated;
 grant execute on function public.mdt_me(), public.mdt_is_admin(), public.mdt_is_mod(), public.mdt_can_read(text, text, text[], text) to anon, authenticated;
