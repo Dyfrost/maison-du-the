@@ -6349,9 +6349,9 @@ class Component extends DCLogic {
       if (ev === 'PASSWORD_RECOVERY') this.setState({ view: 'login', authMode: 'newpass', authMsg: '', af: {} });
       if (session && ev === 'SIGNED_IN') { if (this.v2) this.sb.rpc('mdt_register').then(({ data: reg }) => { if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) this._regName = reg.nom; this.pullCloud(true); }); else this.pullCloud(true); }
     });
-    this._onFocus = () => this.pullCloud(false);
+    this._onFocus = () => { if (Date.now() - (this._focusPull || 0) < 15000) return; this._focusPull = Date.now(); this.pullCloud(false); };
     window.addEventListener('focus', this._onFocus);
-    this._poll = setInterval(() => { if (!document.hidden) this.pullCloud(false); }, 20000);
+    this._poll = setInterval(() => { if (!document.hidden) this.pullCloud(false); }, 60000);
     this._gPoll = setInterval(() => { if (!document.hidden && this.state.view === 'guess' && this.state.gsId) this.pullCloud(false); }, 3000);
   }
 
@@ -6433,7 +6433,7 @@ class Component extends DCLogic {
   async pullV2(first) {
     if (this._dirty || this._v2Pulling) return; this._v2Pulling = true;
     try {
-      const full = first || !this._v2Rows || !this._v2Since || (Date.now() - (this._v2Full || 0) > 120000);
+      const full = first || !this._v2Rows || !this._v2Since || (Date.now() - (this._v2Full || 0) > 900000);
       if (full || !this._members) await this.v2Members();
       const chg = this._chg || 0;
       const rows = await this.v2FetchAll(full ? null : this._v2Since);

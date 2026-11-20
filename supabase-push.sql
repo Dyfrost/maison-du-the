@@ -186,8 +186,10 @@ end $$;
 create or replace function public.mdt_notif_run() returns table (id bigint, endpoint text, p256dh text, auth text, title text, body text, url text)
 language plpgsql security definer set search_path = public as $$
 begin
-  perform public.mdt_notif_due();
-  delete from public.mdt_notif where created_at < now() - interval '30 days';
+  if extract(minute from now())::int < 5 then
+    perform public.mdt_notif_due();
+    delete from public.mdt_notif where created_at < now() - interval '30 days';
+  end if;
   return query
     with taken as (
       update public.mdt_notif q set sent_at = now()
@@ -232,7 +234,7 @@ grant execute on function public.mdt_push_save(text, text, text, text), public.m
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
 select cron.unschedule(jobid) from cron.job where jobname = 'mdt-push';
-select cron.schedule('mdt-push', '* * * * *', $cron$
+select cron.schedule('mdt-push', '*/5 * * * *', $cron$
   select net.http_post(url := 'https://hnyomaobuftunuhwkzox.supabase.co/functions/v1/bright-endpoint',
                        headers := '{"Content-Type": "application/json"}'::jsonb, body := '{}'::jsonb);
 $cron$);
