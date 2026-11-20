@@ -426,6 +426,9 @@
         </sc-if>
       </div>
     </sc-if>
+    <sc-if value="{{ cloudWait }}" hint-placeholder-val="{{ false }}">
+      <button class="btn btn-secondary" onClick="{{ cloudRetry }}" title="{{ cloudWaitTitle }}" style="white-space: nowrap;">{{ cloudWaitTxt }}</button>
+    </sc-if>
     <sc-if value="{{ cloudGuest }}" hint-placeholder-val="{{ false }}">
       <button class="btn btn-secondary" onClick="{{ openLogin }}" style="white-space: nowrap;">Se connecter</button>
     </sc-if>
@@ -4219,7 +4222,7 @@ class Component extends DCLogic {
     document.addEventListener('keydown', e => { if (e.key === 'Enter') this.flushDraft(); }, true);
     document.addEventListener('focusout', () => this.flushDraft(), true);
     window.addEventListener('hashchange', () => this.applyHash());
-    this.initCloud();
+    this.initCloud(); setTimeout(() => { if (!this.state.cloudReady) this.setState({ cloudLong: true }); }, 4000);
     this.loadSheet();
     try { localStorage.removeItem('the-photos-v1'); } catch (e) {}
     this.loadDecl();
@@ -6327,12 +6330,17 @@ class Component extends DCLogic {
     let n = 0;
     while (!(window.supabase && window.supabase.createClient) && n++ < 50) await new Promise(r => setTimeout(r, 100));
     if (!url || !key || !window.supabase) { this.setState({ cloud: false, cloudReady: true }); return; }
-    this.sb = window.supabase.createClient(url, key);
-    const { data } = await this.sb.auth.getSession();
-    try { const { data: st, error: stErr } = await this.sb.from('mdt_items').select('data').eq('kind', 'opt').eq('id', 'storage').maybeSingle(); if (!stErr) { this._v2Tables = true; if (st && st.data && st.data.v === 2) this.v2 = true; } } catch (e) {}
+    // lock désactivé : sur iOS (appli écran d'accueil) le verrou navigateur peut bloquer getSession indéfiniment
+    if (!this.sb) this.sb = window.supabase.createClient(url, key, { auth: { lock: (name, t, fn) => fn() } });
+    const T = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('délai dépassé')), ms))]);
+    let data;
+    try { data = (await T(this.sb.auth.getSession(), 10000)).data || {}; }
+    catch (e) { this._cloudTries = (this._cloudTries || 0) + 1; this.setState({ cloudSlow: true }); setTimeout(() => this.initCloud(), Math.min(15000, 3000 * this._cloudTries)); return; }
+    this.setState({ cloudSlow: false });
+    try { const { data: st, error: stErr } = await T(this.sb.from('mdt_items').select('data').eq('kind', 'opt').eq('id', 'storage').maybeSingle(), 10000); if (!stErr) { this._v2Tables = true; if (st && st.data && st.data.v === 2) this.v2 = true; } } catch (e) {}
     window.addEventListener('error', ev => this.logError(ev.message, ev.error && ev.error.stack));
     window.addEventListener('unhandledrejection', ev => this.logError('Promesse : ' + ((ev.reason && ev.reason.message) || ev.reason), ev.reason && ev.reason.stack));
-    if (this.v2 && data.session) { try { const { data: reg } = await this.sb.rpc('mdt_register'); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) { this._regName = reg.nom; if (reg.suspended) this.setState({ suspended: true }); } } catch (e) {} }
+    if (this.v2 && data.session) { try { const { data: reg } = await T(this.sb.rpc('mdt_register'), 10000); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) { this._regName = reg.nom; if (reg.suspended) this.setState({ suspended: true }); } } catch (e) {} }
     this.setState({ cloud: true, cloudReady: true, session: data.session || null, v2: !!this.v2, v2Tables: !!this._v2Tables });
     if (/[?&]confirmed=1/.test(window.location.search)) { try { history.replaceState(null, '', this.siteUrl() + window.location.hash); } catch (e) {} this.setState({ view: data.session ? 'home' : 'login', authMode: 'signin' }); this.flash(data.session ? 'Adresse e-mail confirmée, bienvenue ! 🍵' : 'Adresse e-mail confirmée : vous pouvez vous connecter.'); }
     this.pullCloud(!!data.session);
@@ -8563,6 +8571,7 @@ class Component extends DCLogic {
       cloudUser: !!this.state.session,
       tabs: !this.state.session ? [] : [['home', '🏠', 'Accueil', () => this.setState({ view: 'home', menuOpen: false, notifOpen: false })], ['coll', '🍵', 'Mes thés', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: s0.collView || 'mine' }))], ['log', '＋', 'Dégustation', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s0.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s0.lf) }))], ['gear', '🫖', 'Matériel', () => this.setState({ view: 'gear', gearEdit: null, gearMsg: '', menuOpen: false, notifOpen: false })], ['profile', '👤', 'Profil', () => this.setState({ menuOpen: false, notifOpen: false, view: 'profile', profUser: me, profEdit: false })]].map(t => { const act = t[0] === 'home' ? v === 'home' : t[0] === 'coll' ? (v === 'mine' || v === 'logs') : t[0] === 'log' ? v === 'log' : t[0] === 'gear' ? (v === 'gear' || v === 'gearItem') : (v === 'profile' && this.state.profUser === me); return { icon: t[1], label: t[2], go: t[3], main: t[0] === 'log', plain: t[0] !== 'log', color: act ? 'var(--color-accent-700)' : 'var(--color-text)', weight: act ? '700' : '500', cur: act ? 'page' : 'false' }; }),
       cloudGuest: guest,
+      cloudWait: !this.state.cloudReady && (!!this.state.cloudSlow || !!this.state.cloudLong), cloudWaitTxt: this.state.cloudSlow ? '⚠️ Serveur injoignable · réessayer' : '⏳ Connexion…', cloudWaitTitle: 'Connexion au serveur de la Maison du Thé', cloudRetry: () => { try { location.reload(); } catch (e) {} },
       syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
       localMode: !!this.state.cloudReady && !this.state.cloud,
