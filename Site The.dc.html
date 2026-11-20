@@ -3957,7 +3957,7 @@
       </div>
     </sc-if>
 
-    <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--color-divider); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 13px; opacity: .65;"><span>Maison du Thé</span><button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: inherit; text-decoration: underline;">Confidentialité et mentions légales</button></footer>
+    <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--color-divider); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 13px; opacity: .65;"><span>Maison du Thé</span><button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: inherit; text-decoration: underline;">Confidentialité et mentions légales</button><span>{{ siteVersion }}</span></footer>
     <datalist id="liste-boutiques"><sc-for list="{{ dlShops }}" as="ds" hint-placeholder-count="2"><option value="{{ ds }}"></option></sc-for></datalist>
     <datalist id="liste-villes"><sc-for list="{{ dlCities }}" as="dc" hint-placeholder-count="2"><option value="{{ dc }}"></option></sc-for></datalist>
   </main>
