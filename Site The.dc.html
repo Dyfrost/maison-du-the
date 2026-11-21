@@ -698,6 +698,7 @@
 
     <sc-if value="{{ isSelTest }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px;">
+        <button class="btn btn-secondary" onClick="{{ stBack }}" style="align-self: flex-start;">← Retour à l’administration</button>
         <h1 style="font-size: 28px; margin: 0;">🧪 Test des listes (moteur du site)</h1>
         <p style="margin: 0;">Touche chaque liste, puis appuie sur « Analyser » et envoie une capture de toute la page.</p>
         <p style="margin: 0; font-size: 11px; opacity: .6; word-break: break-all;">{{ stUa }}</p>
@@ -2520,6 +2521,11 @@
           </section>
         </sc-if>
         <sc-if value="{{ tabDevOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-accent-100, #f6dcc8); border-radius: 30px; padding: 18px 22px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="font-size: 22px; margin: 0;">🧪 Pages de test</h2>
+            <p style="margin: 0; font-size: 14px; opacity: .75;">Listes déroulantes sur téléphone : touche chaque liste, puis envoie une capture de la page entière.</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ goSelTest }}" style="white-space: nowrap;">1 · Listes avec le moteur du site</button><a class="btn btn-secondary" href="./test/selects.html" style="white-space: nowrap; text-decoration: none;">2 · Listes sans le moteur</a></div>
+          </section>
           <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🛠️ Développement · bugs signalés ({{ dvN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Envoyés par les membres avec le bouton 🐞 en bas à droite du site (titre, texte, photos, page et appareil).</p></div><button class="btn btn-secondary" onClick="{{ dvReload }}" style="white-space: nowrap; background: var(--color-bg);">↻ Actualiser</button></div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ dvFilters }}" as="df" hint-placeholder-count="4"><button onClick="{{ df.go }}" aria-pressed="{{ df.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ df.bg }}; color: {{ df.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ df.label }}</button></sc-for></div>
@@ -8383,7 +8389,7 @@ class Component extends DCLogic {
       tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
       ...this.mergeVals(),
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
-      isMine: v === 'mine', isSelTest: v === 'seltest',
+      isMine: v === 'mine', isSelTest: v === 'seltest', stBack: () => this.setState({ view: 'admin', addTab: 'dev' }), goSelTest: () => { this.setState({ view: 'seltest', stOut: '' }); try { window.scrollTo(0, 0); } catch (e) {} },
       ...(v !== 'seltest' ? { stV: {}, stSet: {}, stOpts: [] } : (() => { const sv = this.state.stV || {}; const V = {}; const S = {}; 'LMNOQR'.split('').forEach(k => { V[k] = sv[k] || 'theiere'; S[k] = e => { const val = e.target.value; this.setState(s0 => ({ stV: Object.assign({}, s0.stV, { [k]: val }) })); }; }); V.Q = sv.Q || '';
         return { stV: V, stSet: S, stOpts: this.gearTypeList().map(t => ({ v: t[0], l: t[1] + ' ' + t[2] })), stUa: navigator.userAgent + ' · v' + (window.MDT_VERSION || '?') + ' · lang ' + (window.mdtLang || 'fr'), stOut: this.state.stOut || '(appuie sur Analyser)',
           stScan: () => { const out = 'LMNOPQR'.split('').map(k => { const el = document.getElementById('st-' + k); if (!el) return k + ' : introuvable'; const o = el.options[el.selectedIndex]; return k + ' : ' + el.options.length + ' options · choisi ' + el.selectedIndex + ' · texte « ' + (o ? o.text : '') + ' » · label « ' + (o ? o.label : '') + ' » · html ' + (o ? o.innerHTML.slice(0, 60) : ''); }).join('\n'); this.setState({ stOut: out }); } }; })()),
