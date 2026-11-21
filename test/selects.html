@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test listes déroulantes</title>
+<style>
+  :root { --bg: #f5ead8; --surface: #eadcc4; --text: #2b2520; --div: #cdbb9f; --accent: #c4703a; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.45 -apple-system, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 22px; margin: 4px 0; }
+  .t { background: var(--surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .t b { font-size: 15px; }
+  .t small { opacity: .7; font-size: 12.5px; }
+  select { width: 100%; font-size: 16px; padding: 10px 14px; border: 1px solid var(--div); border-radius: 999px; background: var(--bg); color: var(--text); }
+  .dbg { font: 12px/1.35 ui-monospace, Menlo, monospace; opacity: .75; word-break: break-all; }
+  .ua { font: 11px ui-monospace, Menlo, monospace; opacity: .6; }
+</style></head>
+<body><main>
+<h1>🧪 Test des listes déroulantes</h1>
+<p style="margin:0">Touche chaque liste. Note les lettres dont la liste est <b>vide</b> ou dont le texte n’apparaît pas, puis envoie une capture de la page entière.</p>
+<div class="ua" id="ua"></div>
+<div id="tests"></div>
+<div id="react"></div>
+</main>
+<script src="../vendor/react.production.min.js"></script>
+<script src="../vendor/react-dom.production.min.js"></script>
+<script>
+var OPTS = [['theiere', '🫖 Théières'], ['tasse', '🍵 Tasses & bols'], ['bateau', '🛶 Bateaux & plateaux'], ['teapet', '🐸 Tea pets'], ['autre', '🧺 Autres ustensiles']];
+var PLAIN = [['gaiwan', 'Gaiwan (bol à couvercle)'], ['kyusu', 'Kyusu'], ['pichet', 'Pichet de partage']];
+document.getElementById('ua').textContent = navigator.userAgent;
+function box(id, title, sub) {
+  var d = document.createElement('div'); d.className = 't'; d.id = 'box-' + id;
+  d.innerHTML = '<b>' + id + ' — ' + title + '</b><small>' + sub + '</small><div class="slot"></div><div class="dbg"></div>';
+  document.getElementById('tests').appendChild(d); return d;
+}
+function dbg(d) {
+  var s = d.querySelector('select'); if (!s) return;
+  var o = s.options[s.selectedIndex];
+  d.querySelector('.dbg').textContent = 'options=' + s.options.length + ' · choisi=' + s.selectedIndex + ' · text="' + (o ? o.text : '') + '" · label="' + (o ? o.label : '') + '" · labelAttr=' + (o && o.hasAttribute('label') ? 'oui' : 'non');
+}
+function staticSel(id, title, sub, build) {
+  var d = box(id, title, sub); var s = document.createElement('select');
+  build(s); d.querySelector('.slot').appendChild(s); s.addEventListener('change', function () { dbg(d); }); dbg(d);
+}
+// A : HTML simple, texte seul
+staticSel('A', 'HTML, texte simple', 'Référence : doit marcher partout', function (s) { OPTS.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.textContent = x[1]; s.appendChild(o); }); });
+// B : texte + attribut label (comme le site aujourd’hui)
+staticSel('B', 'Texte + attribut label', 'Comme les listes du site', function (s) { OPTS.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.setAttribute('label', x[1]); o.textContent = x[1]; s.appendChild(o); }); });
+// C : label seul, sans texte
+staticSel('C', 'Attribut label sans texte', 'Teste si iOS lit l’attribut label', function (s) { OPTS.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.setAttribute('label', x[1]); s.appendChild(o); }); });
+// D : texte dans une balise <span> (comme le moteur du site)
+staticSel('D', 'Texte dans une balise <span>', 'Comme le moteur du site', function (s) { OPTS.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; var sp = document.createElement('span'); sp.textContent = x[1]; o.appendChild(sp); s.appendChild(o); }); });
+// E : <span> + label
+staticSel('E', 'Balise <span> + attribut label', 'Moteur du site + label', function (s) { OPTS.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.setAttribute('label', x[1]); var sp = document.createElement('span'); sp.textContent = x[1]; o.appendChild(sp); s.appendChild(o); }); });
+// F : sans émoji
+staticSel('F', 'Texte sans émoji + label', 'Teste si les émojis gênent', function (s) { PLAIN.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.setAttribute('label', x[1]); o.textContent = x[1]; s.appendChild(o); }); });
+// G : groupes <optgroup> (comme « Modèle »)
+staticSel('G', 'Groupes (optgroup) + label', 'Comme la liste « Modèle »', function (s) { var e = document.createElement('option'); e.value = ''; e.textContent = '—'; s.appendChild(e); var g = document.createElement('optgroup'); g.label = '🫖 Théières'; PLAIN.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.setAttribute('label', x[1]); o.textContent = x[1]; g.appendChild(o); }); s.appendChild(g); });
+
+// React
+var h = React.createElement;
+function RSel(p) {
+  var st = React.useState(p.init || 'theiere'), v = st[0], setV = st[1];
+  var tk = React.useState(0), setTk = tk[1];
+  React.useEffect(function () { if (!p.tick) return; var t = setInterval(function () { setTk(function (n) { return n + 1; }); }, p.tick); return function () { clearInterval(t); }; }, []);
+  var ref = React.useRef(null);
+  React.useEffect(function () { var d = ref.current && ref.current.closest('.t'); if (d) dbg(d); });
+  return h('div', { className: 't' }, h('b', null, p.id + ' — ' + p.title), h('small', null, p.sub),
+    h('select', { ref: ref, value: v, onChange: function (e) { setV(e.target.value); } },
+      OPTS.map(function (x) { return p.mode === 'span' ? h('option', { key: x[0], value: x[0], label: p.label ? x[1] : undefined }, h('span', { className: 'sc-interp' }, x[1])) : h('option', { key: x[0], value: x[0], label: p.label ? x[1] : undefined }, x[1]); })),
+    h('div', { className: 'dbg' }));
+}
+ReactDOM.createRoot(document.getElementById('react')).render(h(React.Fragment, null,
+  h(RSel, { id: 'H', title: 'React, texte simple', sub: 'Même bibliothèque que le site', mode: 'text' }),
+  h(RSel, { id: 'I', title: 'React, <span> + label', sub: 'Exactement comme le site', mode: 'span', label: true }),
+  h(RSel, { id: 'J', title: 'React, <span> + label + rafraîchi 3×/s', sub: 'Le site se redessine souvent', mode: 'span', label: true, tick: 330 }),
+  h(RSel, { id: 'K', title: 'React, texte simple + rafraîchi 3×/s', sub: 'Rafraîchissement sans span ni label', mode: 'text', tick: 330 })
+));
+</script>
+</body></html>

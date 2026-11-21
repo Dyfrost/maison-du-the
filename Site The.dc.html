@@ -696,6 +696,23 @@
       </div>
     </sc-if>
 
+    <sc-if value="{{ isSelTest }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px;">
+        <h1 style="font-size: 28px; margin: 0;">🧪 Test des listes (moteur du site)</h1>
+        <p style="margin: 0;">Touche chaque liste, puis appuie sur « Analyser » et envoie une capture de toute la page.</p>
+        <p style="margin: 0; font-size: 11px; opacity: .6; word-break: break-all;">{{ stUa }}</p>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>L — Comme « Catégorie » (label + texte)</b><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select id="st-L" class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ stV.L }}" data-val="{{ stV.L }}" onChange="{{ stSet.L }}"><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" label="{{ o.l }}">{{ o.l }}</option></sc-for></select></label></div>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>M — Sans attribut label</b><label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Catégorie</span><select id="st-M" class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ stV.M }}" data-val="{{ stV.M }}" onChange="{{ stSet.M }}"><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select></label></div>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>N — Label seul, sans texte</b><select id="st-N" class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ stV.N }}" data-val="{{ stV.N }}" onChange="{{ stSet.N }}"><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" label="{{ o.l }}"></option></sc-for></select></div>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>O — Hors balise <label></b><select id="st-O" class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ stV.O }}" data-val="{{ stV.O }}" onChange="{{ stSet.O }}"><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" label="{{ o.l }}">{{ o.l }}</option></sc-for></select></div>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>P — Sans valeur imposée (non contrôlée)</b><select id="st-P" class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;"><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" label="{{ o.l }}">{{ o.l }}</option></sc-for></select></div>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>Q — Option fixe + liste (comme « Modèle »)</b><select id="st-Q" class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" value="{{ stV.Q }}" data-val="{{ stV.Q }}" onChange="{{ stSet.Q }}"><option value="">—</option><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" label="{{ o.l }}">{{ o.l }}</option></sc-for></select></div>
+        <div style="background: var(--color-surface); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;"><b>R — Classe « input » retirée</b><select id="st-R" style="width: 100%; font-size: 16px; padding: 10px;" value="{{ stV.R }}" data-val="{{ stV.R }}" onChange="{{ stSet.R }}"><sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}" label="{{ o.l }}">{{ o.l }}</option></sc-for></select></div>
+        <button class="btn btn-primary" onClick="{{ stScan }}" style="align-self: flex-start;">🔍 Analyser</button>
+        <pre style="margin: 0; white-space: pre-wrap; font-size: 12px; background: var(--color-surface); border-radius: 14px; padding: 12px;">{{ stOut }}</pre>
+        <a href="./test/selects.html" style="font-size: 15px;">→ Page de test sans le moteur du site</a>
+      </div>
+    </sc-if>
     <sc-if value="{{ isMine }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 24px; animation: fadeUp .45s ease both;">
         <div role="tablist" aria-label="Mes thés ou mes dégustations" style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 4px;">
@@ -6917,7 +6934,7 @@ class Component extends DCLogic {
     const g = /^#go=([\w-]+)$/.exec(location.hash || '');
     if (g) { const k = g[1]; const adm = /^admin-(\w+)$/.exec(k);
       if (adm) this.setState({ view: 'admin', addTab: adm[1] }); else if (k === 'wrap') this.setState({ view: 'stats', stTab: 'wrap' }); else if (k === 'log') this.setState({ view: 'log', editLogId: null });
-      else if (['friends', 'salon', 'home', 'settings', 'mine'].indexOf(k) >= 0) this.setState({ view: k });
+      else if (['friends', 'salon', 'home', 'settings', 'mine', 'seltest'].indexOf(k) >= 0) this.setState({ view: k });
       try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} return; }
     const sq = /^#sac=([\w-]+)$/.exec(location.hash || '');
     if (sq) { const o = this.collection().find(x => x.id === sq[1]); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
@@ -8366,7 +8383,10 @@ class Component extends DCLogic {
       tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
       ...this.mergeVals(),
       openAdd: () => this.setState({ view: 'add', addMsg: '' }),
-      isMine: v === 'mine',
+      isMine: v === 'mine', isSelTest: v === 'seltest',
+      ...(v !== 'seltest' ? { stV: {}, stSet: {}, stOpts: [] } : (() => { const sv = this.state.stV || {}; const V = {}; const S = {}; 'LMNOQR'.split('').forEach(k => { V[k] = sv[k] || 'theiere'; S[k] = e => { const val = e.target.value; this.setState(s0 => ({ stV: Object.assign({}, s0.stV, { [k]: val }) })); }; }); V.Q = sv.Q || '';
+        return { stV: V, stSet: S, stOpts: this.gearTypeList().map(t => ({ v: t[0], l: t[1] + ' ' + t[2] })), stUa: navigator.userAgent + ' · v' + (window.MDT_VERSION || '?') + ' · lang ' + (window.mdtLang || 'fr'), stOut: this.state.stOut || '(appuie sur Analyser)',
+          stScan: () => { const out = 'LMNOPQR'.split('').map(k => { const el = document.getElementById('st-' + k); if (!el) return k + ' : introuvable'; const o = el.options[el.selectedIndex]; return k + ' : ' + el.options.length + ' options · choisi ' + el.selectedIndex + ' · texte « ' + (o ? o.text : '') + ' » · label « ' + (o ? o.label : '') + ' » · html ' + (o ? o.innerHTML.slice(0, 60) : ''); }).join('\n'); this.setState({ stOut: out }); } }; })()),
       isLogin: v === 'login',
       navOn: v !== 'login' && !this.state.cloud,
       menuOpen: !!this.state.menuOpen, menuRot: this.state.menuOpen ? 180 : 0,
