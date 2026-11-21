@@ -1918,6 +1918,7 @@
           <sc-if value="{{ sh.live }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sh.resume }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours</b></span><span style="font-weight: 600; color: var(--color-accent-700);">Reprendre →</span></button></sc-if>
           <sc-if value="{{ sh.hasInfs }}" hint-placeholder-val="{{ false }}"><section class="sess-card"><div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;"><h2 style="font-size: 22px; margin: 0;">⏱ Les infusions</h2><span style="font-size: 13px; opacity: .7;">{{ sh.infsTxt }}</span></div><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ sh.infs }}" as="pl" hint-placeholder-count="3"><span style="border-radius: 14px; padding: 6px 12px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-size: 13.5px; display: flex; flex-direction: column; gap: 1px; max-width: 240px;"><b style="font-weight: 600;">{{ pl.label }}</b><sc-if value="{{ pl.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .8;">{{ pl.sub }}</span></sc-if></span></sc-for></div></section></sc-if>
           <sc-if value="{{ sh.nez }}" hint-placeholder-val="{{ false }}"><section class="sess-card"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">👃 Premières impressions</span><p style="margin: 0; font-size: 16px; line-height: 1.65; white-space: pre-wrap;">{{ sh.nez }}</p></section></sc-if>
+          <sc-if value="{{ sh.pnShow }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Notes de chacun</span><span>{{ sh.pnTxt }}</span><sc-if value="{{ sh.pnDiff }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="font-size: 12px;">⚡ Désaccord</span></sc-if></p></sc-if>
           <sc-if value="{{ sh.photo }}" hint-placeholder-val="{{ false }}"><div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;"><sc-for list="{{ sh.photos }}" as="sp" hint-placeholder-count="2"><figure style="margin: 0; display: flex; flex-direction: column; gap: 6px;"><a href="{{ sp.u }}" target="_blank" rel="noopener" style="display: block; border-radius: 20px; overflow: hidden; background: var(--color-surface); aspect-ratio: 1;"><img src="{{ sp.u }}" alt="Photo de la dégustation : couleur de la liqueur" style="display: block; width: 100%; height: 100%; object-fit: cover;"></a><sc-if value="{{ sp.cap }}" hint-placeholder-val="{{ false }}"><figcaption style="font-size: 13px; opacity: .7; text-align: center;">{{ sp.cap }}</figcaption></sc-if></figure></sc-for></div></sc-if>
           <sc-if value="{{ sh.avis }}" hint-placeholder-val="{{ true }}"><section style="background: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-accent-700) 18%, transparent); border-radius: 26px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">Avis</span><p style="margin: 0; font-size: 18px; line-height: 1.7; white-space: pre-wrap; text-wrap: pretty;">{{ sh.avis }}</p></section></sc-if>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; align-items: start;">
@@ -2195,6 +2196,7 @@
           <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;"><h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">⭐</span>Note et avis</h2><span style="font-size: 12px; opacity: .6;">{{ logNoteHint }}</span></div>
+            <sc-if value="{{ lfNoteMineTxt }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; background: var(--color-bg); border-radius: 14px; padding: 8px 12px;">{{ lfNoteMineTxt }}</p></sc-if>
             <div style="display: grid; grid-template-columns: minmax(170px, 220px) 1fr; gap: 12px; align-items: start;" class="lf-note-row">
               <div style="display: flex; align-items: center; gap: 6px;"><button type="button" onClick="{{ noteDown }}" aria-label="Baisser la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">−</button><input class="input" aria-label="Note sur 20" style="width: 100%; min-width: 0; box-sizing: border-box; font-family: var(--font-heading); font-size: 26px; padding: 12px 8px; text-align: center; color: {{ lfNoteColor }};" placeholder="16,5" value="{{ lfNoteNum }}" onInput="{{ setNoteNum }}" inputMode="decimal"><button type="button" onClick="{{ noteUp }}" aria-label="Monter la note d’un demi-point" style="cursor: pointer; flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--color-bg); font-size: 22px; color: var(--color-text);">+</button></div>
               <div style="display: flex; gap: 6px; grid-column: 1; justify-content: center;"><button type="button" onClick="{{ noteTogR }}" aria-pressed="{{ lfNoteR }}" title="En cours de réglage" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; background: {{ lfNoteRBg }}; color: {{ lfNoteRFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">R <span style="font-weight: 400;">réglage</span></button><button type="button" onClick="{{ noteTogL }}" aria-pressed="{{ lfNoteL }}" title="Loupé" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; background: {{ lfNoteLBg }}; color: {{ lfNoteLFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">L <span style="font-weight: 400;">loupé</span></button></div>
@@ -5719,7 +5721,7 @@ class Component extends DCLogic {
     const f1 = n => (Math.round(n * 10) / 10).toString().replace('.', ',');
     const grams = logs.reduce((t, l) => t + (this.qtyNum(l.qty) || 0), 0);
     const infs = logs.reduce((t, l) => t + this.infsOf(l).length, 0);
-    const byP = {}; logs.forEach(l => { const p = prodOf(l); if (!p) return; const b = byP[p.id] = byP[p.id] || { p: p, n: 0, notes: [] }; b.n++; const n = this.noteNum(l); if (n != null) b.notes.push(n); });
+    const byP = {}; logs.forEach(l => { const p = prodOf(l); if (!p) return; const b = byP[p.id] = byP[p.id] || { p: p, n: 0, notes: [] }; b.n++; const n = this.noteVal(this.logNoteOf(l, me)); if (n != null) b.notes.push(n); });
     const teas = Object.keys(byP).map(k => byP[k]);
     const top = teas.slice().sort((x, y) => y.n - x.n)[0];
     const best = teas.filter(b => b.notes.length).map(b => Object.assign(b, { max: Math.max.apply(null, b.notes) })).sort((x, y) => y.max - x.max)[0];
@@ -5771,7 +5773,7 @@ class Component extends DCLogic {
     const logs = a.logs.filter(l => part(l).length > 0);
     const together = logs.filter(l => part(l).length >= 2);
     const by = {};
-    logs.forEach(l => { const p = prodOf(l.lotId); if (!p) return; const b = by[p.id] = by[p.id] || { p: p, n: 0, notes: [] }; b.n++; const n = noteN(l); if (n != null) b.notes.push(n); });
+    logs.forEach(l => { const p = prodOf(l.lotId); if (!p) return; const b = by[p.id] = by[p.id] || { p: p, n: 0, notes: [] }; b.n++; this.logNoteNums(l, M).forEach(n => b.notes.push(n)); });
     const arr = Object.keys(by).map(k => by[k]); arr.forEach(b => { b.avg = b.notes.length ? b.notes.reduce((t, n) => t + n, 0) / b.notes.length : null; });
     const most = arr.slice().sort((x, y) => y.n - x.n)[0];
     const rated = arr.filter(b => b.avg != null); const minN = rated.some(b => b.notes.length >= 2) ? 2 : 1;
@@ -5972,7 +5974,7 @@ class Component extends DCLogic {
     const prodOf = id => { const sa = a.sachets.find(o => o.id === id); return sa ? a.prods.find(p => p.id === sa.prodId) : null; };
     const logs = a.logs.filter(l => l.author === u || (l.with || []).indexOf(u) >= 0);
     const by = {};
-    logs.forEach(l => { const p = prodOf(l.lotId); if (!p) return; const b = by[p.id] = by[p.id] || { p: p, n: 0, notes: [], g: 0 }; b.n++; const n = this.num(String(l.note || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); if (n != null) b.notes.push(n); b.g += this.num(l.qty) || 0; });
+    logs.forEach(l => { const p = prodOf(l.lotId); if (!p) return; const b = by[p.id] = by[p.id] || { p: p, n: 0, notes: [], g: 0 }; b.n++; const n = this.noteVal(this.logNoteOf(l, u)); if (n != null) b.notes.push(n); b.g += this.num(l.qty) || 0; });
     const arr = Object.keys(by).map(k => by[k]);
     arr.forEach(b => { b.avg = b.notes.length ? b.notes.reduce((t, n) => t + n, 0) / b.notes.length : null; });
     const most = arr.slice().sort((x, y) => y.n - x.n)[0];
@@ -6042,7 +6044,7 @@ class Component extends DCLogic {
     const logs = a.logs.filter(l => l.author === u || (l.with || []).indexOf(u) >= 0);
     const sac = id => a.sachets.find(o => o.id === id);
     const prodOf = id => { const sa = sac(id); return sa ? a.prods.find(p => p.id === sa.prodId) : null; };
-    const noteN = l => this.num(String(l.note || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, ''));
+    const noteN = l => this.noteVal(this.logNoteOf(l, u));
     const hourOf = l => { const m = /^(\d{1,2})/.exec(String(l.heure || '')); return m ? +m[1] : null; };
     const teas = new Set(logs.map(l => (prodOf(l.lotId) || {}).id).filter(Boolean)).size;
     const grams = logs.reduce((t, l) => t + (this.qtyNum ? (this.qtyNum(l.qty) || 0) : (this.num(l.qty) || 0)), 0);
@@ -6960,7 +6962,8 @@ class Component extends DCLogic {
     return { nez: l.nez || '', live: !!l.live, resume: () => this.openSession(l.id), hasInfs: infs.length > 0,
       infs: infs.map((i, k) => ({ label: '#' + (k + 1) + ' · ' + this.fmtSec(i.t) + (i.temp ? ' · ' + i.temp + (/^\d+$/.test(i.temp) ? '°' : '') : ''), sub: i.note || '', hasSub: !!i.note })),
       infsTxt: infs.length ? infs.length + ' infusion' + (infs.length > 1 ? 's' : '') + ' · ' + this.fmtSec(totalS) + ' d’infusion' + (l.startTs && l.endTs ? ' · séance de ' + this.fmtDur(l.endTs - l.startTs) : '') : '',
-      ok: true, missing: false, kicker: l.live ? 'Séance en cours' : kicker, note: l.note || '—', noteFs: String(l.note || '—').length > 3 ? '28px' : '36px', noteSub: isNum, ...this.noteColors(l.note), name: p.nom || p.the || 'Thé', avis: l.avis || '', photo: this.logPhotos(l).length > 0, photos: this.logPhotos(l).map(x => ({ u: x.u, cap: this.photoInfLbl(x.i) })),
+      ok: true, missing: false, kicker: l.live ? 'Séance en cours' : kicker, note: l.note || '—', noteFs: String(l.note || '—').length > 3 ? '28px' : '36px', noteSub: isNum, ...this.noteColors(l.note), name: p.nom || p.the || 'Thé', ...(() => { const ppl = this.logPeople(l); const ns = ppl.map(u => ({ u: u, n: this.logNoteOf(l, u), own: u === l.author || ((((this.getAdds().options || {}).profiles || {})[u] || {}).lnotes || {})[l.id] != null })); const vals = ns.map(x => this.noteVal(x.n)).filter(v => v != null); const diff = vals.length > 1 && Math.max(...vals) - Math.min(...vals) >= 4; const any = ppl.length > 1 && ns.some(x => x.u !== l.author && x.own);
+          return { pnShow: any, pnTxt: ns.map(x => x.u + ' ' + (x.n || '—')).join(' · ') + (vals.length > 1 ? ' — moyenne ' + (vals.reduce((t, v) => t + v, 0) / vals.length).toFixed(1).replace('.', ',') : ''), pnDiff: diff }; })(), avis: l.avis || '', photo: this.logPhotos(l).length > 0, photos: this.logPhotos(l).map(x => ({ u: x.u, cap: this.photoInfLbl(x.i) })),
       cat: p.the || '', fam: fk ? this.families[fk].name : '',
       openCat: () => { if (p.the) this.openCatTea(p.the); }, openFam: () => { if (fk) this.openFamily(fk); },
       meta: [l.author ? (l.author + ((l.with || []).length ? ' avec ' + l.with.join(', ') : '')) : '', l.date ? 'le ' + this.fmtDate(l.date) : '', l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' · '),
@@ -7235,6 +7238,13 @@ class Component extends DCLogic {
     return out;
   }
   // ---------- Contenu nourri par les dégustations ----------
+  // Notes personnelles : l'hôte (auteur) note pour tout le monde ; un participant qui modifie la note
+  // enregistre la sienne dans son profil (lnotes[idDégustation]) sans toucher à celle de l'hôte.
+  logNoteOf(l, u) { if (!l) return ''; if (!u || this.norm(u) === this.norm(l.author || '')) return l.note || ''; const ov = ((((this.getAdds().options || {}).profiles || {})[u] || {}).lnotes || {})[l.id]; return ov != null && ov !== '' ? ov : (l.note || ''); }
+  logPeople(l) { return [l.author].concat(l.with || []).filter((x, i, arr) => x && arr.indexOf(x) === i); }
+  noteVal(v) { return this.num(String(v || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); }
+  logNoteNums(l, only) { return this.logPeople(l).filter(u => !only || only.indexOf(u) >= 0).map(u => this.noteVal(this.logNoteOf(l, u))).filter(n => n != null); }
+  setMyLogNote(id, note) { const me = this.me(); if (!me) return; const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); const pr = Object.assign({}, all[me]); const ln = Object.assign({}, pr.lnotes); if (note == null || note === '') delete ln[id]; else ln[id] = String(note); pr.lnotes = ln; all[me] = pr; this.setOpt('profiles', all); }
   noteNum(l) { const n = parseFloat(String((l && l.note) || '').replace(',', '.')); return /^\s*\d+([.,]\d+)?\s*$/.test(String((l && l.note) || '')) && isFinite(n) ? n : null; }
   aromaCounts(logs, prods) {
     const rx = x => new RegExp('(^|[^a-z0-9])' + x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
@@ -7252,13 +7262,14 @@ class Component extends DCLogic {
     const logs = a.logs.filter(l => sacIds.indexOf(l.lotId) >= 0);
     const circ = this.circleOf(me); const inC = l => circ.indexOf(l.author) >= 0 || (l.with || []).some(w => circ.indexOf(w) >= 0);
     const noted = logs.filter(l => this.noteNum(l) != null && inC(l));
-    const avg = noted.length ? noted.reduce((t, l) => t + this.noteNum(l), 0) / noted.length : null;
+    const allN = [].concat(...logs.filter(inC).map(l => this.logNoteNums(l)));
+    const avg = allN.length ? allN.reduce((t, n) => t + n, 0) / allN.length : null;
     const best = noted.slice().sort((x, y) => this.noteNum(y) - this.noteNum(x))[0];
     const ar = this.aromaCounts(logs, prods).slice(0, 8); const max = ar.length ? ar[0].n : 1;
-    const logsC = logs.filter(inC); const people = logsC.map(l => l.author).filter((x, i, arr) => x && arr.indexOf(x) === i);
+    const logsC = logs.filter(inC); const people = [].concat(...logsC.map(l => this.logPeople(l))).filter((x, i, arr) => x && arr.indexOf(x) === i);
     return { hsOn: logs.length > 0, hsNone: !logs.length, hsAvgLbl: 'Moyenne ' + this.circleName(me),
       hsAvg: avg != null ? avg.toFixed(1).replace('.', ',') : '—', hsAvgColor: avg != null ? this.noteColors(String(Math.round(avg * 10) / 10)).noteBg : 'inherit',
-      hsSub: noted.length + ' note' + (noted.length > 1 ? 's' : '') + ' · ' + logsC.length + ' dégustation' + (logsC.length > 1 ? 's' : '') + ' · ' + people.length + ' dégustateur' + (people.length > 1 ? 's' : ''),
+      hsSub: allN.length + ' note' + (allN.length > 1 ? 's' : '') + ' · ' + logsC.length + ' dégustation' + (logsC.length > 1 ? 's' : '') + ' · ' + people.length + ' dégustateur' + (people.length > 1 ? 's' : ''),
       hsBest: !!best, hsBestNote: best ? best.note : '', hsBestColor: best ? this.noteColors(best.note).noteBg : '',
       hsBestTxt: best ? [this.logGears(best).map(g => this.gearCat(g)[1] + ' ' + g.name).join(', ') || this.logGearRest(best), best.temperature ? best.temperature + (/^\d+$/.test(best.temperature) ? ' °C' : '') : '', best.qty ? best.qty + (/^\s*[\d.,]+\s*$/.test(String(best.qty)) ? ' g' : '') : '', best.temps, best.technique].filter(x => x && !/^\s*x\s*$/i.test(x)).join(' · ') || 'paramètres non notés' : '',
       hsBestWho: best ? best.author + ' · ' + this.fmtDate(best.date) : '', hsBestOpen: () => { if (best) this.openLogDetail(best.id); },
@@ -7270,7 +7281,7 @@ class Component extends DCLogic {
     const sacOf = {}; coll.forEach(o => { sacOf[o.id] = o; });
     const logs = a.logs.filter(l => sacOf[l.lotId] && prods.some(p => p.id === sacOf[l.lotId].prodId));
     const circ = this.circleOf(me); const inC = l => circ.indexOf(l.author) >= 0 || (l.with || []).some(w => circ.indexOf(w) >= 0);
-    const byProd = {}; logs.forEach(l => { const n = this.noteNum(l); if (n == null || !inC(l)) return; const pid = sacOf[l.lotId].prodId; (byProd[pid] = byProd[pid] || []).push(n); });
+    const byProd = {}; logs.forEach(l => { if (!inC(l)) return; const ns = this.logNoteNums(l); if (!ns.length) return; const pid = sacOf[l.lotId].prodId; (byProd[pid] = byProd[pid] || []).push(...ns); });
     const top = Object.keys(byProd).map(pid => ({ p: prods.find(x => x.id === pid), avg: byProd[pid].reduce((t, x) => t + x, 0) / byProd[pid].length, n: byProd[pid].length })).filter(x => x.p).sort((x, y) => y.avg - x.avg || y.n - x.n).slice(0, 3);
     const tasted = {}; logs.forEach(l => { if (this.inLog(l, me)) tasted[sacOf[l.lotId].prodId] = 1; });
     const cand = coll.filter(o => prods.some(p => p.id === o.prodId) && this.canTaste(o, me) && !this.emptyFor(o, me) && !tasted[o.prodId]);
@@ -7279,7 +7290,7 @@ class Component extends DCLogic {
     // courbe : moyenne mensuelle sur 12 mois
     const now = new Date(); const months = [];
     for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push(mdtDayKey(d).slice(0, 7)); }
-    const pts = months.map(m => { const ns = logs.filter(l => inC(l) && String(l.date || '').slice(0, 7) === m).map(l => this.noteNum(l)).filter(x => x != null); return { m: m, avg: ns.length ? ns.reduce((t, x) => t + x, 0) / ns.length : null, n: ns.length }; });
+    const pts = months.map(m => { const ns = [].concat(...logs.filter(l => inC(l) && String(l.date || '').slice(0, 7) === m).map(l => this.logNoteNums(l))); return { m: m, avg: ns.length ? ns.reduce((t, x) => t + x, 0) / ns.length : null, n: ns.length }; });
     const W = 560, H = 160, padL = 28, padB = 32, padT = 12; const ys = pts.filter(p => p.avg != null).map(p => p.avg);
     const lo = ys.length ? Math.max(0, Math.floor(Math.min.apply(null, ys)) - 1) : 10, hi = ys.length ? Math.min(20, Math.ceil(Math.max.apply(null, ys)) + 1) : 20;
     const X = i => padL + i * (W - padL - 10) / 11, Y = v => padT + (hi - v) / Math.max(1, hi - lo) * (H - padT - padB);
@@ -7295,7 +7306,7 @@ class Component extends DCLogic {
   }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
-    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', photos: this.logPhotos(l), photo: '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
+    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', photos: this.logPhotos(l), photo: '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: this.logNoteOf(l, this.me()) || '', noteMine: this.norm(l.author || '') !== this.norm(this.me() || ''), infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
   logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const isNum = /^\d+([.,]\d+)?$/.test(String(l.note || '')); return { ...this.joinInfo(l, me), photo: (this.logPhotos(l)[0] || {}).u || '', openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: l.note || '', infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } })), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: this.shopTxt(o.marque, o.ville) || '—', canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(l.note), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
@@ -7644,8 +7655,8 @@ class Component extends DCLogic {
 
   statsMany(ids) {
     const ls = this.getAdds().logs.filter(l => ids.indexOf(l.lotId) >= 0);
-    const ns = ls.map(l => this.num(String(l.note).replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, ''))).filter(n => n != null);
-    return { n: ns.length, avg: ns.length ? ns.reduce((t, n) => t + n, 0) / ns.length : null };
+    const ns = [].concat(...ls.map(l => this.logNoteNums(l)));
+    return { n: ls.filter(l => this.logNoteNums(l).length).length, avg: ns.length ? ns.reduce((t, n) => t + n, 0) / ns.length : null };
   }
 
   sachetView(o, me) {
@@ -7931,7 +7942,7 @@ class Component extends DCLogic {
 
   statsFor(id, user) {
     const ls = this.logsFor(id).filter(l => !user || this.inLog(l, user));
-    const ns = ls.map(l => this.num(String(l.note).replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, ''))).filter(n => n != null);
+    const ns = user ? ls.map(l => this.noteVal(this.logNoteOf(l, user))).filter(n => n != null) : [].concat(...ls.map(l => this.logNoteNums(l)));
     const avg = ns.length ? ns.reduce((s, n) => s + n, 0) / ns.length : null;
     return { n: ls.length, avg: avg, last: ls[0] ? ls[0].date : '' };
   }
@@ -8584,6 +8595,7 @@ class Component extends DCLogic {
       })(),
       st: v === 'stats' ? this.computeStats(coll.filter(o => !this.isEmptySachet(o)), me) : {}, cal: v === 'stats' && me && this.state.stTab !== 'wrap' ? this.calView(me) : { calCells: [], calMonths: [], calKpis: [] },
       isLogs: v === 'logs',
+      lfNoteMineTxt: (() => { const id = this.state.editLogId; const lg = id ? this.getAdds().logs.find(x => x.id === id) : null; if (!lg || this.norm(lg.author || '') === this.norm(me || '')) return ''; return '✍️ Ta note personnelle : ' + lg.author + ' a mis ' + (lg.note || '—') + '. Ce que tu mets ici ne compte que pour toi, sa note à lui ne change pas.'; })(),
       ...(() => { const lf0 = this.state.lf || {}; const ps = this.logPhotos(lf0);
         const nInf = Math.max(8, String(lf0.temps || '').split('/').filter(x => x.trim()).length);
         const upd = fn => this.setState(s0 => { const cur = this.logPhotos(s0.lf || {}); return { lf: Object.assign({}, s0.lf, { photos: fn(cur.slice()), photo: '' }) }; });
@@ -8893,7 +8905,10 @@ class Component extends DCLogic {
         const a = this.getAdds();
         if (this.state.editLogId) {
           const id = this.state.editLogId;
-          this.setAdds(Object.assign({}, a, { logs: a.logs.map(x => { if (x.id !== id) return x; const y = Object.assign({}, x, l, { id: x.id, author: x.author, with: (l.with || []).filter(w => w !== x.author) });
+          const notHost = !!editOrig && this.norm(editOrig.author || '') !== this.norm(me || '');
+          if (notHost) { const mine = String(l.note || ''); this.setMyLogNote(id, mine === String(editOrig.note || '') ? '' : mine); }
+          delete l.noteMine;
+          this.setAdds(Object.assign({}, this.getAdds(), { logs: this.getAdds().logs.map(x => { if (x.id !== id) return x; const y = Object.assign({}, x, l, { id: x.id, author: x.author, with: (l.with || []).filter(w => w !== x.author) }); if (notHost) y.note = x.note;
             if (x.startTs) { const day = /^\d{4}-\d{2}-\d{2}$/.test(y.date || '') ? y.date : mdtDayKey(new Date(x.startTs)); const at = hm => { const d = new Date(day + 'T' + hm.padStart(5, '0') + ':00'); return d.getTime(); };
               if (/^\d{1,2}:\d{2}$/.test(y.heure || '')) y.startTs = at(y.heure);
               if (/^\d{1,2}:\d{2}$/.test(finV || '')) { let e = at(finV); if (e < y.startTs) e += 864e5; y.endTs = e; } }
