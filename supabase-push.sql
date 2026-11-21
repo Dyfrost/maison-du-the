@@ -1,5 +1,5 @@
 -- ============================================================================================
--- Maison du Thé — notifications sur le téléphone (à coller dans Supabase → SQL Editor → Run)
+-- L’Unanimithé — notifications sur le téléphone (à coller dans Supabase → SQL Editor → Run)
 -- À lancer APRÈS supabase-v2.sql. Peut être relancé sans risque.
 -- Les notifications partent d'une petite fonction Supabase (slug « bright-endpoint », code dans supabase/functions/push)
 -- appelée chaque minute par pg_cron.
@@ -114,7 +114,7 @@ begin
   end if;
   if new.kind = 'opt' and new.id = 'announce' and coalesce(d->'v'->>'text', '') <> '' and (d->'v'->>'at') is distinct from (o->'v'->>'at') then
     for x in select nom from public.maison_members loop
-      perform public.mdt_notify(x, 'announce', '📣 Maison du Thé', d->'v'->>'text', base, 'announce:' || (d->'v'->>'at') || ':' || x);
+      perform public.mdt_notify(x, 'announce', '📣 L’Unanimithé', d->'v'->>'text', base, 'announce:' || (d->'v'->>'at') || ':' || x);
     end loop;
   end if;
   return null;
@@ -222,7 +222,7 @@ create or replace function public.mdt_notif_test() returns void
 language plpgsql security definer set search_path = public as $$
 begin
   if public.mdt_me() is null then raise exception 'Non connecté.'; end if;
-  perform public.mdt_notify(public.mdt_me(), 'test', '🍵 Maison du Thé', 'Les notifications fonctionnent sur cet appareil !', public.mdt_site());
+  perform public.mdt_notify(public.mdt_me(), 'test', '🍵 L’Unanimithé', 'Les notifications fonctionnent sur cet appareil !', public.mdt_site());
 end $$;
 
 revoke all on function public.mdt_notify(text, text, text, text, text, text), public.mdt_notif_run(), public.mdt_notif_due(),

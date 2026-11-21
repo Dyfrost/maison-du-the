@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Maison du Thé">
+<meta name="apple-mobile-web-app-title" content="L’Unanimithé">
 <meta name="theme-color" content="#f5ead8">
 </head>
 <body>
@@ -346,7 +346,7 @@
 <div style="min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); display: flex; flex-direction: column;">
 
   <header class="nav" style="padding: 22px 40px; gap: 10px; flex-wrap: wrap;">
-    <button class="nav-brand" onClick="{{ goHome }}" style="font-size: 21px; white-space: nowrap; cursor: pointer; border: none; background: transparent; padding: 0; color: var(--color-text);" style-hover="color: var(--color-accent-700);"><span style="display: inline-flex; align-items: center; gap: 10px;"><img src="logo-mark.png" alt="" width="44" height="44" style="width: 44px; height: 44px; display: block; flex: none;">Maison du Thé</span></button>
+    <button class="nav-brand" onClick="{{ goHome }}" style="font-size: 21px; white-space: nowrap; cursor: pointer; border: none; background: transparent; padding: 0; color: var(--color-text);" style-hover="color: var(--color-accent-700);"><span style="display: inline-flex; align-items: center; gap: 10px;"><img src="logo-mark.png" alt="" width="44" height="44" style="width: 44px; height: 44px; display: block; flex: none;">L’Unanimithé</span></button>
     <sc-if value="{{ navOn }}" hint-placeholder-val="{{ true }}">
     <button class="btn btn-ghost" onClick="{{ openMine }}" style="white-space: nowrap;">Mes thés</button>
     <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">Nouvelle dégustation</button>
@@ -1336,7 +1336,7 @@
           <h2 class="set-h">Mentions légales</h2>
           <p><b>Éditeur du site :</b> {{ lg.editor }}<br><b>Contact :</b> {{ lg.contact }}<br><b>Directeur de la publication :</b> {{ lg.editor }}</p>
           <p><b>Hébergement du site :</b> GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.<br><b>Hébergement des données :</b> Supabase Inc. (base de données et comptes), région {{ lg.region }}.</p>
-          <p>Maison du Thé est un site associatif et non commercial, sans publicité.</p>
+          <p>L’Unanimithé est un site associatif et non commercial, sans publicité.</p>
         </section>
         <section class="set-card">
           <h2 class="set-h">Données que nous enregistrons</h2>
@@ -3967,7 +3967,7 @@
       </div>
     </sc-if>
 
-    <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--color-divider); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 13px; opacity: .65;"><span>Maison du Thé</span><button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: inherit; text-decoration: underline;">Confidentialité et mentions légales</button><span>{{ siteVersion }}</span></footer>
+    <footer style="margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--color-divider); display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 13px; opacity: .65;"><span>L’Unanimithé</span><button onClick="{{ openLegal }}" style="cursor: pointer; border: none; background: transparent; padding: 0; font: inherit; color: inherit; text-decoration: underline;">Confidentialité et mentions légales</button><span>{{ siteVersion }}</span></footer>
     <datalist id="liste-boutiques"><sc-for list="{{ dlShops }}" as="ds" hint-placeholder-count="2"><option value="{{ ds }}"></option></sc-for></datalist>
     <datalist id="liste-villes"><sc-for list="{{ dlCities }}" as="dc" hint-placeholder-count="2"><option value="{{ dc }}"></option></sc-for></datalist>
   </main>
@@ -5408,7 +5408,7 @@ class Component extends DCLogic {
     this.scanStop(); try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
     const h = String(txt).indexOf('#');
     if (h >= 0 && /#(sac|prod|log|go)=/.test(txt.slice(h))) { const hash = txt.slice(h); if (location.hash === hash) this.applyHash(); else location.hash = hash; return; }
-    this.flash('Ce QR code n’est pas un sachet de la Maison du Thé.');
+    this.flash('Ce QR code n’est pas un sachet de l’Unanimithé.');
   }
   printLabels(ids, title, offIds) {
     offIds = offIds || [];
@@ -5422,7 +5422,7 @@ class Component extends DCLogic {
       return '<label class="lb' + (offIds.indexOf(o.id) >= 0 ? ' off' : '') + '" data-q="' + esc(String((o.nom || '') + ' ' + (o.the || '') + ' ' + (o.code || '') + ' ' + (o.marque || '') + ' ' + (o.ville || '')).toLowerCase()) + '"><input type="checkbox" class="ck"' + (offIds.indexOf(o.id) >= 0 ? '' : ' checked') + ' onchange="this.parentNode.classList.toggle(\'off\',!this.checked);upd()">' + q.createSvgTag({ cellSize: 3, margin: 1, scalable: true }) +
         '<div class="tx"><b>' + esc(o.nom || o.the) + '</b>' + (o.nom && o.the && o.nom !== o.the ? '<span>' + esc(o.the) + '</span>' : '') + (shop ? '<span>' + esc(shop) + '</span>' : '') +
         '<span class="c">' + esc(o.code || '') + '</span><span class="o">' + (o.owner !== this.me() && this.me() ? 'part donnée par ' : '') + esc(o.owner) + (o.achat ? ' · ' + esc(this.fmtDate(o.achat)) : '') + (offIds.indexOf(o.id) >= 0 ? ' · vide' : '') + '</span></div></label>'; }).join('');
-    const html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(title || 'Étiquettes QR') + ' — Maison du Thé</title><style>' +
+    const html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(title || 'Étiquettes QR') + ' — L’Unanimithé</title><style>' +
       'body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:16px;color:#2b2118;background:#fff}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.bar button{font:inherit;padding:8px 16px;border-radius:999px;border:1px solid #c9b89a;background:#f5ead8;cursor:pointer}.bar span{font-size:13px;opacity:.7}' +
       '.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(62mm,1fr));gap:4mm}.lb{position:relative;display:flex;gap:3mm;align-items:center;border:1px dashed #bbb;border-radius:3mm;padding:3mm;break-inside:avoid;page-break-inside:avoid}.lb svg{width:24mm;height:24mm;flex:none}' +
       '.tx{display:flex;flex-direction:column;gap:1mm;font-size:9pt;line-height:1.2;min-width:0}.tx b{font-size:11pt}.tx .c{font-family:ui-monospace,Menlo,monospace;font-size:7.5pt;opacity:.75;word-break:break-all}.tx .o{font-size:8pt;opacity:.65}' +
@@ -5477,7 +5477,7 @@ class Component extends DCLogic {
     if (error) { window.alert('La suppression a échoué : ' + error.message); return; }
     try { localStorage.removeItem('the-ajouts'); } catch (e) {}
     try { await this.sb.auth.signOut(); } catch (e) {}
-    window.alert('Votre compte a été supprimé. Merci d’être passé par la Maison du Thé 🍵');
+    window.alert('Votre compte a été supprimé. Merci d’être passé par l’Unanimithé 🍵');
     window.location.href = this.siteUrl();
   }
   legalView() {
@@ -6905,10 +6905,10 @@ class Component extends DCLogic {
     const who = l.author && l.author !== me ? l.author + ' a goûté' : 'J’ai goûté';
     const note = l.note ? (/^\d+([.,]\d+)?$/.test(String(l.note)) ? l.note + '/20' : l.note) : '';
     const avis = String(l.avis || '').trim(); const av = avis ? ' « ' + (avis.length > 120 ? avis.slice(0, 117) + '…' : avis) + ' »' : '';
-    return '🍵 ' + who + ' ' + name + (p.marque ? ' (' + p.marque + ')' : '') + (note ? ' et lui a mis ' + note + ' !' : ' !') + av + '\nDécouvre la dégustation complète (matériel, temps, température…) sur la Maison du Thé, notre carnet de thés partagé entre amis 👇';
+    return '🍵 ' + who + ' ' + name + (p.marque ? ' (' + p.marque + ')' : '') + (note ? ' et lui a mis ' + note + ' !' : ' !') + av + '\nDécouvre la dégustation complète (matériel, temps, température…) sur l’Unanimithé, notre carnet de thés partagé entre amis 👇';
   }
   shareProdMsg(pr) {
-    return '🍃 Regarde ce thé : ' + (pr.nom || pr.the) + (pr.marque ? ' de ' + pr.marque : '') + ' !\nOn l’a dans la Maison du Thé, notre collection de thés partagée entre amis : famille, origine et prix au 100 g, tout est là 👇';
+    return '🍃 Regarde ce thé : ' + (pr.nom || pr.the) + (pr.marque ? ' de ' + pr.marque : '') + ' !\nOn l’a dans l’Unanimithé, notre collection de thés partagée entre amis : famille, origine et prix au 100 g, tout est là 👇';
   }
 
   applyHash() {
@@ -8608,7 +8608,7 @@ class Component extends DCLogic {
       cloudUser: !!this.state.session,
       tabs: !this.state.session ? [] : [['home', '🏠', 'Accueil', () => this.setState({ view: 'home', menuOpen: false, notifOpen: false })], ['coll', '🍵', 'Mes thés', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: s0.collView || 'mine' }))], ['log', '＋', 'Dégustation', () => this.setState(s0 => ({ menuOpen: false, notifOpen: false, view: 'log', logMsg: '', editLogId: null, lf: s0.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s0.lf) }))], ['gear', '🫖', 'Matériel', () => this.setState({ view: 'gear', gearEdit: null, gearMsg: '', menuOpen: false, notifOpen: false })], ['profile', '👤', 'Profil', () => this.setState({ menuOpen: false, notifOpen: false, view: 'profile', profUser: me, profEdit: false })]].map(t => { const act = t[0] === 'home' ? v === 'home' : t[0] === 'coll' ? (v === 'mine' || v === 'logs') : t[0] === 'log' ? v === 'log' : t[0] === 'gear' ? (v === 'gear' || v === 'gearItem') : (v === 'profile' && this.state.profUser === me); return { icon: t[1], label: t[2], go: t[3], main: t[0] === 'log', plain: t[0] !== 'log', color: act ? 'var(--color-accent-700)' : 'var(--color-text)', weight: act ? '700' : '500', cur: act ? 'page' : 'false' }; }),
       cloudGuest: guest,
-      cloudWait: !this.state.cloudReady && (!!this.state.cloudSlow || !!this.state.cloudLong), cloudWaitTxt: this.state.cloudSlow ? '⚠️ Serveur injoignable · réessayer' : '⏳ Connexion…', cloudWaitTitle: 'Connexion au serveur de la Maison du Thé', cloudRetry: () => { try { location.reload(); } catch (e) {} },
+      cloudWait: !this.state.cloudReady && (!!this.state.cloudSlow || !!this.state.cloudLong), cloudWaitTxt: this.state.cloudSlow ? '⚠️ Serveur injoignable · réessayer' : '⏳ Connexion…', cloudWaitTitle: 'Connexion au serveur de l’Unanimithé', cloudRetry: () => { try { location.reload(); } catch (e) {} },
       syncErrTxt: (!guest && this.state.syncErr) || '',
       openLogin: () => this.setState({ view: 'login', authMode: 'signin', authMsg: '' }),
       localMode: !!this.state.cloudReady && !this.state.cloud,
@@ -8683,7 +8683,7 @@ class Component extends DCLogic {
       impPick: e => {
         const f = e.target.files && e.target.files[0]; if (!f) return;
         const r = new FileReader();
-        r.onload = () => { try { const d = JSON.parse(String(r.result)); if (d.format !== 'maison-du-the-import' || !Array.isArray(d.teas)) throw new Error('format'); this._impData = d; this.setState({ impReady: true, impLines: this.importPreview(d), impMsg: '' }); } catch (err) { this._impData = null; this.setState({ impReady: false, impMsg: 'Ce fichier n’est pas un fichier d’import de la Maison du Thé.' }); } };
+        r.onload = () => { try { const d = JSON.parse(String(r.result)); if (d.format !== 'maison-du-the-import' || !Array.isArray(d.teas)) throw new Error('format'); this._impData = d; this.setState({ impReady: true, impLines: this.importPreview(d), impMsg: '' }); } catch (err) { this._impData = null; this.setState({ impReady: false, impMsg: 'Ce fichier n’est pas un fichier d’import de l’Unanimithé.' }); } };
         r.readAsText(f); e.target.value = '';
       },
       impReady: !!this.state.impReady, impLines: this.state.impLines || [], impMsg: this.state.impMsg || '',

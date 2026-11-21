@@ -1,4 +1,4 @@
-// Maison du Thé — bascule français / anglais avec traduction automatique.
+// L’Unanimithé — bascule français / anglais avec traduction automatique.
 // En anglais, chaque texte affiché par React (et, sur la carte, chaque texte du DOM)
 // est traduit à la volée puis mémorisé dans le navigateur.
 // Date du jour (fuseau local, pas UTC) au format AAAA-MM-JJ
@@ -17,7 +17,7 @@ window.mdtToday = function () { return window.mdtDayKey(new Date()); };
   try { cache = JSON.parse(localStorage.getItem(CK) || '{}'); } catch (e) {}
   var pending = {}, timer = null, active = 0, failed = 0, saveT = null, listeners = [];
   var MAX_PAR = 6;
-  var NO_TR = ['Maison du Thé', '🇫🇷 FR', '🇬🇧 EN', 'FR', 'EN'];
+  var NO_TR = ['L’Unanimithé', '🇫🇷 FR', '🇬🇧 EN', 'FR', 'EN'];
 
   function want(s) {
     if (typeof s !== 'string') return false;

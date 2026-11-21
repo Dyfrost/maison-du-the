@@ -1,4 +1,4 @@
-// Maison du Thé — envoi des notifications (Supabase Edge Function « bright-endpoint »)
+// L’Unanimithé — envoi des notifications (Supabase Edge Function « bright-endpoint »)
 // Appelée toutes les 5 minutes par pg_cron et à chaque nouvelle notification (voir supabase-push.sql).
 // Secrets à définir dans Supabase → Edge Functions → Secrets : VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT.
 // SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont fournis automatiquement par Supabase.

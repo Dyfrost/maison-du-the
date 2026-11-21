@@ -1,4 +1,4 @@
-// Maison du Thé — contenus « Apprendre » : encyclopédie, défauts, roue des arômes.
+// L’Unanimithé — contenus « Apprendre » : encyclopédie, défauts, roue des arômes.
 window.MDT_SAVOIR = {
   // ---------------------------------------------------------------- Encyclopédie
   cats: [

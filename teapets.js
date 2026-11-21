@@ -1,4 +1,4 @@
-// Maison du Thé — tea pets en pixel art et enclos animé du salon.
+// L’Unanimithé — tea pets en pixel art et enclos animé du salon.
 (function () {
   // ---------- Photo -> sprite pixel art (PNG en data URL) ----------
   function loadImg(src) {

@@ -1,10 +1,10 @@
-// Maison du Thé — service worker : affiche les notifications reçues, même site fermé
+// L’Unanimithé — service worker : affiche les notifications reçues, même site fermé
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : '' }; }
-  e.waitUntil(self.registration.showNotification(d.title || 'Maison du Thé', {
+  e.waitUntil(self.registration.showNotification(d.title || 'L’Unanimithé', {
     body: d.body || '', icon: 'icon-192.png', badge: 'icon-192.png', tag: d.tag || undefined, data: { url: d.url || './' }
   }));
 });
