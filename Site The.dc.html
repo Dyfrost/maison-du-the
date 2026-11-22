@@ -6531,6 +6531,8 @@ class Component extends DCLogic {
     } catch (e) { this.setState({ v2Msg: 'Échec : ' + (e.message || e) + ' (rien n’a été verrouillé, vous pouvez réessayer).' }); }
   }
   logError(msg, stack) {
+    // « Script error. » sans trace = erreur d'un script d'une autre origine (CDN, extension Safari…) : le navigateur masque tout, rien d'exploitable → ignorée
+    if (/^Script error\.?$/i.test(String(msg || '').trim()) && !stack) return;
     try { if (!this.sb || !this._v2Tables) return; const k = String(msg).slice(0, 200); this._errSeen = this._errSeen || {}; if (this._errSeen[k]) return; this._errSeen[k] = 1;
       this.sb.from('mdt_errors').insert({ who: this.state.session ? this.sessionName() : null, msg: String(msg).slice(0, 1900), stack: String(stack || '').slice(0, 5900), url: window.location.href.slice(0, 500), ua: navigator.userAgent.slice(0, 300) }).then(() => {}); } catch (e) {}
   }
