@@ -2928,16 +2928,29 @@
           <div style="display: flex; flex-direction: column; gap: 22px;">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 18px;">
             <div style="display: flex; flex-direction: column; gap: 4px;">
-              <h2 style="font-size: 26px; margin: 0;">Le thé</h2>
-              <p style="margin: 0; font-size: 14px; opacity: .7;">Commun à tous : si quelqu'un l'a déjà ajouté, choisissez-le dans la liste.</p>
+              <h2 style="font-size: 26px; margin: 0;">① Quel thé ?</h2>
+              <p style="margin: 0; font-size: 14px; opacity: .7;">{{ lotStepTxt }}</p>
             </div>
-            <label style="display: flex; flex-direction: column; gap: 6px; max-width: 620px;">
-              <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé du commerce</span>
-              <sc-raw-select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; min-height: 50px;" value="{{ form.prodId }}" data-val="{{ form.prodId }}" onChange="{{ pickProd }}">
-                <option value="">＋ Nouveau thé du commerce</option>
-                <sc-for list="{{ prodOptions }}" as="po" hint-placeholder-count="0"><option value="{{ po.id }}" label="{{ po.label }}">{{ po.label }}</option></sc-for>
-              </sc-raw-select>
-            </label>
+            <sc-if value="{{ lotDoneMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 15px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">{{ lotDoneMsg }}</p></sc-if>
+            <sc-if value="{{ lotSearchOn }}" hint-placeholder-val="{{ true }}">
+              <input class="input" type="search" value="{{ apQ }}" onInput="{{ setApQ }}" placeholder="🔎 Nom du thé, boutique, Sencha…" aria-label="Chercher un thé du commerce" autoFocus="{{ true }}" style="width: 100%; box-sizing: border-box; font-size: 16px; padding: 13px 18px;">
+              <sc-if value="{{ lotHitsLbl }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ lotHitsLbl }}</span></sc-if>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px;">
+                <sc-for list="{{ lotHits }}" as="lh" hint-placeholder-count="3"><button type="button" onClick="{{ lh.pick }}" style="cursor: pointer; text-align: left; border: none; border-radius: 18px; padding: 12px 14px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 3px;" style-hover="box-shadow: inset 0 0 0 2px var(--color-accent);"><b style="font-size: 15.5px;">{{ lh.name }}</b><span style="font-size: 13.5px; opacity: .8;">{{ lh.sub }}</span><span style="font-size: 12.5px; opacity: .6;">{{ lh.who }}</span></button></sc-for>
+              </div>
+              <sc-if value="{{ lotNoHit }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .75;">Aucun thé du commerce ne correspond à « {{ apQ }} ».</p></sc-if>
+              <button type="button" class="btn btn-secondary" onClick="{{ lotNew }}" style="align-self: flex-start; white-space: nowrap; background: var(--color-bg);">＋ Il n’y est pas : créer la fiche de ce thé</button>
+            </sc-if>
+            <sc-if value="{{ lotHaveOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--color-bg); border-radius: 20px; padding: 14px 16px; box-shadow: inset 0 0 0 2px var(--color-accent);">
+                <span aria-hidden="true" style="font-size: 24px;">✅</span>
+                <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 200px;"><b style="font-size: 17px;">{{ lotHaveName }}</b><span style="font-size: 14px; opacity: .8;">{{ lotHaveSub }}</span><span style="font-size: 12.5px; opacity: .6;">{{ lotHaveWho }}</span></span>
+                <button type="button" class="btn btn-ghost" onClick="{{ lotEditProd }}" style="white-space: nowrap;">{{ lotEditProdTxt }}</button>
+                <sc-if value="{{ lotCanChange }}" hint-placeholder-val="{{ true }}"><button type="button" class="btn btn-secondary" onClick="{{ lotChange }}" style="white-space: nowrap;">Changer de thé</button></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ lotNewOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 14.5px; font-weight: 600;">🆕 Nouvelle fiche de thé du commerce</span><span style="font-size: 13.5px; opacity: .7;">Elle sera partagée : les autres pourront y rattacher leurs sachets.</span><sc-if value="{{ lotCanChange }}" hint-placeholder-val="{{ true }}"><button type="button" class="btn btn-ghost" onClick="{{ lotChange }}" style="white-space: nowrap; margin-left: auto;">← Chercher dans la liste</button></sc-if></div></sc-if>
+            <sc-if value="{{ lotFieldsOn }}" hint-placeholder-val="{{ false }}">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé de l’encyclopédie</span>
@@ -2999,11 +3012,13 @@
                 <textarea class="input" rows="3" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; border-radius: 22px; resize: vertical; font-family: var(--font-body);" placeholder="Ce qui caractérise ce thé…" defaultValue="{{ form.prodComment }}" data-dv="{{ form.prodComment }}" onInput="{{ setFz.prodComment }}" key="{{ formKey }}-prodComment"></textarea>
               </label>
             </div>
+            </sc-if>
           </section>
 
+          <sc-if value="{{ lotStep2On }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 18px;">
             <div style="display: flex; flex-direction: column; gap: 4px;">
-              <h2 style="font-size: 26px; margin: 0;">Mon sachet</h2>
+              <h2 style="font-size: 26px; margin: 0;">② Mon sachet</h2>
               <p style="margin: 0; font-size: 14px; opacity: .7;">Votre paquet à vous : unique, avec son propre code.</p>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
@@ -3080,6 +3095,7 @@
               <sc-if value="{{ addMsg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: var(--color-accent-2-800);">{{ addMsg }}</span></sc-if>
             </div>
           </section>
+          </sc-if>
           <button class="btn btn-primary" onClick="{{ openMine }}" style="align-self: flex-start; white-space: nowrap;">Voir mes thés →</button>
           </div>
         </sc-if>
@@ -8585,7 +8601,7 @@ class Component extends DCLogic {
       },
       isLore: v === 'lore',
       isAdd: v === 'add' || v === 'admin', isAdminView: v === 'admin', isAddView: v === 'add',
-      addMaxW: v === 'admin' ? '1240px' : '860px',
+      addMaxW: v === 'admin' ? '1240px' : '1100px',
       ...(() => { const tea = this.state.addTab === 'tea'; const mod = this.isMod(me);
         return { addBanBg: tea ? '#e3ecdf' : 'var(--color-accent-100)', addBanIcon: tea ? '📖' : '🛍️',
           addBanTitle: tea ? 'Tu proposes un thé à l’encyclopédie' : 'Tu ajoutes un thé à ta collection',
@@ -8607,7 +8623,7 @@ class Component extends DCLogic {
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
       tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
       ...this.mergeVals(),
-      openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
+      openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', lotNew: s.view === 'add' ? s.lotNew : false, lotEditProd: false, apQ: s.view === 'add' ? s.apQ : '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
       isMine: v === 'mine',
       isLogin: v === 'login',
       navOn: v !== 'login' && !this.state.cloud,
@@ -9010,7 +9026,7 @@ class Component extends DCLogic {
       hasLive: this.liveLogs(me).length > 0,
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
-      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
+      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', lotNew: false, lotEditProd: false, apQ: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
       hideHaveShow: scope !== 'me' && !!me, hideHaveOn: !!this.state.hideHave, hideHaveTxt: this.state.hideHave ? '✓ Sans les thés que j’ai déjà' : 'Masquer les thés que j’ai déjà', hideHaveCls: this.state.hideHave ? 'btn btn-primary' : 'btn btn-secondary', hideHaveToggle: () => this.setState(s0 => ({ hideHave: !s0.hideHave })),
@@ -9174,7 +9190,30 @@ class Component extends DCLogic {
         const n = a.sachets.filter(x => x.owner === me && pr && x.prodId === pr.id && x.id !== this.state.editId).length + 1;
         return { genCode: gen, codeSuggest: (this.state.editId && fm.code) ? fm.code : gen + '-' + ini + n + '-XXXX',
           prodOptions: a.prods.slice().sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the))).map(x => ({ id: x.id, label: [x.nom || x.the, x.the !== x.nom ? x.the : '', x.marque, x.code].filter(Boolean).join(' — ') })),
-          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { recoTemp: x.recoTemp || '', recoQty: x.recoQty || '', recoTimes: x.recoTimes || '', prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ville: '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } };
+          ...(() => {
+            const fill = x => ({ recoTemp: x.recoTemp || '', recoQty: x.recoQty || '', recoTimes: x.recoTimes || '', prodId: x.id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ville: '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' });
+            const blank = { prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', recoTemp: '', recoQty: '', recoTimes: '' };
+            const owners = id => Array.from(new Set(a.sachets.filter(z => z.prodId === id).map(z => z.owner).filter(Boolean)));
+            const whoTxt = id => { const o = owners(id); return o.length ? '🛍️ ' + (o.indexOf(me) >= 0 ? 'tu en as déjà · ' : '') + o.length + ' sachet' + (o.length > 1 ? 's' : '') + ' chez ' + o.join(', ') : 'Personne n’en a encore'; };
+            const desc = x => [x.nom && x.nom !== x.the ? x.the + (x.variante ? ' · ' + x.variante : '') : (x.variante || ''), x.marque].filter(Boolean).join(' — ');
+            const mode = pr ? 'have' : (this.state.lotNew || String(fm.the || '').trim() || this.state.editId) ? 'new' : 'search';
+            const q = this.norm(this.state.apQ || '');
+            const all = a.prods.slice();
+            const hits = q ? all.filter(x => this.norm([x.nom, x.the, x.variante, x.marque, x.code, x.ref].join(' ')).indexOf(q) >= 0).sort((x, y) => (owners(y.id).length - owners(x.id).length) || String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr'))
+              : all.sort((x, y) => (this.idTs(y.id) || 0) - (this.idTs(x.id) || 0));
+            const shown = hits.slice(0, q ? 12 : 6);
+            return { lotDoneMsg: mode === 'search' ? (this.state.addMsg || '') : '', lotSearchOn: mode === 'search', lotHaveOn: mode === 'have', lotNewOn: mode === 'new', lotStep2On: mode !== 'search',
+              lotFieldsOn: mode === 'new' || (mode === 'have' && !!this.state.lotEditProd),
+              lotStepTxt: mode === 'search' ? 'Cherche-le d’abord : si quelqu’un l’a déjà, tu n’as qu’à le choisir et passer à ton sachet.' : mode === 'have' ? 'Thé choisi : remplis maintenant ton sachet ci-dessous.' : 'Décris le thé tel qu’il est vendu (nom, boutique…), puis ton sachet ci-dessous.',
+              apQ: this.state.apQ || '', setApQ: e => this.setState({ apQ: e.target.value }),
+              lotHitsLbl: shown.length ? (q ? hits.length + ' thé' + (hits.length > 1 ? 's' : '') + ' trouvé' + (hits.length > 1 ? 's' : '') : 'Derniers ajoutés') : '', lotNoHit: !!q && !hits.length,
+              lotHits: shown.map(x => ({ name: x.nom || x.the, sub: desc(x) || x.the, who: whoTxt(x.id), pick: () => this.setState(s0 => ({ apQ: '', lotNew: false, lotEditProd: false, addMsg: '', formRev: (s0.formRev || 0) + 1, form: Object.assign({}, s0.form, fill(x)) })) })),
+              lotNew: () => this.setState(s0 => ({ lotNew: true, lotEditProd: false, addMsg: '', formRev: (s0.formRev || 0) + 1, form: Object.assign({}, s0.form, blank, { nomFour: s0.apQ ? String(s0.apQ).trim() : '' }) })),
+              lotChange: () => this.setState(s0 => ({ lotNew: false, lotEditProd: false, addMsg: '', formRev: (s0.formRev || 0) + 1, form: Object.assign({}, s0.form, blank) })),
+              lotCanChange: !this.state.editId,
+              lotHaveName: pr ? (pr.nom || pr.the) : '', lotHaveSub: pr ? (desc(pr) || pr.the) + (pr.code ? ' · ' + pr.code : '') : '', lotHaveWho: pr ? whoTxt(pr.id) : '',
+              lotEditProd: () => this.setState(s0 => ({ lotEditProd: !s0.lotEditProd })), lotEditProdTxt: this.state.lotEditProd ? 'Masquer la fiche' : '✏️ Voir / compléter la fiche',
+          pickProd: e => { const id = e.target.value; const x = a.prods.find(y => y.id === id); this.setState(s => ({ form: Object.assign({}, s.form, x ? { recoTemp: x.recoTemp || '', recoQty: x.recoQty || '', recoTimes: x.recoTimes || '', prodId: id, the: x.the, variante: x.variante || '', nomFour: x.nom || '', marque: x.marque || '', ville: '', ref: x.ref || '', boutique: x.boutique || '', tags: (x.tags || []).slice(), prodComment: x.commentaire || '' } : { prodId: '' }) })); } }; })() };
       })(),
       noteHint: (() => { const n = parseFloat(String((this.state.form || {}).note20 || '').replace(',', '.')); if (isNaN(n)) return '0–4 à jeter · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel'; return n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? "Correct, sans plus" : n <= 18 ? 'Vraiment bon' : 'Exceptionnel'; })(),
       saveVar: () => {
@@ -9230,7 +9269,7 @@ class Component extends DCLogic {
           return;
         }
         this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.concat([Object.assign({ id: 's' + Date.now().toString(36) }, sac)]) }));
-        this.setState(s => ({ addMsg: 'Sachet ' + code + ' ajouté (' + (pr.nom || pr.the) + ').', form: Object.assign({}, s.form, clear) }));
+        this.setState(s => ({ addMsg: '✅ Sachet ' + code + ' ajouté (' + (pr.nom || pr.the) + '). Un autre ?', lotNew: false, lotEditProd: false, apQ: '', form: Object.assign({}, s.form, clear) }));
       },
       hasAdds: (this.getAdds().teas.length + this.getAdds().decl.length + coll.length + this.getAdds().logs.length) > 0,
       addList: this.getAdds().teas.map((t, i) => ({ kind: 'Encyclopédie', label: t.nom, meta: (this.families[t.famille] || {}).name + (t.origine ? ' · ' + t.origine : ''), remove: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { teas: a.teas.filter((x, j) => j !== i) })); } }))
