@@ -2548,23 +2548,18 @@
               <details style="background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><summary style="cursor: pointer; font-size: 14.5px; font-weight: 600;">Les plus grosses tables</summary>
                 <div style="display: flex; flex-direction: column; margin-top: 8px;"><sc-for list="{{ hsTables }}" as="ht" hint-placeholder-count="4"><div style="display: flex; gap: 10px; font-size: 13.5px; padding: 5px 0; border-top: 1px solid var(--color-divider);"><span style="font-family: ui-monospace, Menlo, monospace; margin-right: auto; min-width: 0; overflow-wrap: anywhere;">{{ ht.name }}</span><span style="opacity: .65; white-space: nowrap;">{{ ht.rows }}</span><b style="white-space: nowrap; color: {{ ht.c }};">{{ ht.size }}</b></div></sc-for></div>
               </details>
-              <span style="font-size: 13px; opacity: .7;">{{ hsAt }} · Le budget « Disk IO » et le CPU ne sont visibles que dans le tableau de bord Supabase : <a href="https://supabase.com/dashboard/project/hnyomaobuftunuhwkzox/reports/database" target="_blank" rel="noopener" style="color: var(--color-accent-700);">ouvrir les rapports ↗</a></span>
+              <span style="font-size: 13px; opacity: .7;"><b>{{ hsAt }}</b> · Le budget « Disk IO » et le CPU ne sont visibles que dans le tableau de bord Supabase : <a href="https://supabase.com/dashboard/project/hnyomaobuftunuhwkzox/reports/database" target="_blank" rel="noopener" style="color: var(--color-accent-700);">ouvrir les rapports ↗</a></span>
             </sc-if>
           </section>
           <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0; margin-right: auto;">📈 Activité</h2><div style="display: flex; gap: 6px;"><sc-for list="{{ gpRanges }}" as="gr" hint-placeholder-count="3"><button onClick="{{ gr.go }}" aria-pressed="{{ gr.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13.5px; background: {{ gr.bg }}; color: {{ gr.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ gr.label }}</button></sc-for></div></div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ gpSeries }}" as="gs" hint-placeholder-count="4"><button onClick="{{ gs.go }}" aria-pressed="{{ gs.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ gs.bg }}; color: {{ gs.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ gs.label }}</button></sc-for></div>
             <sc-if value="{{ gpHasNote }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; background: var(--color-bg); border-radius: 14px; padding: 10px 14px;">{{ gpNote }}</p></sc-if>
-            <div style="display: grid; grid-template-columns: 28px 1fr; gap: 6px;">
-              <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; font-size: 11px; opacity: .6; height: 180px;"><span>{{ gpMax }}</span><span>{{ gpMid }}</span><span>0</span></div>
-              <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
-                <div role="img" aria-label="{{ gpSum }}" style="height: 180px; display: flex; align-items: flex-end; gap: {{ gpGap }}; border-bottom: 1px solid var(--color-divider); background-image: linear-gradient(var(--color-divider) 1px, transparent 1px); background-size: 100% 50%;">
-                  <sc-for list="{{ gpBars }}" as="gb" hint-placeholder-count="30"><div title="{{ gb.tip }}" onClick="{{ gb.pick }}" style="cursor: pointer; flex: 1; min-width: 0; height: {{ gb.h }}; background: {{ gb.bg }}; border-radius: 3px 3px 0 0;"></div></sc-for>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-size: 11px; opacity: .6;"><span>{{ gpX0 }}</span><span>{{ gpX1 }}</span><span>{{ gpX2 }}</span></div>
-              </div>
+            <div style="position: relative; width: 100%;">
+              <img src="{{ gpSvg }}" alt="{{ gpSum }}" style="display: block; width: 100%; height: auto;">
+              <div style="position: absolute; top: 0; bottom: {{ gpOvB }}; left: {{ gpOvL }}; right: {{ gpOvR }}; display: flex;"><sc-for list="{{ gpBars }}" as="gb" hint-placeholder-count="30"><div title="{{ gb.tip }}" onClick="{{ gb.pick }}" style="cursor: pointer; flex: 1; min-width: 0;"></div></sc-for></div>
             </div>
-            <sc-if value="{{ gpPickTxt }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; font-weight: 600;">{{ gpPickTxt }}</span></sc-if><span style="font-size: 13.5px; opacity: .75;">{{ gpSum }} · touchez ou survolez une barre pour le détail.</span>
+            <sc-if value="{{ gpPickTxt }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; font-weight: 600;">{{ gpPickTxt }}</span></sc-if><span style="font-size: 13.5px; opacity: .75;">{{ gpSum }} · touchez ou survolez le graphe pour le détail d’un jour.</span>
           </section>
           <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
             <h2 style="font-size: 22px; margin: 0;">📣 Annonce pour tout le monde</h2>
@@ -5330,8 +5325,7 @@ class Component extends DCLogic {
   }
   healthView() {
     if (this.state.dbHealthAt == null) setTimeout(() => this.loadHealth(), 0);
-    // actualisation auto toutes les 60 s tant que l’accueil admin est ouvert
-    if (!this._hsTimer) this._hsTimer = setInterval(() => { if (this.state.view === 'admin' && this.state.addTab === 'dash' && !document.hidden) this.loadHealth(); else { clearInterval(this._hsTimer); this._hsTimer = null; } }, 60000);
+    // chargée une fois à l’ouverture, ensuite seulement avec « Actualiser »
     const H = this.state.dbHealth; const err = this.state.dbHealthErr || '';
     const mb = b => { b = Number(b) || 0; return b >= 1048576 ? String(Math.round(b / 104857.6) / 10).replace('.', ',') + ' Mo' : Math.max(1, Math.round(b / 1024)) + ' ko'; };
     const copy = async () => { try { const t = await (await fetch('./supabase-suivi.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ hsCopyMsg: '✓ Copié : colle-le dans le SQL Editor puis Run.' }); } catch (e) { this.setState({ hsCopyMsg: 'Copie impossible : ouvre « Voir le script », sélectionne tout et copie.' }); } };
@@ -5354,7 +5348,36 @@ class Component extends DCLogic {
         card('🔔 File des notifications', H.net ? String(net.responses || 0) : '—', H.net ? 'réponses stockées · ' + (net.queue || 0) + ' en attente · ' + (net.errors1h || 0) + ' erreur(s) en 1 h' : 'pg_net non disponible', (net.responses || 0) > 5000),
         card('🗂️ Éléments du site', String(H.items || 0), (H.errors || 0) + ' erreur(s) au journal', false)],
       hsTables: (H.tables || []).map(t => ({ name: t.name, size: mb(t.bytes), rows: '≈ ' + (t.rows || 0) + ' lignes', c: t.bytes > 50 * 1048576 ? '#c0392b' : 'inherit' })),
-      hsAt: 'Mis à jour ' + new Date(H.at || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (toutes les minutes)' });
+      hsAt: 'Dernière actualisation : ' + new Date(H.at || Date.now()).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) });
+  }
+  // graphe d’activité façon « relevé » : quadrillage, courbe et points en croix (image SVG)
+  gpChart(days, vals, unit, R, today, pick) {
+    const W = Math.max(340, Math.min(1100, (window.innerWidth || 1000) - 90)), H = Math.round(Math.max(220, Math.min(340, W * 0.38)));
+    const L = 46, Rm = 14, T = 14, B = 44, pw = W - L - Rm, ph = H - T - B;
+    const mx0 = Math.max(1, ...vals); const steps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500]; const st = steps.find(x => mx0 / x <= 6) || Math.ceil(mx0 / 6); const top = Math.ceil(mx0 / st) * st;
+    const X = i => L + (days.length > 1 ? i * pw / (days.length - 1) : pw / 2), Y = v => T + ph - v / top * ph;
+    const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const fd = d => { const p = d.split('-'); return p[2] + '/' + p[1]; };
+    let g = '';
+    // quadrillage horizontal (pointillés) + graduations
+    for (let v = 0; v <= top; v += st) { const y = Y(v).toFixed(1); g += '<line x1="' + L + '" x2="' + (L + pw) + '" y1="' + y + '" y2="' + y + '" stroke="#201e1d" stroke-opacity="' + (v ? .18 : .55) + '" stroke-dasharray="' + (v ? '3 4' : '') + '"/><text x="' + (L - 8) + '" y="' + (+y + 4) + '" text-anchor="end" font-size="12" fill="#201e1d" fill-opacity=".7">' + v + '</text>'; }
+    // quadrillage vertical : une ligne par semaine (30/90 j) ou par mois (1 an)
+    const nLab = W < 520 ? 4 : 7; const every = Math.max(1, Math.round((days.length - 1) / (nLab - 1)));
+    days.forEach((d, i) => { const major = R > 90 ? d.slice(8) === '01' : i % 7 === (days.length - 1) % 7; if (major || i === days.length - 1) g += '<line x1="' + X(i).toFixed(1) + '" x2="' + X(i).toFixed(1) + '" y1="' + T + '" y2="' + (T + ph) + '" stroke="#201e1d" stroke-opacity=".12" stroke-dasharray="3 4"/>';
+      if ((days.length - 1 - i) % every === 0) g += '<text x="' + X(i).toFixed(1) + '" y="' + (T + ph + 18) + '" text-anchor="middle" font-size="12" fill="#201e1d" fill-opacity=".7">' + (d === today ? 'auj.' : fd(d)) + '</text>'; });
+    g += '<line x1="' + L + '" x2="' + L + '" y1="' + T + '" y2="' + (T + ph) + '" stroke="#201e1d" stroke-opacity=".55"/>';
+    // courbe
+    const pts = vals.map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join(' ');
+    g += '<polyline points="' + pts + '" fill="none" stroke="#c67139" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+    // points en croix (pas sur 1 an : trop serré), jour choisi en évidence
+    const k = R > 90 ? 0 : (R > 30 ? 3 : 5);
+    vals.forEach((v, i) => { const x = X(i), y = Y(v); if (k && (v || R <= 30)) g += '<path d="M' + (x - k) + ' ' + y + 'h' + 2 * k + 'M' + x + ' ' + (y - k) + 'v' + 2 * k + '" stroke="#643312" stroke-width="1.8"/>';
+      if (days[i] === pick) g += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="5.5" fill="#c67139" stroke="#fff" stroke-width="2"/>'; });
+    g += '<text x="' + (L + pw / 2) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="12.5" fill="#8c491a">Jour</text>';
+    g += '<text transform="translate(13 ' + (T + ph / 2) + ') rotate(-90)" text-anchor="middle" font-size="12.5" fill="#8c491a">' + esc(unit.replace(/\(s\)/g, 's')) + '</text>';
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" font-family="system-ui, -apple-system, Segoe UI, sans-serif">' + g + '</svg>';
+    const half = days.length > 1 ? pw / (days.length - 1) / 2 : 0;
+    return { gpSvg: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), gpOvL: ((L - half) / W * 100).toFixed(2) + '%', gpOvR: ((Rm - half) / W * 100).toFixed(2) + '%', gpOvB: (B / H * 100).toFixed(2) + '%' };
   }
   async loadVisits() {
     if (this._visLoading || !this.sb) return; this._visLoading = true;
@@ -5393,6 +5416,7 @@ class Component extends DCLogic {
     return { dbStats: dbStats,
       gpSeries: Object.keys(SER).map(k => ({ label: SER[k][0] + ' ' + SER[k][1], on: ser === k, bg: ser === k ? 'var(--color-text)' : 'var(--color-bg)', fg: ser === k ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ gpSer: k }) })),
       gpRanges: [[30, '30 j'], [90, '90 j'], [365, '1 an']].map(x => ({ label: x[1], on: R === x[0], bg: R === x[0] ? 'var(--color-text)' : 'var(--color-bg)', fg: R === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ gpRange: x[0] }) })),
+      ...this.gpChart(days, vals, SER[ser][2], R, today, this.state.gpPick),
       gpBars: days.map((d, i) => ({ pick: () => this.setState({ gpPick: d }), h: (vals[i] ? Math.max(3, vals[i] / mx * 100) : 0) + '%', tip: fd(d) + ' : ' + vals[i] + ' ' + SER[ser][2] + (who[d] ? ' — ' + who[d] : ''), bg: d === today ? 'var(--color-accent-800)' : 'var(--color-accent)' })),
       gpGap: R > 90 ? '0px' : R > 30 ? '1px' : '3px', gpMax: String(mx), gpMid: mx > 1 ? String(Math.round(mx / 2)) : '',
       gpX0: fd(days[0]), gpX1: fd(days[Math.floor(days.length / 2)]), gpX2: 'aujourd’hui',
