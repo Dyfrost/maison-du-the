@@ -350,13 +350,13 @@
     <sc-if value="{{ navOn }}" hint-placeholder-val="{{ true }}">
     <button class="btn btn-ghost" onClick="{{ openMine }}" style="white-space: nowrap;">Mes thés</button>
     <button class="btn btn-secondary" onClick="{{ openLog }}" style="white-space: nowrap;">Nouvelle dégustation</button>
-    <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Ajouter</button>
+    <button class="btn btn-primary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ J’ai un nouveau thé</button>
     </sc-if>
     <sc-if value="{{ cloudUser }}" hint-placeholder-val="{{ false }}">
     <div class="nav-quick" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
       <button onClick="{{ openColl }}" class="nq" style-hover="background: var(--color-accent-100);">🍵 Mes thés & dégustations</button>
       <button onClick="{{ openLog }}" class="nq" style-hover="background: var(--color-accent-100);">☕ Nouvelle dégustation</button>
-      <button onClick="{{ openAdd }}" class="nq" style-hover="background: var(--color-accent-100);">＋ Nouveau thé</button>
+      <button onClick="{{ openAdd }}" class="nq" style-hover="background: var(--color-accent-100);">＋ J’ai un nouveau thé</button>
     </div>
     </sc-if>
     <button onClick="{{ toggleLang }}" title="{{ langTitle }}" aria-label="{{ langTitle }}" class="nav-lang" style="cursor: pointer; border: none; width: 42px; height: 42px; padding: 0; border-radius: 50%; background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center;" style-hover="background: var(--color-accent-100);"><img src="{{ langFlag }}" alt="" width="24" height="16" style="width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); display: block;"></button>
@@ -509,7 +509,7 @@
           <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{ liveList }}" as="lv" hint-placeholder-count="1"><button onClick="{{ lv.go }}" class="live-banner"><span class="live-dot" aria-hidden="true"></span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;"><b style="font-family: var(--font-heading); font-weight: 400; font-size: 17px;">Séance en cours : {{ lv.name }}</b><span style="font-size: 13px; opacity: .75;">{{ lv.meta }}</span></span><span style="font-weight: 600; white-space: nowrap; color: var(--color-accent-700);">Reprendre →</span></button></sc-for></div></sc-if>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; font-size: 16px; padding: 14px 22px;">☕ Nouvelle dégustation</button>
-            <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ Nouveau thé</button>
+            <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ J’ai un nouveau thé</button>
             <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
             <sc-if value="{{ canScan }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ scanOpen }}" style="white-space: nowrap;">📷 Scanner</button></sc-if>
           </div>
@@ -647,7 +647,7 @@
                 <div style="display: flex; flex-wrap: wrap; gap: 2px; align-self: flex-start; background: var(--color-bg); border-radius: 999px; padding: 3px;">
                   <sc-if value="{{ own.allOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.all }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Tous les thés</button></sc-if><sc-if value="{{ own.allOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.all }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Tous les thés</button></sc-if>
                   <sc-if value="{{ own.mineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.mine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement mes thés</button></sc-if><sc-if value="{{ own.mineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.mine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement mes thés</button></sc-if>
-                  <sc-if value="{{ own.notmineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement le catalogue</button></sc-if><sc-if value="{{ own.notmineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement le catalogue</button></sc-if>
+                  <sc-if value="{{ own.notmineOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-accent); color: var(--color-bg);">Uniquement l’encyclopédie</button></sc-if><sc-if value="{{ own.notmineOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ own.notmine }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Uniquement l’encyclopédie</button></sc-if>
                 </div>
               </div>
             </div>
@@ -1347,7 +1347,7 @@
           </ul>
           <p><b>Pourquoi :</b> faire fonctionner le service que tu utilises (exécution du service, art. 6.1.b du RGPD) et assurer sa sécurité (intérêt légitime, art. 6.1.f). Aucune donnée n’est vendue, ni utilisée pour de la publicité ou du profilage.</p>
           <p><b>Qui les voit :</b> les autres membres, selon tes réglages dans ⚙️ Paramètres (public, salons et amis, amis seulement, privé). Ces règles sont appliquées par la base de données elle-même. Les administrateurs du site peuvent tout voir pour la maintenance et la modération.</p>
-          <p><b>Combien de temps :</b> tant que ton compte existe. À la suppression du compte, tes éléments personnels sont effacés ; les thés que tu as ajoutés au catalogue commun restent, sans ton nom dans les dégustations des autres. Le journal technique est purgé régulièrement.</p>
+          <p><b>Combien de temps :</b> tant que ton compte existe. À la suppression du compte, tes éléments personnels sont effacés ; les thés que tu as ajoutés à l’encyclopédie commune restent, sans ton nom dans les dégustations des autres. Le journal technique est purgé régulièrement.</p>
           <p><b>Transferts hors UE :</b> GitHub et Supabase sont des sociétés américaines, encadrées par des clauses contractuelles types de la Commission européenne.</p>
         </section>
         <section class="set-card">
@@ -1938,7 +1938,7 @@
               <h2 style="font-size: 22px; margin: 0;">🍃 Le thé</h2>
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px 16px;"><sc-for list="{{ sh.tea }}" as="d" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .55;">{{ d.k }}</span><span style="font-size: 15px; overflow-wrap: anywhere;">{{ d.v }}</span></div></sc-for></div>
               <sc-if value="{{ sh.profil }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14.5px; line-height: 1.6; opacity: .85;">{{ sh.profil }}</p></sc-if>
-              <div style="display: flex; gap: 14px; flex-wrap: wrap;"><button onClick="{{ sh.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 15px; color: var(--color-text); text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;">Fiche du thé →</button><sc-if value="{{ sh.cat }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sh.openCat }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 15px; color: var(--color-text); text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;">{{ sh.cat }} dans le catalogue →</button></sc-if></div>
+              <div style="display: flex; gap: 14px; flex-wrap: wrap;"><button onClick="{{ sh.openTea }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 15px; color: var(--color-text); text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;">Fiche du thé →</button><sc-if value="{{ sh.cat }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sh.openCat }}" style="cursor: pointer; border: none; background: transparent; padding: 0; text-align: left; font-family: var(--font-body); font-size: 15px; color: var(--color-text); text-decoration: underline; text-decoration-color: var(--color-divider); text-underline-offset: 3px;">{{ sh.cat }} dans l’encyclopédie →</button></sc-if></div>
             </section>
           </div>
         </sc-if>
@@ -2253,13 +2253,10 @@
           <p style="font-size: 17px; opacity: .72; margin: 0; text-wrap: pretty;">{{ addIntro }}</p>
         </div>
         <sc-if value="{{ isAddView }}" hint-placeholder-val="{{ true }}">
-        <div role="tablist" aria-label="Que voulez-vous ajouter ?" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
-          <sc-for list="{{ addModes }}" as="am" hint-placeholder-count="2">
-            <button role="tab" aria-selected="{{ am.on }}" onClick="{{ am.go }}" style="cursor: pointer; text-align: left; border: none; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 20px; background: {{ am.bg }}; color: {{ am.fg }}; box-shadow: {{ am.ring }}; font-family: var(--font-body);" style-hover="filter: brightness(.97);">
-              <span aria-hidden="true" style="font-size: 24px;">{{ am.icon }}</span>
-              <span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; font-weight: 600;">{{ am.name }}</span><span style="font-size: 13px; opacity: .75;">{{ am.sub }}</span></span>
-            </button>
-          </sc-for>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: {{ addBanBg }}; border-radius: 20px; padding: 14px 18px;">
+          <span aria-hidden="true" style="font-size: 26px;">{{ addBanIcon }}</span>
+          <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 220px;"><b style="font-size: 16px;">{{ addBanTitle }}</b><span style="font-size: 14px; opacity: .8;">{{ addBanSub }}</span></span>
+          <sc-if value="{{ addBanBack }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ addGoLot }}" style="white-space: nowrap; background: var(--color-bg);">← Revenir à mon sachet</button></sc-if>
         </div>
         </sc-if>
         <sc-if value="{{ isAdminView }}" hint-placeholder-val="{{ false }}">
@@ -2279,7 +2276,6 @@
         </datalist>
 
         <sc-if value="{{ tabTeaOn }}" hint-placeholder-val="{{ true }}">
-          <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 28px; margin: 0;">Ajouter au catalogue</h2><p style="margin: 0; font-size: 15px; opacity: .72;">Un thé entièrement nouveau, ou une variante d’un thé déjà au catalogue (par exemple une récolte ou un style particulier).</p></div>
           <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-surface); border-radius: 999px; padding: 3px; flex-wrap: wrap;">
             <sc-if value="{{ modeNewOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Nouveau thé</button></sc-if><sc-if value="{{ modeNewOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeNew }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Nouveau thé</button></sc-if>
             <sc-if value="{{ modeVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variante d'un thé existant</button></sc-if><sc-if value="{{ modeVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ modeVar }}" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variante d'un thé existant</button></sc-if>
@@ -2288,7 +2284,7 @@
 
         <sc-if value="{{ tabCatOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Modifier le catalogue</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Modifiez un champ puis validez avec Entrée ou en quittant le champ. Renommer un thé ou une variante met à jour les sachets qui y sont rattachés.</p></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Modifier l’encyclopédie</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Modifiez un champ puis validez avec Entrée ou en quittant le champ. Renommer un thé ou une variante met à jour les sachets qui y sont rattachés.</p></div>
             <div style="display: flex; gap: 2px; align-self: flex-start; background: var(--color-bg); border-radius: 999px; padding: 3px;"><sc-if value="{{ ceFamOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceFam }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Familles</button></sc-if><sc-if value="{{ ceFamOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceFam }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Familles</button></sc-if><sc-if value="{{ ceTeaOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceTea }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Thés</button></sc-if><sc-if value="{{ ceTeaOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceTea }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Thés</button></sc-if><sc-if value="{{ ceVarOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ceVar }}" aria-pressed="true" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--color-text); color: var(--color-bg);">Variantes</button></sc-if><sc-if value="{{ ceVarOff }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ceVar }}" aria-pressed="false" style="cursor: pointer; white-space: nowrap; border: none; font-family: var(--font-body); font-size: 14px; padding: 7px 14px; border-radius: 999px; background: transparent; color: var(--color-text);" style-hover="background: var(--color-accent-100);">Variantes</button></sc-if></div>
             <sc-if value="{{ ceFamOn }}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-direction: column; gap: 10px;">
               <sc-for list="{{ ceFams }}" as="cf" hint-placeholder-count="3"><div style="background: var(--color-bg); border-radius: 20px; padding: 12px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
@@ -2363,7 +2359,7 @@
                 <span style="font-size: 14px; font-weight: 600; margin-left: 8px;">🛍️ Sachet</span><sc-raw-select class="input" value="{{ adBLot }}" data-val="{{ adBLot }}" onChange="{{ setAdBLot }}" aria-label="Sachet à appliquer" style="width: auto; max-width: 340px; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adLotOpts }}" as="lo" hint-placeholder-count="3"><option value="{{ lo.v }}" label="{{ lo.l }}">{{ lo.l }}</option></sc-for></sc-raw-select><button class="btn btn-secondary" onClick="{{ adApplyLot }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
               </div></sc-if>
               <sc-if value="{{ adProdOps }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--color-surface); border-radius: 14px; padding: 10px 12px;">
-                <span style="font-size: 14px; font-weight: 600;">📖 Thé du catalogue</span><input class="input" list="liste-thes" value="{{ adBThe }}" onInput="{{ setAdBThe }}" placeholder="ex : Da Hong Pao" aria-label="Thé du catalogue à appliquer" style="width: 220px; padding: 7px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ adApplyThe }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
+                <span style="font-size: 14px; font-weight: 600;">📖 Thé de l’encyclopédie</span><input class="input" list="liste-thes" value="{{ adBThe }}" onInput="{{ setAdBThe }}" placeholder="ex : Da Hong Pao" aria-label="Thé de l’encyclopédie à appliquer" style="width: 220px; padding: 7px 12px; background: var(--color-bg);"><button class="btn btn-secondary" onClick="{{ adApplyThe }}" style="white-space: nowrap; background: var(--color-bg);">Appliquer</button>
                 <span style="font-size: 14px; font-weight: 600; margin-left: 8px;">🏷️ Tag</span><sc-raw-select class="input" value="{{ adBTag }}" data-val="{{ adBTag }}" onChange="{{ setAdBTag }}" aria-label="Tag" style="width: auto; padding: 7px 12px; background: var(--color-bg);"><sc-for list="{{ adTagOpts }}" as="to2" hint-placeholder-count="3"><option value="{{ to2.v }}" label="{{ to2.l }}">{{ to2.l }}</option></sc-for></sc-raw-select><button class="btn btn-secondary" onClick="{{ adAddTag }}" style="white-space: nowrap; background: var(--color-bg);">＋ Ajouter</button><button class="btn btn-ghost" onClick="{{ adDelTag }}" style="white-space: nowrap;">− Retirer</button>
               </div></sc-if>
               <sc-if value="{{ adSacOps }}" hint-placeholder-val="{{ false }}">
@@ -2445,7 +2441,7 @@
         </sc-if>
         <sc-if value="{{ tabMrgOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Fusionner des thés du catalogue</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Quand un même thé existe sous deux noms (« Le Bai Mu Dan » et « Bai Mu Dan »), rattachez le doublon au bon nom : ses thés du commerce et ses variantes passent sur le thé gardé, puis le doublon disparaît du catalogue.</p></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">Fusionner des thés de l’encyclopédie</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Quand un même thé existe sous deux noms (« Le Bai Mu Dan » et « Bai Mu Dan »), rattachez le doublon au bon nom : ses thés du commerce et ses variantes passent sur le thé gardé, puis le doublon disparaît de l’encyclopédie.</p></div>
             <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Doublon à fusionner</span>
               <sc-raw-select class="input" value="{{ mgSrc }}" data-val="{{ mgSrc }}" onChange="{{ setMgSrc }}" style="width: 100%; box-sizing: border-box;"><option value="">Choisir le thé en double…</option><sc-for list="{{ mgTeas }}" as="mt" hint-placeholder-count="3"><option value="{{ mt.key }}" label="{{ mt.label }}">{{ mt.label }}</option></sc-for></sc-raw-select></label>
             <button onClick="{{ mgSwap }}" title="Inverser les deux sélections" style="align-self: center; cursor: pointer; border: none; border-radius: 999px; padding: 6px 16px; font-family: var(--font-body); font-size: 14px; background: var(--color-bg); color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-divider);">⇅ Inverser</button>
@@ -2622,7 +2618,7 @@
             </sc-for>
           </section></sc-if>
           <sc-if value="{{ tabModAddOn }}" hint-placeholder-val="{{ false }}"><section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">⏳ Ajouts au catalogue à valider ({{ mdNPend }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les thés et variantes ajoutés par les membres n’apparaissent pour tous qu’une fois validés. Les ajouts des modérateurs et des admins sont publiés directement, sans passer par ici.</p></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">⏳ Ajouts à l’encyclopédie à valider ({{ mdNPend }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les thés et variantes ajoutés par les membres n’apparaissent pour tous qu’une fois validés. Les ajouts des modérateurs et des admins sont publiés directement, sans passer par ici.</p></div>
             <sc-if value="{{ mdV1 }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">La validation s’active avec le nouveau stockage (Données → Passer au nouveau stockage).</p></sc-if>
             <sc-if value="{{ mdNoPending }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien à valider.</p></sc-if>
             <sc-for list="{{ mdPending }}" as="mp" hint-placeholder-count="2">
@@ -2630,7 +2626,7 @@
                 <div class="sac-ttl"><div class="sac-nm"><span class="sac-name" style="cursor: default; font-size: 17px;">{{ mp.label }}</span></div><span class="sac-sub">{{ mp.sub }}</span></div>
                 <div style="display: flex; gap: 8px;"><button class="btn btn-primary" onClick="{{ mp.ok }}" style="white-space: nowrap;">✅ Valider</button><button class="btn btn-secondary" onClick="{{ mp.no }}" style="white-space: nowrap; background: var(--color-bg); color: var(--color-accent-800);">✖ Refuser</button></div>
               </div>
-              <sc-if value="{{ mp.isTea }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 0 16px 12px;"><sc-if value="{{ mp.sim }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">⚠️ Ressemble à : {{ mp.sim }}</span></sc-if><input class="input" list="liste-thes" value="{{ mp.mgVal }}" onInput="{{ mp.setMg }}" placeholder="C’est en fait… (thé du catalogue)" aria-label="Fusionner dans" style="flex: 1; min-width: 200px; padding: 7px 12px;"><button class="btn btn-secondary" onClick="{{ mp.merge }}" style="white-space: nowrap;">🔀 Fusionner</button></div></sc-if>
+              <sc-if value="{{ mp.isTea }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 0 16px 12px;"><sc-if value="{{ mp.sim }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">⚠️ Ressemble à : {{ mp.sim }}</span></sc-if><input class="input" list="liste-thes" value="{{ mp.mgVal }}" onInput="{{ mp.setMg }}" placeholder="C’est en fait… (thé de l’encyclopédie)" aria-label="Fusionner dans" style="flex: 1; min-width: 200px; padding: 7px 12px;"><button class="btn btn-secondary" onClick="{{ mp.merge }}" style="white-space: nowrap;">🔀 Fusionner</button></div></sc-if>
               </div>
             </sc-for>
           </section></sc-if>
@@ -2670,10 +2666,10 @@
             </ul>
           </section>
           <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <h2 style="font-size: 24px; margin: 0;">📖 Catalogue et validation</h2>
+            <h2 style="font-size: 24px; margin: 0;">📖 Encyclopédie et validation</h2>
             <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55;">
-              <li>Le <b>catalogue</b> liste les thés « génériques » (Da Hong Pao, Sencha…) et leurs variantes ; les <b>thés du commerce</b> sont les produits précis d’une boutique ; les <b>sachets</b> sont ce que chacun possède.</li>
-              <li>Un thé ou une variante ajouté au catalogue par un <b>membre</b> reste « ⏳ en attente » jusqu’à validation (Modération → Ajouts au catalogue).</li>
+              <li>L’<b>encyclopédie</b> liste les thés « génériques » (Da Hong Pao, Sencha…) et leurs variantes ; les <b>thés du commerce</b> sont les produits précis d’une boutique ; les <b>sachets</b> sont ce que chacun possède.</li>
+              <li>Un thé ou une variante ajouté à l’encyclopédie par un <b>membre</b> reste « ⏳ en attente » jusqu’à validation (Modération → Ajouts à l’encyclopédie).</li>
               <li>Les ajouts des <b>modérateurs et admins</b> sont publiés directement, sans validation.</li>
               <li>Les textes contenant un mot interdit sont refusés par la base ; les autres textes douteux remontent dans « Textes à vérifier ».</li>
             </ul>
@@ -2933,14 +2929,16 @@
             <label style="display: flex; flex-direction: column; gap: 6px; max-width: 620px;">
               <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé du commerce</span>
               <sc-raw-select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px; min-height: 50px;" value="{{ form.prodId }}" data-val="{{ form.prodId }}" onChange="{{ pickProd }}">
-                <option value="">＋ Nouveau thé</option>
+                <option value="">＋ Nouveau thé du commerce</option>
                 <sc-for list="{{ prodOptions }}" as="po" hint-placeholder-count="0"><option value="{{ po.id }}" label="{{ po.label }}">{{ po.label }}</option></sc-for>
               </sc-raw-select>
             </label>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
               <label style="display: flex; flex-direction: column; gap: 6px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Famille de thé</span>
+                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Thé de l’encyclopédie</span>
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="Commencez à taper : Bai Mu Dan…" value="{{ form.the }}" onChange="{{ setF.the }}" list="liste-thes">
+                <sc-if value="{{ lotTheMissing }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">« {{ form.the }} » n’est pas dans l’encyclopédie.</span><button type="button" class="btn btn-secondary" onClick="{{ lotPropose }}" style="align-self: flex-start; white-space: nowrap; padding: 6px 14px; font-size: 14px;">📖 Le proposer à l’encyclopédie</button></sc-if>
+                <sc-if value="{{ lotTheHelp }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ lotPropose }}" style="align-self: flex-start; cursor: pointer; border: none; background: transparent; padding: 0; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); text-decoration: underline;">Il n’existe pas encore ? Le proposer à l’encyclopédie</button></sc-if>
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px;">
                 <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Variante</span>
@@ -4543,7 +4541,7 @@ class Component extends DCLogic {
     const src = all.find(x => x.key === this.state.mgSrc), tgt = all.find(x => x.key === this.state.mgTgt);
     const dAll = this.declAll();
     let preview = '';
-    if (src && tgt) preview = src.key === tgt.key ? 'Choisissez deux thés différents.' : cnt(src.name) + ' thé(s) du commerce et ' + (dAll[src.name] || []).length + ' variante(s) de « ' + src.name + ' » seront rattachés à « ' + tgt.name + ' » (' + this.families[tgt.fam].name + '). « ' + src.name + ' » sera retiré du catalogue.';
+    if (src && tgt) preview = src.key === tgt.key ? 'Choisissez deux thés différents.' : cnt(src.name) + ' thé(s) du commerce et ' + (dAll[src.name] || []).length + ' variante(s) de « ' + src.name + ' » seront rattachés à « ' + tgt.name + ' » (' + this.families[tgt.fam].name + '). « ' + src.name + ' » sera retiré de l’encyclopédie.';
     return { mgTeas: all.map(x => ({ key: x.key, label: x.name + ' — ' + this.families[x.fam].name + ' · ' + cnt(x.name) + ' thé(s) du commerce' })),
       mgSrc: this.state.mgSrc || '', mgTgt: this.state.mgTgt || '', setMgSrc: e => this.setState({ mgSrc: e.target.value, mgMsg: '' }), setMgTgt: e => this.setState({ mgTgt: e.target.value, mgMsg: '' }),
       mgSwap: () => this.setState(st => ({ mgSrc: st.mgTgt || '', mgTgt: st.mgSrc || '', mgMsg: '' })),
@@ -4712,7 +4710,7 @@ class Component extends DCLogic {
   // ce qui manque ou cloche sur un élément des Données (filtre « ⚠️ À compléter »)
   dataIssues(kind, x, ctx) {
     const P = [], blank = v => !String(v == null ? '' : v).trim();
-    if (kind === 'prod') { if (blank(x.marque)) P.push('sans boutique'); if (!(x.tags || []).length) P.push('sans tags de goût'); if (!blank(x.the) && !this.famOf(x.the)) P.push('thé hors catalogue'); if (blank(x.the)) P.push('sans thé du catalogue'); }
+    if (kind === 'prod') { if (blank(x.marque)) P.push('sans boutique'); if (!(x.tags || []).length) P.push('sans tags de goût'); if (!blank(x.the) && !this.famOf(x.the)) P.push('thé hors encyclopédie'); if (blank(x.the)) P.push('sans thé de l’encyclopédie'); }
     else if (kind === 'sachet') { if (!ctx.prodBy[x.prodId]) P.push('thé introuvable'); if (blank(x.ville)) P.push('sans ville'); if (blank(x.quantite)) P.push('sans quantité'); if (blank(x.owner)) P.push('sans propriétaire'); }
     else if (kind === 'log') { if (!ctx.sacBy[x.lotId]) P.push('sachet introuvable'); if (blank(x.note) && !x.live) P.push('sans note'); else if (!blank(x.note) && !/^[LR]{0,2}\d{1,2}([.,]\d{1,2})?$/i.test(String(x.note).trim())) P.push('note au format inhabituel'); if (blank(x.date)) P.push('sans date'); }
     else if (kind === 'gear') { if (blank(x.type)) P.push('sans type'); if (blank(x.owner)) P.push('sans propriétaire'); }
@@ -4745,7 +4743,7 @@ class Component extends DCLogic {
       cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Boutique'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
       rows = a.prods.map(p => { const sacs = a.sachets.filter(x => x.prodId === p.id); const nl = sacs.reduce((t, x) => t + (logsBySac[x.id] || []).length, 0); const ts = this.idTs(p.id);
         return { id: p.id, v: { nom: p.nom || p.the, the: p.the + (p.variante ? ' · ' + p.variante : ''), fam: famName(p.the), marque: p.marque || '—', nSac: sacs.length, nLog: nl, who: creator('pid', p.id) || (sacs[0] || {}).owner || '—', date: ts },
-          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé du catalogue', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique', this.shopOptions(p.marque)], ['ref', 'Référence'], ['recoTemp', 'Temp. conseillée (vendeur)'], ['recoQty', 'Quantité conseillée'], ['recoTimes', 'Temps conseillés'], ['tags', 'Tags de goût', 'tags'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
+          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé de l’encyclopédie', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique', this.shopOptions(p.marque)], ['ref', 'Référence'], ['recoTemp', 'Temp. conseillée (vendeur)'], ['recoQty', 'Quantité conseillée'], ['recoTimes', 'Temps conseillés'], ['tags', 'Tags de goût', 'tags'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
           save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, recoTemp: d.recoTemp || '', recoQty: d.recoQty || '', recoTimes: d.recoTimes || '', tags: Array.isArray(d.tags) ? d.tags.slice() : (x.tags || []), ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
           open: () => this.openProd(p.id), delMsg: 'Supprimer « ' + (p.nom || p.the) + ' » ? ' + sacs.length + ' sachet(s) et ' + nl + ' dégustation(s) seront aussi supprimés.', delFn: delProds([p.id]) }; });
     } else if (kind === 'sachet') {
@@ -4789,7 +4787,7 @@ class Component extends DCLogic {
       rows = a.teas.map((t, i) => ({ id: 't' + i, v: { nom: t.nom, type: 'Thé', fam: (this.families[t.famille] || {}).name || t.famille, used: a.prods.filter(p => this.norm(p.the) === this.norm(t.nom)).length, who: catEv(t.nom) },
           raw: Object.assign({ id: 't' + i }, t), fields: [['nom', 'Nom'], ['famille', 'Famille', Object.keys(this.families).map(k => [k, this.families[k].name])], ['traduction', 'Traduction'], ['origine', 'Origine'], ['pays', 'Pays'], ['province', 'Province'], ['gout', 'Goût', 'area']],
           save: d => { const b = this.getAdds(); const old = t.nom; this.setAdds(Object.assign({}, b, { teas: b.teas.map((z, k) => k === i ? Object.assign({}, z, { nom: d.nom, famille: d.famille, traduction: d.traduction, origine: d.origine, pays: d.pays, province: d.province, gout: d.gout }) : z), prods: old !== d.nom ? b.prods.map(pp => this.norm(pp.the) === this.norm(old) ? Object.assign({}, pp, { the: d.nom }) : pp) : b.prods, decl: old !== d.nom ? (b.decl || []).map(dd => dd.the === old ? Object.assign({}, dd, { the: d.nom }) : dd) : b.decl })); },
-          open: () => this.openCatTea(t.nom), delMsg: 'Retirer « ' + t.nom + ' » du catalogue ? Les thés du commerce rattachés restent enregistrés.', delFn: delCat(['t' + i]) }))
+          open: () => this.openCatTea(t.nom), delMsg: 'Retirer « ' + t.nom + ' » de l’encyclopédie ? Les thés du commerce rattachés restent enregistrés.', delFn: delCat(['t' + i]) }))
         .concat((a.decl || []).map((d, i) => ({ id: 'd' + i, v: { nom: d.nom, type: 'Variante', fam: d.the, used: a.prods.filter(p => this.norm(p.variante || '') === this.norm(d.nom)).length, who: catEv(d.nom) },
           raw: Object.assign({ id: 'd' + i }, d), fields: [['nom', 'Nom de la variante'], ['the', 'Thé parent', 'tea'], ['traduction', 'Traduction'], ['profil', 'Profil'], ['description', 'Description', 'area']],
           save: dd => { const b = this.getAdds(); const old = d.nom; this.setAdds(Object.assign({}, b, { decl: (b.decl || []).map((z, k) => k === i ? Object.assign({}, z, { nom: dd.nom, the: dd.the, traduction: dd.traduction, profil: dd.profil, description: dd.description }) : z), prods: old !== dd.nom ? b.prods.map(pp => this.norm(pp.variante || '') === this.norm(old) && this.norm(pp.the) === this.norm(d.the) ? Object.assign({}, pp, { variante: dd.nom }) : pp) : b.prods })); },
@@ -4819,12 +4817,12 @@ class Component extends DCLogic {
     const sel = (this.state.adSel || []).filter(id => list.some(r => r.id === id));
     const shown = list.slice(0, 500);
     const cell = (r, k) => { if (r.disp && r.disp[k] != null) return r.disp[k]; const v = r.v[k]; if (k === 'date' && typeof v === 'number') return fmtD(v); if (v == null || v === '') return '—'; return String(v); };
-    const K = [['prod', '🍵', 'Thés du commerce', a.prods.length], ['sachet', '🛍️', 'Sachets', a.sachets.length], ['log', '☕', 'Dégustations', a.logs.length], ['gear', '🫖', 'Matériel', (a.gear || []).length], ['cat', '📖', 'Catalogue ajouté', a.teas.length + (a.decl || []).length], ['shop', '🏪', 'Boutiques', this.allShops().length]];
+    const K = [['prod', '🍵', 'Thés du commerce', a.prods.length], ['sachet', '🛍️', 'Sachets', a.sachets.length], ['log', '☕', 'Dégustations', a.logs.length], ['gear', '🫖', 'Matériel', (a.gear || []).length], ['cat', '📖', 'Encyclopédie (ajouts)', a.teas.length + (a.decl || []).length], ['shop', '🏪', 'Boutiques', this.allShops().length]];
     const IC = this.dataIssueCounts();
     const fNotes = a.logs.filter(l => /^F/i.test(String(l.note || '').trim()));
-    const kindName = { prod: 'les thés du commerce', sachet: 'les sachets', log: 'les dégustations', gear: 'le matériel', cat: 'le catalogue ajouté' }[kind];
+    const kindName = { prod: 'les thés du commerce', sachet: 'les sachets', log: 'les dégustations', gear: 'le matériel', cat: 'les ajouts à l’encyclopédie' }[kind];
     return { adTableOn: kind !== 'shop',
-      adQual: [['prod', '🍵 Thés du commerce'], ['sachet', '🛍️ Sachets'], ['log', '☕ Dégustations'], ['gear', '🫖 Matériel'], ['cat', '📖 Catalogue']].filter(x => IC[x[0]]).map(x => { const on = kind === x[0] && flt === 'issues'; return { label: x[1] + ' · ' + IC[x[0]], on: on, bg: on ? 'var(--color-text)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState(on ? { adFilter: '', adSel: [] } : { adKind: x[0], adFilter: 'issues', adQ: '', adSel: [] }) }; }),
+      adQual: [['prod', '🍵 Thés du commerce'], ['sachet', '🛍️ Sachets'], ['log', '☕ Dégustations'], ['gear', '🫖 Matériel'], ['cat', '📖 Encyclopédie']].filter(x => IC[x[0]]).map(x => { const on = kind === x[0] && flt === 'issues'; return { label: x[1] + ' · ' + IC[x[0]], on: on, bg: on ? 'var(--color-text)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState(on ? { adFilter: '', adSel: [] } : { adKind: x[0], adFilter: 'issues', adQ: '', adSel: [] }) }; }),
       adQualOn: IC.total > 0 || fNotes.length > 0, adQualTxt: IC.total ? IC.total + ' élément' + (IC.total > 1 ? 's' : '') + ' à compléter ou à vérifier :' : 'Tout est complet.',
       adQHasF: fNotes.length > 0, adQFTxt: fNotes.length + ' note' + (fNotes.length > 1 ? 's commencent' : ' commence') + ' par F (ancien code « loupé » ?)',
       adQConvF: () => { if (!window.confirm('Remplacer le F par L (loupé) sur ' + fNotes.length + ' note(s) ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => /^F/i.test(String(l.note || '').trim()) ? Object.assign({}, l, { note: this.noteJoin(this.noteSplit(String(l.note).trim()).pre.replace(/F/g, 'L'), this.noteSplit(String(l.note).trim()).num) }) : l) })); this.flash('Notes converties.'); },
@@ -4844,7 +4842,7 @@ class Component extends DCLogic {
         }
         const tags = this.canonTags(); const tg = tags.indexOf(this.state.adBTag) >= 0 ? this.state.adBTag : '';
         return { adLogOps: false, adProdOps: true, adAuthOpts: [], adLotOpts: [], adBThe: this.state.adBThe || '', setAdBThe: e => this.setState({ adBThe: e.target.value }),
-          adApplyThe: () => { const t = String(this.state.adBThe || '').trim(); if (!t) return; if (!this.famOf(t)) { window.alert('« ' + t + ' » n’est pas dans le catalogue.'); return; } const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 ? Object.assign({}, pp, { the: t, variante: '' }) : pp) })); this.setState({ adSel: [], adBThe: '', addMsg: '✓ Thé du catalogue appliqué.' }); },
+          adApplyThe: () => { const t = String(this.state.adBThe || '').trim(); if (!t) return; if (!this.famOf(t)) { window.alert('« ' + t + ' » n’est pas dans l’encyclopédie.'); return; } const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 ? Object.assign({}, pp, { the: t, variante: '' }) : pp) })); this.setState({ adSel: [], adBThe: '', addMsg: '✓ Thé de l’encyclopédie appliqué.' }); },
           adTagOpts: [{ v: '', l: '— Choisir un tag —' }].concat(tags.map(t => ({ v: t, l: t }))), adBTag: tg, setAdBTag: e => this.setState({ adBTag: e.target.value }),
           adAddTag: () => { if (!tg) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 && (pp.tags || []).indexOf(tg) < 0 ? Object.assign({}, pp, { tags: (pp.tags || []).concat([tg]) }) : pp) })); this.setState({ addMsg: '✓ Tag « ' + tg + ' » ajouté.' }); },
           adDelTag: () => { if (!tg) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(pp => sel.indexOf(pp.id) >= 0 && (pp.tags || []).indexOf(tg) >= 0 ? Object.assign({}, pp, { tags: pp.tags.filter(x => x !== tg) }) : pp) })); this.setState({ addMsg: '✓ Tag « ' + tg + ' » retiré.' }); } };
@@ -5165,7 +5163,7 @@ class Component extends DCLogic {
     let L;
     if (t === 'dev') L = [['bugs', '🐞 Bugs remontés' + n(this.state.admBugs || 0)], ['err', '⚠️ Erreurs générées' + n(this.state.admErr24 || 0)]];
     else { const pend = (a.teas || []).filter(x => x.pending).length + (a.decl || []).filter(x => x.pending).length; const rep = this.reports().filter(r => r.status === 'open').length;
-      L = [['add', '⏳ Ajouts au catalogue' + n(pend)], ['rep', '🚩 Signalements' + n(rep)]];
+      L = [['add', '⏳ Ajouts à l’encyclopédie' + n(pend)], ['rep', '🚩 Signalements' + n(rep)]];
       if (this.isAdmin(this.me())) { if (this._scanN == null || Date.now() - (this._scanAt || 0) > 20000) { this._scanAt = Date.now(); try { this._scanN = this.textScan().length; } catch (e) { this._scanN = 0; } }
         L = L.concat([['scan', '🔍 Textes à vérifier' + n(this._scanN)], ['bw', '🚫 Mots interdits' + n(((a.options || {}).bannedWords || []).length)]]); } }
     return { admSubOn: true, admSubs: L.map(x => ({ label: x[1], on: cur === x[0], bg: cur === x[0] ? 'var(--color-text)' : 'var(--color-surface)', fg: cur === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ [key]: x[0] }) })) };
@@ -5256,7 +5254,7 @@ class Component extends DCLogic {
     (a.sachets || []).forEach(x => check(x.commentaire, { kind: 'sachet', id: x.id, field: 'commentaire', who: x.owner, where: 'Commentaire du sachet · ' + pname(x.id), canClear: true }));
     (a.gear || []).forEach(g => { check(g.name, { kind: 'gear', id: g.id, field: 'name', who: g.owner, where: 'Nom de matériel', canClear: false }); check(g.desc || g.description, { kind: 'gear', id: g.id, field: g.desc != null ? 'desc' : 'description', who: g.owner, where: 'Description · ' + g.name, canClear: true }); });
     (o.salons || []).forEach(x => { check(x.name, { kind: 'salon', id: x.id, field: 'name', who: x.chief || x.creator, where: 'Nom de salon', canClear: false }); check(x.desc, { kind: 'salon', id: x.id, field: 'desc', who: x.chief || x.creator, where: 'Description du salon « ' + x.name + ' »', canClear: true }); });
-    (a.teas || []).forEach(t => { check(t.nom, { kind: 'cat', id: t.nom, field: 'nom', who: '', where: 'Thé du catalogue', canClear: false }); check(t.gout, { kind: 'cat', id: t.nom, field: 'gout', who: '', where: 'Goût · ' + t.nom, canClear: false }); });
+    (a.teas || []).forEach(t => { check(t.nom, { kind: 'cat', id: t.nom, field: 'nom', who: '', where: 'Thé de l’encyclopédie', canClear: false }); check(t.gout, { kind: 'cat', id: t.nom, field: 'gout', who: '', where: 'Goût · ' + t.nom, canClear: false }); });
     (a.decl || []).forEach(d => check(d.description, { kind: 'decl', id: d.nom, field: 'description', who: '', where: 'Variante « ' + d.nom + ' »', canClear: false }));
     (o.reports || []).forEach(r => check(r.reason, { kind: 'report', id: r.id, field: 'reason', who: r.by, where: 'Motif de signalement', canClear: false }));
     this.opts().users.forEach(u => check(u, { kind: 'user', id: u, field: 'nom', who: u, where: 'Prénom d’un membre', canClear: false }));
@@ -5331,7 +5329,7 @@ class Component extends DCLogic {
     const dbStats = [st('👥', M.length || this.opts().users.length, 'Membres', M.length ? M.filter(m => m.last_seen && Date.parse(m.last_seen) > Date.now() - 30 * 864e5).length + ' venus ce mois-ci' : ''),
       st('☕', a.logs.length, 'Dégustations', a.logs.filter(l => String(l.date || '').slice(0, 7) === month).length + ' ce mois-ci'),
       st('🛍️', a.sachets.length, 'Sachets', openSac + ' en cours'), st('🍵', a.prods.length, 'Thés du commerce', this.allShops().length + ' boutiques'),
-      st('📖', (a.teas || []).length + (a.decl || []).length, 'Ajouts au catalogue', 'thés et variantes'), st('🫖', (a.gear || []).length, 'Matériel', pets + ' tea pet' + (pets > 1 ? 's' : '')),
+      st('📖', (a.teas || []).length + (a.decl || []).length, 'Ajouts à l’encyclopédie', 'thés et variantes'), st('🫖', (a.gear || []).length, 'Matériel', pets + ' tea pet' + (pets > 1 ? 's' : '')),
       st('🏠', this.salons().length, 'Salons', ''), st('⭐', (() => { const v = a.logs.map(l => this.noteVal(l.note)).filter(x => x != null); return v.length ? String(Math.round(v.reduce((t, x) => t + x, 0) / v.length * 10) / 10).replace('.', ',') : '—'; })(), 'Note moyenne', 'toutes dégustations')];
     // graphe
     const ser = ['vis', 'log', 'sac', 'mem'].indexOf(this.state.gpSer) >= 0 ? this.state.gpSer : 'vis';
@@ -5455,15 +5453,15 @@ class Component extends DCLogic {
     (a.decl || []).forEach(d => { if (d.pending) pend.push({ label: '🌿 ' + d.nom, sub: 'Variante de « ' + d.the + ' »', list: 'decl', ref: d }); });
     return { mdReports: rows, mdNoReports: !rows.length, mdNRep: String(rows.length),
       mdPending: pend.map(x => ({ label: x.label, sub: x.sub,
-        ok: () => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).map(z => { if (z !== x.ref) return z; const c = Object.assign({}, z); delete c.pending; return c; }) })); this.modLog('a validé l’ajout au catalogue', x.ref.nom); },
-        no: () => { if (!window.confirm('Refuser et retirer « ' + x.ref.nom + ' » du catalogue ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).filter(z => z !== x.ref) })); this.modLog('a refusé l’ajout au catalogue', x.ref.nom); },
+        ok: () => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).map(z => { if (z !== x.ref) return z; const c = Object.assign({}, z); delete c.pending; return c; }) })); this.modLog('a validé l’ajout à l’encyclopédie', x.ref.nom); },
+        no: () => { if (!window.confirm('Refuser et retirer « ' + x.ref.nom + ' » de l’encyclopédie ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { [x.list]: (b[x.list] || []).filter(z => z !== x.ref) })); this.modLog('a refusé l’ajout à l’encyclopédie', x.ref.nom); },
         isTea: x.list === 'teas', sim: x.list === 'teas' ? this.similarNames(x.ref.nom, this.allCatalogNames().filter(n => n !== x.ref.nom)).slice(0, 3).join(', ') : '',
         mgVal: ((this.state.mdMerge || {})[x.ref.nom]) || '', setMg: e => { const v = e.target.value; this.setState(st => ({ mdMerge: Object.assign({}, st.mdMerge, { [x.ref.nom]: v }) })); },
-        merge: () => { const tgt = String(((this.state.mdMerge || {})[x.ref.nom]) || '').trim(); if (!tgt) { window.alert('Choisissez le thé du catalogue à garder.'); return; }
-          if (this.allCatalogNames().indexOf(tgt) < 0) { window.alert('« ' + tgt + ' » n’est pas dans le catalogue.'); return; }
+        merge: () => { const tgt = String(((this.state.mdMerge || {})[x.ref.nom]) || '').trim(); if (!tgt) { window.alert('Choisissez le thé de l’encyclopédie à garder.'); return; }
+          if (this.allCatalogNames().indexOf(tgt) < 0) { window.alert('« ' + tgt + ' » n’est pas dans l’encyclopédie.'); return; }
           if (!window.confirm('Fusionner « ' + x.ref.nom + ' » dans « ' + tgt + ' » ? Les thés du commerce rattachés passeront sur « ' + tgt + ' ».')) return;
           const b = this.getAdds(); this.setAdds(Object.assign({}, b, { teas: (b.teas || []).filter(z => z !== x.ref), prods: b.prods.map(pp => this.norm(pp.the) === this.norm(x.ref.nom) ? Object.assign({}, pp, { the: tgt }) : pp), decl: (b.decl || []).map(dd => this.norm(dd.the) === this.norm(x.ref.nom) ? Object.assign({}, dd, { the: tgt }) : dd) }));
-          this.modLog('a fusionné un ajout au catalogue', x.ref.nom + ' → ' + tgt); } })),
+          this.modLog('a fusionné un ajout à l’encyclopédie', x.ref.nom + ' → ' + tgt); } })),
       mdHist: (((a.options || {}).modlog) || []).slice().sort((x, y) => String(y.at).localeCompare(String(x.at))).slice(0, 60).map(h => ({ txt: h.by + ' ' + h.action + (h.target ? ' : ' + h.target : ''), when: (() => { try { return new Date(h.at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } })() })),
       mdNoPending: !pend.length, mdNPend: String(pend.length), mdV1: !this.v2, mdNoHist: !(((a.options || {}).modlog) || []).length };
   }
@@ -5507,7 +5505,7 @@ class Component extends DCLogic {
     const nf = this.prefsOf(me).notif || {}; const mod = this.realMod(me), adm = this.realAdmin(me);
     const set = patch => { const cur = Object.assign({}, this.prefsOf(me).notif || {}, patch); if (!cur.tz) cur.tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/Paris'; this.setPrefs({ notif: cur }); };
     const T = [];
-    if (mod) T.push(['🛡️ Administration', [['adm_report', '🚩 Nouveau signalement'], ['adm_pending', '⏳ Ajout au catalogue à valider']].concat(adm ? [['adm_member', '👋 Nouveau membre inscrit'], ['adm_bug', '🐞 Nouveau bug signalé']] : [])]);
+    if (mod) T.push(['🛡️ Administration', [['adm_report', '🚩 Nouveau signalement'], ['adm_pending', '⏳ Ajout à l’encyclopédie à valider']].concat(adm ? [['adm_member', '👋 Nouveau membre inscrit'], ['adm_bug', '🐞 Nouveau bug signalé']] : [])]);
     T.push(['👥 Les autres et moi', [['friend_req', '🤝 Demande d’ami reçue'], ['salon_invite', '🏮 Invitation dans un salon'], ['log_with', '☕ Quelqu’un m’ajoute à sa dégustation'], ['gift', '🎁 Un sachet m’est offert ou attribué'], ['announce', '📣 Nouvelle annonce de la maison']]]);
     T.push(['🏮 Mes salons', [['salon_log', '🍵 Chaque dégustation d’un membre de mes salons (peut faire beaucoup)']]]);
     T.push(['⏰ Rappels (à l’heure choisie)', [['tea_day', '🎲 Proposition de thé du jour (un de mes sachets peu bu)'], ['pet_thirst', '💧 Mon tea pet a soif (3 jours sans thé)'], ['wrap', '🎁 Mon Tea Wrapped du mois est prêt (le 1er)']]]);
@@ -6243,7 +6241,7 @@ class Component extends DCLogic {
       { key: 'marathon', v: marathon, unit: 'séances de 8 infusions ou plus', tiers: [[1, '🔁', 'Marathon gongfu'], [10, '🏃', 'Infatigable']] },
       { key: 'months', v: months, unit: 'mois avec une dégustation', tiers: [[3, '📅', 'Régulier'], [6, '🗓️', 'Rituel'], [12, '🎂', 'Une année de thé']] },
       { key: 'gift', v: given + sharedOut, unit: 'dons et partages', tiers: [[1, '🎁', 'Généreux'], [5, '🤲', 'Mécène'], [15, '😇', 'Cœur sur la main']] },
-      { key: 'botanist', v: botanist, unit: 'ajouts au catalogue', tiers: [[1, '🌿', 'Botaniste'], [5, '🔬', 'Taxonomiste']] },
+      { key: 'botanist', v: botanist, unit: 'ajouts à l’encyclopédie', tiers: [[1, '🌿', 'Botaniste'], [5, '🔬', 'Taxonomiste']] },
       { key: 'photo', v: photos, unit: 'sachets en photo', tiers: [[1, '📷', 'Photographe'], [10, '🖼️', 'Galerie']] },
       { key: 'together', v: together, unit: 'dégustations en salon', tiers: [[1, '🫖', 'Thé à plusieurs'], [10, '🏮', 'Cercle du thé'], [30, '🎎', 'Confrérie']] },
       { key: 'herbal', v: herbal, unit: 'familles sans théier goûtées', tiers: [[1, '🌼', 'Infusé'], [3, '🧉', 'Hors du théier']] },
@@ -6274,7 +6272,7 @@ class Component extends DCLogic {
   fieldChanges(o, n, kind, names) {
     const L = { log: { lotId: 'Sachet', author: 'Auteur', with: 'Participants', date: 'Date', heure: 'Heure', note: 'Note', infusion: 'Infusions', temps: 'Temps', temperature: 'Température', qty: 'Quantité', technique: 'Technique', repas: 'Moment', avis: 'Avis', nez: 'Nez', gearIds: 'Matériel', tags: 'Tags', endTs: 'Fin', startTs: 'Début' },
       sachet: { code: 'Code', owner: 'Propriétaire', prodId: 'Thé du commerce', achat: 'Date d’achat', prodDate: 'Année de production', lot: 'Lot', quantite: 'Quantité', prixMode: 'Vendu à', prixPaye: 'Prix payé', freq: 'Fréquence', commentaire: 'Commentaire', empty: 'Vide', sachetPhoto: 'Photo' },
-      prod: { nom: 'Nom', the: 'Thé du catalogue', variante: 'Variante', marque: 'Boutique', ville: 'Ville', ref: 'Référence', boutique: 'Lieu d’achat', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
+      prod: { nom: 'Nom', the: 'Thé de l’encyclopédie', variante: 'Variante', marque: 'Boutique', ville: 'Ville', ref: 'Référence', boutique: 'Lieu d’achat', code: 'Code', tags: 'Tags', recoTemp: 'Température conseillée', recoQty: 'Quantité conseillée', recoTimes: 'Temps conseillés', commentaire: 'Commentaire', prodPhoto: 'Photo' },
       gear: { name: 'Nom', type: 'Type', owner: 'Propriétaire', prix: 'Prix', marque: 'Marque', matiere: 'Matière', contenance: 'Contenance', photo: 'Photo', desc: 'Description', vitrine: 'Vitrine' },
       cat: { nom: 'Nom', famille: 'Famille', traduction: 'Traduction', origine: 'Origine', pays: 'Pays', province: 'Province', gout: 'Goût', recolte: 'Récolte' } }[kind] || {};
     const SKIP = ['history', 'adjust', 'shares', 'gearId', 'live', 'rev', 'id', 'pending'];
@@ -6332,10 +6330,10 @@ class Component extends DCLogic {
     (next.gear || []).filter(g => pG[g.id] && pG[g.id] !== g && JSON.stringify(pG[g.id]) !== JSON.stringify(g)).forEach(g => { const ch = this.fieldChanges(pG[g.id], g, 'gear'); if (ch.length) ev.push({ type: 'edit', icon: '✏️', text: 'a modifié « ' + g.name + ' »' + (g.owner !== who ? ' de ' + g.owner : ''), changes: ch }); });
     (prev.gear || []).filter(g => !nG[g.id]).forEach(g => ev.push({ type: 'del', icon: '🗑️', text: 'a supprimé « ' + g.name + ' »' + (g.owner !== who ? ' de ' + g.owner : '') + ' du matériel' }));
     { const key = t => (t.famille || '') + '|' + (t.nom || ''); const pTm = {}; (prev.teas || []).forEach((t, i) => { pTm[i] = t; });
-      if ((prev.teas || []).length === (next.teas || []).length) (next.teas || []).forEach((t, i) => { const o = pTm[i]; if (o && o !== t && JSON.stringify(o) !== JSON.stringify(t)) { const ch = this.fieldChanges(o, t, 'cat'); if (ch.length) ev.push({ type: 'edit', icon: '📖', text: 'a modifié « ' + (o.nom || t.nom) + ' » dans le catalogue', changes: ch }); } });
-      else (prev.teas || []).filter(o => !(next.teas || []).some(t => key(t) === key(o))).forEach(o => { if ((next.teas || []).length < (prev.teas || []).length) ev.push({ type: 'del', icon: '🗑️', text: 'a retiré « ' + o.nom + ' » du catalogue' }); }); }
+      if ((prev.teas || []).length === (next.teas || []).length) (next.teas || []).forEach((t, i) => { const o = pTm[i]; if (o && o !== t && JSON.stringify(o) !== JSON.stringify(t)) { const ch = this.fieldChanges(o, t, 'cat'); if (ch.length) ev.push({ type: 'edit', icon: '📖', text: 'a modifié « ' + (o.nom || t.nom) + ' » dans l’encyclopédie', changes: ch }); } });
+      else (prev.teas || []).filter(o => !(next.teas || []).some(t => key(t) === key(o))).forEach(o => { if ((next.teas || []).length < (prev.teas || []).length) ev.push({ type: 'del', icon: '🗑️', text: 'a retiré « ' + o.nom + ' » de l’encyclopédie' }); }); }
     const pT = (prev.teas || []).length, nT = (next.teas || []).length;
-    if (nT > pT && !(addP.length > 5)) (next.teas || []).slice(pT).forEach(t => ev.push({ type: 'cat', icon: '📖', name: t.nom, fam: t.famille, text: 'a ajouté « ' + t.nom + ' » au catalogue' }));
+    if (nT > pT && !(addP.length > 5)) (next.teas || []).slice(pT).forEach(t => ev.push({ type: 'cat', icon: '📖', name: t.nom, fam: t.famille, text: 'a ajouté « ' + t.nom + ' » à l’encyclopédie' }));
     const pD = (prev.decl || []).length, nD = (next.decl || []).length;
     if (nD > pD && !(addP.length > 5)) (next.decl || []).slice(pD).forEach(d => ev.push({ type: 'cat', icon: '📖', name: d.the, variant: d.nom, text: 'a ajouté la variante « ' + d.nom + ' » de ' + d.the }));
     const po = (prev.options || {}).friends || [], no = (next.options || {}).friends || [];
@@ -6426,7 +6424,7 @@ class Component extends DCLogic {
 
 
   jTypeLabels() {
-    return { prod: '🍵 Thé ajouté', sachet: '🛍️ Sachet ajouté', log: '☕ Dégustation', edit: '✏️ Modification', del: '🗑️ Suppression', qty: '⚖️ Quantité', empty: '📭 Sachet vide', give: '🎁 Don', share: '🤲 Partage', join: '🫖 Dégustation à plusieurs', cat: '📖 Catalogue', import: '📦 Import', friend: '🤝 Amis', salon: '🏮 Salon', admin: '🛡️ Admin', account: '👋 Nouveau compte', gear: '🫖 Matériel' };
+    return { prod: '🍵 Thé ajouté', sachet: '🛍️ Sachet ajouté', log: '☕ Dégustation', edit: '✏️ Modification', del: '🗑️ Suppression', qty: '⚖️ Quantité', empty: '📭 Sachet vide', give: '🎁 Don', share: '🤲 Partage', join: '🫖 Dégustation à plusieurs', cat: '📖 Encyclopédie', import: '📦 Import', friend: '🤝 Amis', salon: '🏮 Salon', admin: '🛡️ Admin', account: '👋 Nouveau compte', gear: '🫖 Matériel' };
   }
 
   journalFiltered() {
@@ -7096,7 +7094,7 @@ class Component extends DCLogic {
     const pst = this.statsMany(this.collection().filter(o => o.prodId === p.id).map(o => o.id));
     const freq = sa.freq ? ((this.opts().freqs.find(f => String(f.code) === String(sa.freq)) || {}).label || sa.freq) : '';
     const sac = [['Propriétaire', sa.owner], ['Boutique', this.shopTxt(p.marque || sa.marque || p.boutique || sa.boutique, sa.ville || p.ville)], ['Réf. fournisseur', p.ref || sa.ref], ['Acheté le', sa.achat ? this.fmtDate(sa.achat) : ''], ['Production', sa.prodDate], ['Lot', sa.lot], ['Format', sa.id ? this.formatTxt(sa) : ''], ['Payé', (this.priceVisible(sa.owner) && sa.prixPaye) ? String(sa.prixPaye).replace('.', ',') + (/\d\s*$/.test(String(sa.prixPaye)) ? ' €' : '') : ''], ['Prix', sa.id ? this.prixTxt(sa) : ''], ['Fréquence', freq], ['Code', sa.code]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
-    const tea = [['Thé du catalogue', p.the], ['Variante', p.variante], ['Famille', fk ? this.families[fk].name : ''], ['Origine', cat ? (cat.origin || cat.pays || '') : ''], ['Moyenne de ce thé', pst.n ? this.avgTxt(pst) + ' (' + pst.n + ')' : '']].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
+    const tea = [['Thé de l’encyclopédie', p.the], ['Variante', p.variante], ['Famille', fk ? this.families[fk].name : ''], ['Origine', cat ? (cat.origin || cat.pays || '') : ''], ['Moyenne de ce thé', pst.n ? this.avgTxt(pst) + ' (' + pst.n + ')' : '']].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const join = me ? this.joinInfo(l, me) : {};
     const canEdit = !!me && !!this.state.session && this.canEditLog(l, me); const canDel = canEdit && this.norm(l.author || '') === this.norm(me);
     const infs = this.infsOf(l); const totalS = infs.reduce((x, i) => x + (+i.t || 0), 0);
@@ -7627,7 +7625,7 @@ class Component extends DCLogic {
         name: this.draftField('tea-n-' + orig, t.name, v => { if (!v) return; if (famKeys.some(k2 => this.listFor(k2, true).some(x => x !== t && this.norm(x.name) === this.norm(v)))) { window.alert('Un thé porte déjà ce nom.'); return; } const old = t.name; this.setCatOv('tea', orig, { name: v }, a => ({ prods: a.prods.map(p => this.norm(p.the) === this.norm(old) ? Object.assign({}, p, { the: v }) : p) })); }),
         origin: this.draftField('tea-o-' + orig, t.origin, v => this.setCatOv('tea', orig, { origin: v })),
         gout: this.draftField('tea-g-' + orig, t.gout, v => this.setCatOv('tea', orig, { gout: v })),
-        remove: () => { const used = this.getAdds().prods.filter(p => this.norm(p.the) === this.norm(t.name)).length; if (!window.confirm('Retirer « ' + t.name + ' » du catalogue ?' + (used ? ' ' + used + ' thé(s) du commerce y sont rattachés : ils restent enregistrés.' : ''))) return; this.setCatOv('tea', orig, { hidden: true }); } };
+        remove: () => { const used = this.getAdds().prods.filter(p => this.norm(p.the) === this.norm(t.name)).length; if (!window.confirm('Retirer « ' + t.name + ' » de l’encyclopédie ?' + (used ? ' ' + used + ' thé(s) du commerce y sont rattachés : ils restent enregistrés.' : ''))) return; this.setCatOv('tea', orig, { hidden: true }); } };
     });
     const hiddenTeas = Object.keys(this.catOv().tea).filter(k => this.catOv().tea[k].hidden).map(k => ({ name: this.catOv().tea[k].name || k, restore: () => this.setCatOv('tea', k, { hidden: false }) }));
     const allTeas = [].concat(...famKeys.map(k => this.listFor(k, true).map(t => t.name)));
@@ -7739,7 +7737,7 @@ class Component extends DCLogic {
     const lines = [
       data.teas.length + ' thés du commerce et sachets (' + owners.map(o => o + ' : ' + data.teas.filter(t => t.owner === o).length).join(', ') + ')',
       data.teas.reduce((n, t) => n + t.logs.length, 0) + ' dégustations',
-      newTeas.length + ' thés ajoutés au catalogue, ' + (data.newDecl || []).length + ' variantes'
+      newTeas.length + ' thés ajoutés à l’encyclopédie, ' + (data.newDecl || []).length + ' variantes'
     ];
     if (dup.length) lines.push(dup.length + ' déjà présents (même nom et même réf.) : ils seront ignorés');
     (data.addLogs || []).forEach(g => {
@@ -8520,13 +8518,20 @@ class Component extends DCLogic {
       isLore: v === 'lore',
       isAdd: v === 'add' || v === 'admin', isAdminView: v === 'admin', isAddView: v === 'add',
       addMaxW: v === 'admin' ? '1240px' : '860px',
-      addModes: [['lot', '🛍️', 'Un thé et son sachet', 'Ce que vous avez acheté'], ['tea', '📖', 'Un thé au catalogue', 'Nouveau type de thé ou nouvelle variante']].map(x => { const on = (this.state.addTab || 'lot') === x[0]; return { icon: x[1], name: x[2], sub: x[3], on: on, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      ...(() => { const tea = this.state.addTab === 'tea'; const mod = this.isMod(me);
+        return { addBanBg: tea ? '#e3ecdf' : 'var(--color-accent-100)', addBanIcon: tea ? '📖' : '🛍️',
+          addBanTitle: tea ? 'Tu proposes un thé à l’encyclopédie' : 'Tu ajoutes un thé à ta collection',
+          addBanSub: tea ? (mod ? 'Une variété de thé commune à tous (pas un sachet). Tu es modérateur : elle est publiée directement.' : 'Une variété de thé commune à tous (pas un sachet). Un modérateur la valide avant qu’elle apparaisse pour tout le monde.') : 'Un sachet à toi : le thé (choisi dans l’encyclopédie), la boutique, puis ton sachet.',
+          addBanBack: tea, addGoLot: () => this.setState({ addTab: 'lot', addMsg: '', teaFrom: null }) }; })(),
+      lotTheMissing: this.state.addTab !== 'tea' && !!String((this.state.form || {}).the || '').trim() && !this.famOf(String(this.state.form.the).trim()),
+      lotTheHelp: this.state.addTab !== 'tea' && !String((this.state.form || {}).the || '').trim(),
+      lotPropose: () => this.setState(s0 => ({ addTab: 'tea', addMode: 'new', addMsg: '', teaFrom: 'lot', form: Object.assign({}, s0.form, { nom: String((s0.form || {}).the || '').trim() }) })),
       menuAdmin: () => { const back = !!this.state.asMember; if (back) { try { localStorage.setItem('mdt-asmember', ''); } catch (e) {} this.flash('🛡️ Retour en mode admin.'); }
         this.loadAdminCounts(true); this.setState({ asMember: false, menuOpen: false, view: 'admin', addTab: this.realAdmin(this.me()) ? 'dash' : 'mod', addMsg: '' }); },
-      addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
-      addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
+      addTitle: v === 'admin' ? 'Administration' : this.state.addTab === 'tea' ? 'Proposer à l’encyclopédie' : 'J’ai un nouveau thé',
+      addIntro: v === 'admin' ? 'L’encyclopédie, les utilisateurs et les réglages de la maison. Choisissez une section.' : this.state.addTab === 'tea' ? 'Un thé entièrement nouveau, ou une variante d’un thé déjà dans l’encyclopédie (une récolte, un style particulier) : tout le monde pourra ensuite y rattacher ses sachets.' : 'Ajoutez un sachet que vous avez acheté. Si le thé du commerce n’existe pas encore, sa fiche est créée en même temps.',
       admNav: (() => { const adm = this.isAdmin(me); const nDev = (this.state.admBugs || 0) + (this.state.admErr24 || 0); const nMod = this.admAlerts() - (adm ? nDev : 0);
-        return [['dash', '🏠', 'Accueil', 'Vue d’ensemble, graphes, annonce'], ['dev', '🛠️', 'Développement' + (nDev ? ' (' + nDev + ')' : ''), 'Bugs remontés, erreurs générées'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations, matériel, boutiques'], ['mod', '🚩', 'Modération' + (nMod > 0 ? ' (' + nMod + ')' : ''), 'Ajouts, signalements, textes, mots interdits'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Features', 'Devine le thé'], ['inf', 'ℹ️', 'Informations', 'Les règles du site']].filter(x => adm || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }); })(),
+        return [['dash', '🏠', 'Accueil', 'Vue d’ensemble, graphes, annonce'], ['dev', '🛠️', 'Développement' + (nDev ? ' (' + nDev + ')' : ''), 'Bugs remontés, erreurs générées'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations, matériel, boutiques'], ['mod', '🚩', 'Modération' + (nMod > 0 ? ' (' + nMod + ')' : ''), 'Ajouts, signalements, textes, mots interdits'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['cat', '✏️', 'Modifier l’encyclopédie', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Features', 'Devine le thé'], ['inf', 'ℹ️', 'Informations', 'Les règles du site']].filter(x => adm || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }); })(),
       ...this.admSubsView(),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
@@ -8534,7 +8539,7 @@ class Component extends DCLogic {
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
       tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
       ...this.mergeVals(),
-      openAdd: () => this.setState({ view: 'add', addMsg: '' }),
+      openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
       isMine: v === 'mine',
       isLogin: v === 'login',
       navOn: v !== 'login' && !this.state.cloud,
@@ -8566,7 +8571,7 @@ class Component extends DCLogic {
       shareToast: this.state.shareToast || '', bg0: this.bugView(me), siteVersion: 'v' + (window.MDT_VERSION || '?'), bugMenu: () => this.setState(s0 => ({ menuOpen: false, bug: Object.assign({}, s0.bug, { open: true, msg: '' }) })),
       scanOn: !!this.state.scanOn, scanMsg: this.state.scanMsg || '', scanOpen: () => this.scanStart(), scanClose: () => this.scanStop(), canScan: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && (navigator.maxTouchPoints > 0) && !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches),
       canQrAll: !!me && this.collection().some(o => (o.owners || [o.owner]).indexOf(me) >= 0), qrAll: () => { const mineC = this.collection().filter(o => (o.owners || [o.owner]).indexOf(me) >= 0).sort((x, y) => String(x.nom || x.the).localeCompare(String(y.nom || y.the), 'fr')); this.printLabels(mineC.map(o => o.id), 'Mes étiquettes', mineC.filter(o => o.owner === me ? this.isEmptySachet(o) : this.emptyFor(o, me)).map(o => o.id)); },
-      teaBtnTxt: this.isMod(me) ? 'Ajouter au catalogue' : 'Proposer au catalogue', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
+      teaBtnTxt: this.isMod(me) ? 'Ajouter à l’encyclopédie' : 'Proposer à l’encyclopédie', teaValidTxt: this.isMod(me) ? '🛡️ Vous êtes admin ou modérateur : le thé est publié directement.' : '⏳ Chaque nouveau thé est vérifié par un administrateur avant d’apparaître pour tout le monde. En attendant, vous le voyez avec la mention « en attente de validation ».',
       ...(() => { const ann = (this.getAdds().options || {}).announce || {}; let hidden = false; try { hidden = !!ann.at && localStorage.getItem('mdt-ann') === ann.at; } catch (e) {}
         return { annShow: !!ann.text && !hidden && !this.state.annHidden, annText: ann.text || '', annHide: () => { try { localStorage.setItem('mdt-ann', ann.at || ''); } catch (e) {} this.setState({ annHidden: true }); },
           suspShow: !!this.state.suspended }; })(),
@@ -8827,7 +8832,7 @@ class Component extends DCLogic {
             btnTxt: isAdm ? 'Retirer l’accès admin' : 'Donner l’accès admin', btnClass: isAdm ? 'btn btn-ghost' : 'btn btn-secondary',
             idle: this.state.admAsk !== u, asking: this.state.admAsk === u,
             ask: () => this.setState({ admAsk: u }), cancel: () => this.setState({ admAsk: null }),
-            askTxt: isAdm ? 'Retirer l’accès admin à ' + u + ' ? Il ne verra plus l’administration.' : 'Donner l’accès admin à ' + u + ' ? Il pourra modifier le catalogue, les réglages et les accès.',
+            askTxt: isAdm ? 'Retirer l’accès admin à ' + u + ' ? Il ne verra plus l’administration.' : 'Donner l’accès admin à ' + u + ' ? Il pourra modifier l’encyclopédie, les réglages et les accès.',
             confirmTxt: isAdm ? 'Oui, retirer' : 'Oui, donner l’accès',
             confirm: () => { this.setState({ admAsk: null }); if (this.v2) this.setRole(u, isAdm ? 'member' : 'admin'); else this.setOpt('admins', isAdm ? adm.filter(x => x !== u) : adm.concat([u])); },
             isModo: !isAdm && this.isMod(u), canModo: !!this.v2 && !isAdm, modoTxt: this.isMod(u) && !isAdm ? 'Retirer modérateur' : 'Nommer modérateur', toggleModo: () => { this.modLog(this.isMod(u) ? 'a retiré le rôle modérateur' : 'a nommé modérateur', u); this.setRole(u, this.isMod(u) ? 'member' : 'moderator'); },
@@ -9108,7 +9113,7 @@ class Component extends DCLogic {
         const fm = this.state.form || {};
         if (!String(fm.vParent || '').trim() || !String(fm.vNom || '').trim()) { this.setState({ addMsg: 'Indiquez le thé de base et le nom de la variante.' }); return; }
         const fk = this.famOf(fm.vParent.trim());
-        if (!fk) { this.setState({ addMsg: 'Choisissez un thé du catalogue comme thé de base.' }); return; }
+        if (!fk) { this.setState({ addMsg: 'Choisissez un thé de l’encyclopédie comme thé de base.' }); return; }
         const parent = this.listFor(fk, true).find(t => this.norm(t.name) === this.norm(fm.vParent.trim())).name;
         if ((this.declAll()[parent] || []).some(d => this.norm(d.name) === this.norm(fm.vNom.trim()))) { this.setState({ addMsg: 'Cette variante existe déjà.' }); return; }
         const a = this.getAdds();
@@ -9119,16 +9124,17 @@ class Component extends DCLogic {
         const fm = Object.assign({ famille: 'blanc' }, this.state.form);
         if (!String(fm.nom || '').trim()) { this.setState({ addMsg: 'Indiquez au moins un nom.' }); return; }
         const a = this.getAdds();
-        if (this.famOf(fm.nom.trim())) { this.setState({ addMsg: 'Ce thé existe déjà dans le catalogue.' }); return; }
+        if (this.famOf(fm.nom.trim())) { this.setState({ addMsg: 'Ce thé existe déjà dans l’encyclopédie.' }); return; }
         { const sim = this.similarNames(fm.nom.trim(), this.allCatalogNames()); if (sim.length && !window.confirm('« ' + fm.nom.trim() + ' » ressemble à : ' + sim.slice(0, 3).join(', ') + '.\nC’est bien un thé différent ? (Annuler pour vérifier)')) return; }
         const pend = !!this.v2 && !this.isMod(this.me());
         this.setAdds(Object.assign({}, a, { teas: a.teas.concat([Object.assign({ famille: fm.famille, nom: fm.nom.trim(), traduction: fm.traduction, origine: fm.origine, pays: fm.pays, province: fm.province, gout: fm.gout, recolte: fm.recolte }, pend ? { pending: true } : {})]) }));
+        if (this.state.teaFrom === 'lot') { const nm = fm.nom.trim(); this.setState(s => ({ addTab: 'lot', teaFrom: null, addMsg: '« ' + nm + (pend ? ' » proposé à l’encyclopédie (en attente de validation). Tu peux continuer ton sachet.' : ' » ajouté à l’encyclopédie. Tu peux continuer ton sachet.'), form: Object.assign({}, s.form, { the: nm, variante: '', nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '' }) })); return; }
         this.setState(s => ({ addMsg: '« ' + fm.nom.trim() + (pend ? ' » envoyé aux modérateurs : il apparaîtra pour tous une fois validé.' : ' » ajouté à la famille ' + this.families[fm.famille].name + '.'), form: Object.assign({}, s.form, { nom: '', traduction: '', origine: '', pays: '', province: '', gout: '', recolte: '' }) }));
       },
       saveLot: () => {
         const fm = this.state.form || {};
         if (!String(fm.the || '').trim()) { this.setState({ addMsg: 'Choisissez la famille de thé.' }); return; }
-        if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : le catalogue ne change pas.' }); return; }
+        if (!this.famOf(fm.the)) { this.setState({ addMsg: 'Choisissez un thé de la liste : l’encyclopédie ne change pas.' }); return; }
         const a = this.getAdds();
         if (String(fm.marque || '').trim() && this.allShops().indexOf(this.upBrand(fm.marque)) < 0) { const near = this.similarNames(fm.marque, this.allShops()); if (near.length && window.confirm('Boutique « ' + this.upBrand(fm.marque) + ' » : vouliez-vous dire « ' + near[0] + ' » ?\nOK = utiliser « ' + near[0] + ' », Annuler = garder votre saisie.')) fm.marque = near[0]; }
         const prodFields = { the: fm.the.trim(), variante: fm.variante || '', nom: String(fm.nomFour || '').trim(), marque: fm.marque || '', ref: String(fm.ref || '').trim(), boutique: fm.boutique || '', tags: fm.tags || [], recoTemp: String(fm.recoTemp || '').trim(), recoQty: String(fm.recoQty || '').trim(), recoTimes: String(fm.recoTimes || '').trim(), commentaire: fm.prodComment || '' };
@@ -9159,7 +9165,7 @@ class Component extends DCLogic {
         this.setState(s => ({ addMsg: 'Sachet ' + code + ' ajouté (' + (pr.nom || pr.the) + ').', form: Object.assign({}, s.form, clear) }));
       },
       hasAdds: (this.getAdds().teas.length + this.getAdds().decl.length + coll.length + this.getAdds().logs.length) > 0,
-      addList: this.getAdds().teas.map((t, i) => ({ kind: 'Catalogue', label: t.nom, meta: (this.families[t.famille] || {}).name + (t.origine ? ' · ' + t.origine : ''), remove: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { teas: a.teas.filter((x, j) => j !== i) })); } }))
+      addList: this.getAdds().teas.map((t, i) => ({ kind: 'Encyclopédie', label: t.nom, meta: (this.families[t.famille] || {}).name + (t.origine ? ' · ' + t.origine : ''), remove: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { teas: a.teas.filter((x, j) => j !== i) })); } }))
         .concat((this.getAdds().decl || []).map((d, i) => ({ kind: 'Variante', label: d.nom, meta: 'de ' + d.the, remove: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { decl: (a.decl || []).filter((x, j) => j !== i) })); } }))),
       exportAdds: () => {
         const a = this.getAdds();
