@@ -2272,6 +2272,7 @@
           </sc-for>
         </nav>
         </sc-if>
+        <sc-if value="{{ admSubOn }}" hint-placeholder-val="{{ false }}"><div role="tablist" aria-label="Sous-sections" style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ admSubs }}" as="sb" hint-placeholder-count="3"><button role="tab" aria-selected="{{ sb.on }}" onClick="{{ sb.go }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 9px 16px; font-family: var(--font-body); font-size: 14.5px; font-weight: 600; background: {{ sb.bg }}; color: {{ sb.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ sb.label }}</button></sc-for></div></sc-if>
 
         <datalist id="liste-thes">
           <sc-for list="{{ allTeaNames }}" as="n" hint-placeholder-count="0"><option value="{{ n }}"></option></sc-for>
@@ -2337,6 +2338,11 @@
                 </button>
               </sc-for>
             </div>
+            <sc-if value="{{ adQualOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><span style="font-size: 14px; font-weight: 600;">🧽 {{ adQualTxt }}</span><sc-for list="{{ adQual }}" as="aq" hint-placeholder-count="3"><button onClick="{{ aq.go }}" aria-pressed="{{ aq.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13.5px; background: {{ aq.bg }}; color: {{ aq.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ aq.label }}</button></sc-for></div>
+              <sc-if value="{{ adQHasF }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 14px; margin-right: auto;">{{ adQFTxt }}</span><button class="btn btn-secondary" onClick="{{ adQConvF }}" style="white-space: nowrap;">F → L</button></div></sc-if>
+            </div></sc-if>
+            <sc-if value="{{ adTableOn }}" hint-placeholder-val="{{ true }}">
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
               <sc-if value="{{ adHasFilters }}" hint-placeholder-val="{{ false }}"><sc-raw-select class="input" value="{{ adFilter }}" data-val="{{ adFilter }}" onChange="{{ setAdFilter }}" aria-label="Filtrer" style="flex: 0 1 220px; padding: 9px 14px;"><sc-for list="{{ adFilterOpts }}" as="fo2" hint-placeholder-count="3"><option value="{{ fo2.v }}" label="{{ fo2.l }}">{{ fo2.l }}</option></sc-for></sc-raw-select></sc-if>
               <input class="input" type="search" value="{{ adQ }}" onInput="{{ setAdQ }}" placeholder="🔎 Rechercher dans {{ adKindName }}…" aria-label="Rechercher" style="flex: 1 1 240px; min-width: 0; padding: 10px 16px; font-size: 14px;">
@@ -2380,7 +2386,7 @@
                   <div role="row" style="display: grid; grid-template-columns: {{ adGrid }}; align-items: center; border-top: 1px solid var(--color-divider); background: {{ ar.bg }};">
                     <span role="cell" style="padding: 8px 10px;"><input type="checkbox" checked="{{ ar.sel }}" onChange="{{ ar.toggle }}" aria-label="Sélectionner"></span>
                     <sc-for list="{{ ar.cells }}" as="cc" hint-placeholder-count="5"><span role="cell" style="padding: 8px 10px; font-size: 13.5px; min-width: 0; overflow-wrap: break-word;">{{ cc }}</span></sc-for>
-                    <span role="cell" style="padding: 6px 10px; text-align: right; white-space: nowrap;"><button onClick="{{ ar.edit }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 4px 6px;">Modifier</button><button onClick="{{ ar.open }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 4px 6px;">Ouvrir</button><button onClick="{{ ar.del }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-800); padding: 4px 6px;">Supprimer</button></span>
+                    <span role="cell" style="padding: 6px 10px; text-align: right; white-space: nowrap;"><sc-for list="{{ ar.extra }}" as="ax" hint-placeholder-count="0"><button onClick="{{ ax.go }}" title="{{ ax.tip }}" aria-label="{{ ax.tip }}" style="cursor: pointer; border: none; background: var(--color-surface); border-radius: 999px; font-family: var(--font-body); font-size: 13px; padding: 3px 7px; margin-right: 2px;">{{ ax.label }}</button></sc-for><button onClick="{{ ar.edit }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-text); padding: 4px 6px;">Modifier</button><button onClick="{{ ar.open }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-700); padding: 4px 6px;">Ouvrir</button><button onClick="{{ ar.del }}" style="cursor: pointer; border: none; background: transparent; font-family: var(--font-body); font-size: 13px; color: var(--color-accent-800); padding: 4px 6px;">Supprimer</button></span>
                   </div>
                   <sc-if value="{{ ar.editing }}" hint-placeholder-val="{{ false }}">
                     <div style="box-sizing: border-box; background: var(--color-accent-100); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--color-divider);">
@@ -2410,6 +2416,7 @@
               <sc-if value="{{ adEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 16px; opacity: .7;">Aucune donnée.</p></sc-if>
             </div>
             <sc-if value="{{ adMore }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 13px; opacity: .7;">{{ adMore }}</p></sc-if>
+            </sc-if>
           </section>
         </sc-if>
         <sc-if value="{{ tabUsrOn }}" hint-placeholder-val="{{ false }}">
@@ -2506,7 +2513,7 @@
             </sc-for>
           </section>
         </sc-if>
-        <sc-if value="{{ tabDevOn }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ tabDevBugOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🛠️ Développement · bugs signalés ({{ dvN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Envoyés par les membres avec le bouton 🐞 en bas à droite du site (titre, texte, photos, page et appareil).</p></div><button class="btn btn-secondary" onClick="{{ dvReload }}" style="white-space: nowrap; background: var(--color-bg);">↻ Actualiser</button></div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ dvFilters }}" as="df" hint-placeholder-count="4"><button onClick="{{ df.go }}" aria-pressed="{{ df.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ df.bg }}; color: {{ df.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ df.label }}</button></sc-for></div>
@@ -2528,6 +2535,28 @@
           </section>
         </sc-if>
         <sc-if value="{{ tabDashOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+            <h2 style="font-size: 24px; margin: 0;">📊 Vue d’ensemble</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px;">
+              <sc-for list="{{ dbStats }}" as="ds" hint-placeholder-count="8"><div style="background: var(--color-bg); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 13px; opacity: .75;">{{ ds.icon }} {{ ds.label }}</span><span style="font-family: var(--font-heading); font-size: 28px; line-height: 1.1;">{{ ds.n }}</span><span style="font-size: 12px; opacity: .6;">{{ ds.sub }}</span></div></sc-for>
+            </div>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0; margin-right: auto;">📈 Activité</h2><div style="display: flex; gap: 6px;"><sc-for list="{{ gpRanges }}" as="gr" hint-placeholder-count="3"><button onClick="{{ gr.go }}" aria-pressed="{{ gr.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 12px; font-family: var(--font-body); font-size: 13.5px; background: {{ gr.bg }}; color: {{ gr.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ gr.label }}</button></sc-for></div></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;"><sc-for list="{{ gpSeries }}" as="gs" hint-placeholder-count="4"><button onClick="{{ gs.go }}" aria-pressed="{{ gs.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 14px; background: {{ gs.bg }}; color: {{ gs.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ gs.label }}</button></sc-for></div>
+            <sc-if value="{{ gpHasNote }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; background: var(--color-bg); border-radius: 14px; padding: 10px 14px;">{{ gpNote }}</p></sc-if>
+            <div style="display: grid; grid-template-columns: 28px 1fr; gap: 6px;">
+              <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; font-size: 11px; opacity: .6; height: 180px;"><span>{{ gpMax }}</span><span>{{ gpMid }}</span><span>0</span></div>
+              <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                <div role="img" aria-label="{{ gpSum }}" style="height: 180px; display: flex; align-items: flex-end; gap: {{ gpGap }}; border-bottom: 1px solid var(--color-divider); background-image: linear-gradient(var(--color-divider) 1px, transparent 1px); background-size: 100% 50%;">
+                  <sc-for list="{{ gpBars }}" as="gb" hint-placeholder-count="30"><div title="{{ gb.tip }}" onClick="{{ gb.pick }}" style="cursor: pointer; flex: 1; min-width: 0; height: {{ gb.h }}; background: {{ gb.bg }}; border-radius: 3px 3px 0 0;"></div></sc-for>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; opacity: .6;"><span>{{ gpX0 }}</span><span>{{ gpX1 }}</span><span>{{ gpX2 }}</span></div>
+              </div>
+            </div>
+            <sc-if value="{{ gpPickTxt }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; font-weight: 600;">{{ gpPickTxt }}</span></sc-if><span style="font-size: 13.5px; opacity: .75;">{{ gpSum }} · touchez ou survolez une barre pour le détail.</span>
+          </section>
+          <h2 style="font-size: 22px; margin: 6px 0 0;">🔔 À traiter</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
             <sc-for list="{{ dbCards }}" as="dc" hint-placeholder-count="6"><button onClick="{{ dc.go }}" style="cursor: pointer; text-align: left; border: none; border-radius: 22px; padding: 16px 18px; background: {{ dc.bg }}; box-shadow: {{ dc.ring }}; font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 14px; opacity: .75;">{{ dc.icon }} {{ dc.label }}</span><span style="font-family: var(--font-heading); font-size: 32px; line-height: 1.1;">{{ dc.n }}</span><span style="font-size: 12.5px; opacity: .6;">{{ dc.sub }}</span></button></sc-for>
           </div>
@@ -2537,8 +2566,10 @@
             <textarea class="input" rows="2" value="{{ annDraft }}" onInput="{{ setAnnDraft }}" maxLength="400" placeholder="Votre annonce…" style="border-radius: 18px; resize: vertical;"></textarea>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ annPublish }}" style="white-space: nowrap;">Publier</button><sc-if value="{{ annOn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ annRemove }}" style="white-space: nowrap;">Retirer l’annonce</button></sc-if><span style="font-size: 13px; opacity: .65;">{{ annInfo }}</span></div>
           </section>
+        </sc-if>
+        <sc-if value="{{ tabBwOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
-            <h2 style="font-size: 22px; margin: 0;">🚫 Mots interdits</h2>
+            <h2 style="font-size: 26px; margin: 0;">🚫 Mots interdits</h2>
             <p style="margin: 0; font-size: 14px; opacity: .7;">{{ bwNote }}</p>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ bwList }}" as="bw" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px 4px 12px; border-radius: 999px; background: var(--color-bg); font-size: 14px;">{{ bw.w }}<button onClick="{{ bw.del }}" aria-label="Retirer" style="cursor: pointer; border: none; background: transparent; color: var(--color-accent-800); font-size: 13px;">✕</button></span></sc-for><sc-if value="{{ bwEmpty }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .6;">Aucun mot pour l’instant.</span></sc-if></div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;"><input class="input" value="{{ bwDraft }}" onInput="{{ setBwDraft }}" onKeyDown="{{ bwKey }}" placeholder="Ajouter (plusieurs : séparés par des virgules)" aria-label="Ajouter un mot interdit" style="flex: 1; min-width: 220px;"><button class="btn btn-secondary" onClick="{{ bwAdd }}" style="white-space: nowrap;">＋ Ajouter</button></div>
@@ -2559,21 +2590,6 @@
             <sc-if value="{{ scHasMore }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6;">{{ scMore }}</span></sc-if>
           </section>
         </sc-if>
-        <sc-if value="{{ tabQualOn }}" hint-placeholder-val="{{ false }}">
-          <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🧽 Qualité des données ({{ qTotal }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Ce qui manque ou cloche. « Corriger » ouvre l’élément dans Données ; « Tout voir » ouvre le tableau déjà filtré, pour corriger plusieurs lignes d’un coup.</p></div>
-            <sc-if value="{{ qHasF }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; margin-right: auto;">{{ qFTxt }}</span><button class="btn btn-secondary" onClick="{{ qConvF }}" style="white-space: nowrap;">F → L</button></div></sc-if>
-            <sc-for list="{{ qGroups }}" as="qg" hint-placeholder-count="5">
-              <div style="background: var(--color-bg); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;"><b style="font-size: 16px; margin-right: auto;">{{ qg.title }} <span style="font-weight: 400; opacity: .6;">{{ qg.n }}</span></b><sc-if value="{{ qg.hasItems }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ qg.filterAll }}" style="white-space: nowrap; font-size: 14px;">Tout voir →</button></sc-if></div>
-                <sc-if value="{{ qg.none }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .6;">✓ Rien à corriger.</span></sc-if>
-                <sc-if value="{{ qg.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65;">{{ qg.hint }}</span></sc-if>
-                <div style="display: flex; flex-direction: column; gap: 2px;"><sc-for list="{{ qg.items }}" as="qi" hint-placeholder-count="2"><div style="display: flex; gap: 10px; align-items: center; font-size: 14px; padding: 3px 0; border-top: 1px solid var(--color-divider);"><span style="margin-right: auto; min-width: 0;">{{ qi.label }}</span><button onClick="{{ qi.fix }}" style="cursor: pointer; border: none; background: transparent; color: var(--color-accent-700); font-family: var(--font-body); font-size: 14px; white-space: nowrap;">Corriger →</button></div></sc-for></div>
-                <sc-if value="{{ qg.hasMore }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .6;">{{ qg.more }}</span></sc-if>
-              </div>
-            </sc-for>
-          </section>
-        </sc-if>
         <sc-if value="{{ tabErrOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🐞 Erreurs du site ({{ erN }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">{{ erSub }}</p></div>
@@ -2590,7 +2606,7 @@
           </section>
         </sc-if>
         <sc-if value="{{ tabModOn }}" hint-placeholder-val="{{ false }}">
-          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+          <sc-if value="{{ tabModRepOn }}" hint-placeholder-val="{{ false }}"><section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">🚩 Signalements ({{ mdNRep }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Ce que les membres vous ont signalé. Supprimez le contenu s’il pose problème, sinon classez le signalement.</p></div>
             <sc-if value="{{ mdNoReports }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucun signalement en attente. 🍃</p></sc-if>
             <sc-for list="{{ mdReports }}" as="md" hint-placeholder-count="2">
@@ -2604,9 +2620,9 @@
                 </div>
               </div></div>
             </sc-for>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">⏳ Ajouts au catalogue à valider ({{ mdNPend }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les thés et variantes ajoutés par les membres n’apparaissent pour tous qu’une fois validés.</p></div>
+          </section></sc-if>
+          <sc-if value="{{ tabModAddOn }}" hint-placeholder-val="{{ false }}"><section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 26px; margin: 0;">⏳ Ajouts au catalogue à valider ({{ mdNPend }})</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Les thés et variantes ajoutés par les membres n’apparaissent pour tous qu’une fois validés. Les ajouts des modérateurs et des admins sont publiés directement, sans passer par ici.</p></div>
             <sc-if value="{{ mdV1 }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px; opacity: .7;">La validation s’active avec le nouveau stockage (Données → Passer au nouveau stockage).</p></sc-if>
             <sc-if value="{{ mdNoPending }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Rien à valider.</p></sc-if>
             <sc-for list="{{ mdPending }}" as="mp" hint-placeholder-count="2">
@@ -2617,12 +2633,12 @@
               <sc-if value="{{ mp.isTea }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 0 16px 12px;"><sc-if value="{{ mp.sim }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; color: var(--color-accent-800);">⚠️ Ressemble à : {{ mp.sim }}</span></sc-if><input class="input" list="liste-thes" value="{{ mp.mgVal }}" onInput="{{ mp.setMg }}" placeholder="C’est en fait… (thé du catalogue)" aria-label="Fusionner dans" style="flex: 1; min-width: 200px; padding: 7px 12px;"><button class="btn btn-secondary" onClick="{{ mp.merge }}" style="white-space: nowrap;">🔀 Fusionner</button></div></sc-if>
               </div>
             </sc-for>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 10px;">
+          </section></sc-if>
+          <sc-if value="{{ tabModHistOn }}" hint-placeholder-val="{{ false }}"><section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 10px;">
             <h2 style="font-size: 22px; margin: 0;">🗒️ Historique de modération</h2>
             <sc-if value="{{ mdNoHist }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Aucune action pour l’instant.</p></sc-if>
             <sc-for list="{{ mdHist }}" as="mh" hint-placeholder-count="3"><div style="display: flex; gap: 12px; font-size: 14px; padding: 4px 0; border-top: 1px solid var(--color-divider);"><span style="opacity: .6; white-space: nowrap;">{{ mh.when }}</span><span>{{ mh.txt }}</span></div></sc-for>
-          </section>
+          </section></sc-if>
         </sc-if>
         <sc-if value="{{ tabJeuOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
@@ -2641,8 +2657,29 @@
         </sc-if>
         <sc-if value="{{ tabInfOn }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><h2 style="font-size: 28px; margin: 0;">ℹ️ Informations</h2><p style="margin: 0; font-size: 15px; opacity: .72;">Les règles en vigueur sur le site, pour s’y retrouver (et les expliquer aux autres).</p></div>
           <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <h2 style="font-size: 26px; margin: 0;">🐸 Les tea pets : règles du jeu</h2>
+            <h2 style="font-size: 24px; margin: 0;">⭐ Les notes des dégustations</h2>
+            <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55;">
+              <li>L’<b>hôte</b> (l’auteur de la dégustation) met la note : elle compte pour tout le monde.</li>
+              <li>Un <b>participant</b> qui n’est pas d’accord clique sur « Modifier la dégustation » et met sa note : elle ne compte que pour lui, la note de l’hôte ne change pas.</li>
+              <li>Dès qu’un participant a mis sa propre note, la dégustation affiche la <b>moyenne</b>, avec le détail (ex. « Raph 14 · Maël 12 »).</li>
+              <li><b>⚡ Désaccord</b> s’affiche quand deux notes ont au moins 2 points d’écart.</li>
+              <li>Statistiques d’un thé, d’un sachet ou d’un salon : toutes les notes des participants comptent. Statistiques personnelles : seulement sa propre note.</li>
+              <li>Lettres devant la note : <b>L</b> = loupé, <b>R</b> = en réglage. Elles servent de repère ; seule la valeur sur 20 compte dans les moyennes.</li>
+            </ul>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 24px; margin: 0;">📖 Catalogue et validation</h2>
+            <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55;">
+              <li>Le <b>catalogue</b> liste les thés « génériques » (Da Hong Pao, Sencha…) et leurs variantes ; les <b>thés du commerce</b> sont les produits précis d’une boutique ; les <b>sachets</b> sont ce que chacun possède.</li>
+              <li>Un thé ou une variante ajouté au catalogue par un <b>membre</b> reste « ⏳ en attente » jusqu’à validation (Modération → Ajouts au catalogue).</li>
+              <li>Les ajouts des <b>modérateurs et admins</b> sont publiés directement, sans validation.</li>
+              <li>Les textes contenant un mot interdit sont refusés par la base ; les autres textes douteux remontent dans « Textes à vérifier ».</li>
+            </ul>
+          </section>
+          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="font-size: 24px; margin: 0;">🐸 Les tea pets : règles du jeu</h2>
             <p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: .85;">Tout est recalculé à partir des dégustations : rien à saisir en plus. Un tea pet « boit » quand il est coché dans le matériel d’une dégustation.</p>
             <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55;">
               <li><b>Points de vie (PV)</b> : 100 au maximum. Chaque dégustation avec lui rend +40 PV (+55 pour un gourmand).</li>
@@ -2654,20 +2691,8 @@
               <li><b>Évolutions</b> : au niveau 5 le tea pet devient <b>🍃 Culotté</b> (patine de l’argile, une pousse de thé sur la tête), au niveau 10 <b>🎋 Vénérable</b> (patine profonde, chapeau de cueilleur).</li>
               <li><b>Chef de l’enclos 👑</b> : le tea pet qui a seul le niveau le plus haut.</li>
               <li><b>Humeurs</b> : ❤️ a bu aujourd’hui · ✨ en forme (≥ 75 PV) · 💧 assoiffé (&lt; 35 PV, il ralentit) · 💤 KO.</li>
-              <li>Le caractère est tiré au hasard une fois pour toutes à la création du tea pet.</li>
+              <li>Le caractère est tiré au hasard une fois pour toutes à la création du tea pet. Un admin peut le retirer au hasard ou remettre le tea pet à zéro (Données → Matériel, boutons 🎲 et ↺).</li>
             </ul>
-          </section>
-          <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
-            <h2 style="font-size: 22px; margin: 0;">🛠️ Gérer les tea pets</h2>
-            <p style="margin: 0; font-size: 14px; opacity: .7;">Remettre un tea pet à zéro (niveau 1, 0 XP, 100 PV : seules les dégustations suivantes comptent) ou lui choisir un autre caractère.</p>
-            <sc-for list="{{ infPets }}" as="ip" hint-placeholder-count="3">
-              <div style="background: var(--color-bg); border-radius: 18px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                <div style="display: flex; flex-direction: column; gap: 2px; margin-right: auto; min-width: 200px;"><b style="font-size: 16px;">🐸 {{ ip.name }} <span style="font-weight: 400; opacity: .65;">· {{ ip.owner }}</span></b><span style="font-size: 13.5px; opacity: .75;">{{ ip.sub }}</span></div>
-                <sc-raw-select class="input" value="{{ ip.tval }}" data-val="{{ ip.tval }}" onChange="{{ ip.setT }}" aria-label="Caractère" style="width: auto; padding: 7px 12px; background: var(--color-surface);"><sc-for list="{{ ip.topts }}" as="to" hint-placeholder-count="8"><option value="{{ to.v }}" label="{{ to.l }}">{{ to.l }}</option></sc-for></sc-raw-select>
-                <button class="btn btn-secondary" onClick="{{ ip.reset }}" style="white-space: nowrap; background: var(--color-surface);">↺ Remettre à zéro</button>
-                <sc-if value="{{ ip.hasReset }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ ip.undo }}" style="white-space: nowrap; font-size: 13.5px;">Annuler la remise à zéro</button></sc-if>
-              </div>
-            </sc-for>
           </section>
           <section style="background: var(--color-surface); border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="font-size: 22px; margin: 0;">Les caractères</h2>
@@ -4684,6 +4709,22 @@ class Component extends DCLogic {
 
   idTs(id) { const n = parseInt(String(id || '').slice(1), 36); return n > 1.5e12 && n < 2.2e12 ? n : null; }
 
+  // ce qui manque ou cloche sur un élément des Données (filtre « ⚠️ À compléter »)
+  dataIssues(kind, x, ctx) {
+    const P = [], blank = v => !String(v == null ? '' : v).trim();
+    if (kind === 'prod') { if (blank(x.marque)) P.push('sans boutique'); if (!(x.tags || []).length) P.push('sans tags de goût'); if (!blank(x.the) && !this.famOf(x.the)) P.push('thé hors catalogue'); if (blank(x.the)) P.push('sans thé du catalogue'); }
+    else if (kind === 'sachet') { if (!ctx.prodBy[x.prodId]) P.push('thé introuvable'); if (blank(x.ville)) P.push('sans ville'); if (blank(x.quantite)) P.push('sans quantité'); if (blank(x.owner)) P.push('sans propriétaire'); }
+    else if (kind === 'log') { if (!ctx.sacBy[x.lotId]) P.push('sachet introuvable'); if (blank(x.note) && !x.live) P.push('sans note'); else if (!blank(x.note) && !/^[LR]{0,2}\d{1,2}([.,]\d{1,2})?$/i.test(String(x.note).trim())) P.push('note au format inhabituel'); if (blank(x.date)) P.push('sans date'); }
+    else if (kind === 'gear') { if (blank(x.type)) P.push('sans type'); if (blank(x.owner)) P.push('sans propriétaire'); }
+    else if (kind === 'cat') { if (x.pending) P.push('en attente de validation'); if (x.famille && blank(x.origine) && blank(x.pays)) P.push('sans origine'); if (x.the != null && !x.famille && !this.famOf(x.the)) P.push('thé parent introuvable'); }
+    return P;
+  }
+  dataIssueCounts() {
+    const a = this.getAdds(); const ctx = { prodBy: {}, sacBy: {} }; a.prods.forEach(p => { ctx.prodBy[p.id] = p; }); a.sachets.forEach(x => { ctx.sacBy[x.id] = x; });
+    const c = k => L => L.filter(x => this.dataIssues(k, x, ctx).length).length;
+    const r = { prod: c('prod')(a.prods), sachet: c('sachet')(a.sachets), log: c('log')(a.logs), gear: c('gear')(a.gear || []), cat: c('cat')((a.teas || []).concat(a.decl || [])) };
+    r.total = r.prod + r.sachet + r.log + r.gear + r.cat; return r;
+  }
   adminData() {
     const a = this.getAdds();
     const kind = this.state.adKind || 'prod';
@@ -4718,7 +4759,14 @@ class Component extends DCLogic {
       const nLogG = g => a.logs.filter(l => this.logUsesGear(l, g)).length;
       cols = [['nom', 'Nom'], ['type', 'Type'], ['model', 'Modèle'], ['code', 'Code'], ['owner', 'Propriétaire'], ['volume', 'Volume'], ['nLog', 'Dégust.'], ['date', 'Ajouté le']];
       rows = (a.gear || []).map(g => { const c = this.gearCat(g) || ['', '🧺', 'Autre']; const nl = nLogG(g);
-        return { id: g.id, v: { nom: g.name || '?', type: c[1] + ' ' + c[2], model: this.gearModelOf(g) || '—', code: g.code || '—', owner: g.owner || '—', volume: g.volume ? g.volume + ' ml' : '—', nLog: nl, date: this.idTs(g.id) },
+        const isPet = this.gearCatKey(g.type) === 'teapet'; let extra = [], petTxt = '';
+        if (isPet) { const T = this.petTemper(g); const stp = this.petStats(g); petTxt = ' · ' + T.icon + ' ' + T.name + ' · Nv. ' + stp.lvl + (g.petReset ? ' · RAZ ' + this.fmtDate(g.petReset.day) : '');
+          const upd = patch => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: b.gear.map(x => { if (x.id !== g.id) return x; const cc = Object.assign({}, x, patch); Object.keys(patch).forEach(k => { if (patch[k] == null) delete cc[k]; }); return cc; }) })); };
+          extra = [{ label: '🎲', tip: 'Caractère au hasard (actuel : ' + T.name + ')', go: () => { const others = this.petTempers.filter(t => t.key !== T.key); const nt = others[Math.floor(Math.random() * others.length)]; upd({ temper: nt.key }); this.modLog('a tiré un caractère au hasard pour', g.name + ' (' + g.owner + ') : ' + nt.name); this.flash(g.name + ' devient ' + nt.icon + ' ' + nt.name + '.'); } },
+            { label: '↺', tip: 'Remettre à zéro (niveau 1, 0 XP, 100 PV)', go: () => { if (!window.confirm('Remettre ' + g.name + ' (' + g.owner + ') au niveau 1, 0 XP et 100 PV ? Les dégustations passées ne compteront plus pour lui.')) return; upd({ petReset: { day: mdtToday(), ts: Date.now() } }); this.modLog('a remis à zéro le tea pet', g.name + ' (' + g.owner + ')'); this.flash(g.name + ' repart de zéro.'); } }]
+            .concat(g.petReset ? [{ label: '⤺', tip: 'Annuler la remise à zéro', go: () => { upd({ petReset: null }); this.flash('Remise à zéro de ' + g.name + ' annulée.'); } }] : [])
+            .concat(g.temper ? [{ label: '⟲', tip: 'Revenir au caractère d’origine', go: () => { upd({ temper: null }); this.flash(g.name + ' retrouve son caractère d’origine.'); } }] : []); }
+        return { id: g.id, extra: extra, v: { nom: (g.name || '?') + petTxt, type: c[1] + ' ' + c[2], model: this.gearModelOf(g) || '—', code: g.code || '—', owner: g.owner || '—', volume: g.volume ? g.volume + ' ml' : '—', nLog: nl, date: this.idTs(g.id) },
           raw: Object.assign({}, g, { type: this.gearCatKey(g.type), model: this.gearModelOf(g) }),
           fields: [['name', 'Nom'], ['owner', 'Propriétaire', this.opts().users.map(u => [u, u])], ['type', 'Type', this.gearTypeList().map(t => [t[0], t[1] + ' ' + t[2]])], ['model', 'Modèle (gaiwan, kyusu…)'], ['code', 'Code'], ['volume', 'Volume (ml)'], ['material', 'Matière'], ['origin', 'Origine'], ['achat', 'Date d’achat', 'date'], ['prix', 'Prix (€)'], ['comment', 'Commentaire', 'area']],
           save: d => { const nm = String(d.name || '').trim(); if (!nm) { window.alert('Le nom ne peut pas être vide.'); return; }
@@ -4747,6 +4795,10 @@ class Component extends DCLogic {
           save: dd => { const b = this.getAdds(); const old = d.nom; this.setAdds(Object.assign({}, b, { decl: (b.decl || []).map((z, k) => k === i ? Object.assign({}, z, { nom: dd.nom, the: dd.the, traduction: dd.traduction, profil: dd.profil, description: dd.description }) : z), prods: old !== dd.nom ? b.prods.map(pp => this.norm(pp.variante || '') === this.norm(old) && this.norm(pp.the) === this.norm(d.the) ? Object.assign({}, pp, { variante: dd.nom }) : pp) : b.prods })); },
           open: () => this.openCatTea(d.the), delMsg: 'Retirer la variante « ' + d.nom + ' » ?', delFn: delCat(['d' + i]) })));
     }
+    const ictx = { prodBy: prodBy, sacBy: sacBy };
+    rows.forEach(r => { r.pb = this.dataIssues(kind, r.raw || {}, ictx); r.v.pb = r.pb.join(', '); });
+    const nIss = rows.filter(r => r.pb.length).length;
+    if (this.state.adFilter === 'issues') cols = cols.concat([['pb', '⚠️ À revoir']]);
     const q = this.norm(this.state.adQ || '');
     const st = this.state.adSort || {};
     const sk = st.kind === kind ? st.key : (kind === 'log' ? 'date' : kind === 'cat' ? 'nom' : 'date'), sd = st.kind === kind ? st.dir : (kind === 'cat' ? 'asc' : 'desc');
@@ -4754,8 +4806,9 @@ class Component extends DCLogic {
       : kind === 'sachet' ? [['noCity', 'Sans ville']].concat(this.opts().users.map(u => ['u:' + u, '👤 ' + u]), this.allShops().map(x => ['s:' + x, '🏪 ' + x]))
       : kind === 'gear' ? this.gearTypeList().map(t => ['t:' + t[0], t[1] + ' ' + t[2]]).concat(this.opts().users.map(u => ['u:' + u, '👤 ' + u]))
       : kind === 'log' ? [['noNote', 'Sans note'], ['oddNote', 'Note au format inhabituel']].concat(this.opts().users.map(u => ['u:' + u, '👤 ' + u])) : [];
+    fopts.unshift(['issues', '⚠️ À compléter (' + nIss + ')']);
     const flt = fopts.some(f => f[0] === this.state.adFilter) ? this.state.adFilter : '';
-    const fOk = r => { if (!flt) return true; const x = r.raw || {};
+    const fOk = r => { if (!flt) return true; const x = r.raw || {}; if (flt === 'issues') return r.pb.length > 0;
       if (kind === 'prod') { if (flt === 'noShop') return !String(x.marque || '').trim(); if (flt === 'noTags') return !(x.tags || []).length; return this.upBrand(x.marque) === flt.slice(2); }
       if (kind === 'sachet') { if (flt === 'noCity') return !String(x.ville || '').trim(); if (flt.indexOf('u:') === 0) return x.owner === flt.slice(2); return this.upBrand((prodBy[x.prodId] || {}).marque) === flt.slice(2); }
       if (kind === 'gear') { if (flt.indexOf('t:') === 0) return this.gearCatKey(x.type) === flt.slice(2); return x.owner === flt.slice(2); }
@@ -4766,10 +4819,16 @@ class Component extends DCLogic {
     const sel = (this.state.adSel || []).filter(id => list.some(r => r.id === id));
     const shown = list.slice(0, 500);
     const cell = (r, k) => { if (r.disp && r.disp[k] != null) return r.disp[k]; const v = r.v[k]; if (k === 'date' && typeof v === 'number') return fmtD(v); if (v == null || v === '') return '—'; return String(v); };
-    const K = [['prod', '🍵', 'Thés du commerce', a.prods.length], ['sachet', '🛍️', 'Sachets', a.sachets.length], ['log', '☕', 'Dégustations', a.logs.length], ['gear', '🫖', 'Matériel', (a.gear || []).length], ['cat', '📖', 'Catalogue ajouté', a.teas.length + (a.decl || []).length]];
+    const K = [['prod', '🍵', 'Thés du commerce', a.prods.length], ['sachet', '🛍️', 'Sachets', a.sachets.length], ['log', '☕', 'Dégustations', a.logs.length], ['gear', '🫖', 'Matériel', (a.gear || []).length], ['cat', '📖', 'Catalogue ajouté', a.teas.length + (a.decl || []).length], ['shop', '🏪', 'Boutiques', this.allShops().length]];
+    const IC = this.dataIssueCounts();
+    const fNotes = a.logs.filter(l => /^F/i.test(String(l.note || '').trim()));
     const kindName = { prod: 'les thés du commerce', sachet: 'les sachets', log: 'les dégustations', gear: 'le matériel', cat: 'le catalogue ajouté' }[kind];
-    return {
-      adKinds: K.map(x => { const on = x[0] === kind; return { icon: x[1], name: x[2], n: String(x[3]), sub: x[0] === 'sachet' ? a.sachets.filter(z => { const o = this.collection().find(c => c.id === z.id); return o && this.isEmptySachet(o); }).length + ' vides' : x[0] === 'log' ? new Set(a.logs.map(l => l.author)).size + ' auteurs' : x[0] === 'prod' ? new Set(a.prods.map(p => p.marque).filter(Boolean)).size + ' boutiques' : x[0] === 'gear' ? new Set((a.gear || []).map(g => g.owner)).size + ' propriétaires' : 'ajouts des membres', on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', pick: () => this.setState({ adKind: x[0], adSel: [], adQ: '' }) }; }),
+    return { adTableOn: kind !== 'shop',
+      adQual: [['prod', '🍵 Thés du commerce'], ['sachet', '🛍️ Sachets'], ['log', '☕ Dégustations'], ['gear', '🫖 Matériel'], ['cat', '📖 Catalogue']].filter(x => IC[x[0]]).map(x => { const on = kind === x[0] && flt === 'issues'; return { label: x[1] + ' · ' + IC[x[0]], on: on, bg: on ? 'var(--color-text)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState(on ? { adFilter: '', adSel: [] } : { adKind: x[0], adFilter: 'issues', adQ: '', adSel: [] }) }; }),
+      adQualOn: IC.total > 0 || fNotes.length > 0, adQualTxt: IC.total ? IC.total + ' élément' + (IC.total > 1 ? 's' : '') + ' à compléter ou à vérifier :' : 'Tout est complet.',
+      adQHasF: fNotes.length > 0, adQFTxt: fNotes.length + ' note' + (fNotes.length > 1 ? 's commencent' : ' commence') + ' par F (ancien code « loupé » ?)',
+      adQConvF: () => { if (!window.confirm('Remplacer le F par L (loupé) sur ' + fNotes.length + ' note(s) ?')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { logs: b.logs.map(l => /^F/i.test(String(l.note || '').trim()) ? Object.assign({}, l, { note: this.noteJoin(this.noteSplit(String(l.note).trim()).pre.replace(/F/g, 'L'), this.noteSplit(String(l.note).trim()).num) }) : l) })); this.flash('Notes converties.'); },
+      adKinds: K.map(x => { const on = x[0] === kind; return { icon: x[1], name: x[2], n: String(x[3]), sub: x[0] === 'sachet' ? a.sachets.filter(z => { const o = this.collection().find(c => c.id === z.id); return o && this.isEmptySachet(o); }).length + ' vides' : x[0] === 'log' ? new Set(a.logs.map(l => l.author)).size + ' auteurs' : x[0] === 'prod' ? new Set(a.prods.map(p => p.marque).filter(Boolean)).size + ' boutiques' : x[0] === 'gear' ? new Set((a.gear || []).map(g => g.owner)).size + ' propriétaires' : x[0] === 'shop' ? 'renommer, réunir' : 'ajouts des membres', on: on, bg: on ? 'var(--color-accent)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', pick: () => this.setState({ adKind: x[0], adSel: [], adQ: '', adFilter: this.state.adFilter === 'issues' ? 'issues' : '' }) }; }),
       adKindName: kindName, adQ: this.state.adQ || '', setAdQ: e => this.setState({ adQ: e.target.value }),
       adHasFilters: fopts.length > 0, adFilterOpts: [{ v: '', l: 'Tout afficher' }].concat(fopts.map(f => ({ v: f[0], l: f[1] }))), adFilter: flt, setAdFilter: e => this.setState({ adFilter: e.target.value, adSel: [] }),
       ...(() => {
@@ -4819,8 +4878,8 @@ class Component extends DCLogic {
           newKey: e => { if (e.key === 'Enter') { e.preventDefault(); const v0 = String(this.state.adNewVal || '').trim(); if (!v0) return; const v = f[0] === 'marque' ? this.upBrand(v0) : this.cityFmt(v0); this.setState(s0 => ({ adNewField: null, adNewVal: '', adDraft: Object.assign({}, s0.adDraft, { [f[0]]: v }) })); } } })) : [],
         cells: cols.map(c => cell(r, c[0])), sel: on, bg: on ? 'var(--color-accent-100)' : 'transparent', canOpen: true,
         toggle: () => this.setState(s0 => { const cur = s0.adSel || []; return { adSel: cur.indexOf(r.id) >= 0 ? cur.filter(z => z !== r.id) : cur.concat([r.id]) }; }),
-        open: r.open, del: () => { if (window.confirm(r.delMsg)) del(r.delFn); } }; }),
-      adGrid: '30px ' + cols.map(c => ['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 'minmax(0, 1.6fr)' : c[0] === 'date' ? 'minmax(96px, 1fr)' : c[0] === 'shop' ? 'minmax(0, 1.4fr)' : c[0] === 'owner' ? 'minmax(100px, 1fr)' : 'minmax(0, 1fr)').join(' ') + ' 208px', adMinW: (30 + cols.length * 92 + 208) + 'px',
+        extra: r.extra || [], open: r.open, del: () => { if (window.confirm(r.delMsg)) del(r.delFn); } }; }),
+      adGrid: '30px ' + cols.map(c => ['avis', 'nom', 'the'].indexOf(c[0]) >= 0 ? 'minmax(0, 1.6fr)' : c[0] === 'date' ? 'minmax(96px, 1fr)' : c[0] === 'shop' ? 'minmax(0, 1.4fr)' : c[0] === 'owner' ? 'minmax(100px, 1fr)' : c[0] === 'pb' ? 'minmax(140px, 1.5fr)' : 'minmax(0, 1fr)').join(' ') + (kind === 'gear' ? ' 300px' : ' 208px'), adMinW: (30 + cols.length * 92 + (kind === 'gear' ? 300 : 208)) + 'px',
       adEmpty: !list.length, adAllSel: !!shown.length && shown.every(r => sel.indexOf(r.id) >= 0),
       adToggleAll: () => this.setState({ adSel: shown.every(r => sel.indexOf(r.id) >= 0) ? [] : shown.map(r => r.id) }),
       adHasSel: sel.length > 0, adSelTxt: sel.length + ' élément' + (sel.length > 1 ? 's' : '') + ' sélectionné' + (sel.length > 1 ? 's' : ''),
@@ -5094,6 +5153,23 @@ class Component extends DCLogic {
     const { data, error } = await this.sb.from('mdt_errors').select('id,ts,who,msg,stack,url,ua').order('ts', { ascending: false }).limit(200);
     this._errLoading = false; this.setState({ errList: data || [], errMsg: error ? error.message : '', errAt: Date.now() });
   }
+  // sous-onglets de l’admin (Développement, Modération)
+  admSub(t) {
+    if (t === 'dev') return this.state.devSub === 'err' ? 'err' : 'bugs';
+    const ok = this.isAdmin(this.me()) ? ['add', 'rep', 'scan', 'bw'] : ['add', 'rep'];
+    return ok.indexOf(this.state.modSub) >= 0 ? this.state.modSub : 'add';
+  }
+  admSubsView() {
+    const t = this.state.addTab; if (this.state.view !== 'admin' || (t !== 'dev' && t !== 'mod')) return { admSubOn: false, admSubs: [] };
+    const a = this.getAdds(); const cur = this.admSub(t); const key = t === 'dev' ? 'devSub' : 'modSub'; const n = x => x ? ' (' + x + ')' : '';
+    let L;
+    if (t === 'dev') L = [['bugs', '🐞 Bugs remontés' + n(this.state.admBugs || 0)], ['err', '⚠️ Erreurs générées' + n(this.state.admErr24 || 0)]];
+    else { const pend = (a.teas || []).filter(x => x.pending).length + (a.decl || []).filter(x => x.pending).length; const rep = this.reports().filter(r => r.status === 'open').length;
+      L = [['add', '⏳ Ajouts au catalogue' + n(pend)], ['rep', '🚩 Signalements' + n(rep)]];
+      if (this.isAdmin(this.me())) { if (this._scanN == null || Date.now() - (this._scanAt || 0) > 20000) { this._scanAt = Date.now(); try { this._scanN = this.textScan().length; } catch (e) { this._scanN = 0; } }
+        L = L.concat([['scan', '🔍 Textes à vérifier' + n(this._scanN)], ['bw', '🚫 Mots interdits' + n(((a.options || {}).bannedWords || []).length)]]); } }
+    return { admSubOn: true, admSubs: L.map(x => ({ label: x[1], on: cur === x[0], bg: cur === x[0] ? 'var(--color-text)' : 'var(--color-surface)', fg: cur === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ [key]: x[0] }) })) };
+  }
   errView() {
     if (this.state.errAt == null && !this._errLoading) setTimeout(() => this.loadErrors(), 0);
     const fmt = t => new Date(t).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -5220,14 +5296,14 @@ class Component extends DCLogic {
     const M = this._members || []; const week = Date.now() - 7 * 864e5;
     const fresh = M.filter(m => m.created_at && Date.parse(m.created_at) > week);
     const active = M.filter(m => m.last_seen && Date.parse(m.last_seen) > week).length;
-    const qual = this.qualityView(true);
-    const go = t => () => this.setState({ addTab: t, addMsg: '' });
+    const qual = this.dataIssueCounts();
+    const go = t => () => this.setState(t === 'err' ? { addTab: 'dev', devSub: 'err', addMsg: '' } : t === 'qual' ? { addTab: 'new', adFilter: 'issues', adKind: (['sachet', 'prod', 'log', 'gear', 'cat'].find(k => qual[k]) || 'prod'), addMsg: '' } : t === 'mod-add' ? { addTab: 'mod', modSub: 'add', addMsg: '' } : t === 'mod-rep' ? { addTab: 'mod', modSub: 'rep', addMsg: '' } : { addTab: t, addMsg: '' });
     const card = (icon, n, label, sub, tab, warn) => ({ icon: icon, n: String(n), label: label, sub: sub, go: go(tab), bg: warn && n ? '#fbebeb' : 'var(--color-bg)', ring: warn && n ? 'inset 0 0 0 1.5px #c0392b55' : 'inset 0 0 0 1px var(--color-divider)' });
     const ann = (a.options || {}).announce || {}; const bw = (a.options || {}).bannedWords || [];
-    return { dbCards: [card('🐞', this.state.admBugs || 0, 'Bugs signalés', 'à traiter', 'dev', true), card('🚩', rep, 'Signalements ouverts', 'à traiter', 'mod', true), card('⏳', pend, 'Ajouts à valider', 'thés et variantes', 'mod', true),
+    return { ...this.dashStats(), dbCards: [card('🐞', this.state.admBugs || 0, 'Bugs signalés', 'à traiter', 'dev', true), card('🚩', rep, 'Signalements ouverts', 'à traiter', 'mod-rep', true), card('⏳', pend, 'Ajouts à valider', 'thés et variantes', 'mod-add', true),
         card('🐞', this.state.admErr24 || 0, 'Erreurs (24 h)', this._v2Tables ? 'plantages remontés' : 'nouveau stockage requis', 'err', true),
         card('👋', fresh.length, 'Nouveaux membres', '7 derniers jours' + (fresh.length ? ' : ' + fresh.map(m => m.nom).join(', ') : ''), 'usr', false),
-        card('🟢', active, 'Membres actifs', 'venus ces 7 jours', 'usr', false), card('🧽', qual.total, 'À compléter', 'données à corriger', 'qual', false)],
+        card('🟢', active, 'Membres actifs', 'venus ces 7 jours', 'usr', false), card('🧽', qual.total, 'À compléter', 'Données → ⚠️ À compléter', 'qual', false)],
       annDraft: this.state.annDraft != null ? this.state.annDraft : (ann.text || ''), setAnnDraft: e => this.setState({ annDraft: e.target.value }), annOn: !!ann.text,
       annInfo: ann.text ? 'En ligne depuis le ' + this.fmtDate(String(ann.at || '').slice(0, 10)) + (ann.by ? ' (' + ann.by + ')' : '') : 'Aucune annonce en ligne.',
       annPublish: () => { const t = String(this.state.annDraft != null ? this.state.annDraft : ann.text || '').trim(); if (!t) return; this.setOpt('announce', { text: t.slice(0, 400), at: new Date().toISOString(), by: me }); this.setState({ annDraft: null }); this.flash('Annonce publiée.'); },
@@ -5237,6 +5313,49 @@ class Component extends DCLogic {
       bwAdd: () => { const ws = String(this.state.bwDraft || '').split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(x => x.length >= 2 && bw.indexOf(x) < 0); if (!ws.length) return; this.setOpt('bannedWords', bw.concat(ws)); this.setState({ bwDraft: '' }); },
       bwKey: e => { if (e.key === 'Enter') { e.preventDefault(); const ws = String(this.state.bwDraft || '').split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(x => x.length >= 2 && bw.indexOf(x) < 0); if (ws.length) { this.setOpt('bannedWords', bw.concat(ws)); this.setState({ bwDraft: '' }); } } },
       bwNote: this.v2 ? 'Appliqué par la base : tout texte (avis, description, nom de salon, prénom à l’inscription…) contenant un de ces mots est refusé.' : 'Sera appliqué par la base une fois le script supabase-v2.sql relancé.' };
+  }
+  async loadVisits() {
+    if (this._visLoading || !this.sb) return; this._visLoading = true;
+    try { const { data, error } = await this.sb.rpc('mdt_visits_stats', { days: 400 }); this.setState({ visits: error ? null : (data || []), visitsErr: error ? (/mdt_visits_stats|function|schema/i.test(error.message) ? 'setup' : error.message) : '', visitsAt: Date.now() }); }
+    catch (e) { this.setState({ visits: null, visitsErr: String(e.message || e), visitsAt: Date.now() }); }
+    this._visLoading = false;
+  }
+  dashStats() {
+    const a = this.getAdds(); const M = this._members || [];
+    if (this.v2 && !this._members && !this._memLoading) { this._memLoading = true; this.v2Members().then(() => { this._memLoading = false; this.setState({}); }, () => { this._memLoading = false; }); }
+    if (this.state.visitsAt == null) setTimeout(() => this.loadVisits(), 0);
+    const today = mdtToday(); const month = today.slice(0, 7);
+    const coll = this.collection(); const openSac = a.sachets.filter(x => { const o = coll.find(c => c.id === x.id); return o && !this.isEmptySachet(o); }).length;
+    const pets = (a.gear || []).filter(g => this.gearCatKey(g.type) === 'teapet').length;
+    const st = (icon, n, label, sub) => ({ icon: icon, n: String(n), label: label, sub: sub || '' });
+    const dbStats = [st('👥', M.length || this.opts().users.length, 'Membres', M.length ? M.filter(m => m.last_seen && Date.parse(m.last_seen) > Date.now() - 30 * 864e5).length + ' venus ce mois-ci' : ''),
+      st('☕', a.logs.length, 'Dégustations', a.logs.filter(l => String(l.date || '').slice(0, 7) === month).length + ' ce mois-ci'),
+      st('🛍️', a.sachets.length, 'Sachets', openSac + ' en cours'), st('🍵', a.prods.length, 'Thés du commerce', this.allShops().length + ' boutiques'),
+      st('📖', (a.teas || []).length + (a.decl || []).length, 'Ajouts au catalogue', 'thés et variantes'), st('🫖', (a.gear || []).length, 'Matériel', pets + ' tea pet' + (pets > 1 ? 's' : '')),
+      st('🏠', this.salons().length, 'Salons', ''), st('⭐', (() => { const v = a.logs.map(l => this.noteVal(l.note)).filter(x => x != null); return v.length ? String(Math.round(v.reduce((t, x) => t + x, 0) / v.length * 10) / 10).replace('.', ',') : '—'; })(), 'Note moyenne', 'toutes dégustations')];
+    // graphe
+    const ser = ['vis', 'log', 'sac', 'mem'].indexOf(this.state.gpSer) >= 0 ? this.state.gpSer : 'vis';
+    const R = [30, 90, 365].indexOf(this.state.gpRange) >= 0 ? this.state.gpRange : 30;
+    const dayOf = t => { const d = new Date(t); return isNaN(d) ? '' : d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+    const days = []; for (let i = R - 1; i >= 0; i--) days.push(dayOf(Date.now() - i * 864e5));
+    const cnt = {}, who = {}; let note = '';
+    if (ser === 'vis') { if (this.state.visitsErr === 'setup') note = 'Pour activer ce graphe, lancez une fois supabase-visits.sql dans Supabase (SQL Editor). Les visites seront comptées à partir de là.'; else if (this.state.visitsErr) note = 'Impossible de charger les visites : ' + this.state.visitsErr;
+      (this.state.visits || []).forEach(v => { cnt[v.day] = v.n; who[v.day] = (v.noms || []).join(', '); }); }
+    else if (ser === 'log') a.logs.forEach(l => { const d = String(l.date || '').slice(0, 10); if (d) { cnt[d] = (cnt[d] || 0) + 1; who[d] = Array.from(new Set(((who[d] || '') ? who[d].split(', ') : []).concat([l.author]))).join(', '); } });
+    else if (ser === 'sac') a.sachets.forEach(x => { const t = this.idTs(x.id); if (t) { const d = dayOf(t); cnt[d] = (cnt[d] || 0) + 1; who[d] = Array.from(new Set(((who[d] || '') ? who[d].split(', ') : []).concat([x.owner]))).join(', '); } });
+    else M.forEach(m => { if (m.created_at) { const d = dayOf(m.created_at); cnt[d] = (cnt[d] || 0) + 1; who[d] = ((who[d] ? who[d] + ', ' : '') + m.nom); } });
+    const vals = days.map(d => cnt[d] || 0); const mx = Math.max(1, ...vals); const tot = vals.reduce((t, x) => t + x, 0);
+    const SER = { vis: ['🟢', 'Connectés par jour', 'membre(s) venu(s)'], log: ['☕', 'Dégustations', 'dégustation(s)'], sac: ['🛍️', 'Nouveaux sachets', 'sachet(s) ajouté(s)'], mem: ['👋', 'Inscriptions', 'inscription(s)'] };
+    const fd = d => { const p = d.split('-'); return p[2] + '/' + p[1]; };
+    const bi = vals.indexOf(Math.max(...vals));
+    return { dbStats: dbStats,
+      gpSeries: Object.keys(SER).map(k => ({ label: SER[k][0] + ' ' + SER[k][1], on: ser === k, bg: ser === k ? 'var(--color-text)' : 'var(--color-bg)', fg: ser === k ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ gpSer: k }) })),
+      gpRanges: [[30, '30 j'], [90, '90 j'], [365, '1 an']].map(x => ({ label: x[1], on: R === x[0], bg: R === x[0] ? 'var(--color-text)' : 'var(--color-bg)', fg: R === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ gpRange: x[0] }) })),
+      gpBars: days.map((d, i) => ({ pick: () => this.setState({ gpPick: d }), h: (vals[i] ? Math.max(3, vals[i] / mx * 100) : 0) + '%', tip: fd(d) + ' : ' + vals[i] + ' ' + SER[ser][2] + (who[d] ? ' — ' + who[d] : ''), bg: d === today ? 'var(--color-accent-800)' : 'var(--color-accent)' })),
+      gpGap: R > 90 ? '0px' : R > 30 ? '1px' : '3px', gpMax: String(mx), gpMid: mx > 1 ? String(Math.round(mx / 2)) : '',
+      gpX0: fd(days[0]), gpX1: fd(days[Math.floor(days.length / 2)]), gpX2: 'aujourd’hui',
+      gpSum: tot + ' ' + SER[ser][2] + ' sur ' + R + ' jours · moyenne ' + String(Math.round(tot / R * 10) / 10).replace('.', ',') + ' / jour' + (tot ? ' · record ' + vals[bi] + ' le ' + fd(days[bi]) : ''),
+      gpNote: note, gpHasNote: !!note, gpPickTxt: (() => { const d = this.state.gpPick; const i = days.indexOf(d); return i < 0 ? '' : fd(d) + ' : ' + vals[i] + ' ' + SER[ser][2] + (who[d] ? ' — ' + who[d] : ''); })() };
   }
   qualityView(countOnly) {
     const a = this.getAdds(); const prodBy = {}; a.prods.forEach(p => { prodBy[p.id] = p; });
@@ -6394,7 +6513,7 @@ class Component extends DCLogic {
     try { const { data: st, error: stErr } = await T(this.sb.from('mdt_items').select('data').eq('kind', 'opt').eq('id', 'storage').maybeSingle(), 10000); if (!stErr) { this._v2Tables = true; if (st && st.data && st.data.v === 2) this.v2 = true; } } catch (e) {}
     window.addEventListener('error', ev => this.logError(ev.message, ev.error && ev.error.stack));
     window.addEventListener('unhandledrejection', ev => this.logError('Promesse : ' + ((ev.reason && ev.reason.message) || ev.reason), ev.reason && ev.reason.stack));
-    if (this.v2 && data.session) { try { const { data: reg } = await T(this.sb.rpc('mdt_register'), 10000); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) { this._regName = reg.nom; if (reg.suspended) this.setState({ suspended: true }); } } catch (e) {} }
+    if (this.v2 && data.session) { try { const { data: reg } = await T(this.sb.rpc('mdt_register'), 10000); if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) { this._regName = reg.nom; if (reg.suspended) this.setState({ suspended: true }); this.markVisit(); } } catch (e) {} }
     this.setState({ cloud: true, cloudReady: true, session: data.session || null, v2: !!this.v2, v2Tables: !!this._v2Tables });
     if (/[?&]confirmed=1/.test(window.location.search)) { try { history.replaceState(null, '', this.siteUrl() + window.location.hash); } catch (e) {} this.setState({ view: data.session ? 'home' : 'login', authMode: 'signin' }); this.flash(data.session ? 'Adresse e-mail confirmée, bienvenue ! 🍵' : 'Adresse e-mail confirmée : vous pouvez vous connecter.'); }
     this.pullCloud(!!data.session);
@@ -6403,7 +6522,7 @@ class Component extends DCLogic {
       if (ev === 'PASSWORD_RECOVERY') this.setState({ view: 'login', authMode: 'newpass', authMsg: '', af: {} });
       if (session && ev === 'SIGNED_IN') { if (this.v2) this.sb.rpc('mdt_register').then(({ data: reg }) => { if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) this._regName = reg.nom; this.pullCloud(true); }); else this.pullCloud(true); }
     });
-    this._onFocus = () => { if (Date.now() - (this._focusPull || 0) < 15000) return; this._focusPull = Date.now(); this.pullCloud(false); };
+    this._onFocus = () => { if (Date.now() - (this._focusPull || 0) < 15000) return; this._focusPull = Date.now(); this.pullCloud(false); if (this.v2 && this.state.session) this.markVisit(); };
     window.addEventListener('focus', this._onFocus);
     this._poll = setInterval(() => { if (!document.hidden) this.pullCloud(false); }, 60000);
     this._gPoll = setInterval(() => { if (!document.hidden && this.state.view === 'guess' && this.state.gsId) this.pullCloud(false); }, 3000);
@@ -6548,6 +6667,8 @@ class Component extends DCLogic {
       setTimeout(() => window.location.reload(), 1500);
     } catch (e) { this.setState({ v2Msg: 'Échec : ' + (e.message || e) + ' (rien n’a été verrouillé, vous pouvez réessayer).' }); }
   }
+  // une visite par jour et par membre (graphe « connectés par jour » de l’admin ; sans effet si supabase-visits.sql n’a pas été lancé)
+  markVisit() { try { const d = mdtToday(); if (!this.sb || this._visitDay === d) return; this._visitDay = d; this.sb.rpc('mdt_visit').then(() => {}, () => {}); } catch (e) {} }
   logError(msg, stack) {
     // « Script error. » sans trace = erreur d'un script d'une autre origine (CDN, extension Safari…) : le navigateur masque tout, rien d'exploitable → ignorée
     if (/^Script error\.?$/i.test(String(msg || '').trim()) && !stack) return;
@@ -8136,7 +8257,10 @@ class Component extends DCLogic {
   go = (view, key, idx) => this.setState({ view: view, key: key ?? this.state.key, idx: idx ?? 0, teaBack: null, famBack: null });
 
   renderVals() {
-    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['dash', 'dev', 'new', 'mod', 'scan', 'qual', 'cat', 'mrg', 'mrq', 'usr', 'opt', 'jrn', 'jeu', 'err', 'inf'] : ['mod'];
+    { const me0 = this.me(); const ADM = this.isAdmin(me0) ? ['dash', 'dev', 'new', 'mod', 'cat', 'mrg', 'usr', 'opt', 'jrn', 'jeu', 'inf'] : ['mod'];
+      // anciennes sections devenues des sous-onglets
+      const RD = { scan: ['mod', { modSub: 'scan' }], err: ['dev', { devSub: 'err' }], qual: ['new', { adFilter: 'issues' }], mrq: ['new', { adKind: 'shop' }] };
+      if (this.state.view === 'admin' && RD[this.state.addTab]) { const r = RD[this.state.addTab]; Object.assign(this.state, r[1], { addTab: r[0] }); }
       if (this.state.view === 'admin' && !this.isMod(me0)) this.state.view = 'home';
       if (this.state.view === 'add' && this.state.addTab !== 'tea') this.state.addTab = 'lot';
       if (this.state.view === 'admin' && ADM.indexOf(this.state.addTab) < 0) this.state.addTab = ADM[0]; }
@@ -8401,7 +8525,9 @@ class Component extends DCLogic {
         this.loadAdminCounts(true); this.setState({ asMember: false, menuOpen: false, view: 'admin', addTab: this.realAdmin(this.me()) ? 'dash' : 'mod', addMsg: '' }); },
       addTitle: v === 'admin' ? 'Administration' : 'Ajouter un thé',
       addIntro: v === 'admin' ? 'Le catalogue, les utilisateurs et les réglages de la maison. Choisissez une section.' : 'Ajoutez un sachet que vous avez acheté. Si le thé n\'existe pas encore, sa référence est créée en même temps.',
-      admNav: [['dash', '🏠', 'Accueil', 'À traiter, annonce, mots interdits'], ['dev', '🛠️', 'Développement' + (this.state.admBugs ? ' (' + this.state.admBugs + ')' : ''), 'Bugs signalés par les membres'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations, matériel'], ['mod', '🚩', 'Modération' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0) > 0 ? ' (' + (this.admAlerts() - (this.isAdmin(me) ? (this.state.admErr24 || 0) : 0)) + ')' : ''), 'Signalements, ajouts à valider'], ['scan', '🔍', 'Textes à vérifier', 'Insultes, liens, contacts…'], ['qual', '🧽', 'Qualité', 'Données à compléter'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['mrq', '🏪', 'Boutiques', 'Renommer, réunir'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Parties', 'Devine le thé'], ['err', '🐞', 'Erreurs', 'Bugs remontés par le site'], ['inf', '🐸', 'Tea pets', 'Règles et réglages']].filter(x => this.isAdmin(me) || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }),
+      admNav: (() => { const adm = this.isAdmin(me); const nDev = (this.state.admBugs || 0) + (this.state.admErr24 || 0); const nMod = this.admAlerts() - (adm ? nDev : 0);
+        return [['dash', '🏠', 'Accueil', 'Vue d’ensemble, graphes, annonce'], ['dev', '🛠️', 'Développement' + (nDev ? ' (' + nDev + ')' : ''), 'Bugs remontés, erreurs générées'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations, matériel, boutiques'], ['mod', '🚩', 'Modération' + (nMod > 0 ? ' (' + nMod + ')' : ''), 'Ajouts, signalements, textes, mots interdits'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['cat', '✏️', 'Modifier le catalogue', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Features', 'Devine le thé'], ['inf', 'ℹ️', 'Informations', 'Les règles du site']].filter(x => adm || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }); })(),
+      ...this.admSubsView(),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
@@ -8588,14 +8714,7 @@ class Component extends DCLogic {
         return { canClear: this.isMod(me) && !!pdesc, clear: () => { if (!window.confirm('Effacer la description de ' + u + ' ?')) return; const pr = Object.assign({}, (this.getAdds().options || {}).profiles || {}); pr[u] = Object.assign({}, pr[u], { desc: '' }); this.setOpt('profiles', pr); this.modLog('a effacé la description de', u); this.flash('Description de ' + u + ' effacée.'); },
           show: true, name: u, blocked: bl, blockTxt: bl ? 'Débloquer' : '🚫 Bloquer', block: () => this.toggleBlock(u), report: () => this.report({ t: 'user', who: u, label: 'le profil de ' + u }) }; })(),
       tabJrn: () => this.setState({ addTab: 'jrn', addMsg: '' }),
-      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabDevOn: this.state.addTab === 'dev', ...(v === 'admin' && this.state.addTab === 'dev' ? this.devView() : { dvList: [], dvFilters: [] }), tabDashOn: this.state.addTab === 'dash', ...(v === 'admin' && this.state.addTab === 'dash' ? this.dashView() : { dbCards: [], bwList: [] }), tabScanOn: this.state.addTab === 'scan', ...(v === 'admin' && this.state.addTab === 'scan' ? this.scanView() : { scList: [], scFilters: [] }), tabQualOn: this.state.addTab === 'qual', ...(v === 'admin' && this.state.addTab === 'qual' ? this.qualityView() : { qGroups: [] }), tabErrOn: this.state.addTab === 'err', tabMrqOn: this.state.addTab === 'mrq', ...(v === 'admin' && this.state.addTab === 'mrq' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'err' ? this.errView() : { erList: [] }), ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
-      infPets: this.state.addTab !== 'inf' ? [] : (this.getAdds().gear || []).filter(g => this.gearCatKey(g.type) === 'teapet').sort((x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || this.gearAlpha(x, y)).map(g => { const st = this.petStats(g); const T = this.petTemper(g);
-        const upd = patch => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: b.gear.map(x => { if (x.id !== g.id) return x; const c = Object.assign({}, x, patch); Object.keys(patch).forEach(k => { if (patch[k] == null) delete c[k]; }); return c; }) })); };
-        return { name: g.name, owner: g.owner, sub: 'Nv. ' + st.lvl + ' · ' + st.xp + ' XP · ' + st.hp + ' PV · ' + T.icon + ' ' + T.name + (g.temper ? ' (choisi)' : ' (tiré au hasard)') + (g.petReset ? ' · remis à zéro le ' + this.fmtDate(g.petReset.day) : ''),
-          tval: g.temper || '', topts: [{ v: '', l: '🎲 Hasard (d’origine)' }].concat(this.petTempers.map(t => ({ v: t.key, l: t.icon + ' ' + t.name }))),
-          setT: e => { const v = e.target.value; upd({ temper: v || null }); this.flash(g.name + ' : caractère ' + (v ? this.petTempers.find(t => t.key === v).name.toLowerCase() : 'd’origine') + '.'); },
-          reset: () => { if (!window.confirm('Remettre ' + g.name + ' (' + g.owner + ') au niveau 1, 0 XP et 100 PV ? Les dégustations passées ne compteront plus pour lui.')) return; upd({ petReset: { day: mdtToday(), ts: Date.now() } }); this.flash(g.name + ' repart de zéro.'); },
-          hasReset: !!g.petReset, undo: () => { upd({ petReset: null }); this.flash('Remise à zéro de ' + g.name + ' annulée.'); } }; }),
+      tabInfOn: this.state.addTab === 'inf', tabModOn: this.state.addTab === 'mod', tabDevOn: this.state.addTab === 'dev', ...(v === 'admin' && this.state.addTab === 'dev' ? this.devView() : { dvList: [], dvFilters: [] }), tabDashOn: this.state.addTab === 'dash', ...(v === 'admin' && (this.state.addTab === 'dash' || this.admSub('mod') === 'bw') ? this.dashView() : { dbCards: [], bwList: [], dbStats: [], gpSeries: [], gpRanges: [], gpBars: [] }), tabBwOn: this.state.addTab === 'mod' && this.admSub('mod') === 'bw', tabScanOn: this.state.addTab === 'mod' && this.admSub('mod') === 'scan', ...(v === 'admin' && this.state.addTab === 'mod' && this.admSub('mod') === 'scan' ? this.scanView() : { scList: [], scFilters: [] }), tabErrOn: this.state.addTab === 'dev' && this.admSub('dev') === 'err', tabDevBugOn: this.state.addTab === 'dev' && this.admSub('dev') === 'bugs', tabMrqOn: this.state.addTab === 'new' && this.state.adKind === 'shop', ...(v === 'admin' && this.state.addTab === 'new' && this.state.adKind === 'shop' ? this.brandView() : { brList: [] }), ...(v === 'admin' && this.state.addTab === 'dev' && this.admSub('dev') === 'err' ? this.errView() : { erList: [] }), tabModAddOn: this.state.addTab === 'mod' && this.admSub('mod') === 'add', tabModRepOn: this.state.addTab === 'mod' && this.admSub('mod') === 'rep', tabModHistOn: this.state.addTab === 'mod' && ['add', 'rep'].indexOf(this.admSub('mod')) >= 0, ...(v === 'admin' && this.state.addTab === 'mod' ? this.modView() : { mdReports: [], mdPending: [] }),
       infTempers: this.petTempers.map(t => ({ icon: t.icon, name: t.name, desc: t.desc, grace: t.grace + ' j', rate: '×' + String(t.rate).replace('.', ','), loss: '≈ ' + String(Math.round(9 * t.rate * 10) / 10).replace('.', ',') + ' PV/j', heal: '+' + t.heal + ' PV', bonus: t.bonus })),
       infLevels: [1, 2, 3, 4, 5, 6, 7, 8].map(L => ({ lvl: 'Nv. ' + L, xp: String(15 * L * (L - 1)) + ' XP', red: '−' + Math.round(Math.min(0.55, (L - 1) * 0.07) * 100) + ' %' })),
       tabJrnOn: this.state.addTab === 'jrn', tabJrnOff: this.state.addTab !== 'jrn',
