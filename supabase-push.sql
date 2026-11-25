@@ -40,7 +40,7 @@ language sql stable security definer set search_path = public as $$
 $$;
 
 create or replace function public.mdt_site() returns text language sql immutable as $$
-  select 'https://dyfrost.github.io/maison-du-the/Site%20The.dc.html'
+  select 'https://lunanimithe.fr/'
 $$;
 
 -- met une notification en file si la personne l'a activée et a au moins un appareil abonné

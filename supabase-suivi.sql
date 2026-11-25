@@ -77,3 +77,8 @@ end $$;
 grant execute on function public.mdt_db_stats() to authenticated;
 
 notify pgrst, 'reload schema';
+
+-- Adresse du site utilisée dans les notifications (domaine lunanimithe.fr)
+create or replace function public.mdt_site() returns text language sql immutable as $$
+  select 'https://lunanimithe.fr/'
+$$;
