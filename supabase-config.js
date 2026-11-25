@@ -7,9 +7,9 @@ window.SUPABASE_ANON_KEY = 'sb_publishable_fhaCEWs01X9P2FMZV55ptg_liReqT7J';
 window.TURNSTILE_SITE_KEY = '';
 // Mentions légales (affichées dans « Confidentialité et mentions légales »)
 window.MDT_LEGAL = {
-  editor: ['Raphaël ESTOURNET'],   // une ou plusieurs personnes, ex. ['Raphaël Estournet', 'Maël Guillot'] → « Raphaël Estournet et Maël Guillot »
-  contact: 'raphaelplay35@gmail.com',  // ex. 'contact@exemple.fr' : adresse pour les demandes RGPD
-  region: 'South Asia, Singapour'    // ex. 'Union européenne (Francfort, eu-central-1)' : voir Supabase → Project Settings → General
+  editor: ['Raphaël ESTOURNET-HEIDINGER','Maël GUILLOT'],   // une ou plusieurs personnes, ex. ['Raphaël Estournet', 'Maël Guillot'] → « Raphaël Estournet et Maël Guillot »
+  contact: 'lunanimithe@gmail.com',  // ex. 'contact@exemple.fr' : adresse pour les demandes RGPD
+  region: 'Union Européenne'    // ex. 'Union européenne (Francfort, eu-central-1)' : voir Supabase → Project Settings → General
 };
 // Notifications sur le téléphone : clé publique VAPID (la clé privée va dans les secrets Supabase, jamais ici)
 window.VAPID_PUBLIC_KEY = 'BNIuQUPQTva8PKugopbqC6EyGdEf6ITPQdxBMKl-A8s63dpg1-9syA4GLubeiwP6wMTvnUlJu4symQwr0vopgPg';
