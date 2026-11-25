@@ -1290,6 +1290,11 @@
         <sc-if value="{{ sett.setMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px; color: #2f5b3a;">{{ sett.setMsg }}</p></sc-if>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 14px;"><button class="btn btn-secondary" onClick="{{ sett.openProfile }}" style="white-space: nowrap;">🙂 Voir mon profil</button><span style="opacity: .7;">Salon principal : {{ sett.setSalon }}</span><button class="btn btn-ghost" onClick="{{ sett.openSalon }}" style="white-space: nowrap; font-size: 14px;">changer</button></div>
         <section class="set-card">
+          <h2 class="set-h">📏 Unités</h2>
+          <sc-for list="{{ sett.setUnits }}" as="ug" hint-placeholder-count="3"><div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 14px; font-weight: 600;">{{ ug.title }}</span><div class="set-opts"><sc-for list="{{ ug.opts }}" as="o" hint-placeholder-count="2"><button class="{{ o.cls }}" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div></div></sc-for>
+          <span class="set-l" style="text-transform: none; letter-spacing: 0;">Chaque unité se choisit indépendamment. Tout le site s’affiche dans ces unités (indications fournisseur, dégustations, restes des sachets) et les champs de saisie les utilisent aussi ; les données restent enregistrées en °C, g et cL, donc rien n’est perdu en changeant.</span>
+        </section>
+        <section class="set-card">
           <h2 class="set-h">👁️ Qui peut voir mon profil ?</h2>
           <div class="set-opts"><sc-for list="{{ sett.setProfile }}" as="o" hint-placeholder-count="3"><button class="{{ o.cls }}" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}"><b>{{ o.label }}</b><small>{{ o.sub }}</small></button></sc-for></div>
           <span class="set-l" style="text-transform: none; letter-spacing: 0;">Ton profil montre tes thés préférés, ton matériel en vitrine et tes badges. Ton nom reste visible partout.</span>
@@ -2186,7 +2191,7 @@
             </div>
             <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Paramètres</span>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Température de l’eau en °C" placeholder="🌡 Température °C (ex : 95)" defaultValue="{{ lf.temperature }}" data-dv="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature" inputMode="numeric">
+              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Température de l’eau en °C" placeholder="🌡 Température {{ lfTUnit }} (ex : {{ lfTEx }})" defaultValue="{{ lf.temperature }}" data-dv="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature" inputMode="numeric">
               <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Ma quantité" placeholder="⚖️ Ma quantité en {{ qtyUnit }} (ex : 5)" defaultValue="{{ lf.qty }}" data-dv="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal">
             </div>
             <sc-if value="{{ lfTimesOn }}" hint-placeholder-val="{{ true }}">
@@ -2417,6 +2422,27 @@
                         <sc-for list="{{ ar.fields }}" as="fd" hint-placeholder-count="6">
                           <div style="display: flex; flex-direction: column; gap: 4px; grid-column: {{ fd.span }};"><span style="font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6;">{{ fd.label }}</span>
                             <sc-if value="{{ fd.isText }}" hint-placeholder-val="{{ true }}"><input class="input" type="{{ fd.type }}" value="{{ fd.value }}" onInput="{{ fd.set }}" list="{{ fd.list }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"></sc-if>
+                            <sc-if value="{{ fd.isReco }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 12px;">
+                  <b style="font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;">Indication fournisseur <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: .65;">· facultatif · chiffres uniquement</span></b>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">⚖️ Quantité</span>
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                      <sc-if value="{{ fd.rw.qIsG }}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="decimal" aria-label="Quantité de thé ({{ fd.rw.qMassUnit }})" placeholder="ex : 5" value="{{ fd.rw.qN }}" onInput="{{ fd.rw.setQN }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-surface);"><span style="opacity: .7;">{{ fd.rw.qMassUnit }}</span></span></sc-if>
+                      <sc-if value="{{ fd.rw.qIsU }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="numeric" aria-label="Nombre d’unités" placeholder="1" value="{{ fd.rw.qN }}" onInput="{{ fd.rw.setQN }}" style="width: 70px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-surface);"><span style="opacity: .7;">u</span></span></sc-if>
+                      <span aria-hidden="true" style="opacity: .45;">pour</span>
+                      <span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="decimal" aria-label="Volume d’eau ({{ fd.rw.qVolUnit }})" placeholder="ex : 20" value="{{ fd.rw.qCl }}" onInput="{{ fd.rw.setQCl }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-surface);"><span style="opacity: .7;">{{ fd.rw.qVolUnit }}</span></span>
+                      <button type="button" onClick="{{ fd.rw.toggleQU }}" aria-pressed="{{ fd.rw.qIsU }}" title="Thé vendu à l’unité (tuo cha, mini-galette…)" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ fd.rw.qUnitBtn.bg }}; color: {{ fd.rw.qUnitBtn.fg }};">{{ fd.rw.qUnitLbl }}</button>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">🌡 Température</span>
+                    <span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="numeric" aria-label="Température de l’eau ({{ fd.rw.tempUnit }})" placeholder="ex : 95" value="{{ fd.rw.tempV }}" onInput="{{ fd.rw.setTemp }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-surface);"><span style="opacity: .7;">{{ fd.rw.tempUnit }}</span></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">⏱ Temps d’infusion</span>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ fd.rw.tTypes }}" as="tt" hint-placeholder-count="3"><button type="button" onClick="{{ tt.go }}" aria-pressed="{{ tt.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ tt.bg }}; color: {{ tt.fg }};">{{ tt.label }}</button></sc-for><span style="width: 10px;"></span><sc-for list="{{ fd.rw.tUnits }}" as="tu" hint-placeholder-count="2"><button type="button" onClick="{{ tu.go }}" aria-pressed="{{ tu.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ tu.bg }}; color: {{ tu.fg }};">{{ tu.label }}</button></sc-for></div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ fd.rw.tBoxes }}" as="tb" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px;"><sc-if value="{{ tb.hasSep }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="opacity: .5; margin: 0 2px;">{{ tb.sep }}</span></sc-if><input class="input" inputMode="decimal" aria-label="{{ tb.aria }}" placeholder="{{ tb.ph }}" value="{{ tb.v }}" onInput="{{ tb.set }}" style="width: 72px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-surface);"><span style="font-size: 13px; opacity: .65;">{{ tb.unit }}</span></span></sc-for></div>
+                    <span style="font-size: 12.5px; opacity: .65;">{{ fd.rw.tHint }}</span>
+                  </div>
+                  <sc-if value="{{ fd.rw.hasPreview }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; background: var(--color-accent-100); border-radius: 12px; padding: 6px 10px; align-self: flex-start;">Affiché : {{ fd.rw.preview }}</span></sc-if>
+                </div></sc-if>
                             <sc-if value="{{ fd.isArea }}" hint-placeholder-val="{{ false }}"><textarea class="input" rows="3" value="{{ fd.value }}" onInput="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface); border-radius: 14px; resize: vertical;"></textarea></sc-if>
                             <sc-if value="{{ fd.isSelect }}" hint-placeholder-val="{{ false }}"><sc-raw-select class="input" value="{{ fd.value }}" data-val="{{ fd.value }}" onChange="{{ fd.set }}" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; background: var(--color-surface);"><sc-for list="{{ fd.options }}" as="fo" hint-placeholder-count="3"><option value="{{ fo.v }}" label="{{ fo.l }}">{{ fo.l }}</option></sc-for></sc-raw-select><sc-if value="{{ fd.isNew }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px; margin-top: 6px;"><input class="input" value="{{ fd.newVal }}" onInput="{{ fd.setNew }}" onKeyDown="{{ fd.newKey }}" placeholder="{{ fd.newPh }}" autoFocus="{{ true }}" style="flex: 1; min-width: 0; padding: 8px 12px; font-size: 14px; background: var(--color-surface);"><button class="btn btn-primary" onClick="{{ fd.okNew }}" style="white-space: nowrap; padding: 6px 14px;">OK</button></div></sc-if></sc-if>
                             <sc-if value="{{ fd.isTags }}" hint-placeholder-val="{{ false }}"><div class="tp">
@@ -3008,11 +3034,26 @@
                 <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" placeholder="ex : 1107 ou PDT" defaultValue="{{ form.ref }}" data-dv="{{ form.ref }}" onInput="{{ setFz.ref }}" key="{{ formKey }}-ref">
               </label>
               <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px;">
-                <span style="font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Recommandations du fabricant <span style="text-transform: none; letter-spacing: 0;">· facultatif</span></span>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
-                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Température conseillée" placeholder="🌡 Température (ex : 95)" defaultValue="{{ form.recoTemp }}" data-dv="{{ form.recoTemp }}" onInput="{{ setFz.recoTemp }}" key="{{ formKey }}-recoTemp">
-                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Quantité conseillée" placeholder="⚖️ Quantité (ex : 5 g / 100 ml)" defaultValue="{{ form.recoQty }}" data-dv="{{ form.recoQty }}" onInput="{{ setFz.recoQty }}" key="{{ formKey }}-recoQty">
-                  <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Temps conseillés" placeholder="⏱ Temps (ex : 20/30/45 ou 3 min)" defaultValue="{{ form.recoTimes }}" data-dv="{{ form.recoTimes }}" onInput="{{ setFz.recoTimes }}" key="{{ formKey }}-recoTimes">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <b style="font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;">Indication fournisseur <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: .65;">· facultatif · chiffres uniquement</span></b>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">⚖️ Quantité</span>
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                      <sc-if value="{{ rwA.qIsG }}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="decimal" aria-label="Quantité de thé ({{ rwA.qMassUnit }})" placeholder="ex : 5" value="{{ rwA.qN }}" onInput="{{ rwA.setQN }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">{{ rwA.qMassUnit }}</span></span></sc-if>
+                      <sc-if value="{{ rwA.qIsU }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="numeric" aria-label="Nombre d’unités" placeholder="1" value="{{ rwA.qN }}" onInput="{{ rwA.setQN }}" style="width: 70px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">u</span></span></sc-if>
+                      <span aria-hidden="true" style="opacity: .45;">pour</span>
+                      <span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="decimal" aria-label="Volume d’eau ({{ rwA.qVolUnit }})" placeholder="ex : 20" value="{{ rwA.qCl }}" onInput="{{ rwA.setQCl }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">{{ rwA.qVolUnit }}</span></span>
+                      <button type="button" onClick="{{ rwA.toggleQU }}" aria-pressed="{{ rwA.qIsU }}" title="Thé vendu à l’unité (tuo cha, mini-galette…)" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ rwA.qUnitBtn.bg }}; color: {{ rwA.qUnitBtn.fg }};">{{ rwA.qUnitLbl }}</button>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">🌡 Température</span>
+                    <span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="numeric" aria-label="Température de l’eau ({{ rwA.tempUnit }})" placeholder="ex : 95" value="{{ rwA.tempV }}" onInput="{{ rwA.setTemp }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">{{ rwA.tempUnit }}</span></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">⏱ Temps d’infusion</span>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ rwA.tTypes }}" as="tt" hint-placeholder-count="3"><button type="button" onClick="{{ tt.go }}" aria-pressed="{{ tt.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ tt.bg }}; color: {{ tt.fg }};">{{ tt.label }}</button></sc-for><span style="width: 10px;"></span><sc-for list="{{ rwA.tUnits }}" as="tu" hint-placeholder-count="2"><button type="button" onClick="{{ tu.go }}" aria-pressed="{{ tu.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ tu.bg }}; color: {{ tu.fg }};">{{ tu.label }}</button></sc-for></div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ rwA.tBoxes }}" as="tb" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px;"><sc-if value="{{ tb.hasSep }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="opacity: .5; margin: 0 2px;">{{ tb.sep }}</span></sc-if><input class="input" inputMode="decimal" aria-label="{{ tb.aria }}" placeholder="{{ tb.ph }}" value="{{ tb.v }}" onInput="{{ tb.set }}" style="width: 72px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="font-size: 13px; opacity: .65;">{{ tb.unit }}</span></span></sc-for></div>
+                    <span style="font-size: 12.5px; opacity: .65;">{{ rwA.tHint }}</span>
+                  </div>
+                  <sc-if value="{{ rwA.hasPreview }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; background: var(--color-accent-100); border-radius: 12px; padding: 6px 10px; align-self: flex-start;">Affiché : {{ rwA.preview }}</span></sc-if>
                 </div>
               </div>
               <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -3348,7 +3389,7 @@
             <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;"><h1 style="font-size: 48px; margin: 0;">{{ pv.name }}</h1><button class="btn btn-secondary" onClick="{{ pv.share }}" style="white-space: nowrap;">↗ Partager</button><sc-if value="{{ pv.canEditP }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ pv.editP }}" style="white-space: nowrap;">✏️ Modifier le thé</button></sc-if></div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
               <span style="font-size: 15px; opacity: .8;">{{ pv.marque }}<sc-if value="{{ pv.ref }}" hint-placeholder-val="{{ false }}"> · réf. {{ pv.ref }}</sc-if></span>
-              <sc-if value="{{ pv.reco }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; background: var(--color-surface); border-radius: 999px; padding: 5px 12px;">🏷 Conseil du fabricant : {{ pv.reco }}</span></sc-if>
+              <sc-if value="{{ pv.reco }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; background: var(--color-surface); border-radius: 999px; padding: 5px 12px;">🏷 Indication fournisseur : {{ pv.reco }}</span></sc-if>
             </div>
             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ pv.tags }}" as="tg" hint-placeholder-count="0"><span class="tag tag-accent">{{ tg }}</span></sc-for><sc-if value="{{ pv.noTagsEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pv.editP }}" style="cursor: pointer; border: 1px dashed var(--color-divider); background: transparent; border-radius: 999px; padding: 4px 12px; font-family: var(--font-body); font-size: 13px; color: var(--color-text); opacity: .75;">＋ Ajouter des tags</button></sc-if></div>
           </div>
@@ -3361,10 +3402,28 @@
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Boutique<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.marque }}" onInput="{{ pe.now.marque }}" list="liste-boutiques"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Réf. fournisseur<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.ref }}" onInput="{{ pe.now.ref }}"></label>
             <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Variante<input class="input" style="padding: 8px 12px; background: var(--color-bg);" value="{{ pe.variante }}" onInput="{{ pe.now.variante }}"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">🌡 Temp. conseillée (fabricant)<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 95" value="{{ pe.recoTemp }}" onInput="{{ pe.now.recoTemp }}"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⚖️ Quantité conseillée<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 5 g / 100 ml" value="{{ pe.recoQty }}" onInput="{{ pe.now.recoQty }}"></label>
-            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">⏱ Temps conseillés<input class="input" style="padding: 8px 12px; background: var(--color-bg);" placeholder="ex : 20/30/45" value="{{ pe.recoTimes }}" onInput="{{ pe.now.recoTimes }}"></label>
           </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <b style="font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;">Indication fournisseur <span style="font-weight: 400; text-transform: none; letter-spacing: 0; opacity: .65;">· facultatif · chiffres uniquement</span></b>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">⚖️ Quantité</span>
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                      <sc-if value="{{ pe.rw.qIsG }}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="decimal" aria-label="Quantité de thé ({{ pe.rw.qMassUnit }})" placeholder="ex : 5" value="{{ pe.rw.qN }}" onInput="{{ pe.rw.setQN }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">{{ pe.rw.qMassUnit }}</span></span></sc-if>
+                      <sc-if value="{{ pe.rw.qIsU }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="numeric" aria-label="Nombre d’unités" placeholder="1" value="{{ pe.rw.qN }}" onInput="{{ pe.rw.setQN }}" style="width: 70px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">u</span></span></sc-if>
+                      <span aria-hidden="true" style="opacity: .45;">pour</span>
+                      <span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="decimal" aria-label="Volume d’eau ({{ pe.rw.qVolUnit }})" placeholder="ex : 20" value="{{ pe.rw.qCl }}" onInput="{{ pe.rw.setQCl }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">{{ pe.rw.qVolUnit }}</span></span>
+                      <button type="button" onClick="{{ pe.rw.toggleQU }}" aria-pressed="{{ pe.rw.qIsU }}" title="Thé vendu à l’unité (tuo cha, mini-galette…)" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ pe.rw.qUnitBtn.bg }}; color: {{ pe.rw.qUnitBtn.fg }};">{{ pe.rw.qUnitLbl }}</button>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">🌡 Température</span>
+                    <span style="display: inline-flex; align-items: center; gap: 5px;"><input class="input" inputMode="numeric" aria-label="Température de l’eau ({{ pe.rw.tempUnit }})" placeholder="ex : 95" value="{{ pe.rw.tempV }}" onInput="{{ pe.rw.setTemp }}" style="width: 86px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="opacity: .7;">{{ pe.rw.tempUnit }}</span></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600;">⏱ Temps d’infusion</span>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ pe.rw.tTypes }}" as="tt" hint-placeholder-count="3"><button type="button" onClick="{{ tt.go }}" aria-pressed="{{ tt.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ tt.bg }}; color: {{ tt.fg }};">{{ tt.label }}</button></sc-for><span style="width: 10px;"></span><sc-for list="{{ pe.rw.tUnits }}" as="tu" hint-placeholder-count="2"><button type="button" onClick="{{ tu.go }}" aria-pressed="{{ tu.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 13px; font-family: var(--font-body); font-size: 13.5px; box-shadow: inset 0 0 0 1px var(--color-divider); background: {{ tu.bg }}; color: {{ tu.fg }};">{{ tu.label }}</button></sc-for></div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ pe.rw.tBoxes }}" as="tb" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px;"><sc-if value="{{ tb.hasSep }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="opacity: .5; margin: 0 2px;">{{ tb.sep }}</span></sc-if><input class="input" inputMode="decimal" aria-label="{{ tb.aria }}" placeholder="{{ tb.ph }}" value="{{ tb.v }}" onInput="{{ tb.set }}" style="width: 72px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center; background: var(--color-bg);"><span style="font-size: 13px; opacity: .65;">{{ tb.unit }}</span></span></sc-for></div>
+                    <span style="font-size: 12.5px; opacity: .65;">{{ pe.rw.tHint }}</span>
+                  </div>
+                  <sc-if value="{{ pe.rw.hasPreview }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; background: var(--color-accent-100); border-radius: 12px; padding: 6px 10px; align-self: flex-start;">Affiché : {{ pe.rw.preview }}</span></sc-if>
+                </div>
           <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px;">Description<textarea class="input" rows="3" style="padding: 10px 12px; background: var(--color-bg); resize: vertical;" value="{{ pe.commentaire }}" onInput="{{ pe.now.commentaire }}"></textarea></label>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <span style="font-size: 13px;">Tags <span style="opacity: .6;">· {{ pe.tagsCount }}</span></span>
@@ -4789,7 +4848,7 @@ class Component extends DCLogic {
       cols = [['nom', 'Nom'], ['the', 'Thé'], ['fam', 'Famille'], ['marque', 'Boutique'], ['nSac', 'Sachets'], ['nLog', 'Dégust.'], ['who', 'Créé par'], ['date', 'Ajouté le']];
       rows = a.prods.map(p => { const sacs = a.sachets.filter(x => x.prodId === p.id); const nl = sacs.reduce((t, x) => t + (logsBySac[x.id] || []).length, 0); const ts = this.idTs(p.id);
         return { id: p.id, v: { nom: p.nom || p.the, the: p.the + (p.variante ? ' · ' + p.variante : ''), fam: famName(p.the), marque: p.marque || '—', nSac: sacs.length, nLog: nl, who: creator('pid', p.id) || (sacs[0] || {}).owner || '—', date: ts },
-          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé de l’encyclopédie', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique', this.shopOptions(p.marque)], ['ref', 'Référence'], ['recoTemp', 'Temp. conseillée (vendeur)'], ['recoQty', 'Quantité conseillée'], ['recoTimes', 'Temps conseillés'], ['tags', 'Tags de goût', 'tags'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
+          raw: p, fields: [['nom', 'Nom'], ['the', 'Thé de l’encyclopédie', 'tea'], ['variante', 'Variante'], ['marque', 'Boutique', this.shopOptions(p.marque)], ['ref', 'Référence'], ['reco', 'Indication fournisseur', 'reco'], ['tags', 'Tags de goût', 'tags'], ['code', 'Code'], ['commentaire', 'Commentaire', 'area']],
           save: d => { const b = this.getAdds(); this.setAdds(Object.assign({}, b, { prods: b.prods.map(x => x.id === p.id ? Object.assign({}, x, { nom: d.nom, the: d.the, variante: d.variante, marque: d.marque, recoTemp: d.recoTemp || '', recoQty: d.recoQty || '', recoTimes: d.recoTimes || '', tags: Array.isArray(d.tags) ? d.tags.slice() : (x.tags || []), ref: d.ref, boutique: d.boutique, code: d.code, commentaire: d.commentaire }) : x) })); },
           open: () => this.openProd(p.id), delMsg: 'Supprimer « ' + (p.nom || p.the) + ' » ? ' + sacs.length + ' sachet(s) et ' + nl + ' dégustation(s) seront aussi supprimés.', delFn: delProds([p.id]) }; });
     } else if (kind === 'sachet') {
@@ -4908,11 +4967,12 @@ class Component extends DCLogic {
         cancelEdit: () => this.setState({ adEdit: null, adDraft: {} }),
         saveEdit: () => { r.save(Object.assign({}, this.state.adDraft || {})); this.setState({ adEdit: null, adDraft: {} }); },
         fields: ed ? (r.fields || []).map(f => ({ label: f[1], value: draft[f[0]] == null ? '' : String(draft[f[0]]), type: f[2] === 'date' ? 'date' : 'text', list: f[2] === 'tea' ? 'liste-thes' : '',
-          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isGear: f[2] === 'gear', isTags: f[2] === 'tags',
+          isText: !f[2] || f[2] === 'date' || f[2] === 'tea', isArea: f[2] === 'area', isGear: f[2] === 'gear', isTags: f[2] === 'tags', isReco: f[2] === 'reco',
+          rw: f[2] === 'reco' ? this.recoWidget('ad' + r.id, draft, patch => this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, patch) }))) : { tTypes: [], tUnits: [], tBoxes: [], qUnitBtn: {} },
           ...(f[2] === 'tags' ? { tp: this.tagPicker(Array.isArray(draft.tags) ? draft.tags : [], tags => this.setState(s0 => ({ adDraft: Object.assign({}, s0.adDraft, { tags: tags }) })), 'tpOpenA') } : { tp: { intens: [], fams: [], openChips: [], others: [] } }),
           ...(f[2] === 'gear' ? (() => { const cur = Array.isArray(draft.gearIds) ? draft.gearIds : (draft.gearId ? [draft.gearId] : []); const gs = (this.getAdds().gear || []).slice().sort((x, y) => (x.owner === draft.author ? 0 : 1) - (y.owner === draft.author ? 0 : 1) || String(x.owner).localeCompare(String(y.owner)) || x.name.localeCompare(y.name, 'fr'));
             return { noChips: !gs.length, chips: gs.map(g => { const on = cur.indexOf(g.id) >= 0; return { label: (on ? '✓ ' : '') + this.gearCat(g)[1] + ' ' + g.name + ' · ' + g.owner, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)',
-              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? (() => { const cur = draft[f[0]] == null ? '' : String(draft[f[0]]); const l = f[2].map(o => ({ v: o[0], l: o[1] })); if (cur && !l.some(o => o.v === cur)) l.splice(Math.max(0, l.length - 1), 0, { v: cur, l: cur + ' (nouveau)' }); return l; })() : [], span: f[2] === 'area' || f[2] === 'gear' || f[2] === 'tags' ? '1 / -1' : 'auto',
+              toggle: () => this.setState(s0 => { const d0 = s0.adDraft || {}; const c0 = Array.isArray(d0.gearIds) ? d0.gearIds : (d0.gearId ? [d0.gearId] : []); return { adDraft: Object.assign({}, d0, { gearIds: c0.indexOf(g.id) >= 0 ? c0.filter(z => z !== g.id) : c0.concat([g.id]) }) }; }) }; }) }; })() : { chips: [] }), isSelect: Array.isArray(f[2]), options: Array.isArray(f[2]) ? (() => { const cur = draft[f[0]] == null ? '' : String(draft[f[0]]); const l = f[2].map(o => ({ v: o[0], l: o[1] })); if (cur && !l.some(o => o.v === cur)) l.splice(Math.max(0, l.length - 1), 0, { v: cur, l: cur + ' (nouveau)' }); return l; })() : [], span: f[2] === 'area' || f[2] === 'gear' || f[2] === 'tags' || f[2] === 'reco' ? '1 / -1' : 'auto',
           set: e => { const val = f[0] === 'marque' && e.target.tagName !== 'SELECT' ? this.upInput(e) : e.target.value;
             if (val === '__new') { this.setState({ adNewField: f[0], adNewVal: '' }); return; }
             this.setState(s0 => ({ adNewField: s0.adNewField === f[0] ? null : s0.adNewField, adDraft: Object.assign({}, s0.adDraft, { [f[0]]: val }) })); },
@@ -5137,7 +5197,7 @@ class Component extends DCLogic {
     const mine = g.owner === me;
     const isPet = this.gearCatKey(g.type) === 'teapet';
     return { isPet: isPet && !!g.photo, sprite: g.sprite || '', hasSprite: !!g.sprite, spriteBusy: this.state.spriteBusy === g.id, spriteBtn: this.state.spriteBusy === g.id ? 'Création du pixel art…' : (g.sprite ? '↻ Refaire le pixel art' : '✨ Créer le pixel art'), remakeSprite: () => this.makeGearSprite(g.id), name: g.name, icon: T[1], typeName: T[2] + (this.gearModelOf(g) ? ' · ' + this.gearModelOf(g) : ''), photo: g.photo || '', noPhoto: !g.photo, comment: g.comment || '', mine: mine,
-      meta: [g.owner !== me ? 'à ' + g.owner : '',  g.volume ? g.volume + ' ml' : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', (this.priceVisible(g.owner) && g.prix) ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
+      meta: [g.owner !== me ? 'à ' + g.owner : '',  g.volume ? this.mlTxt(g.volume) : '', g.material, g.origin, g.achat ? 'acheté le ' + this.fmtDate(g.achat) : '', (this.priceVisible(g.owner) && g.prix) ? String(g.prix).replace('.', ',') + ' €' : ''].filter(Boolean).join(' · '),
       edit: () => this.setState({ view: 'gear', gearEdit: g.id, gf: Object.assign({}, g, { type: this.gearCatKey(g.type), model: this.gearModelOf(g) }), gearMsg: '', form: Object.assign({}, this.state.form, { gearPhoto: g.photo || '' }) }),
       remove: () => { if (!window.confirm('Supprimer « ' + g.name + ' » ? Les dégustations restent, sans théière associée.')) return; const b = this.getAdds(); this.setAdds(Object.assign({}, b, { gear: (b.gear || []).filter(x => x.id !== g.id) })); this.setState({ view: 'gear' }); },
       kpis: [
@@ -5738,7 +5798,9 @@ class Component extends DCLogic {
     const VIS4 = [['public', '🌍', 'Public', 'Tous les membres de la maison'], ['salons', '🏮', 'Mes salons et mes amis', 'Les membres de tes salons + tes amis'], ['friends', '🤝', 'Mes amis seulement', 'Uniquement les personnes de ta liste d’amis'], ['private', '🔒', 'Privé', 'Personne d’autre que toi']];
     const VIS3 = [['public', '🌍', 'Public', 'Tous les membres de la maison'], ['friends', '🤝', 'Mes amis', 'Uniquement les personnes de ta liste d’amis'], ['private', '🔒', 'Privé', 'Personne d’autre que toi']];
     const choice = (key, def, VIS) => VIS.map(v => { const on = (pr[key] || def) === v[0]; return { label: v[1] + ' ' + v[2], sub: v[3], on: on, cls: on ? 'set-opt on' : 'set-opt', pick: () => { this.setPrefs({ [key]: v[0] }); this.setState({ setMsg: 'Enregistré ✓' }); } }; });
-    return { setProfile: choice('profileVis', 'friends', VIS3), setContent: choice('contentVis', 'public', VIS4), setPrice: choice('priceVis', 'public', VIS4),
+    const U = this.units(); const ug = (title, key, L) => ({ title: title, opts: L.map(x => { const on = U[key] === x[0]; return { label: x[1], sub: x[2], on: on, cls: on ? 'set-opt on' : 'set-opt', pick: () => { this.setUnits({ [key]: x[0] }); this.setState({ setMsg: 'Unités enregistrées ✓' }); } }; }) });
+    const setUnits = [ug('🌡 Température', 't', [['C', '°C', 'Celsius'], ['F', '°F', 'Fahrenheit']]), ug('💧 Volume', 'v', [['cl', 'cL / L', 'centilitres, litres'], ['floz', 'fl oz', 'onces liquides (US)']]), ug('⚖️ Masse', 'm', [['g', 'g', 'grammes'], ['oz', 'oz', 'onces']])];
+    return { setUnits: setUnits, setProfile: choice('profileVis', 'friends', VIS3), setContent: choice('contentVis', 'public', VIS4), setPrice: choice('priceVis', 'public', VIS4),
       setDesc: this.state.setDesc != null ? this.state.setDesc : (prof.desc || ''), onSetDesc: e => this.setState({ setDesc: e.target.value }),
       saveDesc: () => { const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); all[me] = Object.assign({}, all[me], { desc: String(this.state.setDesc != null ? this.state.setDesc : prof.desc || '').trim() }); this.setOpt('profiles', all); this.setState({ setDesc: null, setMsg: 'Description enregistrée ✓' }); },
       setTag: this.userTag(me), setMsg: this.state.setMsg || '', openProfile: () => this.setState({ view: 'profile', profUser: me, profEdit: false }),
@@ -5825,7 +5887,7 @@ class Component extends DCLogic {
     this.aromaCounts(ls, []).forEach(x => { const f = famOfAroma[x.w]; if (f) ar[f] = (ar[f] || 0) + x.n; });
     const arTop = Object.keys(ar).sort((x, y) => ar[y] - ar[x])[0];
     const temps = ls.map(l => this.qtyNum(l.temperature)).filter(x => x && x > 40 && x <= 100);
-    const temp = String(p.recoTemp || '').trim() || (temps.length ? Math.round(temps.reduce((t, x) => t + x, 0) / temps.length) + ' °C' : '');
+    const temp = (String(p.recoTemp || '').trim() ? this.recoTxt(p).temp : '') || (temps.length ? this.tempTxt(Math.round(temps.reduce((t, x) => t + x, 0) / temps.length)) : '');
     const inten = tags.find(t => (S.intens || []).some(x => x.t === t));
     const fk = this.famOf(p.the); const cat = fk ? this.listFor(fk, true).find(x => this.norm(x.name) === this.norm(p.the)) : null;
     const origin = cat ? (cat.origin || cat.pays || '') : '';
@@ -5845,7 +5907,7 @@ class Component extends DCLogic {
     const gear = this.logGears(l).map(g => g.name).join(', ');
     const temps = this.infsOf(l).length ? this.infsOf(l).map(i => i.t).join(' / ') + ' s' : (l.temps || '');
     return { infs: this.infsOf(l).map(i => i.t), note: String(l.note).replace('.', ','), who: l.author, date: this.fmtDate(l.date),
-      params: [l.qty ? l.qty + (/g/.test(l.qty) ? '' : ' g') : '', l.temperature ? l.temperature + (/°/.test(l.temperature) ? '' : ' °C') : '', temps, gear, l.technique ? 'technique ' + l.technique : ''].filter(Boolean).join(' · ') || 'réglages non renseignés' };
+      params: [this.logQtyTxt(l.qty, false), this.logTempTxt(l.temperature), temps, gear, l.technique ? 'technique ' + l.technique : ''].filter(Boolean).join(' · ') || 'réglages non renseignés' };
   }
   guessView(me) {
     const a = this.getAdds(); const GG = this.guessGames();
@@ -5913,7 +5975,7 @@ class Component extends DCLogic {
       return Object.assign(base, common, {
         gsSac: mcoll.map(o => (o.owner === me ? 'ton sachet' : 'le sachet de ' + o.owner) + (o.code ? ' ' + o.code : '')).join(' ou ') || '—',
         gsBest: best ? best.note + '/20 par ' + best.who + ' le ' + best.date : '', gsBestParams: best ? best.params : '', gsHasBest: !!best, gsNoBest: !best,
-        gsReco: [pr.recoQty ? pr.recoQty + ' g' : '', pr.recoTemp ? pr.recoTemp + (/°/.test(pr.recoTemp) ? '' : ' °C') : '', pr.recoTimes || ''].filter(Boolean).join(' · '),
+        gsReco: this.recoTxt(pr).line,
         gsHintsAll: H.map((h, i) => ({ txt: 'Infusion ' + (i + 1) + ' · ' + h.icon + ' ' + h.label + ' : ' + h.val + ((g.inf || 1) > i ? ' ✓ révélé' : '') })),
         gsInf: String(g.inf || 1), gsInfPts: this.guessPtsAt(g.inf || 1) + ' pts',
         gsInfTime: best && best.infs.length ? (best.infs[(g.inf || 1) - 1] != null ? 'Temps conseillé pour cette infusion : ' + best.infs[(g.inf || 1) - 1] + ' s (d’après la meilleure séance)' : 'La meilleure séance s’arrêtait à ' + best.infs.length + ' infusions : allonge un peu le temps') : '',
@@ -6258,7 +6320,7 @@ class Component extends DCLogic {
         const gAll = (a.gear || []).filter(g => g.owner === u);
         const ids = (prof.gearShow || []).filter(id => gAll.some(g => g.id === id)).slice(0, 3);
         const shown = ids.map(id => gAll.find(g => g.id === id));
-        const card = g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? g.volume + ' ml' : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; };
+        const card = g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? this.mlTxt(g.volume) : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; };
         const picking = isMe && !!this.state.gearPicking;
         return { showGear: shown.length > 0 || (isMe && gAll.length > 0), gearShown: shown.map(card), gearShowEmpty: !shown.length, gearShowEmptyTxt: 'Choisissez jusqu’à 3 pièces de votre matériel à montrer ici.',
           gearPicking: picking, gearPickBtn: picking ? 'Terminé' : '✎ Choisir', gearPickToggle: () => this.setState(st => ({ gearPicking: !st.gearPicking })),
@@ -7041,8 +7103,9 @@ class Component extends DCLogic {
     const init0 = q0 == null ? q0 : Math.max(0, q0 - sharedG);
     if ((init0 == null || !q0) && !adj) return null;
     const logs = this.logsFor(o.id).filter(l => recips.indexOf(l.author) < 0);
-    const unit = o.prixMode === 'unite' ? ' u' : ' g';
-    const fmt = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
+    const ozM = o.prixMode !== 'unite' && this.units().m === 'oz';
+    const unit = o.prixMode === 'unite' ? ' u' : ozM ? ' oz' : ' g';
+    const fmt = x => ozM ? this.nFr(x / 28.3495, 2) : (Math.round(x * 10) / 10).toString().replace('.', ',');
     let left, used;
     if (adj) {
       used = logs.filter(l => this.logTs(l) > adj.ts).reduce((t, l) => t + (this.qtyNum(l.qty) || 0), 0);
@@ -7086,6 +7149,79 @@ class Component extends DCLogic {
     if (!me || o.owner === me || !(o.shares || []).some(x => x.to === me)) return this.isEmptySachet(o);
     const pt = this.portionsFor(o).find(x => x.who === me);
     return !pt || pt.empty || pt.left <= 0;
+  }
+  // ---------- Unités d’affichage (Paramètres → Unités) : stockage toujours en °C, g, cL
+  units() { const me = this.me(); let u = me ? (this.prefsOf(me).units || null) : null; if (!u) { try { u = JSON.parse(localStorage.getItem('mdtUnits') || 'null'); } catch (e) { u = null; } } u = u || {}; return { t: u.t === 'F' ? 'F' : 'C', v: u.v === 'floz' ? 'floz' : 'cl', m: u.m === 'oz' ? 'oz' : 'g' }; }
+  setUnits(patch) { const u = Object.assign({}, this.units(), patch); try { localStorage.setItem('mdtUnits', JSON.stringify(u)); } catch (e) {} if (this.me()) this.setPrefs({ units: u }); else this.setState({}); }
+  mlTxt(v) { const n = this.numIn(v); if (n == null) return String(v || ''); return this.units().v === 'floz' ? this.nFr(n * 0.033814, 1) + ' fl oz' : this.nFr(n, 0) + ' ml'; }
+  logTempTxt(v) { const t = String(v == null ? '' : v).trim(); if (!t) return ''; return /^\d+([.,]\d+)?\s*(°\s*c?)?$/i.test(t) ? this.tempTxt(t) : t; }
+  logQtyTxt(v, unite) { const t = String(v == null ? '' : v).trim(); if (!t) return ''; if (!/^\d+([.,]\d+)?\s*g?$/i.test(t)) return t; return unite ? t.replace(/\s*g$/i, '') + ' u' : this.massTxt(t); }
+  nFr(x, d) { if (x == null || !isFinite(x)) return ''; const r = Math.round(x * Math.pow(10, d == null ? 1 : d)) / Math.pow(10, d == null ? 1 : d); return String(r).replace('.', ','); }
+  numIn(v) { const n = parseFloat(String(v == null ? '' : v).replace(',', '.').replace(/[^\d.]/g, '')); return isFinite(n) ? n : null; }
+  tempTxt(c) { const n = this.numIn(c); if (n == null) return String(c || ''); return this.units().t === 'F' ? Math.round(n * 9 / 5 + 32) + ' °F' : this.nFr(n, 1) + ' °C'; }
+  tempIn(v) { const n = this.numIn(v); if (n == null) return ''; return this.units().t === 'F' ? String(Math.round((n - 32) * 5 / 9)) : String(n); }   // saisie (unité choisie) → °C
+  tempShow(c) { const n = this.numIn(c); if (n == null) return ''; return this.units().t === 'F' ? String(Math.round(n * 9 / 5 + 32)) : String(n).replace('.', ','); }   // °C → champ de saisie
+  massTxt(g) { const n = this.numIn(g); if (n == null) return String(g || ''); return this.units().m === 'oz' ? this.nFr(n / 28.3495, 2) + ' oz' : this.nFr(n, 1) + ' g'; }
+  massIn(v) { const n = this.numIn(v); if (n == null) return ''; return this.units().m === 'oz' ? String(Math.round(n * 28.3495 * 10) / 10) : String(n); }
+  massShow(g) { const n = this.numIn(g); if (n == null) return ''; return this.units().m === 'oz' ? String(Math.round(n / 28.3495 * 100) / 100).replace('.', ',') : String(n).replace('.', ','); }
+  volTxt(cl, ratio) { const n = this.numIn(cl); if (n == null) return ''; if (this.units().v === 'floz') return this.nFr(n * 0.33814, 1) + ' fl oz'; if (n >= 100 && n % 10 === 0) { const l = n / 100; return ratio && l === 1 ? 'L' : this.nFr(l, 2) + ' L'; } return this.nFr(n, 1) + ' cL'; }
+  volIn(v) { const n = this.numIn(v); if (n == null) return ''; return this.units().v === 'floz' ? String(Math.round(n / 0.33814 * 10) / 10) : String(n); }
+  volShow(cl) { const n = this.numIn(cl); if (n == null) return ''; return this.units().v === 'floz' ? String(Math.round(n * 0.33814 * 10) / 10).replace('.', ',') : String(n).replace('.', ','); }
+  // ---------- Indications fournisseur : formats enregistrés (chiffres seulement)
+  //   recoQty   : « 5g/20cL », « 10g/100cL », « 1u », « 1u/20cL »   (les anciennes saisies libres sont relues au mieux)
+  //   recoTemp  : « 95 » (°C)
+  //   recoTimes : « 60s » · « 3min » (fixe) · « 3-5min » (variable) · « 60/60/90s » (plusieurs infusions)
+  parseRecoQty(v) { const t = String(v || '').toLowerCase().replace(',', '.'); const r = { mode: 'g', n: '', cl: '' }; if (!t.trim()) return r;
+    const u = t.match(/([\d.]+)\s*(u|unit|pi[eè]ce|boule|tuo)/); const g = t.match(/([\d.]+)\s*g(?!\w*l)/) || (!u && t.match(/^\s*([\d.]+)\s*(?:$|\/)/));
+    if (u) { r.mode = 'u'; r.n = u[1]; } else if (g) r.n = g[1];
+    const ml = t.match(/([\d.]+)\s*ml/), cl = t.match(/([\d.]+)\s*cl/), l = t.match(/\/\s*([\d.]*)\s*l\b/);
+    if (cl) r.cl = cl[1]; else if (ml) r.cl = String(parseFloat(ml[1]) / 10); else if (l) r.cl = String((parseFloat(l[1]) || 1) * 100);
+    return r; }
+  buildRecoQty(q) { const n = this.numIn(q.n), cl = this.numIn(q.cl); if (q.mode === 'u') return (n || 1) + 'u' + (cl ? '/' + cl + 'cL' : ''); if (n == null) return cl ? '/' + cl + 'cL' : ''; return n + 'g' + (cl ? '/' + cl + 'cL' : ''); }
+  parseRecoTimes(v) { const t = String(v || '').toLowerCase().replace(/,/g, '.').trim(); const r = { type: 'multi', unit: 's', nums: [] }; if (!t) return r;
+    if (/m(in|n)?\b|'/.test(t) && !/\d\s*s\b/.test(t)) r.unit = 'min';
+    const nums = (t.match(/[\d.]+/g) || []).map(Number).filter(x => isFinite(x));
+    if (/\d\s*(-|–|à|a)\s*\d/.test(t) && nums.length === 2) r.type = 'range'; else if (nums.length <= 1) r.type = 'fixed'; else r.type = 'multi';
+    r.nums = nums.map(x => String(x)); return r; }
+  buildRecoTimes(o) { const n = (o.nums || []).map(x => this.numIn(x)); const u = o.unit === 'min' ? 'min' : 's';
+    if (o.type === 'fixed') return n[0] != null ? n[0] + u : '';
+    if (o.type === 'range') return n[0] != null && n[1] != null ? n[0] + '-' + n[1] + u : (n[0] != null ? n[0] + u : '');
+    const L = []; for (const x of n) { if (x == null) break; L.push(x); } return L.length ? L.join('/') + u : ''; }
+  recoTxt(p) { p = p || {}; const out = {};
+    if (String(p.recoQty || '').trim()) { const q = this.parseRecoQty(p.recoQty); const head = q.mode === 'u' ? (this.numIn(q.n) || 1) + ' unité' + ((this.numIn(q.n) || 1) > 1 ? 's' : '') : (q.n ? this.massTxt(q.n).replace(' ', ' ') : ''); out.qty = head ? head + (q.cl ? (q.mode === 'u' ? ' pour ' + this.volTxt(q.cl) : '/' + this.volTxt(q.cl, true)) : '') : String(p.recoQty); }
+    if (String(p.recoTemp || '').trim()) out.temp = this.numIn(p.recoTemp) != null ? this.tempTxt(p.recoTemp) : String(p.recoTemp);
+    if (String(p.recoTimes || '').trim()) { const t = this.parseRecoTimes(p.recoTimes); const u = t.unit === 'min' ? ' min' : ' s'; const f = x => String(x).replace('.', ',');
+      out.time = !t.nums.length ? String(p.recoTimes) : t.type === 'range' ? f(t.nums[0]) + '–' + f(t.nums[1]) + u : t.type === 'fixed' ? f(t.nums[0]) + u : t.nums.map(f).join('/') + u; }
+    out.line = [out.qty ? '⚖️ ' + out.qty : '', out.temp ? '🌡 ' + out.temp : '', out.time ? '⏱ ' + out.time : ''].filter(Boolean).join(' · ');
+    return out; }
+  // widget de saisie (ajout de thé, fiche du thé, admin) : cur = { recoQty, recoTemp, recoTimes }, apply(patch)
+  recoWidget(key, cur, apply) {
+    cur = cur || {}; const ui = (this.state.rw || {})[key] || {}; const U = this.units();
+    const setUi = patch => this.setState(s0 => ({ rw: Object.assign({}, s0.rw, { [key]: Object.assign({}, (s0.rw || {})[key], patch) }) }));
+    const q = this.parseRecoQty(cur.recoQty); const qMode = ui.qMode || q.mode;
+    const putQ = patch => { const nq = Object.assign({ mode: qMode, n: q.n, cl: q.cl }, patch); setUi({ qMode: nq.mode }); apply({ recoQty: this.buildRecoQty(nq) }); };
+    const t = this.parseRecoTimes(cur.recoTimes); const tUnit = ui.tUnit || t.unit; const tType = ui.tType || (String(cur.recoTimes || '').trim() ? t.type : 'multi');
+    const nums = t.nums.slice();
+    const putT = (patch) => { const o = Object.assign({ type: tType, unit: tUnit, nums: nums }, patch); setUi({ tType: o.type, tUnit: o.unit }); apply({ recoTimes: this.buildRecoTimes(o) }); };
+    const nBox = tType === 'multi' ? Math.max(3, nums.length + (nums.length >= 3 ? 1 : 0)) : tType === 'range' ? 2 : 1;
+    const uLbl = tUnit === 'min' ? 'min' : 's';
+    const btn = (on) => ({ bg: on ? 'var(--color-text)' : 'var(--color-bg)', fg: on ? 'var(--color-bg)' : 'var(--color-text)' });
+    const prev = this.recoTxt(cur);
+    return {
+      qIsG: qMode !== 'u', qIsU: qMode === 'u', qMassUnit: U.m === 'oz' ? 'oz' : 'g', qVolUnit: U.v === 'floz' ? 'fl oz' : 'cL',
+      qN: qMode === 'u' ? (q.mode === 'u' ? String(q.n || 1) : '1') : this.massShow(q.n), qCl: this.volShow(q.cl),
+      setQN: e => { const v = e.target.value; putQ({ n: qMode === 'u' ? (this.numIn(v) == null ? '' : String(this.numIn(v))) : this.massIn(v) }); },
+      setQCl: e => putQ({ cl: this.volIn(e.target.value) }),
+      qUnitBtn: btn(qMode === 'u'), toggleQU: () => { const to = qMode === 'u' ? 'g' : 'u'; setUi({ qMode: to }); putQ({ mode: to, n: to === 'u' ? '1' : '' }); },
+      qUnitLbl: qMode === 'u' ? '✓ À l’unité' : 'À l’unité',
+      tempV: this.tempShow(cur.recoTemp), tempUnit: U.t === 'F' ? '°F' : '°C', setTemp: e => apply({ recoTemp: this.tempIn(e.target.value) }),
+      tUnits: [['s', 'Secondes'], ['min', 'Minutes']].map(x => Object.assign({ label: x[1], on: tUnit === x[0], go: () => { setUi({ tUnit: x[0] }); putT({ unit: x[0] }); } }, btn(tUnit === x[0]))),
+      tTypes: [['fixed', 'Temps fixe'], ['range', 'Temps variable'], ['multi', 'Plusieurs infusions']].map(x => Object.assign({ label: x[1], on: tType === x[0], go: () => { setUi({ tType: x[0] }); putT({ type: x[0], nums: x[0] === 'fixed' ? nums.slice(0, 1) : x[0] === 'range' ? nums.slice(0, 2) : nums }); } }, btn(tType === x[0]))),
+      tBoxes: Array.from({ length: nBox }, (_, i) => ({ v: nums[i] != null ? String(nums[i]).replace('.', ',') : '', unit: uLbl, sep: i > 0 ? (tType === 'range' ? 'à' : '/') : '', hasSep: i > 0, ph: tType === 'range' ? (i ? 'max' : 'min') : tType === 'multi' ? String(i + 1) + (i ? 'e' : 're') : 'ex : 3',
+        aria: tType === 'multi' ? 'Temps de la ' + (i + 1) + (i ? 'e' : 're') + ' infusion (' + uLbl + ')' : tType === 'range' ? (i ? 'Temps maximum' : 'Temps minimum') + ' (' + uLbl + ')' : 'Temps d’infusion (' + uLbl + ')',
+        set: e => { const x = String(e.target.value || '').replace(',', '.').replace(/[^\d.]/g, ''); const arr = nums.slice(); while (arr.length <= i) arr.push(''); arr[i] = x; while (arr.length && !arr[arr.length - 1]) arr.pop(); putT({ nums: arr }); } })),
+      tHint: tType === 'multi' ? 'Une case par infusion ; une nouvelle case apparaît quand les trois premières sont remplies.' : tType === 'range' ? 'Par exemple de 3 à 5 minutes.' : 'Un seul temps, par exemple 1 minute.',
+      preview: prev.line || '', hasPreview: !!prev.line };
   }
   // pour une dégustation : ses sachets, ceux qu’on lui a partagés, et ceux des membres de ses salons
   canTasteLog(o, me) { return !!o && (this.canTaste(o, me) || (!!me && o.owner !== me && this.salonMates(me).indexOf(o.owner) >= 0)); }
@@ -7204,7 +7340,7 @@ class Component extends DCLogic {
     const techs = this.opts().techs;
     const techTxt = String(l.technique || '').split('+').map(x => x.trim()).filter(x => x && !/^x$/i.test(x)).map(c => { const t = techs.find(z => String(z.code).toUpperCase() === c.toUpperCase()); return t ? t.label + ' (' + t.code + ')' : c; }).join(', ');
     const ok = v => v && !/^\s*[x-]\s*$/i.test(String(v));
-    const infu = [['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + (sa.prixMode === 'unite' ? ' u' : ' g') : l.qty) : ''], ['Technique', techTxt], ['Autre matériel', this.logGearRest(l)], ['Moment', l.repas]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
+    const infu = [['Temps', l.temps], ['Température', this.logTempTxt(l.temperature)], ['Quantité', this.logQtyTxt(l.qty, sa.prixMode === 'unite')], ['Technique', techTxt], ['Autre matériel', this.logGearRest(l)], ['Moment', l.repas]].filter(x => ok(x[1])).map(x => ({ k: x[0], v: x[1] }));
     const gear = this.logGearLinks(l, me);
     const rm = sa.id ? this.remainFor(sa) : null;
     const pst = this.statsMany(this.collection().filter(o => o.prodId === p.id).map(o => o.id));
@@ -7300,7 +7436,7 @@ class Component extends DCLogic {
       this.stopTimer(true); this.setState({ sessSel: null, sessCustom: '', sessNote: '', sessTemp: null, sessEdit: null, tmDone: false, tmRun: false }); setTimeout(() => this.paintTimer(), 0);
     };
     return { ok: true, missing: false, canEdit: canEdit, name: p.nom || p.the || 'Thé', openTea: () => { if (p.id) this.openProd(p.id); },
-      setup: [gearTxt, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty ? l.qty + (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? ' g' : '') : '', l.technique].filter(Boolean).join(' · ') || 'Pas de setup noté',
+      setup: [gearTxt, this.logTempTxt(l.temperature), this.logQtyTxt(l.qty, false), l.technique].filter(Boolean).join(' · ') || 'Pas de setup noté',
       who: [l.author + ((l.with || []).length ? ' avec ' + l.with.join(', ') : ''), l.startTs ? 'depuis ' + this.fmtDur(Date.now() - l.startTs) : ''].filter(Boolean).join(' · '),
       num: editIdx != null ? 'Modifier l’infusion n° ' + (editIdx + 1) : 'Infusion n° ' + (infs.length + 1),
       hasPills: infs.length > 0, totalTxt: infs.length ? infs.length + ' infusion' + (infs.length > 1 ? 's' : '') + ' · ' + this.fmtSec(total) + ' au total' : 'Aucune infusion pour l’instant',
@@ -7407,7 +7543,7 @@ class Component extends DCLogic {
     const best = logs.find(l => num(l) >= 15) || null;
     const parseTimes = t => String(t || '').split('/').map(x => { x = x.trim(); const m = /^(\d+(?:[.,]\d+)?)\s*(m|min)?$/i.exec(x); return m ? Math.round(parseFloat(m[1].replace(',', '.')) * (m[2] ? 60 : 1)) : null; }).filter(x => x > 0);
     const bTimes = best ? (Array.isArray(best.infusions) && best.infusions.length ? best.infusions.map(i => i.t) : parseTimes(best.temps)) : [];
-    const rTimes = parseTimes(p.recoTimes); const rTemp = parseInt(p.recoTemp, 10); const rQty = parseFloat(String(p.recoQty || '').replace(',', '.'));
+    const rT = this.parseRecoTimes(p.recoTimes); const rTimes = rT.type === 'multi' ? rT.nums.map(x => Math.round(parseFloat(x) * (rT.unit === 'min' ? 60 : 1))).filter(x => x > 0) : []; const rTemp = parseInt(p.recoTemp, 10); const rQ = this.parseRecoQty(p.recoQty); const rQty = rQ.mode === 'g' ? (parseFloat(rQ.n) || 0) : 0;
     const times = bTimes.length >= 3 ? bTimes : rTimes.length >= 3 ? rTimes : F.times;
     const temp = best && /^\d+$/.test(String(best.temperature || '').trim()) ? +best.temperature : (rTemp > 0 && rTemp <= 100 ? rTemp : F.temp);
     const qty = best && this.qtyNum(best.qty) ? this.qtyNum(best.qty) : (rQty > 0 ? rQty : F.g);
@@ -7417,7 +7553,7 @@ class Component extends DCLogic {
     const myVessel = usable.find(g => g.owner === me && this.gearCatKey(g.type) === 'theiere');
     const gear = bGear.length ? bGear : (myVessel ? [myVessel] : []);
     const tech = best && best.technique && !/^x$/i.test(best.technique) ? best.technique : (F.rinse ? '*+RV' : '*');
-    const src = best ? 'D’après la dégustation de ' + best.author + ' du ' + this.fmtDate(best.date) + ' (' + best.note + '/20), la mieux notée de ce thé.' + (hasReco ? ' Conseil du fabricant : ' + [p.recoTemp && p.recoTemp + ' °C', p.recoQty, p.recoTimes].filter(Boolean).join(' · ') + '.' : '') : hasReco ? 'Pas encore de dégustation réussie : on suit le conseil du fabricant, complété par les repères d’un thé ' + this.families[fk].name.toLowerCase() + '.' : (logs.length ? 'Aucune dégustation à 15/20 ou plus : on part des repères habituels d’un thé ' + this.families[fk].name.toLowerCase() + '.' : 'Pas encore de dégustation : on part des repères habituels d’un thé ' + this.families[fk].name.toLowerCase() + '.');
+    const src = best ? 'D’après la dégustation de ' + best.author + ' du ' + this.fmtDate(best.date) + ' (' + best.note + '/20), la mieux notée de ce thé.' + (hasReco ? ' Indication fournisseur : ' + this.recoTxt(p).line + '.' : '') : hasReco ? 'Pas encore de dégustation réussie : on suit le conseil du fabricant, complété par les repères d’un thé ' + this.families[fk].name.toLowerCase() + '.' : (logs.length ? 'Aucune dégustation à 15/20 ou plus : on part des repères habituels d’un thé ' + this.families[fk].name.toLowerCase() + '.' : 'Pas encore de dégustation : on part des repères habituels d’un thé ' + this.families[fk].name.toLowerCase() + '.');
     // arômes à chercher
     const dictKeys = Object.keys(this.tkHints);
     const text = this.norm([p.nom, o.nom, cat.gout, cat.profil, p.commentaire, o.commentaire].filter(Boolean).join(' '));
@@ -7437,7 +7573,7 @@ class Component extends DCLogic {
     const rinse = /RV|rinç|reveil|réveil/i.test(tech) ? Math.max(1, F.rinse) : F.rinse;
     const vessel = gear.find(g => this.gearCatKey(g.type) === 'theiere');
     const steps = [
-      ['Chauffer l’eau', 'Visez ' + temp + ' °C' + (temp >= 100 ? ' : eau frémissante, juste à ébullition.' : temp >= 90 ? ' : laissez reposer l’eau bouillie une minute.' : ' : laissez refroidir l’eau bouillie 3 à 5 minutes, ou ajoutez un peu d’eau froide.')],
+      ['Chauffer l’eau', 'Visez ' + this.tempTxt(temp) + (temp >= 100 ? ' : eau frémissante, juste à ébullition.' : temp >= 90 ? ' : laissez reposer l’eau bouillie une minute.' : ' : laissez refroidir l’eau bouillie 3 à 5 minutes, ou ajoutez un peu d’eau froide.')],
       ['Réchauffer la vaisselle', 'Versez de l’eau chaude dans ' + (vessel ? vessel.name : 'le gaiwan ou la théière') + ', le pichet et les tasses, puis videz. Un ustensile chaud garde la température et réveille mieux les arômes.'],
       ['Peser et sentir les feuilles sèches', 'Mettez ' + String(qty).replace('.', ',') + ' g de feuilles (pour environ 100 ml). Avant tout, sentez-les : c’est le premier nez, souvent discret.'],
       [rinse ? 'Rincer' + (rinse > 1 ? ' deux fois' : '') + ' (Quick flush)' : 'Pas de rinçage', rinse ? 'Couvrez d’eau puis videz aussitôt (5 s)' + (rinse > 1 ? ', deux fois de suite' : '') + '. Ça réveille les feuilles ; cette eau ne se boit pas.' : 'Ce thé délicat n’a pas besoin d’être rincé : on passe directement aux infusions.'],
@@ -7448,7 +7584,7 @@ class Component extends DCLogic {
     const go = () => { try { localStorage.setItem('mdt-lfmode', 'gong'); } catch (e) {}
       this.setState({ view: 'log', editLogId: null, lfMode: 'gong', logMsg: '', lf: { lotId: o.id, date: mdtToday(), with: [], temperature: String(temp), qty: String(qty), technique: tech, gearIds: gear.map(g => g.id), gearId: '', heure: '', note: '', avis: '', temps: '', infusion: '', repas: '', nez: '', prefilled: 'Paramètres proposés par Tokoname. Ajustez si besoin, puis lancez la séance.' } }); try { window.scrollTo(0, 0); } catch (e) {} };
     return Object.assign(base, { tkOn: true, tkName: p.nom || o.the, tkFam: this.families[fk].name, tkSrc: src,
-      tkTemp: temp + ' °C', tkQty: String(qty).replace('.', ',') + ' g', tkGear: gear.map(g => this.gearCat(g)[1] + ' ' + g.name).join(' · ') || 'Gaiwan ou petite théière (~100 ml)', tkTech: tech,
+      tkTemp: this.tempTxt(temp), tkQty: this.massTxt(qty), tkGear: gear.map(g => this.gearCat(g)[1] + ' ' + g.name).join(' · ') || 'Gaiwan ou petite théière (~100 ml)', tkTech: tech,
       tkTimes: times.map((t, k) => ({ label: '#' + (k + 1) + ' · ' + this.fmtSec(t) })), tkSteps: steps, tkGame: game,
       tkBest: logs.slice(0, 3).map(l => ({ note: l.note, ...this.noteColors(l.note), meta: l.author + ' · ' + this.fmtDate(l.date) + (l.temps ? ' · ' + l.temps : ''), avis: l.avis || '', open: () => this.openLogDetail(l.id) })), tkHasBest: logs.length > 0,
       tkShowAvis: !!this.state.tkAvis, tkHideAvis: !this.state.tkAvis, tkToggleAvis: () => this.setState(s0 => ({ tkAvis: !s0.tkAvis })),
@@ -7534,7 +7670,7 @@ class Component extends DCLogic {
       hsAvg: avg != null ? avg.toFixed(1).replace('.', ',') : '—', hsAvgColor: avg != null ? this.noteColors(String(Math.round(avg * 10) / 10)).noteBg : 'inherit',
       hsSub: allN.length + ' note' + (allN.length > 1 ? 's' : '') + ' · ' + logsC.length + ' dégustation' + (logsC.length > 1 ? 's' : '') + ' · ' + people.length + ' dégustateur' + (people.length > 1 ? 's' : ''),
       hsBest: !!best, hsBestNote: best ? best.note : '', hsBestColor: best ? this.noteColors(best.note).noteBg : '',
-      hsBestTxt: best ? [this.logGears(best).map(g => this.gearCat(g)[1] + ' ' + g.name).join(', ') || this.logGearRest(best), best.temperature ? best.temperature + (/^\d+$/.test(best.temperature) ? ' °C' : '') : '', best.qty ? best.qty + (/^\s*[\d.,]+\s*$/.test(String(best.qty)) ? ' g' : '') : '', best.temps, best.technique].filter(x => x && !/^\s*x\s*$/i.test(x)).join(' · ') || 'paramètres non notés' : '',
+      hsBestTxt: best ? [this.logGears(best).map(g => this.gearCat(g)[1] + ' ' + g.name).join(', ') || this.logGearRest(best), this.logTempTxt(best.temperature), this.logQtyTxt(best.qty, false), best.temps, best.technique].filter(x => x && !/^\s*x\s*$/i.test(x)).join(' · ') || 'paramètres non notés' : '',
       hsBestWho: best ? best.author + ' · ' + this.fmtDate(best.date) : '', hsBestOpen: () => { if (best) this.openLogDetail(best.id); },
       hsAromas: ar.map(x => ({ w: x.w, n: String(x.n), c: x.c, size: (13 + Math.round(x.n / max * 7)) + 'px' })), hsHasAromas: ar.length > 0 };
   }
@@ -7569,10 +7705,10 @@ class Component extends DCLogic {
   }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
-    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lfTmMin: null, lfPicking: false, lfOwner: null, lotQ: '', lf: { infList: Array.isArray(l.infusions) && l.infusions.length ? l.infusions.map(i => Object.assign({}, i)) : null, nez: l.nez || '', photos: this.logPhotos(l), photo: '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: this.logNoteOf(l, this.me()) || '', noteMine: this.norm(l.author || '') !== this.norm(this.me() || ''), infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
+    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lfTmMin: null, lfPicking: false, lfOwner: null, lotQ: '', lf: { infList: Array.isArray(l.infusions) && l.infusions.length ? l.infusions.map(i => Object.assign({}, i)) : null, nez: l.nez || '', photos: this.logPhotos(l), photo: '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: this.logNoteOf(l, this.me()) || '', noteMine: this.norm(l.author || '') !== this.norm(this.me() || ''), infusion: l.infusion || '', temps: l.temps || '', temperature: /^\d+([.,]\d+)?$/.test(String(l.temperature || '').trim()) ? this.tempShow(l.temperature) : (l.temperature || ''), qty: /^\d+([.,]\d+)?$/.test(String(l.qty || '').trim()) && this.units().m === 'oz' ? this.massShow(l.qty) : (l.qty || ''), technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
-  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const sn = this.logShownNote(l); const isNum = /^\d+([.,]\d+)?$/.test(String(sn.note || '')); return { ...this.joinInfo(l, me), photo: (this.logPhotos(l)[0] || {}).u || '', openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.startEditLog(l), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: this.shopTxt(o.marque, o.ville) || '—', canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: sn.note || '—', noteWho: sn.who ? '🫖 ' + sn.who + (sn.diff ? ' · ⚡ Désaccord' : '') : '', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(sn.note.replace(',', '.')), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
+  logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const sn = this.logShownNote(l); const isNum = /^\d+([.,]\d+)?$/.test(String(sn.note || '')); return { ...this.joinInfo(l, me), photo: (this.logPhotos(l)[0] || {}).u || '', openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.startEditLog(l), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: this.shopTxt(o.marque, o.ville) || '—', canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: sn.note || '—', noteWho: sn.who ? '🫖 ' + sn.who + (sn.diff ? ' · ⚡ Désaccord' : '') : '', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(sn.note.replace(',', '.')), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', this.logTempTxt(l.temperature)], ['⚖️', this.logQtyTxt(l.qty, o.prixMode === 'unite')], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', this.logTempTxt(l.temperature)], ['Quantité', this.logQtyTxt(l.qty, o.prixMode === 'unite')], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
 
   calView(me) {
     const a = this.getAdds(); const days = {};
@@ -7821,7 +7957,7 @@ class Component extends DCLogic {
     const pe0 = this.state.prodEdit && this.state.prodEdit.id === pr.id ? this.state.prodEdit : null;
     const startEdit = () => this.setState({ prodEdit: { id: pr.id, nom: pr.nom || '', marque: pr.marque || '', ville: pr.ville || '', ref: pr.ref || '', variante: pr.variante || '', boutique: pr.boutique || '', commentaire: pr.commentaire || '', tags: (pr.tags || []).slice(), recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '', rev: Date.now() }, prodNewTag: '' });
     return { wishTxt: this.isWished(pr.nom || pr.the) ? '✓ Dans mes envies' : '🎁 Ajouter à mes envies', wish: () => this.toggleWish({ name: pr.nom || pr.the, shop: pr.marque || '', city: this.prodCities(pr.id)[0] || '', price: '', note: '' }),
-      cities: this.prodCities(pr.id).map(c => ({ c: c })), hasCities: this.prodCities(pr.id).length > 0, reco: [pr.recoTemp ? pr.recoTemp + (/^\d+$/.test(pr.recoTemp) ? ' °C' : '') : '', pr.recoQty ? pr.recoQty + (/^\s*[\d.,]+\s*$/.test(pr.recoQty) ? ' g' : '') : '', pr.recoTimes].filter(Boolean).join(' · '), canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
+      cities: this.prodCities(pr.id).map(c => ({ c: c })), hasCities: this.prodCities(pr.id).length > 0, reco: this.recoTxt(pr).line, canEditP: canEditP && !pe0, editingP: !!pe0, noTagsEdit: canEditP && !pe0 && !(pr.tags || []).length, editP: startEdit,
       member: !!me && !!this.state.session || !this.state.cloud, share: () => this.shareLink('prod', pr.id, pr.nom || pr.the, this.shareProdMsg(pr)), name: pr.nom || pr.the, the: pr.the, variante: pr.variante || '', code: pr.code, marque: this.shopTxt(pr.marque, this.prodCities(pr.id).join('/')) || '—', ref: pr.ref || '', tags: pr.tags || [], comment: pr.commentaire || '',
       photo: photo.prodPhoto || photo.photo || '',
       famName: fk ? this.families[fk].name : '—',
@@ -8031,7 +8167,7 @@ class Component extends DCLogic {
       avg: this.avgTxt(st) || '—', nTxt: st.n ? st.n + (st.n > 1 ? ' dégustations' : ' dégustation') : 'Pas encore dégusté',
       hasLogs: st.n > 0, open: open, rot: open ? 90 : 0,
       toggleLogs: () => this.setState(s => ({ openLogs: Object.assign({}, s.openLogs, { [o.id]: !(s.openLogs || {})[o.id] }) })),
-      logs: this.logsFor(o.id).map(l => ({ ...this.noteColors(l.note), openDetail: () => this.openLogDetail(l.id), author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : '', l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), canEditL: this.canEditLog(l, me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', this.shareLogMsg(l)),
+      logs: this.logsFor(o.id).map(l => ({ ...this.noteColors(l.note), openDetail: () => this.openLogDetail(l.id), author: (l.author || '') + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: l.note || '—', avis: l.avis || '', meta: [this.fmtDate(l.date), l.heure, l.infusion, l.temps, this.logTempTxt(l.temperature), l.qty, l.technique, l.repas].filter(Boolean).join(' · '), canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), canEditL: this.canEditLog(l, me), editLog: () => this.startEditLog(l), ...this.joinInfo(l, me), share: () => this.shareLink('log', l.id, 'Dégustation', this.shareLogMsg(l)),
         remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); } })),
       openTea: () => this.openProd(o.prodId),
       openCat: () => this.openCatTea(o.the),
@@ -8149,7 +8285,7 @@ class Component extends DCLogic {
     const addNew = () => { const t = String(this.state.prodNewTag || '').trim(); if (!t) return; const name = t.charAt(0).toUpperCase() + t.slice(1); const exist = this.allTags().find(x => this.norm(x) === this.norm(name)); const tag = exist || name; if (!exist) this.setTagList(this.allTags().concat([tag])); const m = merged(); this._peDraft = {}; this.setState({ prodNewTag: '', prodEdit: Object.assign({}, m, { tags: m.tags.indexOf(tag) >= 0 ? m.tags : m.tags.concat([tag]) }) }); };
     const all = this.allTags(); const extra = pe.tags.filter(t => all.indexOf(t) < 0);
     const tp = this.tagPicker(merged().tags, tags => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { tags: tags }) }); }, 'tpOpenP');
-    return { tp: tp, key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ville: pe.ville, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
+    return { tp: tp, rw: this.recoWidget('pe' + pe.id, merged(), patch => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, patch) }); }), key: 'pe' + pe.rev, recoTemp: pe.recoTemp, recoQty: pe.recoQty, recoTimes: pe.recoTimes, nom: pe.nom, marque: pe.marque, ville: pe.ville, ref: pe.ref, variante: pe.variante, boutique: pe.boutique, commentaire: pe.commentaire,
       set: ['nom', 'marque', 'ville', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => setD(k, e.target.value); return o; }, {}),
       now: ['nom', 'marque', 'ville', 'ref', 'variante', 'boutique', 'commentaire', 'recoTemp', 'recoQty', 'recoTimes'].reduce((o, k) => { o[k] = e => { const v = e.target.value; const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { [k]: v }) }); }; return o; }, {}),
       city: this.cityPick(pe.marque, pe.ville, c => { const m = merged(); this._peDraft = {}; this.setState({ prodEdit: Object.assign({}, m, { ville: c }) }); }),
@@ -8595,7 +8731,7 @@ class Component extends DCLogic {
           teaNoProds: !prods.length, ...(guest ? { hsOn: false } : this.houseTeaStats(prods, me)),
           teaHasLogs: myLogs.length > 0, teaLogsLbl: '☕ Voir mes ' + myLogs.length + ' dégustation' + (myLogs.length > 1 ? 's' : '') + ' de ce thé →',
           teaLogsOpen: () => this.setState({ view: 'logs', collView: 'logs', dq: '', dTea: tea.name, ds: 'me' }),
-          teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''].filter(Boolean).join(' · ') })),
+          teaMyLogs: myLogs.map(l => ({ note: l.note ? l.note + (/^\d+([.,]\d+)?$/.test(String(l.note)) ? '/20' : '') : '—', avis: l.avis || '', meta: [this.fmtDate(l.date), (coll.find(o => o.id === l.lotId) || {}).code, l.infusion, l.temps, this.logTempTxt(l.temperature)].filter(Boolean).join(' · ') })),
           teaNoMyLogs: !myLogs.length,
           teaCanWish: !!me && !!this.state.session || (!this.state.cloud && !!me), teaWishTxt: this.isWished(tea.name) ? '✓ Dans mes envies' : '🎁 Ajouter à mes envies', teaWish: () => this.toggleWish({ name: tea.name, shop: '', city: '', price: '', note: '' }),
           teaBuy: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', form: Object.assign({}, s.form, { code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }, { prodId: '', the: tea.name, variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', prodPhoto: '' }) }))
@@ -8655,7 +8791,7 @@ class Component extends DCLogic {
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
       tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
       ...this.mergeVals(),
-      openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', lotNew: s.view === 'add' ? s.lotNew : false, lotEditProd: false, apQ: s.view === 'add' ? s.apQ : '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
+      openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', rw: s.view === 'add' ? s.rw : {}, lotNew: s.view === 'add' ? s.lotNew : false, lotEditProd: false, apQ: s.view === 'add' ? s.apQ : '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
       isMine: v === 'mine',
       isLogin: v === 'login',
       navOn: v !== 'login' && !this.state.cloud,
@@ -8750,10 +8886,10 @@ class Component extends DCLogic {
             this.setState({ gearEdit: null, gearMsg: '' });
           },
           gearEmpty: !mineG.length,
-          gearSalon: (() => { const mates = this.salonMates(me); if (mates.length < 2) return []; return mates.filter(u => u !== me).map(u => ({ owner: u, items: (this.getAdds().gear || []).filter(g => g.owner === u).map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? g.volume + ' ml' : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) })).filter(x => x.items.length); })(),
+          gearSalon: (() => { const mates = this.salonMates(me); if (mates.length < 2) return []; return mates.filter(u => u !== me).map(u => ({ owner: u, items: (this.getAdds().gear || []).filter(g => g.owner === u).map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [T[2], this.gearModelOf(g), g.volume ? this.mlTxt(g.volume) : ''].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) })).filter(x => x.items.length); })(),
           hasGearSalon: (this.getAdds().gear || []).some(g => g.owner !== me && this.salonMates(me).indexOf(g.owner) >= 0),
           gearSalonName: this.salonsOf(me).map(x => x.name).join(', '),
-          gearGroups: this.gearTypeList().map(T => ({ icon: T[1], title: T[2], items: mineG.filter(g => this.gearCatKey(g.type) === T[0]) })).filter(G => G.items.length).map(G => ({ icon: G.icon, title: G.title, n: String(G.items.length), items: G.items.map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [this.gearModelOf(g), g.volume ? g.volume + ' ml' : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) }))
+          gearGroups: this.gearTypeList().map(T => ({ icon: T[1], title: T[2], items: mineG.filter(g => this.gearCatKey(g.type) === T[0]) })).filter(G => G.items.length).map(G => ({ icon: G.icon, title: G.title, n: String(G.items.length), items: G.items.map(g => { const T = this.gearCat(g); return { name: g.name, icon: T[1], photo: g.photo || '', noPhoto: !g.photo, sub: [this.gearModelOf(g), g.volume ? this.mlTxt(g.volume) : '', g.material].filter(Boolean).join(' · '), stat: this.gearStatsTxt(g), open: () => this.setState({ view: 'gearItem', gearId: g.id }) }; }) }))
         };
       })(),
       ...(() => {
@@ -9063,7 +9199,7 @@ class Component extends DCLogic {
       hasLive: this.liveLogs(me).length > 0,
       openMine: () => this.setState({ view: 'mine' }),
       openLog: () => this.setState(s => ({ view: 'log', logMsg: '', editLogId: null, lf: s.editLogId ? { lotId: '', with: [], date: mdtToday() } : Object.assign({ date: mdtToday() }, s.lf) })),
-      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', lotNew: false, lotEditProd: false, apQ: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
+      newLot: () => this.setState(s => ({ view: 'add', addTab: 'lot', editId: null, addMsg: '', rw: {}, lotNew: false, lotEditProd: false, apQ: '', form: Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '', prodPhoto: '' }) })),
       mq: this.state.mq || '',
       onMq: e => this.setState({ mq: e.target.value }),
       hideHaveShow: scope !== 'me' && !!me, hideHaveOn: !!this.state.hideHave, hideHaveTxt: this.state.hideHave ? '✓ Sans les thés que j’ai déjà' : 'Masquer les thés que j’ai déjà', hideHaveCls: this.state.hideHave ? 'btn btn-primary' : 'btn btn-secondary', hideHaveToggle: () => this.setState(s0 => ({ hideHave: !s0.hideHave })),
@@ -9114,7 +9250,7 @@ class Component extends DCLogic {
       qtyPh: pm === 'unite' ? 'ex : 10 (dragon balls, mini tuocha…)' : 'ex : 100',
       prixCalc: this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) ? '= ' + this.prixTxt(Object.assign({ prixMode: pm }, this.state.form)) : '',
       lf: Object.assign({ lotId: '', date: '', heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' }, this.state.lf),
-      lfPrefilled: (this.state.lf || {}).prefilled || '',
+      lfPrefilled: (this.state.lf || {}).prefilled || '', lfTUnit: this.units().t === 'F' ? '°F' : '°C', lfTEx: this.units().t === 'F' ? '203' : '95',
       lfWhenOpen: true, lfWhenClosed: false, toggleLfWhen: () => this.setState(s0 => ({ lfWhenOpen: !s0.lfWhenOpen })),
       lfWhenSummary: (() => { const lf = this.state.lf || {}; const today = mdtToday(); return [lf.date ? (lf.date === today ? 'Aujourd’hui' : 'le ' + this.fmtDate(lf.date)) : 'Date non précisée', lf.heure ? 'à ' + lf.heure : '', lf.repas || '', (lf.with || []).length ? 'avec ' + lf.with.join(', ') : 'seul·e'].filter(Boolean).join(' · '); })(),
       noteDown: () => this.setState(s0 => { const lf = s0.lf || {}; const sp = this.noteSplit(lf.note); const n = parseFloat(sp.num.replace(',', '.')); const v = Math.max(0, (isFinite(n) ? n : 15.5) - 0.5); return { lf: Object.assign({}, lf, { note: this.noteJoin(sp.pre, String(v).replace('.', ',')) }) }; }),
@@ -9126,6 +9262,7 @@ class Component extends DCLogic {
           lfNoteRBg: has('R') ? '#d9e5f1' : 'var(--color-bg)', lfNoteRFg: has('R') ? '#2c4a6b' : 'var(--color-text)', lfNoteLBg: has('L') ? 'var(--color-accent-800)' : 'var(--color-bg)', lfNoteLFg: has('L') ? '#fff' : 'var(--color-text)' }; })(),
       lfNoteColor: this.noteColors((this.state.lf || {}).note).noteBg,
       setLz: ['temps', 'temperature', 'qty', 'repas', 'avis', 'infusion', 'nez'].reduce((o, k) => { o[k] = this.lazySet('lf', k); return o; }, {}),
+      rwA: this.recoWidget('add', this.state.form || {}, patch => this.setState(s0 => ({ form: Object.assign({}, s0.form, patch) }))),
       setFz: ['recoTemp', 'recoQty', 'recoTimes', 'prodComment', 'variante', 'nomFour', 'marque', 'ville', 'nom', 'traduction', 'origine', 'pays', 'province', 'gout', 'recolte', 'lot', 'boutique', 'commentaire', 'ref', 'code', 'prixPaye', 'quantite', 'vNom', 'vTrad', 'vProfil', 'vDesc', 'prodDate', 'annee', 'format'].reduce((o, k) => { o[k] = this.lazySet('form', k); return o; }, {}),
       lfKey: 'lf' + (this.state.lfRev || 0),
       formKey: 'f' + (this.state.formRev || 0),
@@ -9182,7 +9319,7 @@ class Component extends DCLogic {
         const fmtq = x => (Math.round(x * 10) / 10).toString().replace('.', ',');
         const pu = myP && myP.unit === 'u' ? ' u' : ' g';
         const remainTxt = myP ? 'Ma part : reste ≈ ' + fmtq(myP.left) + pu + ' sur ' + fmtq(myP.grams) + pu + ' (sachet de ' + o.owner + ') avant cette dégustation' : r ? 'Mon sachet : ' + r.txt.charAt(0).toLowerCase() + r.txt.slice(1) + ' avant cette dégustation' : (o ? 'Quantité du sachet non renseignée : pas d\'estimation du reste.' : '');
-        return { qtyUnit: o && o.prixMode === 'unite' ? 'unités' : 'g', logRemain: remainTxt,
+        return { qtyUnit: o && o.prixMode === 'unite' ? 'unités' : (this.units().m === 'oz' ? 'oz' : 'g'), logRemain: remainTxt,
           noOthers: !others.length,
           withChips: others.map(u => { const on = cur.indexOf(u) >= 0; return { name: u, on: on, off: !on, toggle: () => this.setState(s => { const c = (s.lf || {}).with || []; return { lf: Object.assign({}, s.lf, { with: on ? c.filter(x => x !== u) : c.concat([u]) }) }; }) }; }) };
       })(),
@@ -9218,6 +9355,9 @@ class Component extends DCLogic {
       logMsg: this.state.logMsg || '',
       saveLog: () => {
         const l = Object.assign({}, this.state.lf || {}); delete l.prefilled;
+        { const U = this.units(); const isN = v => /^\d+([.,]\d+)?$/.test(String(v || '').trim());
+          if (U.t === 'F' && isN(l.temperature)) l.temperature = this.tempIn(l.temperature);
+          if (U.m === 'oz' && isN(l.qty)) { const sa0 = coll.find(x => x.id === l.lotId) || {}; if (sa0.prixMode !== 'unite') l.qty = this.massIn(l.qty); } }
         const infList = Array.isArray(l.infList) ? l.infList.map(i => Object.assign({}, i, { t: parseInt(i.t, 10) || 0, temp: String(i.temp || '').trim(), note: String(i.note || '').trim() })).filter(i => i.t > 0).map(i => { if (!i.temp) delete i.temp; if (!i.note) delete i.note; return i; }) : null; delete l.infList;
         if (/^[\d\s/]*$/.test(String(l.temps || ''))) l.temps = String(l.temps || '').split('/').map(x => x.trim()).filter(Boolean).join('/');
         { const ps = this.logPhotos(l); l.photos = ps; l.photo = ps.length ? ps[0].u : ''; } const finV = l.fin; delete l.fin; delete l.hasStart;
@@ -9356,7 +9496,7 @@ class Component extends DCLogic {
           return;
         }
         this.setAdds(Object.assign({}, a, { prods: prods, sachets: a.sachets.concat([Object.assign({ id: 's' + Date.now().toString(36) }, sac)]) }));
-        this.setState(s => ({ addMsg: '✅ Sachet ' + code + ' ajouté (' + (pr.nom || pr.the) + '). Un autre ?', lotNew: false, lotEditProd: false, apQ: '', form: Object.assign({}, s.form, clear) }));
+        this.setState(s => ({ addMsg: '✅ Sachet ' + code + ' ajouté (' + (pr.nom || pr.the) + '). Un autre ?', rw: {}, lotNew: false, lotEditProd: false, apQ: '', form: Object.assign({}, s.form, clear) }));
       },
       hasAdds: (this.getAdds().teas.length + this.getAdds().decl.length + coll.length + this.getAdds().logs.length) > 0,
       addList: this.getAdds().teas.map((t, i) => ({ kind: 'Encyclopédie', label: t.nom, meta: (this.families[t.famille] || {}).name + (t.origine ? ' · ' + t.origine : ''), remove: () => { const a = this.getAdds(); this.setAdds(Object.assign({}, a, { teas: a.teas.filter((x, j) => j !== i) })); } }))
