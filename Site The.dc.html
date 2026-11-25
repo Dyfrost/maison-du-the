@@ -300,6 +300,9 @@
     header.nav .nav-quick { order: 6; width: 100%; }
     header.nav .nav-lang { margin-left: auto; }
     .lf-note-row { grid-template-columns: 1fr !important; }
+    .lf-gear-row { grid-template-columns: 1fr !important; gap: 4px !important; }
+    .lf-inf-row { grid-template-columns: 30px 1fr 1fr 28px !important; }
+    .lf-inf-row > input:nth-of-type(3) { grid-column: 2 / -1; order: 5; }
     .ad-table { min-width: var(--ad-min) !important; }
     .adm-nav { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
     header.nav .nav-quick .nq { white-space: normal !important; line-height: 1.15; min-height: 44px; flex: 1 1 0; font-size: 13px !important; padding: 6px 8px !important; text-align: center; padding-left: 8px !important; padding-right: 8px !important; font-size: 14px !important; }
@@ -2127,10 +2130,17 @@
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🍵</span>Le thé</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
-              <input class="input" type="search" value="{{ lotQ }}" onInput="{{ setLotQ }}" placeholder="🔎 Rechercher : nom, marque, code" aria-label="Rechercher un thé" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;">
-              <sc-raw-select class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" value="{{ lf.lotId }}" data-val="{{ lf.lotId }}" onChange="{{ setL.lotId }}" aria-label="Thé"><option value="">Choisir dans mes thés (A → Z)…</option><sc-for list="{{ lotOptions }}" as="o" hint-placeholder-count="0"><option value="{{ o.id }}" label="{{ o.label }}">{{ o.label }}</option></sc-for></sc-raw-select>
-            </div>
+            <sc-if value="{{ lfPicked }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--color-bg); border-radius: 18px; padding: 12px 14px; box-shadow: inset 0 0 0 2px var(--color-accent);"><span aria-hidden="true" style="font-size: 22px;">✅</span><span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 200px;"><b style="font-size: 16.5px;">{{ lfCurName }}</b><span style="font-size: 13.5px; opacity: .75;">{{ lfCurSub }}</span></span><button type="button" class="btn btn-secondary" onClick="{{ lfChangeTea }}" style="white-space: nowrap;">Changer de thé</button></div></sc-if>
+            <sc-if value="{{ lfPicking }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ lfOwnersOn }}" hint-placeholder-val="{{ false }}"><div role="radiogroup" aria-label="Sachet à" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px;">Sachet à</span><sc-for list="{{ lfOwners }}" as="ow" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{ ow.on }}" onClick="{{ ow.go }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; font-family: var(--font-body); font-size: 14px; background: {{ ow.bg }}; color: {{ ow.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ ow.label }}</button></sc-for></div></sc-if>
+              <input class="input" type="search" value="{{ lotQ }}" onInput="{{ setLotQ }}" placeholder="{{ lfTeaPh }}" aria-label="Rechercher le thé dégusté" autoComplete="off" style="width: 100%; box-sizing: border-box; font-size: 16px; padding: 12px 16px;">
+              <div role="listbox" aria-label="Suggestions" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px;">
+                <sc-for list="{{ lfSugg }}" as="sg" hint-placeholder-count="4"><button type="button" role="option" aria-selected="{{ sg.on }}" onClick="{{ sg.pick }}" style="cursor: pointer; text-align: left; border: none; border-radius: 16px; padding: 10px 13px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 2px;" style-hover="box-shadow: inset 0 0 0 2px var(--color-accent);"><b style="font-size: 15px;">{{ sg.name }}</b><span style="font-size: 12.5px; opacity: .7;">{{ sg.sub }}</span></button></sc-for>
+              </div>
+              <sc-if value="{{ lfSuggMore }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .7;">{{ lfSuggMore }}</span></sc-if>
+              <sc-if value="{{ lfSuggNone }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; opacity: .75;">{{ lfSuggNone }}</span></sc-if>
+              <sc-if value="{{ lfCanCancelPick }}" hint-placeholder-val="{{ false }}"><button type="button" class="btn btn-ghost" onClick="{{ lfCancelPick }}" style="align-self: flex-start; padding-left: 0;">Annuler</button></sc-if>
+            </sc-if>
           </section>
           <section style="background: var(--color-surface); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <h2 style="margin: 0; font-family: var(--font-heading); font-size: 18px; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true">🕒</span>Quand, et avec qui</h2>
@@ -2138,7 +2148,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Date</span><input class="input" type="date" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.date }}" onChange="{{ setL.date }}"></label>
               <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">{{ lfHeureLbl }}</span><input class="input" type="time" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="" value="{{ lf.heure }}" onChange="{{ setL.heure }}"></label><sc-if value="{{ lfHasFin }}" hint-placeholder-val="{{ false }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Fin de séance</span><input class="input" type="time" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" value="{{ lf.fin }}" onChange="{{ setLfFin }}"></label></sc-if>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Moment</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="RAV · goûter · palet breton" defaultValue="{{ lf.repas }}" data-dv="{{ lf.repas }}" onInput="{{ setLz.repas }}" key="{{ lfKey }}-repas"></label>
+              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0; grid-column: 1 / -1;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">🍪 À manger ou boire avec</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="Ce que tu manges ou bois en même temps : palet breton, fromage, rien…" title="Ce que tu manges ou bois en même temps que le thé (accord, goûter, repas…)" defaultValue="{{ lf.repas }}" data-dv="{{ lf.repas }}" onInput="{{ setLz.repas }}" key="{{ lfKey }}-repas"></label>
             </div>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-right: 4px;">Avec</span>
@@ -2163,27 +2173,42 @@
                 <sc-if value="{{ lfHasPresets }}" hint-placeholder-val="{{ false }}"><button onClick="{{ gpToggleEdit }}" style="cursor: pointer; margin-left: auto; border: none; background: transparent; color: var(--color-text); font-family: var(--font-body); font-size: 13px; opacity: .7;">{{ gpEditLbl }}</button></sc-if>
                 <sc-if value="{{ gpMsg }}" hint-placeholder-val="{{ false }}"><span role="status" style="flex-basis: 100%; font-size: 12.5px; opacity: .75;">{{ gpMsg }}</span></sc-if>
               </div>
-              <div role="group" aria-label="Matériel utilisé" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
-                <sc-for list="{{ lfGearChips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
-                <input class="input" style="width: 170px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" defaultValue="{{ lf.infusion }}" data-dv="{{ lf.infusion }}" onInput="{{ setLz.infusion }}" key="{{ lfKey }}-infusion">
+              <div role="group" aria-label="Matériel utilisé" style="display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ lfGearGroups }}" as="gg" hint-placeholder-count="3"><div style="display: grid; grid-template-columns: 150px 1fr; gap: 8px; align-items: start;" class="lf-gear-row"><span style="font-size: 13px; font-weight: 600; padding-top: 7px;">{{ gg.title }} <span style="font-weight: 400; opacity: .6;">{{ gg.n }}</span></span><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ gg.chips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for></div></div></sc-for>
+                <input class="input" style="width: 220px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Autre matériel" defaultValue="{{ lf.infusion }}" data-dv="{{ lf.infusion }}" onInput="{{ setLz.infusion }}" key="{{ lfKey }}-infusion">
               </div>
               <sc-if value="{{ hasSalonGear }}" hint-placeholder-val="{{ false }}">
                 <button onClick="{{ toggleSalonGear }}" aria-pressed="{{ showSalonGear }}" style="cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 8px; border: none; background: transparent; padding: 2px 0; font-family: var(--font-body); font-size: 14px; color: var(--color-text);"><span style="width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--color-accent-700); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1;">{{ salonGearBox }}</span>Afficher le matériel du salon</button>
                 <sc-if value="{{ showSalonGear }}" hint-placeholder-val="{{ false }}"><div role="group" aria-label="Matériel du salon" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 10px; border-radius: 18px; background: var(--color-bg);">
-                <sc-for list="{{ lfGearSalon }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for>
+                <sc-for list="{{ lfGearSalonGroups }}" as="gg" hint-placeholder-count="2"><div style="display: grid; grid-template-columns: 150px 1fr; gap: 8px; align-items: start; width: 100%;" class="lf-gear-row"><span style="font-size: 13px; font-weight: 600; padding-top: 7px;">{{ gg.title }} <span style="font-weight: 400; opacity: .6;">{{ gg.n }}</span></span><div style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{ gg.chips }}" as="gc" hint-placeholder-count="3"><button onClick="{{ gc.toggle }}" aria-pressed="{{ gc.on }}" style="cursor: pointer; border: 1.5px solid {{ gc.border }}; background: {{ gc.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ gc.label }}</button></sc-for></div></div></sc-for>
                 </div></sc-if>
               </sc-if>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-              <sc-if value="{{ lfFull }}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Temps</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="30/45/60 · 4m" defaultValue="{{ lf.temps }}" data-dv="{{ lf.temps }}" onInput="{{ setLz.temps }}" key="{{ lfKey }}-temps"></label></sc-if>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Température</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="90 · f" defaultValue="{{ lf.temperature }}" data-dv="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature"></label>
-              <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;"><span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Ma quantité ({{ qtyUnit }})</span><input class="input" type="text" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;" placeholder="4" defaultValue="{{ lf.qty }}" data-dv="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal"></label>
-              
+            <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Paramètres</span>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Température de l’eau en °C" placeholder="🌡 Température °C (ex : 95)" defaultValue="{{ lf.temperature }}" data-dv="{{ lf.temperature }}" onInput="{{ setLz.temperature }}" key="{{ lfKey }}-temperature" inputMode="numeric">
+              <input class="input" style="width: 100%; box-sizing: border-box; font-size: 15px; padding: 12px 18px;" aria-label="Ma quantité" placeholder="⚖️ Ma quantité en {{ qtyUnit }} (ex : 5)" defaultValue="{{ lf.qty }}" data-dv="{{ lf.qty }}" onInput="{{ setLz.qty }}" key="{{ lfKey }}-qty" inputMode="decimal">
             </div>
+            <sc-if value="{{ lfTimesOn }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <span style="font-size: 15px; margin-right: 2px;">⏱ Temps</span>
+                <sc-if value="{{ lfTmSec }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ lfTimeBoxes }}" as="tb" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 4px;"><sc-if value="{{ tb.sep }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="opacity: .4;">/</span></sc-if><input class="input" inputMode="numeric" aria-label="{{ tb.aria }}" placeholder="{{ tb.ph }}" value="{{ tb.v }}" onInput="{{ tb.set }}" style="width: 74px; box-sizing: border-box; font-size: 15px; padding: 10px 10px; text-align: center;"><span style="font-size: 13px; opacity: .6;">s</span></span></sc-for></sc-if>
+                <sc-if value="{{ lfTmMinOn }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 6px;"><input class="input" inputMode="decimal" aria-label="Temps en minutes" placeholder="ex : 4" value="{{ lfTmMinVal }}" onInput="{{ setTmMin }}" style="width: 90px; box-sizing: border-box; font-size: 15px; padding: 10px 12px; text-align: center;"><span style="font-size: 14px; opacity: .7;">min</span></span></sc-if>
+                <button type="button" onClick="{{ toggleTm }}" aria-pressed="{{ lfTmMinOn }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 13.5px; background: {{ lfTmBg }}; color: {{ lfTmFg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">⏲ Minutes</button>
+              </div>
+              <span style="font-size: 12.5px; opacity: .65; margin-top: -4px;">{{ lfTmHint }}</span>
+            </sc-if>
+            <sc-if value="{{ lfInfEditOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border-radius: 18px; padding: 12px 14px;">
+                <span style="font-size: 14px; font-weight: 600;">⏱ Les infusions de la séance <span style="font-weight: 400; opacity: .65;">· temps, température et commentaire de chacune</span></span>
+                <sc-for list="{{ lfInfRows }}" as="ir" hint-placeholder-count="3"><div style="display: grid; grid-template-columns: 34px 84px 84px minmax(0, 1fr) 34px; gap: 6px; align-items: center;" class="lf-inf-row"><b style="font-size: 14px;">#{{ ir.n }}</b><input class="input" inputMode="numeric" aria-label="{{ ir.aT }}" placeholder="s" value="{{ ir.t }}" onInput="{{ ir.setT }}" style="width: 100%; box-sizing: border-box; padding: 8px 8px; text-align: center; background: var(--color-surface);"><input class="input" inputMode="numeric" aria-label="{{ ir.aTp }}" placeholder="°C" value="{{ ir.temp }}" onInput="{{ ir.setTemp }}" style="width: 100%; box-sizing: border-box; padding: 8px 8px; text-align: center; background: var(--color-surface);"><input class="input" aria-label="{{ ir.aN }}" placeholder="Commentaire sur cette infusion" value="{{ ir.note }}" onInput="{{ ir.setNote }}" style="width: 100%; box-sizing: border-box; padding: 8px 12px; background: var(--color-surface);"><button type="button" onClick="{{ ir.del }}" aria-label="{{ ir.aD }}" title="Supprimer cette infusion" style="cursor: pointer; border: none; background: transparent; font-size: 16px; color: #a8432e;">✕</button></div></sc-for>
+                <button type="button" class="btn btn-secondary" onClick="{{ lfInfAdd }}" style="align-self: flex-start; white-space: nowrap; background: var(--color-surface);">＋ Ajouter une infusion</button>
+              </div>
+            </sc-if>
             <sc-if value="{{ logRemain }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; opacity: .7; margin-top: -4px;">{{ logRemain }}</span></sc-if>
             <span style="font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .6;">Technique</span>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.add }}" aria-pressed="{{ t.on }}" title="{{ t.label }}" style="cursor: pointer; border: 1.5px solid {{ t.border }}; background: {{ t.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ t.check }}<b>{{ t.code }}</b> <span style="opacity: .75;">{{ t.label }}</span></button></sc-for>
+              <sc-for list="{{ techChips }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.add }}" aria-pressed="{{ t.on }}" title="{{ t.label }}" style="cursor: pointer; border: 1.5px solid {{ t.border }}; background: {{ t.bg }}; color: var(--color-text); font-family: var(--font-body); font-size: 14px; padding: 6px 12px; border-radius: 999px; white-space: nowrap;">{{ t.check }}{{ t.name }}</button></sc-for>
               <input class="input" style="width: 150px; box-sizing: border-box; font-size: 14px; padding: 7px 12px;" placeholder="＋ Autre…" aria-label="Technique (saisie libre)" value="{{ techExtra }}" onChange="{{ setTechExtra }}">
             </div>
           </section>
@@ -7062,6 +7087,13 @@ class Component extends DCLogic {
     const pt = this.portionsFor(o).find(x => x.who === me);
     return !pt || pt.empty || pt.left <= 0;
   }
+  // pour une dégustation : ses sachets, ceux qu’on lui a partagés, et ceux des membres de ses salons
+  canTasteLog(o, me) { return !!o && (this.canTaste(o, me) || (!!me && o.owner !== me && this.salonMates(me).indexOf(o.owner) >= 0)); }
+  // noms alternatifs des thés (recherche : « phoenix » trouve les Dan Cong…)
+  teaAliases(txt) {
+    const t = this.norm(txt || ''); const G = [['dan cong', 'dancong', 'phoenix', 'feng huang', 'fenghuang', 'phénix'], ['tie guan yin', 'tieguanyin', 'ti kuan yin', 'iron goddess'], ['da hong pao', 'big red robe', 'grande robe rouge'], ['long jing', 'longjing', 'dragon well', 'puits du dragon'], ['bai mu dan', 'white peony', 'pai mu tan', 'pivoine blanche'], ['bai hao yin zhen', 'yin zhen', 'silver needle', 'aiguilles d argent'], ['pu er', 'puer', 'pu-erh', 'puerh', 'pu erh', 'shou', 'sheng'], ['lapsang', 'souchong', 'zheng shan xiao zhong', 'thé fumé'], ['bi luo chun', 'biluochun', 'pi lo chun'], ['dong fang mei ren', 'oriental beauty', 'beauté orientale', 'bai hao oolong'], ['dong ding', 'tung ting'], ['jasmin', 'jasmine', 'mo li'], ['yerba', 'mate', 'maté'], ['matcha', 'macha'], ['hojicha', 'houjicha'], ['genmaicha', 'genmai'], ['kukicha', 'kuki', 'bocha'], ['gyokuro'], ['milky', 'jin xuan']];
+    return G.filter(g => g.some(x => t.indexOf(this.norm(x)) >= 0)).map(g => g.join(' ')).join(' ');
+  }
   canTaste(o, me) { return !!o && (o.owner === me || (o.shares || []).some(x => x.to === me)); }
 
   inLog(l, u) { return (l.author || '') === u || (l.with || []).indexOf(u) >= 0; }
@@ -7102,10 +7134,10 @@ class Component extends DCLogic {
     if (!src) { out.prefilled = ''; return out; }
     const empty = k => !String(lf[k] || '').trim();
     let n = 0;
-    ['temps', 'temperature', 'qty', 'technique', 'infusion'].forEach(k => { if (empty(k) && src[k] && !/^\s*[x-]\s*$/i.test(String(src[k]))) { out[k] = src[k]; n++; } });
+    // les paramètres (temps, température, quantité, technique) restent vierges : seul le matériel est repris
     const gids = this.logGears(src).filter(g => g.owner === me || this.gearUsable(me).some(x => x.id === g.id)).map(g => g.id);
     if (!(lf.gearIds || []).length && gids.length) { out.gearIds = gids; out.gearId = ''; n++; }
-    out.prefilled = n ? 'Infusion préremplie d’après ' + (src.author === me ? 'ta' : 'la') + ' dégustation du ' + this.fmtDate(src.date) + (src.author !== me ? ' (' + src.author + ')' : '') + '. Modifie ce qui change.' : '';
+    out.prefilled = n ? 'Matériel repris de ' + (src.author === me ? 'ta' : 'la') + ' dégustation du ' + this.fmtDate(src.date) + (src.author !== me ? ' (' + src.author + ')' : '') + '. Décoche ce qui change.' : '';
     return out;
   }
   lazySet(obj, k) {
@@ -7537,7 +7569,7 @@ class Component extends DCLogic {
   }
   canEditLog(l, me) { return !!me && (this.norm(l.author || '') === this.norm(me) || (l.with || []).some(w => this.norm(w) === this.norm(me))); }
   startEditLog(l) {
-    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lf: { nez: l.nez || '', photos: this.logPhotos(l), photo: '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: this.logNoteOf(l, this.me()) || '', noteMine: this.norm(l.author || '') !== this.norm(this.me() || ''), infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
+    this.setState(st => ({ view: 'log', editLogId: l.id, logBack: st.view, logMsg: '', lfTmMin: null, lfPicking: false, lfOwner: null, lotQ: '', lf: { infList: Array.isArray(l.infusions) && l.infusions.length ? l.infusions.map(i => Object.assign({}, i)) : null, nez: l.nez || '', photos: this.logPhotos(l), photo: '', hasStart: !!l.startTs, fin: l.endTs ? (d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))(new Date(l.endTs)) : '', lotId: l.lotId, gearIds: this.logGears(l).map(g => g.id), gearId: '', with: (l.with || []).slice(), date: l.date || '', heure: l.heure || '', note: this.logNoteOf(l, this.me()) || '', noteMine: this.norm(l.author || '') !== this.norm(this.me() || ''), infusion: l.infusion || '', temps: l.temps || '', temperature: l.temperature || '', qty: l.qty || '', technique: l.technique || '', repas: l.repas || '', avis: l.avis || '' } }));
   }
 
   logCard(l, coll, me) { const o = coll.find(x => x.id === l.lotId) || {}; const sn = this.logShownNote(l); const isNum = /^\d+([.,]\d+)?$/.test(String(sn.note || '')); return { ...this.joinInfo(l, me), photo: (this.logPhotos(l)[0] || {}).u || '', openDetail: () => this.openLogDetail(l.id), share: () => this.shareLink('log', l.id, 'Dégustation : ' + (o.nom || o.the || 'thé'), this.shareLogMsg(l)), nameOpen: this.stop(() => { if (o.prodId) this.openProd(o.prodId); }), openCat: () => this.openCatTea(o.the), canEdit: this.norm(l.author || '') === this.norm(me), canEditL: this.canEditLog(l, me), editLog: () => this.startEditLog(l), openP: () => { if (o.prodId) this.openProd(o.prodId); }, ...this.expFlags('l:' + l.id), marque: this.shopTxt(o.marque, o.ville) || '—', canDel: this.norm(l.author || '') === this.norm(me) || this.isMod(me), remove: () => { if (!window.confirm('Supprimer cette dégustation ?')) return; const a = this.getAdds(); this.setAdds(Object.assign({}, a, { logs: a.logs.filter(x => x.id !== l.id) })); }, author: (l.author || this.opts().users[0]) + ((l.with || []).length ? ' avec ' + l.with.join(' & ') : ''), note: sn.note || '—', noteWho: sn.who ? '🫖 ' + sn.who + (sn.diff ? ' · ⚡ Désaccord' : '') : '', noteSub: isNum ? '/ 20' : '', name: o.nom || o.the || 'Sachet supprimé', the: [o.nom && o.the !== o.nom ? o.the : '', o.variante].filter(Boolean).join(' · '), code: o.code || '—', when: [this.fmtDate(l.date), l.heure ? 'à ' + l.heure : ''].filter(Boolean).join(' '), avis: l.avis || '', gearLinks: this.logGearLinks(l, me), hasGear: this.logGears(l).length > 0, ...this.noteColors(sn.note.replace(',', '.')), detailLine: [['⏳', l.live ? 'séance en cours' : ''], ['🫖', this.logGearRest(l)], ['⏱', l.temps], ['🌡', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['⚖️', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['🌀', l.technique], ['🕒', l.repas]].filter(x => x[1] && !/^\s*[x-]\s*$/i.test(String(x[1]))).map(x => x[0] + ' ' + x[1]).join('  ·  '), details: [['Matériel', this.logGearRest(l)], ['Temps', l.temps], ['Température', l.temperature ? l.temperature + (/^\d+$/.test(l.temperature) ? ' °C' : '') : ''], ['Quantité', l.qty ? (/^\s*[\d.,]+\s*$/.test(String(l.qty)) ? l.qty + ((o.prixMode === 'unite') ? ' u' : ' g') : l.qty) : ''], ['Technique', l.technique], ['Moment', l.repas]].filter(x => x[1]).map(x => ({ k: x[0], v: x[1] })) }; }
@@ -8727,7 +8759,7 @@ class Component extends DCLogic {
       ...(() => {
         const cur = this.lfGearIds();
         const chip = g => { const T = this.gearCat(g); const on = cur.indexOf(g.id) >= 0;
-          return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-surface)', border: on ? 'var(--color-accent-700)' : 'transparent',
+          return { label: (on ? '✓ ' : '') + T[1] + ' ' + g.name + (g.owner !== me ? ' · ' + g.owner : ''), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', border: on ? 'var(--color-accent-700)' : 'var(--color-divider)',
             toggle: () => this.setState(s0 => { const lf = s0.lf || {}; const ids = (lf.gearIds || (lf.gearId ? [lf.gearId] : [])).slice(); const k = ids.indexOf(g.id); if (k >= 0) ids.splice(k, 1); else ids.push(g.id); return { lf: Object.assign({}, lf, { gearIds: ids, gearId: '' }) }; }) }; };
         const ord = (x, y) => String(x.owner).localeCompare(String(y.owner), 'fr') || String(x.name).localeCompare(String(y.name), 'fr', { sensitivity: 'base', numeric: true });
         const all = this.gearUsable(me).concat((this.getAdds().gear || []).filter(g => cur.indexOf(g.id) >= 0 && !this.gearUsable(me).some(x => x.id === g.id)));
@@ -8755,7 +8787,12 @@ class Component extends DCLogic {
             savePresets(presets.concat([{ id: 'gp' + Date.now().toString(36), name: nm, ids: cur.slice() }])); this.setState({ gpNew: false, gpName: '', gpMsg: 'Preset « ' + nm + ' » créé avec ' + cur.length + ' objet' + (cur.length > 1 ? 's' : '') + '.' }); },
           gpKey: e => { if (e.key === 'Enter') { e.preventDefault(); lfPresetVals.gpSave(); } },
           gpMsg: this.state.gpMsg || '', gpCount: cur.length ? cur.length + ' objet' + (cur.length > 1 ? 's' : '') + ' coché' + (cur.length > 1 ? 's' : '') : 'rien de coché' };
-        return { ...lfPresetVals, lfGearChips: mine.map(chip), lfGearSalon: others.map(chip), hasSalonGear: others.length > 0, showSalonGear: show, salonGearBox: show ? '✓' : '',
+        // matériel rangé par catégorie (ordre des catégories du site), puis par ordre alphabétique
+        const groups = L => { const byName = (x, y) => String(x.name).localeCompare(String(y.name), 'fr', { sensitivity: 'base', numeric: true }) || String(x.owner).localeCompare(String(y.owner), 'fr');
+          const T = this.gearTypeList(); const keys = T.map(t => t[0]); const extra = Array.from(new Set(L.map(g => this.gearCatKey(g.type)).filter(k => keys.indexOf(k) < 0)));
+          return T.concat(extra.map(k => [k, '📦', 'Autre'])).map(t => { const it = L.filter(g => this.gearCatKey(g.type) === t[0]).sort(byName); const nOn = it.filter(g => cur.indexOf(g.id) >= 0).length;
+            return { title: t[1] + ' ' + t[2], n: nOn ? nOn + '/' + it.length : String(it.length), chips: it.map(g => { const c = chip(g); c.label = (cur.indexOf(g.id) >= 0 ? '✓ ' : '') + g.name + (g.owner !== me ? ' · ' + g.owner : ''); return c; }) }; }).filter(G => G.chips.length); };
+        return { ...lfPresetVals, lfGearGroups: groups(mine), lfGearSalonGroups: groups(others), lfGearChips: mine.map(chip), lfGearSalon: others.map(chip), hasSalonGear: others.length > 0, showSalonGear: show, salonGearBox: show ? '✓' : '',
           toggleSalonGear: () => this.setState(s0 => ({ showSalonGear: !show })) };
       })(),
       gearHint: this.gearUsable(me).length ? 'Touchez tout ce que vous utilisez. Le matériel du salon s’affiche avec la case ci-dessous.' : 'Ajoutez votre matériel dans le menu du profil → Mon matériel.',
@@ -9104,12 +9141,37 @@ class Component extends DCLogic {
           .sort((x, y) => (x.empty - y.empty) || (x.o.nom || x.o.the).localeCompare(y.o.nom || y.o.the, 'fr', { sensitivity: 'base' }) || x.o.code.localeCompare(y.o.code))
           .map(x => ({ id: x.o.id, label: (x.o.nom || x.o.the) + (x.o.owner !== me ? ' (partagé par ' + x.o.owner + ')' : '') + (x.empty ? ' (vide)' : '') + ' — ' + x.o.code }));
       })(),
+      ...(() => {
+        // choix du thé : « Sachet à » (moi ou un membre du salon), recherche avec suggestions
+        const lf = this.state.lf || {}; const cur = lf.lotId; const ed = !!this.state.editLogId;
+        const pool = coll.filter(o => this.canTasteLog(o, me) || (ed && o.id === cur));
+        const curO = coll.find(o => o.id === cur);
+        const owners = [me].concat(Array.from(new Set(pool.map(o => o.owner))).filter(u => u && u !== me).sort((x, y) => x.localeCompare(y, 'fr')));
+        const who = owners.indexOf(this.state.lfOwner) >= 0 ? this.state.lfOwner : (curO && owners.indexOf(curO.owner) >= 0 ? curO.owner : me);
+        const picking = !curO || !!this.state.lfPicking;
+        const q = this.norm(this.state.lotQ || '').split(/\s+/).filter(Boolean);
+        const famN = o => { const k = this.famOf(o.the); return k ? this.families[k].name : ''; };
+        const hay = o => this.norm([o.nom, o.the, o.variante, o.marque, o.code, famN(o), this.teaAliases([o.nom, o.the, o.variante].join(' '))].join(' '));
+        const list = pool.filter(o => o.owner === who).map(o => ({ o: o, empty: this.emptyFor(o, me) }))
+          .filter(x => !q.length || q.every(w => hay(x.o).indexOf(w) >= 0))
+          .sort((x, y) => (x.empty - y.empty) || String(x.o.nom || x.o.the).localeCompare(String(y.o.nom || y.o.the), 'fr', { sensitivity: 'base' }));
+        const desc = o => [[o.the, o.variante].filter(Boolean).join(' · '), o.marque, o.code].filter(Boolean).join(' — ');
+        const r = curO ? this.remainFor(curO) : null;
+        const pick = o => this.setState(st => ({ lotQ: '', lfPicking: false, lf: this.lfWithLot(st.lf || {}, o.id) }));
+        return { lfOwners: owners.length > 1 ? owners.map(u => ({ label: u === me ? 'Moi' : u, on: u === who, bg: u === who ? 'var(--color-text)' : 'var(--color-bg)', fg: u === who ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ lfOwner: u, lotQ: '' }) })) : [],
+          lfOwnersOn: owners.length > 1 && picking, lfPicking: picking, lfPicked: !picking,
+          lfTeaPh: who === me ? '🔎 Tape le nom de ton thé : kuki, phoenix, sencha…' : '🔎 Tape le nom du thé de ' + who + '…',
+          lfSugg: list.slice(0, q.length ? 12 : 8).map(x => ({ name: (x.o.nom || x.o.the) + (x.empty ? ' (vide)' : ''), sub: desc(x.o), on: x.o.id === cur, pick: () => pick(x.o) })),
+          lfSuggMore: list.length > (q.length ? 12 : 8) ? '… et ' + (list.length - (q.length ? 12 : 8)) + ' autre(s) : précise ta recherche.' : '',
+          lfSuggNone: !list.length ? (q.length ? 'Aucun thé de ' + (who === me ? 'ta collection' : who) + ' ne correspond à « ' + (this.state.lotQ || '') + ' ».' : (who === me ? 'Tu n’as pas encore de sachet : ajoute-le avec « J’ai un nouveau thé ».' : who + ' n’a pas de sachet visible.')) : '',
+          lfCurName: curO ? (curO.nom || curO.the) : '', lfCurSub: curO ? [desc(curO), curO.owner !== me ? 'sachet de ' + curO.owner : 'mon sachet', r ? r.txt : ''].filter(Boolean).join(' · ') : '',
+          lfChangeTea: () => this.setState({ lfPicking: true, lotQ: '' }), lfCancelPick: () => this.setState({ lfPicking: false, lotQ: '' }), lfCanCancelPick: !!curO };
+      })(),
       lotQ: this.state.lotQ || '',
       setLotQ: e => {
         const val = e.target.value;
         const q = this.norm(val).split(/\s+/).filter(Boolean);
-        const hits = coll.filter(o => this.canTaste(o, me) && q.length && q.every(w => this.norm([o.nom, o.the, o.variante, o.marque, o.code].join(' ')).indexOf(w) >= 0));
-        this.setState(st => ({ lotQ: val, lf: hits.length === 1 && (st.lf || {}).lotId !== hits[0].id ? this.lfWithLot(st.lf || {}, hits[0].id) : st.lf }));
+        this.setState({ lotQ: val });
       },
       ...(() => {
         const o = coll.find(x => x.id === (this.state.lf || {}).lotId);
@@ -9126,18 +9188,42 @@ class Component extends DCLogic {
       })(),
       vessels: this.opts().vessels,
       vesselHint: (() => { const c = String((this.state.lf || {}).infusion || '').replace(/\*$/, '').trim().toUpperCase(); const v = this.opts().vessels.find(x => String(x.code).toUpperCase() === c); return v ? v.label + (/\*$/.test((this.state.lf || {}).infusion || '') ? ' · avec préchauffe' : '') : 'PGW, GGW, KYU, VM, TMR, XSI, CHR… ou votre propre code'; })(),
+      ...(() => {
+        const lf = this.state.lf || {}; const raw = String(lf.temps || '').trim(); const full = (this.state.lfMode || 'full') === 'full' || !!this.state.editLogId;
+        const infEdit = !!this.state.editLogId && Array.isArray(lf.infList);
+        const setT = v => this.setState(s0 => ({ lf: Object.assign({}, s0.lf, { temps: v }) }));
+        const minOn = this.state.lfTmMin != null ? !!this.state.lfTmMin : /^\s*[\d.,]+\s*(m|min|mn)\s*$/i.test(raw);
+        const parts = raw && !minOn ? raw.split('/').map(x => x.trim()) : [];
+        const nBox = Math.max(3, parts.length + (parts.length >= 3 && parts.every(Boolean) ? 1 : 0));
+        const boxes = Array.from({ length: nBox }, (_, i) => ({ v: parts[i] || '', ph: String(i + 1) + (i ? 'e' : 're'), sep: i > 0, aria: 'Temps de la ' + (i + 1) + (i ? 'e' : 're') + ' infusion en secondes',
+          set: e => { const x = String(e.target.value || '').replace(/[^\d]/g, ''); this.setState(s0 => { const cur = String((s0.lf || {}).temps || '').trim(); const arr = (cur && !/m/i.test(cur) ? cur.split('/').map(y => y.trim()) : []); while (arr.length <= i) arr.push(''); arr[i] = x; while (arr.length && !arr[arr.length - 1]) arr.pop(); return { lf: Object.assign({}, s0.lf, { temps: arr.join('/') }) }; }); } }));
+        const L = infEdit ? lf.infList : [];
+        const upd = (k, patch) => this.setState(s0 => { const li = ((s0.lf || {}).infList || []).slice(); li[k] = Object.assign({}, li[k], patch); return { lf: Object.assign({}, s0.lf, { infList: li }) }; });
+        return { lfTimesOn: full && !infEdit, lfTmSec: !minOn, lfTmMinOn: minOn, lfTimeBoxes: boxes,
+          lfTmMinVal: minOn ? raw.replace(/\s*(m|min|mn)\s*$/i, '') : '', setTmMin: e => { const x = String(e.target.value || '').replace(/[^\d.,]/g, ''); setT(x ? x + 'm' : ''); },
+          toggleTm: () => this.setState(s0 => ({ lfTmMin: !minOn, lf: Object.assign({}, s0.lf, { temps: '' }) })),
+          lfTmBg: minOn ? 'var(--color-text)' : 'var(--color-bg)', lfTmFg: minOn ? 'var(--color-bg)' : 'var(--color-text)',
+          lfTmHint: minOn ? 'Infusion longue : un seul temps, en minutes. Reclique sur « Minutes » pour revenir aux secondes.' : 'Une case par infusion, en secondes (ex : 60 / 60 / 90). Une nouvelle case apparaît quand les précédentes sont remplies.',
+          lfInfEditOn: infEdit,
+          lfInfRows: L.map((i, k) => ({ n: String(k + 1), t: i.t == null ? '' : String(i.t), temp: i.temp || '', note: i.note || '', aT: 'Temps de l’infusion ' + (k + 1) + ' en secondes', aTp: 'Température de l’infusion ' + (k + 1), aN: 'Commentaire de l’infusion ' + (k + 1), aD: 'Supprimer l’infusion ' + (k + 1),
+            setT: e => upd(k, { t: String(e.target.value || '').replace(/[^\d]/g, '') }), setTemp: e => upd(k, { temp: e.target.value }), setNote: e => upd(k, { note: e.target.value }),
+            del: () => this.setState(s0 => ({ lf: Object.assign({}, s0.lf, { infList: ((s0.lf || {}).infList || []).filter((_, j) => j !== k) }) })) })),
+          lfInfAdd: () => this.setState(s0 => { const li = ((s0.lf || {}).infList || []).slice(); const last = li[li.length - 1]; li.push({ t: last && last.t ? String((parseInt(last.t, 10) || 0) + 5) : '', ts: Date.now() }); return { lf: Object.assign({}, s0.lf, { infList: li }) }; }) };
+      })(),
       techExtra: (() => { const known = this.opts().techs.map(t => String(t.code).toUpperCase()); return String((this.state.lf || {}).technique || '').split('+').map(x => x.trim()).filter(x => x && known.indexOf(x.toUpperCase()) < 0).join('+'); })(),
       setTechExtra: e => { const val = String(e.target.value || ''); this.setState(s0 => { const known = this.opts().techs.map(t => String(t.code).toUpperCase()); const sel = String((s0.lf || {}).technique || '').split('+').map(x => x.trim()).filter(x => x && known.indexOf(x.toUpperCase()) >= 0); const extra = val.split('+').map(x => x.trim()).filter(Boolean); return { lf: Object.assign({}, s0.lf, { technique: sel.concat(extra).join('+') }) }; }); },
-      techChips: (() => { const parts = String((this.state.lf || {}).technique || '').split('+').map(x => x.trim()).filter(Boolean); return this.opts().techs.filter(t => t.code).map(t => { const on = parts.some(x => x.toUpperCase() === String(t.code).toUpperCase()); return { code: t.code, label: t.label, on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', border: on ? 'var(--color-accent-700)' : 'transparent', check: on ? '✓ ' : '',
+      techChips: (() => { const parts = String((this.state.lf || {}).technique || '').split('+').map(x => x.trim()).filter(Boolean); return this.opts().techs.filter(t => t.code).map(t => { const on = parts.some(x => x.toUpperCase() === String(t.code).toUpperCase()); return { code: t.code, label: t.label, name: t.code === '*' ? 'Préchauffage' : (t.label || t.code), on: on, bg: on ? 'var(--color-accent-100)' : 'var(--color-bg)', border: on ? 'var(--color-accent-700)' : 'transparent', check: on ? '✓ ' : '',
         add: () => this.setState(s0 => { const cur = String((s0.lf || {}).technique || '').split('+').map(x => x.trim()).filter(Boolean); const i = cur.findIndex(x => x.toUpperCase() === String(t.code).toUpperCase()); if (i >= 0) cur.splice(i, 1); else cur.push(t.code); return { lf: Object.assign({}, s0.lf, { technique: cur.join('+') }) }; }) }; }); })(),
       logNoteHint: (() => { const raw = String((this.state.lf || {}).note || ''); const n = this.num(raw.replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); const tag = /f/i.test(raw) ? ' · foiré' : /r/i.test(raw) ? ' · réglage' : ''; if (n == null) return '0–4 peut être jeté · 5–10 un défaut · 11–14 correct · 15–18 vraiment bon · 19–20 exceptionnel · F foiré · R réglage'; return (n <= 4 ? 'Peut être jeté' : n <= 10 ? 'Il a un défaut' : n <= 14 ? 'Correct, sans plus' : n <= 18 ? 'Vraiment bon' : 'Exceptionnel') + tag; })(),
       logMsg: this.state.logMsg || '',
       saveLog: () => {
         const l = Object.assign({}, this.state.lf || {}); delete l.prefilled;
+        const infList = Array.isArray(l.infList) ? l.infList.map(i => Object.assign({}, i, { t: parseInt(i.t, 10) || 0, temp: String(i.temp || '').trim(), note: String(i.note || '').trim() })).filter(i => i.t > 0).map(i => { if (!i.temp) delete i.temp; if (!i.note) delete i.note; return i; }) : null; delete l.infList;
+        if (/^[\d\s/]*$/.test(String(l.temps || ''))) l.temps = String(l.temps || '').split('/').map(x => x.trim()).filter(Boolean).join('/');
         { const ps = this.logPhotos(l); l.photos = ps; l.photo = ps.length ? ps[0].u : ''; } const finV = l.fin; delete l.fin; delete l.hasStart;
         if (!l.lotId) { this.setState({ logMsg: 'Choisissez le thé dégusté.' }); return; }
         const editOrig = this.state.editLogId ? this.getAdds().logs.find(x => x.id === this.state.editLogId) : null;
-        if (!(editOrig && editOrig.lotId === l.lotId) && !coll.some(x => x.id === l.lotId && this.canTaste(x, me))) { this.setState({ logMsg: 'Vous ne pouvez noter que vos sachets ou ceux qu’on vous a partagés.' }); return; }
+        if (!(editOrig && editOrig.lotId === l.lotId) && !coll.some(x => x.id === l.lotId && this.canTasteLog(x, me))) { this.setState({ logMsg: 'Tu ne peux noter que tes sachets, ceux qu’on t’a partagés ou ceux des membres de ton salon.' }); return; }
         const a = this.getAdds();
         if (this.state.editLogId) {
           const id = this.state.editLogId;
@@ -9148,21 +9234,22 @@ class Component extends DCLogic {
             if (x.startTs) { const day = /^\d{4}-\d{2}-\d{2}$/.test(y.date || '') ? y.date : mdtDayKey(new Date(x.startTs)); const at = hm => { const d = new Date(day + 'T' + hm.padStart(5, '0') + ':00'); return d.getTime(); };
               if (/^\d{1,2}:\d{2}$/.test(y.heure || '')) y.startTs = at(y.heure);
               if (/^\d{1,2}:\d{2}$/.test(finV || '')) { let e = at(finV); if (e < y.startTs) e += 864e5; y.endTs = e; } }
-            if (Array.isArray(x.infusions) && String(l.temps || '') !== x.infusions.map(i => i.t).join('/')) { const ts = String(l.temps || '').split('/').map(t => parseInt(t, 10)).filter(t => t > 0); y.infusions = ts.map((t, k) => Object.assign({}, x.infusions[k] || {}, { t: t })); }
+            if (infList) { y.infusions = infList; y.temps = infList.map(i => i.t).join('/'); }
+            else if (Array.isArray(x.infusions) && String(l.temps || '') !== x.infusions.map(i => i.t).join('/')) { const ts = String(l.temps || '').split('/').map(t => parseInt(t, 10)).filter(t => t > 0); y.infusions = ts.map((t, k) => Object.assign({}, x.infusions[k] || {}, { t: t })); }
             return y; }) }));
-          this.setState(st => ({ editLogId: null, view: st.logBack || 'logs', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } }));
+          this.setState(st => ({ editLogId: null, lfTmMin: null, view: st.logBack || 'logs', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: '', temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } }));
           return;
         }
         const entry = Object.assign({ id: 'l' + Date.now().toString(36), author: me }, l, { with: (l.with || []).filter(x => x !== me), date: l.date || mdtToday() });
         if ((this.state.lfMode || 'full') === 'gong') {
           delete entry.note; delete entry.avis; const now = new Date(); Object.assign(entry, { live: true, infusions: [], temps: '', startTs: Date.now(), heure: entry.heure || (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')) });
           this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
-          this.setState({ lotQ: '', logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
+          this.setState({ lotQ: '', lfOwner: null, lfPicking: false, lfTmMin: null, logMsg: '', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
           this.openSession(entry.id); return;
         }
         this.setAdds(Object.assign({}, a, { logs: a.logs.concat([entry]) }));
         const o = coll.find(x => x.id === l.lotId);
-        this.setState({ lotQ: '', logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
+        this.setState({ lotQ: '', lfOwner: null, lfPicking: false, lfTmMin: null, logMsg: 'Dégustation de ' + me + ' enregistrée' + (o ? ' pour ' + o.the : '') + '.', lf: { lotId: '', with: [], date: mdtToday(), heure: '', note: '', infusion: l.infusion, temps: '', temperature: '', qty: '', technique: '', repas: '', avis: '' } });
       },
       hasRecent: this.getAdds().logs.length > 0,
       recentLogs: this.getAdds().logs.filter(l => this.logVisible(l, guest ? null : me)).slice().sort((x, y) => (String(y.date) + String(y.heure || '')).localeCompare(String(x.date) + String(x.heure || ''))).slice(0, 8).map(l => this.logCard(l, coll, me)),
