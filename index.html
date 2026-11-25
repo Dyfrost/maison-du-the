@@ -1343,7 +1343,7 @@
         <div style="display: flex; flex-direction: column; gap: 6px;"><h1 style="font-size: 46px; margin: 0;">Confidentialité</h1><p style="font-size: 16px; opacity: .72; margin: 0;">Mentions légales, données personnelles et cookies. Dernière mise à jour : {{ lg.date }}.</p></div>
         <section class="set-card">
           <h2 class="set-h">Mentions légales</h2>
-          <p><b>Éditeur du site :</b> {{ lg.editor }}<br><b>Contact :</b> {{ lg.contact }}<br><b>Directeur de la publication :</b> {{ lg.editor }}</p>
+          <p><b>{{ lg.edLbl }} :</b> {{ lg.editor }}<br><b>Contact :</b> {{ lg.contact }}<br><b>{{ lg.dirLbl }} :</b> {{ lg.editor }}</p>
           <p><b>Hébergement du site :</b> GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.<br><b>Hébergement des données :</b> Supabase Inc. (base de données et comptes), région {{ lg.region }}.</p>
           <p>L’Unanimithé est un site associatif et non commercial, sans publicité.</p>
         </section>
@@ -5803,7 +5803,9 @@ class Component extends DCLogic {
   }
   legalView() {
     const L = window.MDT_LEGAL || {};
-    return { date: '19 novembre 2026', editor: L.editor || '[nom de l’éditeur à compléter]', contact: L.contact || '[adresse e-mail de contact à compléter]', region: L.region || 'Union européenne (à vérifier dans Supabase)',
+    const names = v => { const L0 = (Array.isArray(v) ? v : String(v || '').split(/\s*[;,]\s*/)).map(x => String(x).trim()).filter(Boolean); return L0.length > 1 ? L0.slice(0, -1).join(', ') + ' et ' + L0[L0.length - 1] : (L0[0] || ''); };
+    const ed = names(L.editor);
+    return { date: '19 novembre 2026', editor: ed || '[nom de l’éditeur à compléter]', edLbl: /\set\s/.test(ed) ? 'Éditeurs du site' : 'Éditeur du site', dirLbl: /\set\s/.test(ed) ? 'Directeurs de la publication' : 'Directeur de la publication', contact: L.contact || '[adresse e-mail de contact à compléter]', region: L.region || 'Union européenne (à vérifier dans Supabase)',
       captcha: window.TURNSTILE_SITE_KEY ? ' À l’inscription et à la connexion, un contrôle anti-robot Cloudflare Turnstile vérifie que tu n’es pas un robot (sans cookie publicitaire).' : '' };
   }
   settingsView(me) {

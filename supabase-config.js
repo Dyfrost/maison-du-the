@@ -7,7 +7,7 @@ window.SUPABASE_ANON_KEY = 'sb_publishable_fhaCEWs01X9P2FMZV55ptg_liReqT7J';
 window.TURNSTILE_SITE_KEY = '';
 // Mentions légales (affichées dans « Confidentialité et mentions légales »)
 window.MDT_LEGAL = {
-  editor: 'Raphaël ESTOURNET',   // ex. 'Raphaël Dupont' : nom de la personne qui publie le site
+  editor: ['Raphaël ESTOURNET'],   // une ou plusieurs personnes, ex. ['Raphaël Estournet', 'Maël Guillot'] → « Raphaël Estournet et Maël Guillot »
   contact: 'raphaelplay35@gmail.com',  // ex. 'contact@exemple.fr' : adresse pour les demandes RGPD
   region: 'South Asia, Singapour'    // ex. 'Union européenne (Francfort, eu-central-1)' : voir Supabase → Project Settings → General
 };
