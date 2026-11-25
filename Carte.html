@@ -51,8 +51,8 @@
 <body>
 
 <header class="nav" style="padding: 22px 40px; gap: 14px; max-width: 1140px; margin: 0 auto;">
-  <a class="nav-brand" href="Site%20The.dc.html" style="font-size: 21px; white-space: nowrap; text-decoration: none; color: var(--color-text); display: inline-flex; align-items: center; gap: 10px;"><img src="logo-mark.png" alt="" width="40" height="40" style="display: block;">L’Unanimithé</a>
-  <a class="btn btn-secondary" href="Site The.dc.html" style="white-space: nowrap;">← Retour au site</a>
+  <a class="nav-brand" href="./" style="font-size: 21px; white-space: nowrap; text-decoration: none; color: var(--color-text); display: inline-flex; align-items: center; gap: 10px;"><img src="logo-mark.png" alt="" width="40" height="40" style="display: block;">L’Unanimithé</a>
+  <a class="btn btn-secondary" href="./" style="white-space: nowrap;">← Retour au site</a>
 </header>
 
 <main class="wrap">
@@ -319,7 +319,7 @@ Promise.all([
     z.fams.forEach(f => {
       const ts = z.teas.filter(t => t.f === f);
       html += '<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px"><div style="display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.75"><i style="width:12px;height:12px;border-radius:50%;background:' + FAMILIES[f].color + ';border:1px solid var(--color-divider);display:inline-block"></i>' + FAMILIES[f].label.replace(/ \(.*\)/, '') + ' · ' + ts.length + '</div>'
-        + '<div style="display:flex;flex-wrap:wrap;gap:8px">' + ts.map(t => '<a class="chip" style="text-decoration:none" href="Site%20The.dc.html#the=' + t.f + '-' + t.i + '">' + t.name + ' →</a>').join('') + '</div></div>';
+        + '<div style="display:flex;flex-wrap:wrap;gap:8px">' + ts.map(t => '<a class="chip" style="text-decoration:none" href="./#the=' + t.f + '-' + t.i + '">' + t.name + ' →</a>').join('') + '</div></div>';
     });
     el.innerHTML = html;
   }
