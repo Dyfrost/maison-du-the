@@ -1351,25 +1351,25 @@
           <h2 class="set-h">Données que nous enregistrons</h2>
           <ul>
             <li><b>Compte :</b> adresse e-mail, prénom choisi, mot de passe (chiffré par Supabase, jamais visible par nous).</li>
-            <li><b>Ce que tu saisis :</b> thés, sachets, prix payés, dégustations et notes, matériel, photos, profil, amis, salons, réactions, parties de jeu, signalements.</li>
+            <li><b>Ce que vous saisissez :</b> thés, sachets, prix payés, dégustations et notes, matériel, photos, profil, amis, salons, réactions, parties de jeu, signalements.</li>
             <li><b>Journal technique :</b> en cas d’erreur du site, le message d’erreur, la page et le type de navigateur, pour corriger les bugs.</li>
           </ul>
-          <p><b>Pourquoi :</b> faire fonctionner le service que tu utilises (exécution du service, art. 6.1.b du RGPD) et assurer sa sécurité (intérêt légitime, art. 6.1.f). Aucune donnée n’est vendue, ni utilisée pour de la publicité ou du profilage.</p>
-          <p><b>Qui les voit :</b> les autres membres, selon tes réglages dans ⚙️ Paramètres (public, salons et amis, amis seulement, privé). Ces règles sont appliquées par la base de données elle-même. Les administrateurs du site peuvent tout voir pour la maintenance et la modération.</p>
-          <p><b>Combien de temps :</b> tant que ton compte existe. À la suppression du compte, tes éléments personnels sont effacés ; les thés que tu as ajoutés à l’encyclopédie commune restent, sans ton nom dans les dégustations des autres. Le journal technique est purgé régulièrement.</p>
+          <p><b>Pourquoi :</b> faire fonctionner le service que vous utilisez (exécution du service, art. 6.1.b du RGPD) et assurer sa sécurité (intérêt légitime, art. 6.1.f). Aucune donnée n’est vendue, ni utilisée pour de la publicité ou du profilage.</p>
+          <p><b>Qui les voit :</b> les autres membres, selon vos réglages dans ⚙️ Paramètres (public, salons et amis, amis seulement, privé). Ces règles sont appliquées par la base de données elle-même. Les administrateurs du site peuvent tout voir pour la maintenance et la modération.</p>
+          <p><b>Combien de temps :</b> tant que votre compte existe. À la suppression du compte, vos éléments personnels sont effacés ; les thés que vous avez ajoutés à l’encyclopédie commune restent, sans votre nom dans les dégustations des autres. Le journal technique est purgé régulièrement.</p>
           <p><b>Transferts hors UE :</b> GitHub et Supabase sont des sociétés américaines, encadrées par des clauses contractuelles types de la Commission européenne.</p>
         </section>
         <section class="set-card">
-          <h2 class="set-h">Tes droits</h2>
-          <p>Tu peux à tout moment accéder à tes données, les corriger, les télécharger (portabilité) ou les supprimer : tout se fait dans ⚙️ Paramètres → Mes données. Pour toute autre demande (opposition, limitation, question), écris à {{ lg.contact }}. Si tu estimes que tes droits ne sont pas respectés, tu peux saisir la CNIL (cnil.fr).</p>
+          <h2 class="set-h">Vos droits</h2>
+          <p>Vous pouvez à tout moment accéder à vos données, les corriger, les télécharger (portabilité) ou les supprimer : tout se fait dans ⚙️ Paramètres → Mes données. Pour toute autre demande (opposition, limitation, question), écrivez à {{ lg.contact }}. Si vous estimez que vos droits ne sont pas respectés, vous pouvez saisir la CNIL (cnil.fr).</p>
         </section>
         <section class="set-card">
           <h2 class="set-h">Cookies et stockage</h2>
-          <p>Le site n’utilise aucun cookie publicitaire ni de mesure d’audience. Il garde seulement dans ton navigateur ta session de connexion et une copie des données pour s’afficher plus vite (stockage local), ce qui est indispensable au service et ne demande pas de consentement.{{ lg.captcha }}</p>
+          <p>Le site n’utilise aucun cookie publicitaire ni de mesure d’audience. Il garde seulement dans votre navigateur votre session de connexion et une copie des données pour s’afficher plus vite (stockage local), ce qui est indispensable au service et ne demande pas de consentement.{{ lg.captcha }}</p>
         </section>
         <section class="set-card">
           <h2 class="set-h">Règles de la maison</h2>
-          <p>Reste courtois. Pas de contenu illégal, insultant, discriminatoire ou de publicité. Tout contenu peut être signalé avec 🚩 ; les modérateurs peuvent le retirer et un compte qui ne respecte pas ces règles peut être supprimé.</p>
+          <p>Restez courtois. Pas de contenu illégal, insultant, discriminatoire ou de publicité. Tout contenu peut être signalé avec 🚩 ; les modérateurs peuvent le retirer et un compte qui ne respecte pas ces règles peut être supprimé.</p>
         </section>
       </div>
     </sc-if>
@@ -5806,7 +5806,7 @@ class Component extends DCLogic {
     const names = v => { const L0 = (Array.isArray(v) ? v : String(v || '').split(/\s*[;,]\s*/)).map(x => String(x).trim()).filter(Boolean); return L0.length > 1 ? L0.slice(0, -1).join(', ') + ' et ' + L0[L0.length - 1] : (L0[0] || ''); };
     const ed = names(L.editor);
     return { date: '25 novembre 2026', editor: ed || '[nom de l’éditeur à compléter]', edLbl: /\set\s/.test(ed) ? 'Éditeurs du site' : 'Éditeur du site', dirLbl: /\set\s/.test(ed) ? 'Directeurs de la publication' : 'Directeur de la publication', contact: L.contact || '[adresse e-mail de contact à compléter]', region: L.region || 'Union européenne (à vérifier dans Supabase)',
-      captcha: window.TURNSTILE_SITE_KEY ? ' À l’inscription et à la connexion, un contrôle anti-robot Cloudflare Turnstile vérifie que tu n’es pas un robot (sans cookie publicitaire).' : '' };
+      captcha: window.TURNSTILE_SITE_KEY ? ' À l’inscription et à la connexion, un contrôle anti-robot Cloudflare Turnstile vérifie que vous n’êtes pas un robot (sans cookie publicitaire).' : '' };
   }
   settingsView(me) {
     const pr = this.prefsOf(me); const prof = ((((this.getAdds().options || {}).profiles || {})[me]) || {});
