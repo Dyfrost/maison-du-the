@@ -234,7 +234,14 @@
 
   // Normalize a stored slot value. Pre-reframe sidecars stored a bare
   // data-URL string; newer ones store {u, s, x, y}. Either shape is valid.
+  // ── Couche « site » (L’Unanimithé) : images enregistrées en base par les admins ──
+  // window.__mdtSlotsApply(obj) fournit { id: {u,s,x,y} | null } (null = image retirée) ;
+  // window.__mdtSlotSave(id, val) reçoit les modifications (upload, recadrage, suppression).
+  let remote = {};
+  window.__mdtSlotHas = function (id) { return !!getSlot(id); };
+  window.__mdtSlotsApply = function (obj) { remote = Object.assign({}, obj || {}); subs.forEach((fn) => fn()); };
   function getSlot(id) {
+    if (Object.prototype.hasOwnProperty.call(remote, id)) { const r = remote[id]; return r ? (typeof r === 'string' ? { u: r, s: 1, x: 0, y: 0 } : r) : null; }
     const v = slots[id];
     if (!v) return null;
     return typeof v === 'string' ? { u: v, s: 1, x: 0, y: 0 } : v;
@@ -242,6 +249,7 @@
 
   function setSlot(id, val) {
     if (!id) return;
+    if (typeof window.__mdtSlotSave === 'function') { remote[id] = val || null; subs.forEach((fn) => fn()); try { window.__mdtSlotSave(id, val || null); } catch (e) {} return; }
     if (val) { slots[id] = val; tombstones.delete(id); }
     else { delete slots[id]; if (!loaded) tombstones.add(id); }
     subs.forEach((fn) => fn());
@@ -504,7 +512,7 @@
         '  <img part="image" alt="" draggable="false" style="display:none">' +
         '  <div class="empty" part="empty">' + icon +
         '    <div class="cap"></div>' +
-        '    <div class="sub">or <u>browse files</u></div></div>' +
+        '    <div class="sub">ou <u>choisir un fichier</u></div></div>' +
         '  <div class="attr-error" part="attribution-error">' + warnIcon +
         '    <div class="cap">This photo needs attribution</div></div>' +
         '  <div class="loading" part="loading"></div>' +
@@ -524,8 +532,9 @@
         // clicks through for chrome marked with it (EDIT_TRANSPARENT_SEL)
         // — without it, Replace/Edit clicks in Edit mode are swallowed by
         // element selection and the controls look dead.
-        '<div class="ctl" popover="manual" data-dc-edit-transparent><button data-act="replace" title="Replace image">Replace</button>' +
-        '  <button data-act="edit" title="Reframe image">Edit</button></div>' +
+        '<div class="ctl" popover="manual" data-dc-edit-transparent><button data-act="replace" title="Remplacer l’image">Remplacer</button>' +
+        '  <button data-act="edit" title="Recadrer (glisser pour déplacer, coins ou molette pour zoomer)">Recadrer</button>' +
+        '  <button data-act="clear" title="Supprimer l’image">Supprimer</button></div>' +
         '<input type="file" accept="' + ACCEPT.join(',') + '" hidden>';
       this._frame = root.querySelector('.frame');
       this._ring = root.querySelector('.ring');
@@ -568,7 +577,7 @@
       this._subFn = () => this._render();
       // Shadow-DOM listeners live with the shadow DOM — bound once here so
       // disconnect/reconnect (e.g. React remount) doesn't stack handlers.
-      this._empty.addEventListener('click', () => this._input.click());
+      this._empty.addEventListener('click', () => { if (this.hasAttribute('data-editable')) this._input.click(); });
       root.addEventListener('click', (e) => {
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
         if (!act) return;
@@ -576,6 +585,12 @@
         // this gate a keyboard user could drive them on a read-only share
         // link (mirrors the dblclick handler's editable gate).
         if (!this.hasAttribute('data-editable')) return;
+        if (act === 'clear') {
+          this._exitReframe(true);
+          if (window.confirm('Supprimer cette image ?')) setSlot(this.id || '', null);
+          return;
+        }
+        if (act === 'replace' && !(window.omelette && window.omelette.writeFile)) { this._exitReframe(true); this._input.click(); return; }
         if (act === 'replace') {
           this._exitReframe(true);
           // Host-owned picker (Unsplash modal; it also offers local import).
@@ -877,9 +892,10 @@
     }
 
     async _ingest(file) {
+      if (!this.hasAttribute('data-editable')) return;
       this._setError(null);
       if (!file || ACCEPT.indexOf(file.type) < 0) {
-        this._setError('Drop a PNG, JPEG, WebP, or AVIF image.');
+        this._setError('Image PNG, JPEG, WebP ou AVIF uniquement.');
         return;
       }
       // toDataUrl can take hundreds of ms on a large photo. A Clear or a
@@ -1085,7 +1101,8 @@
       this._ring.style.display = mask ? 'none' : '';
 
       // Controls and reframe entry gate on this so share links stay read-only.
-      const editable = !!(window.omelette && window.omelette.writeFile);
+      const editable = !!(window.omelette && window.omelette.writeFile) || !!(typeof window.__mdtSlotAdmin === 'function' && window.__mdtSlotAdmin());
+      { const cb = this.shadowRoot && this.shadowRoot.querySelector('[data-act="clear"]'); if (cb) cb.style.display = typeof window.__mdtSlotSave === 'function' ? '' : 'none'; }
       this.toggleAttribute('data-editable', editable);
       this._sub.style.display = editable ? '' : 'none';
 
@@ -1094,7 +1111,7 @@
       // data:image/ URLs from it. The `src` attribute is author-controlled
       // (Claude wrote it into the HTML) so it passes through unchanged.
       let stored = this.id ? getSlot(this.id) : this._local;
-      if (stored && stored.u && !/^data:image\//i.test(stored.u)) stored = null;
+      if (stored && stored.u && !/^data:image\//i.test(stored.u) && !/^https:\/\/[a-z0-9-]+\.supabase\.co\/storage\//i.test(stored.u)) stored = null;
       const srcAttr = this.getAttribute('src') || '';
       this._userUrl = (stored && stored.u) || null;
       const url = this._userUrl || srcAttr;
