@@ -2776,6 +2776,11 @@ window.mdtCsvX = (function () {
           </section></sc-if>
         </sc-if>
         <sc-if value="{{ tabJeuOn }}" hint-placeholder-val="{{ false }}">
+          <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🧩 Theordle — parties du jour</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Remettre à zéro tire un nouveau thé mystère pour aujourd’hui : les parties en cours ou finies repartent de zéro chez tout le monde. Les stats déjà comptées sont conservées.</p></div>
+              <button class="btn btn-secondary" onClick="{{ agTdlAll }}" style="white-space: nowrap; background: var(--color-bg);">🔄 Tout remettre à zéro</button></div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"><sc-for list="{{ agTdl }}" as="at" hint-placeholder-count="3"><div style="display: flex; flex-direction: column; gap: 10px; background: var(--color-bg); border-radius: 20px; padding: 14px 16px;"><div style="display: flex; gap: 12px; align-items: center;"><span aria-hidden="true" style="font-size: 26px;">{{ at.icon }}</span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><b style="font-size: 15.5px;">{{ at.label }}</b><span style="font-size: 12.5px; opacity: .7;">{{ at.sub }}</span></span></div><button class="btn btn-secondary" onClick="{{ at.go }}" style="white-space: nowrap; align-self: flex-start;">🔄 Remettre à zéro</button></div></sc-for></div>
+          </section>
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🎯 Parties de Devine le thé</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Toutes les parties enregistrées. Supprimer une partie ne retire pas les stats déjà comptées pour les joueurs.</p></div>
               <sc-if value="{{ agHasEnded }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ agClean }}" style="white-space: nowrap; background: var(--color-bg);">🧹 Supprimer les parties terminées</button></sc-if></div>
@@ -6012,24 +6017,28 @@ class Component extends DCLogic {
   }
   // une partie par jour et par catégorie : même thé mystère toute la journée (encyclopédie : le même pour tout le monde)
   tdlKey(src, me) { if (src === 'mine') return 'mdt-tdl-day-mine-' + me; if (src === 'ency') return 'mdt-tdl2-day-ency-' + me; const sl = this.tdlSalon(me); return 'mdt-tdl2-day-salon-' + (sl ? sl.id : '-') + '-' + me; }
+  // remise à zéro du jour par un admin (options.tdlReset = { day, mine, salon, ency } : compteur par catégorie)
+  tdlRv(src) { const R = (this.getAdds().options || {}).tdlReset; return R && R.day === mdtToday() ? (R[src] || 0) : 0; }
+  tdlReset(srcs) { const day = mdtToday(); const R0 = (this.getAdds().options || {}).tdlReset; const R = Object.assign({}, R0 && R0.day === day ? R0 : {}, { day: day }); srcs.forEach(k => { R[k] = (R[k] || 0) + 1; }); this.setOpt('tdlReset', R); }
   tdlLoad(src) {
     const me = this.me(); const P = this.tdlPool(src, me); const day = mdtToday();
     let T = null; try { T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); } catch (e) {}
-    if (!T || T.day !== day || !P.some(x => x.key === T.target)) {
+    const rv = this.tdlRv(src);
+    if (!T || T.day !== day || (T.rv || 0) !== rv || !P.some(x => x.key === T.target)) {
       if (!P.length) { this.setState({ tdl: { src: src, empty: true, guesses: [] } }); return; }
-      const keys = P.map(x => x.key).sort(); let h = 2166136261; const sl = src === 'salon' ? this.tdlSalon(me) : null; const seed = 'v2|' + day + '|' + src + '|' + (src === 'mine' ? me : sl ? sl.id : '');
+      const keys = P.map(x => x.key).sort(); let h = 2166136261; const sl = src === 'salon' ? this.tdlSalon(me) : null; const seed = 'v2|' + day + '|' + src + '|' + (src === 'mine' ? me : sl ? sl.id : '') + (rv ? '|r' + rv : '');
       for (let i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
-      T = { day: day, src: src, sid: sl ? sl.id : null, target: keys[h % keys.length], guesses: [], done: false, won: false };
+      T = { day: day, src: src, rv: rv, sid: sl ? sl.id : null, target: keys[h % keys.length], guesses: [], done: false, won: false };
       try { localStorage.setItem(this.tdlKey(src, me), JSON.stringify(T)); } catch (e) {}
     }
     this.setState({ tdl: Object.assign({}, T, { src: src }), tdlQ: '' });
   }
   tdlSave(T) { try { localStorage.setItem(this.tdlKey(T.src, this.me()), JSON.stringify(T)); } catch (e) {} }
-  tdlStatus(src) { const me = this.me(); try { const T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); if (!T || T.day !== mdtToday()) return { txt: 'À jouer aujourd’hui', done: false }; return T.done ? { txt: T.won ? '✅ Trouvé en ' + T.guesses.length + ' essai' + (T.guesses.length > 1 ? 's' : '') : '❌ Pas trouvé', done: true } : { txt: '⏳ En cours · ' + T.guesses.length + '/8', done: false }; } catch (e) { return { txt: 'À jouer aujourd’hui', done: false }; } }
+  tdlStatus(src) { const me = this.me(); try { const T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); if (!T || T.day !== mdtToday() || (T.rv || 0) !== this.tdlRv(src)) return { txt: 'À jouer aujourd’hui', done: false }; return T.done ? { txt: T.won ? '✅ Trouvé en ' + T.guesses.length + ' essai' + (T.guesses.length > 1 ? 's' : '') : '❌ Pas trouvé', done: true } : { txt: '⏳ En cours · ' + T.guesses.length + '/8', done: false }; } catch (e) { return { txt: 'À jouer aujourd’hui', done: false }; } }
   tdlView(me) {
     const T = this.state.tdl || null; const src = this.state.tdlSrc || (T && T.src) || 'mine';
     const sl0 = src === 'salon' ? this.tdlSalon(me) : null;
-    if (!T || T.src !== src || (T.day && T.day !== mdtToday()) || (sl0 && T.sid !== sl0.id)) { setTimeout(() => this.tdlLoad(src), 0); }
+    if (!T || T.src !== src || (T.day && T.day !== mdtToday()) || (sl0 && T.sid !== sl0.id) || (T.day && (T.rv || 0) !== this.tdlRv(src))) { setTimeout(() => this.tdlLoad(src), 0); }
     const P = this.tdlPool(src, me); const byKey = new Map(P.map(x => [x.key, x]));
     const target = T && byKey.get(T.target); const MAX = 8;
     const COLS = src === 'ency' ? [['fam', 'Famille'], ['pays', 'Pays'], ['region', 'Région'], ['ox', 'Oxydation'], ['n', 'Sachets à la maison']]
@@ -6091,7 +6100,10 @@ class Component extends DCLogic {
     const nm = id => { const p = a.prods.find(x => x.id === id) || {}; return p.nom || p.the || '?'; };
     const list = Object.keys(all).filter(k => del.indexOf(k) < 0).map(k => all[k]).sort((x, y) => (y.ts || 0) - (x.ts || 0));
     const remove = ids => { const all2 = Object.assign({}, (this.getAdds().options || {}).guessGames || {}); ids.forEach(id => delete all2[id]); const d2 = ((this.getAdds().options || {}).guessDeleted || []).concat(ids).slice(-300); const a2 = this.getAdds(); this.setAdds(Object.assign({}, a2, { options: Object.assign({}, a2.options, { guessGames: all2, guessDeleted: d2 }) })); };
-    return { agList: list.map(g => { const sc = {}; Object.keys(g.answers || {}).filter(k => (g.revealed || []).indexOf(k) >= 0).forEach(k => Object.keys(g.answers[k]).forEach(u => { if (g.answers[k][u].ok) sc[u] = (sc[u] || 0) + g.answers[k][u].pts; }));
+    const TS = [['mine', '🍵', 'Mes thés', 'le thé du jour de chaque joueur'], ['salon', '🏮', 'Mon salon', 'le thé du jour de chaque salon'], ['ency', '📖', 'Encyclopédie', 'le thé du jour commun à tous']];
+    const agTdl = TS.map(x => { const n = this.tdlRv(x[0]); return { icon: x[1], label: x[2], sub: 'Nouveau tirage pour ' + x[3] + (n ? ' · déjà remis à zéro ' + n + ' fois aujourd’hui' : ''), go: () => { if (window.confirm('Remettre à zéro les parties d’aujourd’hui « ' + x[2] + ' » ? Tout le monde repart avec un nouveau thé mystère.')) { this.tdlReset([x[0]]); this.flash('🧩 Theordle « ' + x[2] + ' » remis à zéro pour aujourd’hui.'); } } }; });
+    const agTdlAll = () => { if (window.confirm('Remettre à zéro les parties d’aujourd’hui dans les 3 catégories ?')) { this.tdlReset(TS.map(x => x[0])); this.flash('🧩 Theordle remis à zéro pour aujourd’hui (3 catégories).'); } };
+    return { agTdl: agTdl, agTdlAll: agTdlAll, agList: list.map(g => { const sc = {}; Object.keys(g.answers || {}).filter(k => (g.revealed || []).indexOf(k) >= 0).forEach(k => Object.keys(g.answers[k]).forEach(u => { if (g.answers[k][u].ok) sc[u] = (sc[u] || 0) + g.answers[k][u].pts; }));
         const ended = g.phase === 'ended' || Date.now() - (g.ts || 0) > 864e5;
         return { title: '👑 ' + g.master + ' · ' + (g.players || []).join(', '), sub: new Date(g.ts || 0).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · manche ' + (g.round || 0) + ' · thé en cours : ' + nm(g.target) + ' · ' + (Object.keys(sc).length ? Object.keys(sc).map(u => u + ' ' + sc[u] + ' pts').join(', ') : 'aucun point'),
           state: ended ? 'Terminée' : g.phase === 'reveal' ? 'Réponse révélée' : 'En cours', stBg: ended ? 'var(--color-bg)' : '#d9e8e8', live: !ended,
@@ -9095,13 +9107,13 @@ class Component extends DCLogic {
       addTitle: v === 'admin' ? 'Administration' : this.state.addTab === 'tea' ? 'Proposer à l’encyclopédie' : 'J’ai un nouveau thé',
       addIntro: v === 'admin' ? 'L’encyclopédie, les utilisateurs et les réglages de la maison. Choisissez une section.' : this.state.addTab === 'tea' ? 'Un thé entièrement nouveau, ou une variante d’un thé déjà dans l’encyclopédie (une récolte, un style particulier) : tout le monde pourra ensuite y rattacher ses sachets.' : 'Ajoutez un sachet que vous avez acheté. Si le thé du commerce n’existe pas encore, sa fiche est créée en même temps.',
       admNav: (() => { const adm = this.isAdmin(me); const nDev = (this.state.admBugs || 0) + (this.state.admErr24 || 0); const nMod = this.admAlerts() - (adm ? nDev : 0);
-        return [['dash', '🏠', 'Accueil', 'À traiter, santé de la base, graphes'], ['dev', '🛠️', 'Développement' + (nDev ? ' (' + nDev + ')' : ''), 'Bugs remontés, erreurs générées'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations, matériel, boutiques'], ['mod', '🚩', 'Modération' + (nMod > 0 ? ' (' + nMod + ')' : ''), 'Ajouts, signalements, textes, mots interdits'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['cat', '✏️', 'Modifier l’encyclopédie', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎯', 'Features', 'Devine le thé'], ['img', '🖼️', 'Images du site', 'Ajouter, recadrer, supprimer'], ['inf', 'ℹ️', 'Informations', 'Les règles du site']].filter(x => adm || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }); })(),
+        return [['dash', '🏠', 'Accueil', 'À traiter, santé de la base, graphes'], ['dev', '🛠️', 'Développement' + (nDev ? ' (' + nDev + ')' : ''), 'Bugs remontés, erreurs générées'], ['new', '🗂️', 'Données', 'Thés, sachets, dégustations, matériel, boutiques'], ['mod', '🚩', 'Modération' + (nMod > 0 ? ' (' + nMod + ')' : ''), 'Ajouts, signalements, textes, mots interdits'], ['usr', '👥', 'Utilisateurs', 'Rôles et comptes'], ['cat', '✏️', 'Modifier l’encyclopédie', 'Familles, thés, variantes'], ['mrg', '🔀', 'Fusionner', 'Réunir des doublons'], ['opt', '⚙️', 'Options', 'Listes et réglages'], ['jrn', '📜', 'Journal', 'Historique des actions'], ['jeu', '🎮', 'Jeux', 'Theordle, Devine le thé'], ['img', '🖼️', 'Images du site', 'Ajouter, recadrer, supprimer'], ['inf', 'ℹ️', 'Informations', 'Les règles du site']].filter(x => adm || x[0] === 'mod').map(x => { const on = this.state.addTab === x[0]; return { icon: x[1], name: x[2], sub: x[3], cur: on ? 'page' : 'false', bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? 'var(--color-bg)' : 'var(--color-text)', ring: on ? 'none' : 'inset 0 0 0 1px var(--color-divider)', go: () => this.setState({ addTab: x[0], addMsg: '' }) }; }); })(),
       ...this.admSubsView(),
       v2Offer: !!this.state.v2Tables && !this.state.v2 && this.isAdmin(me), v2On: !!this.state.v2, v2Msg: this.state.v2Msg || '', v2Migrate: () => this.migrateToV2(),
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
-      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [] }),
+      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [], agTdl: [] }),
       ...this.mergeVals(),
       openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', rw: s.view === 'add' ? s.rw : {}, lotNew: s.view === 'add' ? s.lotNew : false, lotEditProd: false, apQ: s.view === 'add' ? s.apQ : '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
       isMine: v === 'mine',
