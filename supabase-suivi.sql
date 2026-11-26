@@ -71,7 +71,8 @@ begin
     'connections', (select count(*) from pg_stat_activity where datname = current_database()),
     'activeQueries', (select count(*) from pg_stat_activity where datname = current_database() and state = 'active'),
     'cron', c, 'net', n,
-    'items', (select count(*) from public.mdt_items), 'errors', (select count(*) from public.mdt_errors));
+    'items', (select count(*) from public.mdt_items where not deleted), 'deletedRows', (select count(*) from public.mdt_items where deleted), 'errors', (select count(*) from public.mdt_errors),
+    'menage', (select exists (select 1 from pg_proc where proname = 'mdt_menage')));
   return r;
 end $$;
 grant execute on function public.mdt_db_stats() to authenticated;

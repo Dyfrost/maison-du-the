@@ -2610,6 +2610,7 @@ window.mdtCsvX = (function () {
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0; margin-right: auto;">🩺 Santé de la base</h2><span style="font-size: 14px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: {{ hsBadgeBg }};">{{ hsBadge }}</span><button class="btn btn-secondary" onClick="{{ hsReload }}" style="white-space: nowrap; background: var(--color-bg);">↻ Actualiser</button></div>
             <sc-if value="{{ hsSetup }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border-radius: 16px; padding: 12px 14px;"><span style="font-size: 14.5px;">Pour activer ce suivi (et le graphe des connectés), il faut lancer une fois le script <b>supabase-suivi.sql</b> : copie-le avec le bouton, puis dans Supabase → SQL Editor → New query, colle et clique sur Run.</span><div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ hsCopySql }}" style="white-space: nowrap;">📋 Copier le script SQL</button><a class="btn btn-secondary" href="https://supabase.com/dashboard/project/hnyomaobuftunuhwkzox/sql/new" target="_blank" rel="noopener" style="white-space: nowrap; text-decoration: none;">Ouvrir le SQL Editor ↗</a><a href="./supabase-suivi.sql" target="_blank" rel="noopener" style="font-size: 13.5px; color: var(--color-accent-700);">Voir le script</a><span style="font-size: 13.5px;">{{ hsCopyMsg }}</span></div></div></sc-if>
             <sc-if value="{{ hsRtOff }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; flex: 1; min-width: 220px;">📡 <b>Temps réel inactif.</b> Pour que la base prévienne le site (moins de requêtes), lance une fois <b>supabase-realtime.sql</b>.</span><button class="btn btn-secondary" onClick="{{ hsCopyRt }}" style="white-space: nowrap; background: var(--color-surface);">📋 Copier le script temps réel</button></div></sc-if>
+            <sc-if value="{{ hsMnOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; flex: 1; min-width: 220px;">🧹 <b>Ménage automatique inactif.</b> Les historiques (journal, modération, corbeille) grossissent sans fin : lance une fois <b>supabase-menage.sql</b>.</span><button class="btn btn-secondary" onClick="{{ hsCopyMn }}" style="white-space: nowrap; background: var(--color-surface);">📋 Copier le script de ménage</button></div></sc-if>
             <sc-if value="{{ hsB64On }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; flex: 1; min-width: 220px;">🖼️ {{ hsB64Txt }}</span><button class="btn btn-secondary" onClick="{{ hsB64Go }}" style="white-space: nowrap; background: var(--color-surface);">🧹 Déplacer vers le stockage</button><span style="font-size: 13.5px;">{{ hsB64Msg }}</span></div></sc-if>
             <sc-if value="{{ hsErr }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px;">{{ hsErr }}</p></sc-if>
             <sc-if value="{{ hsOn }}" hint-placeholder-val="{{ false }}">
@@ -5493,7 +5494,8 @@ class Component extends DCLogic {
     const copy = async () => { try { const t = await (await fetch('./supabase-suivi.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ hsCopyMsg: '✓ Copié : colle-le dans le SQL Editor puis Run.' }); } catch (e) { this.setState({ hsCopyMsg: 'Copie impossible : ouvre « Voir le script », sélectionne tout et copie.' }); } };
     const b64 = this._b64At && Date.now() - this._b64At < 30000 ? this._b64L : (this._b64At = Date.now(), this._b64L = this.b64Scan());
     const copyRt = async () => { try { const t = await (await fetch('./supabase-realtime.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ hsCopyMsg: '✓ Script temps réel copié : colle-le dans le SQL Editor puis Run.' }); } catch (e) { this.setState({ hsCopyMsg: 'Copie impossible : ouvre supabase-realtime.sql sur GitHub.' }); } };
-    const ext = { hsRtOn: !!this._rtOn, hsRtOff: !this._rtOn, hsCopyRt: copyRt, hsB64On: b64.length > 0, hsB64Txt: b64.length + ' photo(s) encore stockée(s) en texte dans la base (' + Math.round(b64.reduce((t, x) => t + x.size, 0) / 1024) + ' ko à chaque synchronisation)', hsB64Go: () => this.b64Migrate(), hsB64Msg: this.state.b64Msg || '' };
+    const copyMn = async () => { try { const t = await (await fetch('./supabase-menage.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ hsCopyMsg: '✓ Script de ménage copié : colle-le dans le SQL Editor puis Run.' }); } catch (e) { this.setState({ hsCopyMsg: 'Copie impossible : ouvre supabase-menage.sql sur GitHub.' }); } };
+    const ext = { hsCopyMn: copyMn, hsMnOn: !!H && H.menage !== true, hsRtOn: !!this._rtOn, hsRtOff: !this._rtOn, hsCopyRt: copyRt, hsB64On: b64.length > 0, hsB64Txt: b64.length + ' photo(s) encore stockée(s) en texte dans la base (' + Math.round(b64.reduce((t, x) => t + x.size, 0) / 1024) + ' ko à chaque synchronisation)', hsB64Go: () => this.b64Migrate(), hsB64Msg: this.state.b64Msg || '' };
     const base = { ...ext, hsSetup: err === 'setup' || this.state.visitsErr === 'setup', hsCopySql: copy, hsCopyMsg: this.state.hsCopyMsg || '', hsReload: () => { this.loadHealth(); this.loadVisits(); }, hsErr: err && err !== 'setup' ? 'Impossible de lire l’état de la base : ' + err : '' };
     if (!H) return Object.assign(base, { hsOn: false, hsCards: [], hsTables: [], hsBadge: err ? (err === 'setup' ? 'À activer' : '⚠️ Injoignable') : '…', hsBadgeBg: err && err !== 'setup' ? '#fbebeb' : 'var(--color-bg)', hsAt: '' });
     const warn = [], LIM = 500 * 1048576;
@@ -5511,7 +5513,7 @@ class Component extends DCLogic {
         card('⚡ Cache', H.cacheHit == null ? '—' : String(H.cacheHit).replace('.', ',') + ' %', 'lectures servies depuis la mémoire (idéal ≥ 99 %)', H.cacheHit != null && H.cacheHit < 95),
         card('⏰ Tâches planifiées (24 h)', H.cron ? String(cron.runs || 0) : '—', H.cron ? (cron.failed ? cron.failed + ' en échec' + (cron.lastFail ? ' : ' + String(cron.lastFail).slice(0, 80) : '') : 'aucun échec') + (cron.last ? ' · dernière ' + ago(cron.last) : '') : 'pg_cron non disponible', (cron.failed || 0) > 0),
         card('🔔 File des notifications', H.net ? String(net.responses || 0) : '—', H.net ? 'réponses stockées · ' + (net.queue || 0) + ' en attente · ' + (net.errors1h || 0) + ' erreur(s) en 1 h' : 'pg_net non disponible', (net.responses || 0) > 5000),
-        card('🗂️ Éléments du site', String(H.items || 0), (H.errors || 0) + ' erreur(s) au journal', false),
+        card('🗂️ Éléments du site', String(H.items || 0), (H.errors || 0) + ' erreur(s) au journal' + (H.deletedRows != null ? ' · ' + H.deletedRows + ' dans la corbeille' : ''), false),
         card('📡 Temps réel', this._rtOn ? 'Actif' : 'Inactif', this._rtOn ? 'la base prévient le site à chaque changement' : 'le site interroge la base toutes les minutes', !this._rtOn)],
       hsTables: (H.tables || []).map(t => ({ name: t.name, size: mb(t.bytes), rows: '≈ ' + (t.rows || 0) + ' lignes', c: t.bytes > 50 * 1048576 ? '#c0392b' : 'inherit' })),
       hsAt: 'Dernière actualisation : ' + new Date(H.at || Date.now()).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) });
@@ -6724,7 +6726,7 @@ class Component extends DCLogic {
       if (prev !== a && this.state.session) {
         const ev = this.diffEvents(prev, a);
         if (ev.length && this.state.view === 'admin') ev.forEach(e => { e.adm = true; });
-        if (ev.length) a = Object.assign({}, a, { events: (a.events || prev.events || []).concat(ev).slice(this.v2 ? -5000 : -400) });
+        if (ev.length) a = Object.assign({}, a, { events: (a.events || prev.events || []).concat(ev).slice(this.v2 ? -3000 : -400) });
       }
     } catch (e) {}
     this._adds = a;
@@ -6834,7 +6836,8 @@ class Component extends DCLogic {
     const out = []; const step = 1000;
     for (let from = 0; from < 100000; from += step) {
       let q = this.sb.from('mdt_items').select('kind,id,owner,data,deleted,updated_at').order('updated_at', { ascending: true }).range(from, from + step - 1);
-      if (since) q = q.gt('updated_at', since);
+      // rechargement complet : inutile de télécharger la corbeille ; en incrémental il faut les suppressions
+      if (since) q = q.gt('updated_at', since); else q = q.eq('deleted', false);
       const { data, error } = await q; if (error) throw error;
       out.push(...data); if (data.length < step) break;
     }
