@@ -4647,7 +4647,11 @@ class Component extends DCLogic {
     try { const h = JSON.parse(localStorage.getItem('the-kw-hits') || '{}'); h[k] = (h[k] || 0) + 1; localStorage.setItem('the-kw-hits', JSON.stringify(h)); } catch (e) {}
   }
 
-  norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  norm(s) { const k = String(s || ''); const C = this._normC || (this._normC = new Map()); let v = C.get(k); if (v === undefined) { v = k.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); if (C.size > 20000) C.clear(); C.set(k, v); } return v; }
+  // ---------- Mémoire des calculs lourds : vidée dès que les données, la session, l’encyclopédie ou les unités changent
+  _memoEpoch() { const cur = [this._adds, this._chg || 0, this.state.sheet, this.state.decl, this.state.session, this._unitsV || 0, this.sessionName ? this.sessionName() : '']; const k = this._mkey; if (!this._mc || !k || k.length !== cur.length || k.some((x, i) => x !== cur[i])) { this._mc = new Map(); this._mw = new Map(); this._mkey = cur; } }
+  memo(name, key, fn) { this._memoEpoch(); const kk = name + '\u0001' + key; if (this._mc.has(kk)) return this._mc.get(kk); const v = fn(); this._mc.set(kk, v); return v; }
+  memoObj(name, o, fn) { this._memoEpoch(); if (!o || typeof o !== 'object') return fn(); let W = this._mw.get(name); if (!W) { W = new WeakMap(); this._mw.set(name, W); } if (W.has(o)) return W.get(o); const v = fn(); W.set(o, v); return v; }
 
   // ---------- Amis, profils, journal ----------
   userIds(o) {
@@ -7066,10 +7070,11 @@ class Component extends DCLogic {
     return w.map((x, i) => i ? x[0].toUpperCase() + x.slice(1) : x).join('');
   }
 
-  collection() {
-    const a = this.getAdds();
+  collection() { return this.memo('coll', '', () => this._collection()).slice(); }
+  _collection() {
+    const a = this.getAdds(); const pById = new Map(a.prods.map(x => [x.id, x]));
     return a.sachets.map(sa => {
-      const pr = a.prods.find(x => x.id === sa.prodId);
+      const pr = pById.get(sa.prodId);
       if (!pr) return null;
       return { id: sa.id, prodId: pr.id, owner: sa.owner, shares: sa.shares || [], portionAdj: sa.portionAdj || {}, portionEmpty: sa.portionEmpty || {}, owners: [sa.owner].concat((sa.shares || []).map(x => x.to)).filter((x, i, arr) => x && arr.indexOf(x) === i),
         recoTemp: pr.recoTemp || '', recoQty: pr.recoQty || '', recoTimes: pr.recoTimes || '',
@@ -7164,7 +7169,8 @@ class Component extends DCLogic {
 
   logTs(l) { const t = parseInt(String(l.id || '').slice(1), 36); return isNaN(t) ? 0 : t; }
 
-  isEmptySachet(o) {
+  isEmptySachet(o) { return this.memoObj('empty', o, () => this._isEmptySachet(o)); }
+  _isEmptySachet(o) {
     if (!o) return false;
     if (o.empty === true) return true;
     if (o.empty === false) return false;
@@ -7172,7 +7178,8 @@ class Component extends DCLogic {
     return !!(r && r.left <= 0);
   }
 
-  remainFor(o) {
+  remainFor(o) { return this.memoObj('remain', o, () => this._remainFor(o)); }
+  _remainFor(o) {
     const adj = o.adjust && o.adjust.left != null ? o.adjust : null;
     const shares = o.shares || [];
     const sharedG = shares.reduce((t, x) => t + (this.num(x.grams) || 0), 0);
@@ -7275,7 +7282,7 @@ class Component extends DCLogic {
     if (blob) this.uploadPhoto(blob, kind, field);
   }
   units() { const me = this.me(); let u = me ? (this.prefsOf(me).units || null) : null; if (!u) { try { u = JSON.parse(localStorage.getItem('mdtUnits') || 'null'); } catch (e) { u = null; } } u = u || {}; return { t: u.t === 'F' ? 'F' : 'C', v: u.v === 'floz' ? 'floz' : 'cl', m: u.m === 'oz' ? 'oz' : 'g' }; }
-  setUnits(patch) { const u = Object.assign({}, this.units(), patch); try { localStorage.setItem('mdtUnits', JSON.stringify(u)); } catch (e) {} if (this.me()) this.setPrefs({ units: u }); else this.setState({}); }
+  setUnits(patch) { this._unitsV = (this._unitsV || 0) + 1; const u = Object.assign({}, this.units(), patch); try { localStorage.setItem('mdtUnits', JSON.stringify(u)); } catch (e) {} if (this.me()) this.setPrefs({ units: u }); else this.setState({}); }
   mlTxt(v) { const n = this.numIn(v); if (n == null) return String(v || ''); return this.units().v === 'floz' ? this.nFr(n * 0.033814, 1) + ' fl oz' : this.nFr(n, 0) + ' ml'; }
   logTempTxt(v) { const t = String(v == null ? '' : v).trim(); if (!t) return ''; return /^\d+([.,]\d+)?\s*(°\s*c?)?$/i.test(t) ? this.tempTxt(t) : t; }
   logQtyTxt(v, unite) { const t = String(v == null ? '' : v).trim(); if (!t) return ''; if (!/^\d+([.,]\d+)?\s*g?$/i.test(t)) return t; return unite ? t.replace(/\s*g$/i, '') + ' u' : this.massTxt(t); }
@@ -7765,7 +7772,8 @@ class Component extends DCLogic {
     return { note: avg == null ? (l.note || '') : String(avg).replace('.', ','), who: ppl.map(u => u + ' ' + (this.logNoteOf(l, u) || '—')).join(' · '), diff: vals.length > 1 && Math.max(...vals) - Math.min(...vals) >= 2 }; }
   logPeople(l) { return [l.author].concat(l.with || []).filter((x, i, arr) => x && arr.indexOf(x) === i); }
   noteVal(v) { return this.num(String(v || '').replace(/^[A-Za-z]+/, '').replace(/[A-Za-z]+$/, '')); }
-  logNoteNums(l, only) { return this.logPeople(l).filter(u => !only || only.indexOf(u) >= 0).map(u => this.noteVal(this.logNoteOf(l, u))).filter(n => n != null); }
+  logNoteNums(l, only) { if (!only) return this.memoObj('lnn', l, () => this._logNoteNums(l)); return this._logNoteNums(l, only); }
+  _logNoteNums(l, only) { return this.logPeople(l).filter(u => !only || only.indexOf(u) >= 0).map(u => this.noteVal(this.logNoteOf(l, u))).filter(n => n != null); }
   setMyLogNote(id, note) { const me = this.me(); if (!me) return; const all = Object.assign({}, (this.getAdds().options || {}).profiles || {}); const pr = Object.assign({}, all[me]); const ln = Object.assign({}, pr.lnotes); if (note == null || note === '') delete ln[id]; else ln[id] = String(note); pr.lnotes = ln; all[me] = pr; this.setOpt('profiles', all); }
   noteNum(l) { const n = parseFloat(String((l && l.note) || '').replace(',', '.')); return /^\s*\d+([.,]\d+)?\s*$/.test(String((l && l.note) || '')) && isFinite(n) ? n : null; }
   aromaCounts(logs, prods) {
@@ -8175,8 +8183,9 @@ class Component extends DCLogic {
 
   avgTxt(st) { return st.avg != null ? st.avg.toFixed(1).replace('.', ',') + '/20' : ''; }
 
-  statsMany(ids) {
-    const ls = this.getAdds().logs.filter(l => ids.indexOf(l.lotId) >= 0);
+  statsMany(ids) { return this.memo('statsMany', (ids || []).join(','), () => this._statsMany(ids)); }
+  _statsMany(ids) {
+    const set = new Set(ids); const ls = this.getAdds().logs.filter(l => set.has(l.lotId));
     const ns = [].concat(...ls.map(l => this.logNoteNums(l)));
     return { n: ls.filter(l => this.logNoteNums(l).length).length, avg: ns.length ? ns.reduce((t, n) => t + n, 0) / ns.length : null };
   }
@@ -8460,9 +8469,13 @@ class Component extends DCLogic {
     return q ? fmt(p / q * 100) + ' / 100 g' : fmt(p);
   }
 
-  logsFor(id) { return this.getAdds().logs.filter(l => l.lotId === id).sort((x, y) => String(y.date).localeCompare(String(x.date))); }
+  logsFor(id) {
+    const idx = this.memo('logsIdx', '', () => { const m = new Map(); this.getAdds().logs.forEach(l => { const L = m.get(l.lotId); if (L) L.push(l); else m.set(l.lotId, [l]); }); m.forEach(L => L.sort((x, y) => String(y.date).localeCompare(String(x.date)))); return m; });
+    return (idx.get(id) || []).slice();
+  }
 
-  statsFor(id, user) {
+  statsFor(id, user) { return this.memo('statsFor', id + '|' + (user || ''), () => this._statsFor(id, user)); }
+  _statsFor(id, user) {
     const ls = this.logsFor(id).filter(l => !user || this.inLog(l, user));
     const ns = user ? ls.map(l => this.noteVal(this.logNoteOf(l, user))).filter(n => n != null) : [].concat(...ls.map(l => this.logNoteNums(l)));
     const avg = ns.length ? ns.reduce((s, n) => s + n, 0) / ns.length : null;
@@ -8470,8 +8483,7 @@ class Component extends DCLogic {
   }
 
   famOf(name) {
-    for (const k of Object.keys(this.families)) { if (this.listFor(k, true).some(t => this.norm(t.name) === this.norm(name))) return k; }
-    return null;
+    return this.memo('famOf', this.norm(name), () => { for (const k of Object.keys(this.families)) { if (this.listFor(k, true).some(t => this.norm(t.name) === this.norm(name))) return k; } return null; });
   }
 
   fmtDate(d) { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(d || '')); return m ? m[3] + '/' + m[2] + '/' + m[1] : (d || ''); }
@@ -8521,7 +8533,8 @@ class Component extends DCLogic {
     { code: 'KRD', label: 'Koridashi (sur glaçons)' }, { code: 'VC', label: 'Versage sur le côté' }, { code: 'x', label: 'Rien de spécial' }
   ];
 
-  listFor(k, raw) {
+  listFor(k, raw) { return this.memo('listFor', k + '|' + (raw ? 1 : 0) + '|' + (raw ? '' : this.me()), () => this._listFor(k, raw)).slice(); }
+  _listFor(k, raw) {
     const sheet = this.state.sheet || {};
     const base = (sheet[k] && sheet[k].length) ? sheet[k] : ((this.families[k] || {}).teas || []);
     const adds = this.getAdds();
