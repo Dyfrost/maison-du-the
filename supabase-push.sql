@@ -188,6 +188,7 @@ language plpgsql security definer set search_path = public as $$
 begin
   if extract(minute from now())::int < 5 then
     perform public.mdt_notif_due();
+    begin perform public.mdt_notif_due_tdl(); exception when undefined_function or undefined_table then null; end;   -- rappel du Theordle (supabase-ligue.sql)
     delete from public.mdt_notif where created_at < now() - interval '30 days';
   end if;
   return query

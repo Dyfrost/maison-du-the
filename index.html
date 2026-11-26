@@ -1232,12 +1232,12 @@ window.mdtCsvX = (function () {
           <div style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; gap: 12px; align-items: center;"><span style="font-size: 40px;" aria-hidden="true">🧩</span><div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 24px; margin: 0;">Theordle</h2><span style="font-size: 13.5px; opacity: .7;">Seul · un thé mystère par jour et par catégorie</span></div></div>
             <p style="margin: 0; font-size: 14.5px; line-height: 1.5;">Devine le thé en 8 essais : à chaque proposition, chaque critère (famille, pays, boutique, note…) te dit si tu chauffes.</p>
-            <div style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{ gmTdl }}" as="gt" hint-placeholder-count="3"><button onClick="{{ gt.go }}" style="cursor: pointer; border: none; border-radius: 16px; padding: 11px 14px; display: flex; gap: 10px; align-items: center; font-family: var(--font-body); color: var(--color-text); background: {{ gt.bg }}; box-shadow: inset 0 0 0 1px var(--color-divider); text-align: left;" style-hover="box-shadow: inset 0 0 0 2px var(--color-accent);"><span aria-hidden="true" style="font-size: 20px;">{{ gt.icon }}</span><b style="font-size: 15px; margin-right: auto;">{{ gt.label }}</b><span style="font-size: 13px; opacity: .75;">{{ gt.st }}</span></button></sc-for></div>
+            <div style="display: flex; flex-direction: column; gap: 8px;"><sc-for list="{{ gmTdl }}" as="gt" hint-placeholder-count="3"><button onClick="{{ gt.go }}" style="cursor: pointer; border: none; border-radius: 16px; padding: 11px 14px; display: flex; gap: 10px; align-items: center; font-family: var(--font-body); color: var(--color-text); background: {{ gt.bg }}; box-shadow: inset 0 0 0 1px var(--color-divider); text-align: left;" style-hover="box-shadow: inset 0 0 0 2px var(--color-accent);"><span aria-hidden="true" style="font-size: 20px;">{{ gt.icon }}</span><b style="font-size: 15px; margin-right: auto;">{{ gt.label }}</b><span style="font-size: 13px; opacity: .75;">{{ gt.st }}</span></button></sc-for></div><sc-if value="{{ gmLeagueOn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ gmLeague }}" style="align-self: flex-start; white-space: nowrap; background: var(--color-bg);">🏆 Ligue du salon</button></sc-if>
           </div>
           <div style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; gap: 12px; align-items: center;"><span style="font-size: 40px;" aria-hidden="true">🎯</span><div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 24px; margin: 0;">Devine le thé</h2><span style="font-size: 13.5px; opacity: .7;">À plusieurs · chacun sur son téléphone</span></div></div>
             <p style="margin: 0; font-size: 14.5px; line-height: 1.5;">Un maître du jeu sert un thé à l’aveugle, les autres proposent leur réponse. Les points sont comptés automatiquement.</p>
-            <button class="btn btn-primary" onClick="{{ gmGuess }}" style="align-self: flex-start; white-space: nowrap;">🎯 Lancer ou rejoindre une partie</button><sc-if value="{{ gmLeagueOn }}" hint-placeholder-val="{{ false }}"><button class="btn btn-secondary" onClick="{{ gmLeague }}" style="align-self: flex-start; white-space: nowrap; background: var(--color-bg);">🏆 Ligue du salon</button></sc-if>
+            <button class="btn btn-primary" onClick="{{ gmGuess }}" style="align-self: flex-start; white-space: nowrap;">🎯 Lancer ou rejoindre une partie</button>
           </div>
           <div style="background: var(--color-surface); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 10px; opacity: .65;">
             <div style="display: flex; gap: 12px; align-items: center;"><span style="font-size: 40px;" aria-hidden="true">🙈</span><div style="display: flex; flex-direction: column; gap: 2px;"><h2 style="font-size: 24px; margin: 0;">Bientôt</h2><span style="font-size: 13.5px;">À l’aveugle · en salon</span></div></div>
@@ -1406,6 +1406,7 @@ window.mdtCsvX = (function () {
             <div class="set-opts"><sc-for list="{{ ng.items }}" as="ni" hint-placeholder-count="3"><button class="{{ ni.cls }}" onClick="{{ ni.toggle }}" aria-pressed="{{ ni.on }}"><b>{{ ni.label }}</b><small>{{ ni.mark }}</small></button></sc-for></div>
           </sc-for>
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 14.5px;">⏰ Heure des rappels (thé du jour, tea pet, Tea Wrapped)</span><sc-raw-select class="input" value="{{ nf.nfHour }}" data-val="{{ nf.nfHour }}" onChange="{{ nf.setNfHour }}" aria-label="Heure des rappels" style="width: auto; padding: 8px 14px;"><sc-for list="{{ nf.nfHours }}" as="nh" hint-placeholder-count="24"><option value="{{ nh.v }}" label="{{ nh.l }}">{{ nh.l }}</option></sc-for></sc-raw-select><span style="font-size: 12.5px; opacity: .6;">fuseau : {{ nf.nfTz }}</span></div>
+          <sc-if value="{{ nf.nfTdlOn }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><span style="font-size: 14.5px;">🧩 Heure du rappel Theordle</span><sc-raw-select class="input" value="{{ nf.nfTdlHour }}" data-val="{{ nf.nfTdlHour }}" onChange="{{ nf.setNfTdlHour }}" aria-label="Heure du rappel Theordle" style="width: auto; padding: 8px 14px;"><sc-for list="{{ nf.nfHours }}" as="nh2" hint-placeholder-count="24"><option value="{{ nh2.v }}" label="{{ nh2.l }}">{{ nh2.l }}</option></sc-for></sc-raw-select></div></sc-if>
         </section>
         <section class="set-card">
           <h2 class="set-h">🗄️ Mes données</h2>
@@ -1546,12 +1547,14 @@ window.mdtCsvX = (function () {
                 <div style="display: flex; gap: 6px;"><sc-for list="{{ sl.lgPers }}" as="lp" hint-placeholder-count="2"><button onClick="{{ lp.go }}" aria-pressed="{{ lp.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 7px 14px; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; background: {{ lp.bg }}; color: {{ lp.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ lp.label }}</button></sc-for></div></div>
               <sc-if value="{{ sl.lgChamp }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; font-weight: 600; background: var(--color-accent-100); border-radius: 16px; padding: 10px 14px;">{{ sl.lgChamp }}</p></sc-if>
               <sc-if value="{{ sl.lgEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Personne n’a encore marqué de points sur cette période : à vous de jouer !</p></sc-if>
+              <sc-if value="{{ sl.lgErr }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; background: var(--color-bg); border-radius: 14px; padding: 10px 14px; font-size: 14px;">{{ sl.lgErr }}</p></sc-if>
+              <sc-if value="{{ sl.lgLoading }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; opacity: .7;">Chargement du classement…</p></sc-if>
               <div role="table" aria-label="Classement" style="display: flex; flex-direction: column; gap: 6px;">
-                <div role="row" class="lg-row" style="font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; opacity: .6; padding: 0 12px;"><span role="columnheader"></span><span role="columnheader">Membre</span><span role="columnheader">Total</span><span role="columnheader" class="lg-c">🧩 Theordle</span><span role="columnheader" class="lg-c">🎯 Devine le thé</span></div>
-                <sc-for list="{{ sl.lgRows }}" as="lr" hint-placeholder-count="3"><div role="row" class="lg-row" style="background: {{ lr.bg }}; border-radius: 14px; padding: 10px 12px; align-items: center;"><span role="cell" style="font-size: 20px; text-align: center;">{{ lr.rank }}</span><b role="cell" style="font-size: 15.5px;">{{ lr.name }}</b><b role="cell" style="font-size: 15.5px;">{{ lr.total }}</b><span role="cell" class="lg-c" style="font-size: 13.5px; opacity: .8;">{{ lr.tdl }}</span><span role="cell" class="lg-c" style="font-size: 13.5px; opacity: .8;">{{ lr.gs }}</span></div></sc-for>
+                <div role="row" class="lg-row" style="font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; opacity: .6; padding: 0 12px;"><span role="columnheader"></span><span role="columnheader">Membre</span><span role="columnheader">Points</span><span role="columnheader" class="lg-c">Trouvés / joués</span><span role="columnheader" class="lg-c">Moyenne par thé trouvé</span></div>
+                <sc-for list="{{ sl.lgRows }}" as="lr" hint-placeholder-count="3"><div role="row" class="lg-row" style="background: {{ lr.bg }}; border-radius: 14px; padding: 10px 12px; align-items: center;"><span role="cell" style="font-size: 20px; text-align: center;">{{ lr.rank }}</span><b role="cell" style="font-size: 15.5px;">{{ lr.name }}</b><b role="cell" style="font-size: 15.5px;">{{ lr.total }}</b><span role="cell" class="lg-c" style="font-size: 13.5px; opacity: .8;">{{ lr.found }}</span><span role="cell" class="lg-c" style="font-size: 13.5px; opacity: .8;">{{ lr.avg }}</span></div></sc-for>
               </div>
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ sl.lgPlay }}" style="white-space: nowrap;">🧩 Jouer au Theordle du salon</button><button class="btn btn-secondary" onClick="{{ sl.lgGuess }}" style="white-space: nowrap; background: var(--color-bg);">🎯 Devine le thé</button></div>
-              <p style="margin: 0; font-size: 13px; opacity: .7; line-height: 1.5;">Comptent : le Theordle « Mon salon » de ce salon et le Theordle « Encyclopédie » (le même thé mystère pour tout le salon). Trouvé en 1 essai = 8 pts, en 2 = 7 pts… en 8 = 1 pt. S’y ajoutent les points des parties de Devine le thé. Le classement se remet à zéro chaque lundi et chaque 1er du mois.</p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;"><button class="btn btn-primary" onClick="{{ sl.lgPlay }}" style="white-space: nowrap;">🏮 Theordle du salon</button><button class="btn btn-secondary" onClick="{{ sl.lgEncy }}" style="white-space: nowrap; background: var(--color-bg);">📖 Theordle Encyclopédie</button></div>
+              <p style="margin: 0; font-size: 13px; opacity: .7; line-height: 1.5;">Comptent : le Theordle « Mon salon » de ce salon et le Theordle « Encyclopédie » (le même thé mystère pour tout le salon). Trouvé en 1 essai = 8 pts, en 2 = 7 pts… en 8 = 1 pt ; perdu = 0. Le classement repart de zéro chaque lundi et chaque 1er du mois.</p>
             </section>
           </sc-if>
 
@@ -2795,8 +2798,10 @@ window.mdtCsvX = (function () {
         </sc-if>
         <sc-if value="{{ tabJeuOn }}" hint-placeholder-val="{{ false }}">
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px;">
-            <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🧩 Theordle — parties du jour</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Remettre à zéro tire un nouveau thé mystère pour aujourd’hui : les parties en cours ou finies repartent de zéro chez tout le monde. Les stats déjà comptées sont conservées.</p></div>
+            <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h2 style="font-size: 26px; margin: 0;">🧩 Theordle — parties du jour</h2><p style="margin: 0; font-size: 14px; opacity: .7;">Remettre à zéro tire un nouveau thé mystère pour aujourd’hui : les parties en cours ou finies repartent de zéro chez tout le monde, et les scores du jour de la ligue sont effacés pour cette catégorie.</p></div>
               <button class="btn btn-secondary" onClick="{{ agTdlAll }}" style="white-space: nowrap; background: var(--color-bg);">🔄 Tout remettre à zéro</button></div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; flex: 1; min-width: 220px;">🏆 {{ agLgTxt }}</span><button class="btn btn-secondary" onClick="{{ agSqlCopy }}" style="white-space: nowrap;">📋 Copier le script SQL de la ligue</button></div>
+            <sc-if value="{{ agSqlMsg }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px;">{{ agSqlMsg }}</p></sc-if>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"><sc-for list="{{ agTdl }}" as="at" hint-placeholder-count="3"><div style="display: flex; flex-direction: column; gap: 10px; background: var(--color-bg); border-radius: 20px; padding: 14px 16px;"><div style="display: flex; gap: 12px; align-items: center;"><span aria-hidden="true" style="font-size: 26px;">{{ at.icon }}</span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><b style="font-size: 15.5px;">{{ at.label }}</b><span style="font-size: 12.5px; opacity: .7;">{{ at.sub }}</span></span></div><button class="btn btn-secondary" onClick="{{ at.go }}" style="white-space: nowrap; align-self: flex-start;">🔄 Remettre à zéro</button></div></sc-for></div>
           </section>
           <section style="background: var(--color-surface); border-radius: 34px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
@@ -5833,12 +5838,13 @@ class Component extends DCLogic {
     T.push(['👥 Les autres et moi', [['friend_req', '🤝 Demande d’ami reçue'], ['salon_invite', '🏮 Invitation dans un salon'], ['log_with', '☕ Quelqu’un m’ajoute à sa dégustation'], ['gift', '🎁 Un sachet m’est offert ou attribué'], ['announce', '📣 Nouvelle annonce de la maison']]]);
     T.push(['🏮 Mes salons', [['salon_log', '🍵 Chaque dégustation d’un membre de mes salons (peut faire beaucoup)']]]);
     T.push(['⏰ Rappels (à l’heure choisie)', [['tea_day', '🎲 Proposition de thé du jour (un de mes sachets peu bu)'], ['pet_thirst', '💧 Mon tea pet a soif (3 jours sans thé)'], ['wrap', '🎁 Mon Tea Wrapped du mois est prêt (le 1er)']]]);
-    const hour = nf.teaHour != null ? Number(nf.teaHour) : 9;
+    T.push(['🧩 Jeux', [['tdl', '🧩 Rappel du Theordle (seulement si je n’ai pas encore joué ce jour-là)']]]);
+    const hour = nf.teaHour != null ? Number(nf.teaHour) : 9; const tdlHour = nf.tdlHour != null ? Number(nf.tdlHour) : 18;
     return { nfSupported: this.pushSupported(), nfUnsupported: !this.pushSupported(), nfV2: !!this.v2, nfOn: !!this.state.pushOn, nfOff: !this.state.pushOn, nfMsg: this.state.pushMsg || '', nfIOS: this.pushIOSHint(),
       nfEnable: () => this.pushEnable(), nfDisable: () => this.pushDisable(),
       nfTest: async () => { if (!this.sb) return; const { error } = await this.sb.rpc('mdt_notif_test'); this.setState({ pushMsg: error ? 'Échec : ' + error.message : 'Notification de test envoyée : elle arrive dans la minute.' }); },
       nfGroups: T.map(g => ({ title: g[0], items: g[1].map(t => { const on = !!nf[t[0]]; return { label: t[1], on: on, cls: on ? 'set-opt on' : 'set-opt', mark: on ? '✓ Activé' : 'Désactivé', toggle: () => set({ [t[0]]: !on }) }; }) })),
-      nfHours: Array.from({ length: 24 }, (_, h) => ({ v: String(h), l: String(h).padStart(2, '0') + ' h 00' })), nfHour: String(hour), setNfHour: e => set({ teaHour: Number(e.target.value) }),
+      nfHours: Array.from({ length: 24 }, (_, h) => ({ v: String(h), l: String(h).padStart(2, '0') + ' h 00' })), nfHour: String(hour), setNfHour: e => set({ teaHour: Number(e.target.value) }), nfTdlOn: !!nf.tdl, nfTdlHour: String(tdlHour), setNfTdlHour: e => set({ tdlHour: Number(e.target.value) }),
       nfTz: nf.tz || (Intl.DateTimeFormat().resolvedOptions().timeZone) || '' };
   }
   // ---------- Étiquettes QR : un code par sachet ; scanné, il ouvre une dégustation de ce sachet
@@ -6037,27 +6043,30 @@ class Component extends DCLogic {
     });
   }
   // une partie par jour et par catégorie : même thé mystère toute la journée (encyclopédie : le même pour tout le monde)
-  tdlKey(src, me) { if (src === 'mine') return 'mdt-tdl-day-mine-' + me; if (src === 'ency') return 'mdt-tdl2-day-ency-' + me; const sl = this.tdlSalon(me); return 'mdt-tdl2-day-salon-' + (sl ? sl.id : '-') + '-' + me; }
+  tdlKey(src, me) { if (src === 'mine') return 'mdt-tdl3-day-mine-' + me; if (src === 'ency') return 'mdt-tdl3-day-ency-' + me; const sl = this.tdlSalon(me); return 'mdt-tdl3-day-salon-' + (sl ? sl.id : '-') + '-' + me; }
   // remise à zéro du jour par un admin (options.tdlReset = { day, mine, salon, ency } : compteur par catégorie)
   tdlRv(src) { const R = (this.getAdds().options || {}).tdlReset; return R && R.day === mdtToday() ? (R[src] || 0) : 0; }
-  tdlReset(srcs) { const day = mdtToday(); const R0 = (this.getAdds().options || {}).tdlReset; const R = Object.assign({}, R0 && R0.day === day ? R0 : {}, { day: day }); srcs.forEach(k => { R[k] = (R[k] || 0) + 1; }); this.setOpt('tdlReset', R); }
+  tdlReset(srcs) { const day = mdtToday(); const com = srcs.filter(k => k !== 'mine'); if (com.length && this.sb) this.sb.from('mdt_tdl_scores').delete().eq('day', day).in('src', com).then(({ error }) => { this.setState({ lgData: null }); if (error) this.flash('⚠️ Scores du jour non effacés : ' + error.message); }); const R0 = (this.getAdds().options || {}).tdlReset; const R = Object.assign({}, R0 && R0.day === day ? R0 : {}, { day: day }); srcs.forEach(k => { R[k] = (R[k] || 0) + 1; }); this.setOpt('tdlReset', R); }
   tdlLoad(src) {
     const me = this.me(); const P = this.tdlPool(src, me); const day = mdtToday();
     let T = null; try { T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); } catch (e) {}
     const rv = this.tdlRv(src);
     if (!T || T.day !== day || (T.rv || 0) !== rv || !P.some(x => x.key === T.target)) {
       if (!P.length) { this.setState({ tdl: { src: src, empty: true, guesses: [] } }); return; }
-      const keys = P.map(x => x.key).sort(); let h = 2166136261; const sl = src === 'salon' ? this.tdlSalon(me) : null; const seed = 'v2|' + day + '|' + src + '|' + (src === 'mine' ? me : sl ? sl.id : '') + (rv ? '|r' + rv : '');
+      const keys = P.map(x => x.key).sort(); let h = 2166136261; const sl = src === 'salon' ? this.tdlSalon(me) : null; const seed = 'v3|' + day + '|' + src + '|' + (src === 'mine' ? me : sl ? sl.id : '') + (rv ? '|r' + rv : '');
       for (let i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
       T = { day: day, src: src, rv: rv, sid: sl ? sl.id : null, target: keys[h % keys.length], guesses: [], done: false, won: false };
       try { localStorage.setItem(this.tdlKey(src, me), JSON.stringify(T)); } catch (e) {}
     }
     this.setState({ tdl: Object.assign({}, T, { src: src }), tdlQ: '' });
   }
-  tdlPublish(T, v) { if (!T || T.src === 'mine') return; this.lgPublish('tdl|' + T.day + '|' + T.src + '|' + (T.src === 'salon' ? (T.sid || '') : ''), v); }
+  tdlPublish(T, v) { if (!T || T.src === 'mine' || !this.state.session) return; const won = v[0] === 'W'; const tries = won ? (parseInt(v.slice(1), 10) || 8) : Math.max(1, Math.min(8, (T.guesses || []).length || 1));
+    const row = { day: T.day, src: T.src, scope: T.src === 'salon' ? (T.sid || '') : '', nom: this.me(), won: won, tries: tries, pts: won ? Math.max(1, 9 - tries) : 0, rv: T.rv || 0 };
+    this.lgQueue(q => q.filter(x => !(x.day === row.day && x.src === row.src && x.scope === row.scope)).concat([row])); this.lgFlush(); }
   tdlSave(T) { try { localStorage.setItem(this.tdlKey(T.src, this.me()), JSON.stringify(T)); } catch (e) {} }
   tdlStatus(src) { const me = this.me(); try { const T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); if (!T || T.day !== mdtToday() || (T.rv || 0) !== this.tdlRv(src)) return { txt: 'À jouer aujourd’hui', done: false }; return T.done ? { txt: T.won ? '✅ Trouvé en ' + T.guesses.length + ' essai' + (T.guesses.length > 1 ? 's' : '') : '❌ Pas trouvé', done: true } : { txt: '⏳ En cours · ' + T.guesses.length + '/8', done: false }; } catch (e) { return { txt: 'À jouer aujourd’hui', done: false }; } }
   tdlView(me) {
+    if (!this._lgFlushAt || Date.now() - this._lgFlushAt > 30000) { this._lgFlushAt = Date.now(); setTimeout(() => this.lgFlush(), 0); }
     const T = this.state.tdl || null; const src = this.state.tdlSrc || (T && T.src) || 'mine';
     const sl0 = src === 'salon' ? this.tdlSalon(me) : null;
     if (!T || T.src !== src || (T.day && T.day !== mdtToday()) || (sl0 && T.sid !== sl0.id) || (T.day && (T.rv || 0) !== this.tdlRv(src))) { setTimeout(() => this.tdlLoad(src), 0); }
@@ -6084,9 +6093,9 @@ class Component extends DCLogic {
     const q = this.norm(this.state.tdlQ || '').split(/\s+/).filter(Boolean);
     const hay = x => this.norm([x.name, x.sub, this.teaAliases(x.name + ' ' + x.sub)].join(' '));
     const sugg = !done && q.length ? P.filter(x => (T.guesses || []).indexOf(x.key) < 0 && q.every(w => hay(x).indexOf(w) >= 0)).slice(0, 8) : [];
-    const stats = (() => { try { return JSON.parse(localStorage.getItem('mdt-tdl-' + src) || '{}'); } catch (e) { return {}; } })();
+    const stats = (() => { try { return JSON.parse(localStorage.getItem('mdt-tdl3-' + src) || '{}'); } catch (e) { return {}; } })();
     const guess = x => { const t0 = this.state.tdl; if (!t0 || t0.done || t0.day !== mdtToday()) return; const gs = t0.guesses.concat([x.key]); const won = x.key === t0.target; const fin = won || gs.length >= MAX;
-      if (fin) { try { const st = JSON.parse(localStorage.getItem('mdt-tdl-' + src) || '{}'); st.played = (st.played || 0) + 1; if (won) { st.won = (st.won || 0) + 1; st.streak = (st.streak || 0) + 1; st.best = Math.max(st.best || 0, st.streak); st['g' + gs.length] = (st['g' + gs.length] || 0) + 1; } else st.streak = 0; localStorage.setItem('mdt-tdl-' + src, JSON.stringify(st)); } catch (e) {} }
+      if (fin) { try { const st = JSON.parse(localStorage.getItem('mdt-tdl3-' + src) || '{}'); st.played = (st.played || 0) + 1; if (won) { st.won = (st.won || 0) + 1; st.streak = (st.streak || 0) + 1; st.best = Math.max(st.best || 0, st.streak); st['g' + gs.length] = (st['g' + gs.length] || 0) + 1; } else st.streak = 0; localStorage.setItem('mdt-tdl3-' + src, JSON.stringify(st)); } catch (e) {} }
       const nt = Object.assign({}, t0, { guesses: gs, done: fin, won: won }); this.tdlSave(nt); this.setState({ tdlQ: '', tdl: nt }); if (fin) this.tdlPublish(nt, won ? 'W' + gs.length : 'L'); };
     // indices offerts au fil des essais
     const hints = [];
@@ -6117,45 +6126,45 @@ class Component extends DCLogic {
         try { if (navigator.share) await navigator.share({ text: txt }); else { await navigator.clipboard.writeText(txt); this.flash('Résultat copié ✓'); } } catch (e) {} },
       tdlNext: (() => { const n = new Date(); const t = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); const m = Math.round((t - n) / 60000); return 'Prochain thé mystère dans ' + Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0'); })(),
       tdlOthers: [['mine', '🍵 Mes thés'], ['salon', '🏮 Mon salon'], ['ency', '📖 Encyclopédie']].filter(x => x[0] !== src).map(x => ({ label: x[1] + ' · ' + this.tdlStatus(x[0]).txt, go: () => { this.setState({ tdlSrc: x[0] }); this.tdlLoad(x[0]); } })),
-      tdlCards: rows.map(r => ({ name: r.name, ok: r.ok, tiles: r.cells.map((c, k) => ({ lbl: COLS[k][1], txt: c.txt, bg: c.bg })) })), tdlGiveUp: () => { const t0 = this.state.tdl; if (t0 && !t0.done && window.confirm('Abandonner et voir la réponse ?')) { try { const st = JSON.parse(localStorage.getItem('mdt-tdl-' + src) || '{}'); st.played = (st.played || 0) + 1; st.streak = 0; localStorage.setItem('mdt-tdl-' + src, JSON.stringify(st)); } catch (e) {} const nt = Object.assign({}, t0, { done: true, won: false }); this.tdlSave(nt); this.setState({ tdl: nt }); this.tdlPublish(nt, 'L'); } },
+      tdlCards: rows.map(r => ({ name: r.name, ok: r.ok, tiles: r.cells.map((c, k) => ({ lbl: COLS[k][1], txt: c.txt, bg: c.bg })) })), tdlGiveUp: () => { const t0 = this.state.tdl; if (t0 && !t0.done && window.confirm('Abandonner et voir la réponse ?')) { try { const st = JSON.parse(localStorage.getItem('mdt-tdl3-' + src) || '{}'); st.played = (st.played || 0) + 1; st.streak = 0; localStorage.setItem('mdt-tdl3-' + src, JSON.stringify(st)); } catch (e) {} const nt = Object.assign({}, t0, { done: true, won: false }); this.tdlSave(nt); this.setState({ tdl: nt }); this.tdlPublish(nt, 'L'); } },
       tdlStats: (stats.played || 0) + ' partie' + ((stats.played || 0) > 1 ? 's' : '') + ' · ' + (stats.played ? Math.round((stats.won || 0) / stats.played * 100) : 0) + ' % gagnées · série ' + (stats.streak || 0) + ' (record ' + (stats.best || 0) + ')',
       tdlLegend: [['#cfe3c6', 'Exact'], ['#f5ddb0', 'Proche (même famille, même pays, ±15 %, goûts en commun)'], ['#efcfc6', 'Faux']].map(x => ({ bg: x[0], txt: x[1] })) };
   }
   // ---------- 🎯 Devine le thé (multi-écrans : un maître du jeu, des joueurs)
-  // ---------- 🏆 Ligue du salon : résultats publiés par chacun (lignes « react » : clé tdl|jour|cat|salon ou gs|partie, valeur W3 / L / G12|jour)
-  lgPublish(key, val) { const me = this.me(); if (!me || !this.state.session) return; const R = (this.getAdds().options || {}).reacts || {}; if ((R[key] || {})[me] === val) return;
-    const all = Object.assign({}, R); all[key] = Object.assign({}, all[key] || {}, { [me]: val }); this.setOpt('reacts', all); }
-  lgGuessSync(me) { if (!me || !this.state.session || this._lgGsBusy) return; const GG = this.guessGames(); const R = (this.getAdds().options || {}).reacts || {}; const todo = [];
-    Object.keys(GG).forEach(id => { const g = GG[id]; if (!g || (g.players || []).concat([g.master]).indexOf(me) < 0) return; let pts = 0, any = false;
-      Object.keys(g.answers || {}).filter(k => (g.revealed || []).indexOf(k) >= 0).forEach(k => { const x = (g.answers[k] || {})[me]; if (x) { any = true; if (x.ok) pts += x.pts || 0; } });
-      if (!any) return; const d = new Date(g.ts || Date.now()); const day = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-      const v = 'G' + pts + '|' + day; if ((R['gs|' + id] || {})[me] !== v) todo.push(['gs|' + id, v]); });
-    if (!todo.length) return; this._lgGsBusy = true;
-    setTimeout(() => { try { const R2 = Object.assign({}, (this.getAdds().options || {}).reacts || {}); todo.forEach(t => { R2[t[0]] = Object.assign({}, R2[t[0]] || {}, { [me]: t[1] }); }); this.setOpt('reacts', R2); } finally { this._lgGsBusy = false; } }, 0); }
+  // ---------- 🏆 Ligue du salon : scores du Theordle (« Mon salon » + « Encyclopédie ») stockés dans la table mdt_tdl_scores
+  lgSend(row) { if (!this.sb || !this.state.session) return Promise.resolve(false);
+    return this.sb.from('mdt_tdl_scores').upsert(row, { onConflict: 'day,src,scope,nom' }).then(({ error }) => { if (error) throw error; this.setState({ lgData: null }); return true; }); }
+  lgQueue(fn) { let q = []; try { q = JSON.parse(localStorage.getItem('mdt-tdl3-q') || '[]'); } catch (e) {} q = fn(q) || q; try { localStorage.setItem('mdt-tdl3-q', JSON.stringify(q)); } catch (e) {} return q; }
+  lgFlush() { if (this._lgFlushing || !this.sb || !this.state.session) return; const me = this.me(); const today = mdtToday();
+    const q = this.lgQueue(x => x.filter(r => r.day === today && r.nom === me && (r.rv || 0) === this.tdlRv(r.src))); if (!q.length) return;
+    this._lgFlushing = true; Promise.all(q.map(r => this.lgSend(r).then(() => r, () => null))).then(ok => { const done = ok.filter(Boolean); this.lgQueue(x => x.filter(r => done.indexOf(r) < 0 && !done.some(d => d.day === r.day && d.src === r.src && d.scope === r.scope))); }).finally(() => { this._lgFlushing = false; }); }
+  lgLoad(from) { if (!this.sb || this._lgLoading) return; this._lgLoading = true;
+    this.sb.from('mdt_tdl_scores').select('day,src,scope,nom,won,tries,pts').gte('day', from).limit(20000).then(({ data, error }) => {
+      const setup = error && /mdt_tdl_scores|does not exist|PGRST205|42P01/i.test((error.code || '') + ' ' + (error.message || ''));
+      this.setState({ lgData: { from: from, at: Date.now(), rows: error ? [] : (data || []), err: error ? (setup ? 'setup' : error.message) : '' } }); }).finally(() => { this._lgLoading = false; }); }
   lgWeekStart(day) { const d = new Date(day + 'T12:00:00'); const w = (d.getDay() + 6) % 7; d.setDate(d.getDate() - w); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   lgAddDays(day, n) { const d = new Date(day + 'T12:00:00'); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
-  lgRank(sal, from, to) {
-    const M = sal.members || []; const R = (this.getAdds().options || {}).reacts || {}; const T = {}; M.forEach(u => { T[u] = { u: u, tdl: 0, gs: 0, played: 0, won: 0, games: 0 }; });
-    Object.keys(R).forEach(k => { const parts = k.split('|');
-      if (parts[0] === 'tdl') { const day = parts[1], src = parts[2], sid = parts[3]; if (day < from || day > to) return; if (!(src === 'ency' || (src === 'salon' && sid === sal.id))) return;
-        Object.keys(R[k] || {}).forEach(u => { if (!T[u]) return; const v = String(R[k][u] || ''); T[u].played++; if (v[0] === 'W') { const n = parseInt(v.slice(1), 10) || 8; T[u].won++; T[u].tdl += Math.max(1, 9 - n); } }); }
-      else if (parts[0] === 'gs') { Object.keys(R[k] || {}).forEach(u => { if (!T[u]) return; const m = /^G(\d+)\|(\d{4}-\d{2}-\d{2})$/.exec(String(R[k][u] || '')); if (!m || m[2] < from || m[2] > to) return; T[u].gs += parseInt(m[1], 10) || 0; T[u].games++; }); } });
-    return M.map(u => Object.assign(T[u], { total: T[u].tdl + T[u].gs })).sort((x, y) => y.total - x.total || y.won - x.won || x.u.localeCompare(y.u, 'fr')); }
+  lgRank(sal, rows, from, to) {
+    const M = sal.members || []; const T = {}; M.forEach(u => { T[u] = { u: u, pts: 0, played: 0, won: 0 }; });
+    rows.forEach(x => { const day = String(x.day).slice(0, 10); if (day < from || day > to || !T[x.nom]) return; if (!(x.src === 'ency' || (x.src === 'salon' && x.scope === sal.id))) return;
+      T[x.nom].played++; if (x.won) T[x.nom].won++; T[x.nom].pts += x.pts || 0; });
+    return M.map(u => T[u]).sort((x, y) => y.pts - x.pts || y.won - x.won || x.u.localeCompare(y.u, 'fr')); }
   lgView(sal, me) {
     const today = mdtToday(); const per = this.state.lgPer === 'month' ? 'month' : 'week';
-    const ws = this.lgWeekStart(today); const ms = today.slice(0, 8) + '01';
-    const from = per === 'week' ? ws : ms; const L = this.lgRank(sal, from, today);
-    const prev = this.lgRank(sal, this.lgAddDays(ws, -7), this.lgAddDays(ws, -1)); const champ = prev.length && prev[0].total > 0 && (prev.length < 2 || prev[1].total < prev[0].total) ? prev[0] : null;
+    const ws = this.lgWeekStart(today); const ms = today.slice(0, 8) + '01'; const need = [ms, this.lgAddDays(ws, -7)].sort()[0];
+    const D = this.state.lgData; if (!D || D.from !== need || Date.now() - D.at > 60000) setTimeout(() => { this.lgFlush(); this.lgLoad(need); }, 0);
+    const rowsAll = (D && D.rows) || [];
+    const from = per === 'week' ? ws : ms; const L = this.lgRank(sal, rowsAll, from, today);
+    const prev = this.lgRank(sal, rowsAll, this.lgAddDays(ws, -7), this.lgAddDays(ws, -1)); const champ = prev.length && prev[0].pts > 0 && (prev.length < 2 || prev[1].pts < prev[0].pts) ? prev[0] : null;
     const MED = ['🥇', '🥈', '🥉']; let rank = 0, last = null;
-    const rows = L.map((x, i) => { if (last === null || x.total !== last) rank = i + 1; last = x.total; return { rank: rank <= 3 && x.total > 0 ? MED[rank - 1] : String(rank), name: x.u + (champ && champ.u === x.u ? ' 👑' : ''), me: x.u === me, bg: x.u === me ? 'var(--color-accent-100)' : 'var(--color-bg)',
-      total: x.total + ' pt' + (x.total > 1 ? 's' : ''), tdl: x.played ? x.tdl + ' pts · ' + x.won + '/' + x.played + ' trouvé' + (x.won > 1 ? 's' : '') : '—', gs: x.games ? x.gs + ' pts · ' + x.games + ' partie' + (x.games > 1 ? 's' : '') : '—' }; });
-    const fmt = d => this.fmtDate(d);
-    return { lgRows: rows, lgEmpty: !L.some(x => x.total > 0 || x.played || x.games),
-      lgPeriod: per === 'week' ? 'Semaine du ' + fmt(ws) + ' au ' + fmt(this.lgAddDays(ws, 6)) : new Date(today + 'T12:00:00').toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }).replace(/^./, c => c.toUpperCase()),
+    const rows = L.map((x, i) => { if (last === null || x.pts !== last) rank = i + 1; last = x.pts; return { rank: rank <= 3 && x.pts > 0 ? MED[rank - 1] : String(rank), name: x.u + (champ && champ.u === x.u ? ' 👑' : ''), bg: x.u === me ? 'var(--color-accent-100)' : 'var(--color-bg)',
+      total: x.pts + ' pt' + (x.pts > 1 ? 's' : ''), found: x.played ? x.won + ' / ' + x.played : '—', avg: x.won ? (Math.round((x.pts / x.won) * 10) / 10).toString().replace('.', ',') + ' pts' : '—' }; });
+    return { lgRows: rows, lgEmpty: !!D && !L.some(x => x.played), lgLoading: !D, lgErr: D && D.err ? (D.err === 'setup' ? 'La ligue n’est pas encore installée dans la base : un admin doit lancer le script SQL (Administration › Jeux).' : 'Classement indisponible : ' + D.err) : '',
+      lgPeriod: per === 'week' ? 'Semaine du ' + this.fmtDate(ws) + ' au ' + this.fmtDate(this.lgAddDays(ws, 6)) : new Date(today + 'T12:00:00').toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }).replace(/^./, c => c.toUpperCase()),
       lgPers: [['week', 'Cette semaine'], ['month', 'Ce mois-ci']].map(x => ({ label: x[1], on: per === x[0], bg: per === x[0] ? 'var(--color-text)' : 'var(--color-bg)', fg: per === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => this.setState({ lgPer: x[0] }) })),
-      lgChamp: champ ? '👑 Champion de la semaine dernière : ' + champ.u + ' (' + champ.total + ' pts)' : '',
+      lgChamp: champ ? '👑 Champion de la semaine dernière : ' + champ.u + ' (' + champ.pts + ' pts)' : '',
       lgPlay: () => { this.setState({ view: 'tdl', tdlSrc: 'salon', tdlSalonId: sal.id }); setTimeout(() => this.tdlLoad('salon'), 0); },
-      lgGuess: () => this.setState({ view: 'guess', gsId: null, gsSetup: null }) };
+      lgEncy: () => { this.setState({ view: 'tdl', tdlSrc: 'ency' }); setTimeout(() => this.tdlLoad('ency'), 0); } };
   }
   guessGames() { const o = this.getAdds().options || {}; const del = o.guessDeleted || []; const all = o.guessGames || {}; const out = {}; Object.keys(all).forEach(k => { if (del.indexOf(k) < 0) out[k] = all[k]; }); return out; }
   adminGames() {
@@ -6166,7 +6175,9 @@ class Component extends DCLogic {
     const TS = [['mine', '🍵', 'Mes thés', 'le thé du jour de chaque joueur'], ['salon', '🏮', 'Mon salon', 'le thé du jour de chaque salon'], ['ency', '📖', 'Encyclopédie', 'le thé du jour commun à tous']];
     const agTdl = TS.map(x => { const n = this.tdlRv(x[0]); return { icon: x[1], label: x[2], sub: 'Nouveau tirage pour ' + x[3] + (n ? ' · déjà remis à zéro ' + n + ' fois aujourd’hui' : ''), go: () => { if (window.confirm('Remettre à zéro les parties d’aujourd’hui « ' + x[2] + ' » ? Tout le monde repart avec un nouveau thé mystère.')) { this.tdlReset([x[0]]); this.flash('🧩 Theordle « ' + x[2] + ' » remis à zéro pour aujourd’hui.'); } } }; });
     const agTdlAll = () => { if (window.confirm('Remettre à zéro les parties d’aujourd’hui dans les 3 catégories ?')) { this.tdlReset(TS.map(x => x[0])); this.flash('🧩 Theordle remis à zéro pour aujourd’hui (3 catégories).'); } };
-    return { agTdl: agTdl, agTdlAll: agTdlAll, agList: list.map(g => { const sc = {}; Object.keys(g.answers || {}).filter(k => (g.revealed || []).indexOf(k) >= 0).forEach(k => Object.keys(g.answers[k]).forEach(u => { if (g.answers[k][u].ok) sc[u] = (sc[u] || 0) + g.answers[k][u].pts; }));
+    if (this.state.agLgOk == null && this.sb && !this._agLgChk) { this._agLgChk = true; this.sb.from('mdt_tdl_scores').select('day', { count: 'exact', head: true }).then(({ error, count }) => { this._agLgChk = false; this.setState({ agLgOk: error ? 'no' : 'yes', agLgN: count || 0 }); }); }
+    const agSqlCopy = async () => { try { const t = await (await fetch('./supabase-ligue.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ agSqlMsg: '✓ Copié : colle-le dans Supabase › SQL Editor puis Run, puis recharge cette page.', agLgOk: null }); } catch (e) { this.setState({ agSqlMsg: 'Copie impossible : ouvre le fichier supabase-ligue.sql du dépôt.' }); } };
+    return { agSqlCopy: agSqlCopy, agSqlMsg: this.state.agSqlMsg || '', agLgTxt: this.state.agLgOk === 'yes' ? '✓ Ligue installée dans la base · ' + (this.state.agLgN || 0) + ' score(s) enregistré(s)' : this.state.agLgOk === 'no' ? '⚠️ Ligue pas encore installée : lance le script SQL ci-contre (une seule fois).' : 'Vérification de la base…', agTdl: agTdl, agTdlAll: agTdlAll, agList: list.map(g => { const sc = {}; Object.keys(g.answers || {}).filter(k => (g.revealed || []).indexOf(k) >= 0).forEach(k => Object.keys(g.answers[k]).forEach(u => { if (g.answers[k][u].ok) sc[u] = (sc[u] || 0) + g.answers[k][u].pts; }));
         const ended = g.phase === 'ended' || Date.now() - (g.ts || 0) > 864e5;
         return { title: '👑 ' + g.master + ' · ' + (g.players || []).join(', '), sub: new Date(g.ts || 0).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · manche ' + (g.round || 0) + ' · thé en cours : ' + nm(g.target) + ' · ' + (Object.keys(sc).length ? Object.keys(sc).map(u => u + ' ' + sc[u] + ' pts').join(', ') : 'aucun point'),
           state: ended ? 'Terminée' : g.phase === 'reveal' ? 'Réponse révélée' : 'En cours', stBg: ended ? 'var(--color-bg)' : '#d9e8e8', live: !ended,
@@ -6220,7 +6231,6 @@ class Component extends DCLogic {
       params: [this.logQtyTxt(l.qty, false), this.logTempTxt(l.temperature), temps, gear, l.technique ? 'technique ' + l.technique : ''].filter(Boolean).join(' · ') || 'réglages non renseignés' };
   }
   guessView(me) {
-    this.lgGuessSync(me);
     const a = this.getAdds(); const GG = this.guessGames();
     const prodOf = id => a.prods.find(p => p.id === id) || {}; const nm = id => prodOf(id).nom || prodOf(id).the || '?';
     const famName = id => { const fk = this.famOf(prodOf(id).the); return fk ? this.families[fk].name : 'Autre'; };
@@ -6480,7 +6490,7 @@ class Component extends DCLogic {
     const isMain = !!main && main.id === mine.id;
     return Object.assign(base, addPart, { isMain: isMain, notMain: !isMain, mainName: main ? main.name : '',
       makeMain: () => { this.setMainSalon(mine.id); this.setState({ slMsg: '⭐ « ' + mine.name + ' » est maintenant votre salon principal : son nom s’affiche à côté du vôtre et vos stats « Dans mon salon » portent sur lui.' }); },
-      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabLig: tab === 'lig', ...(tab === 'lig' ? (this.lgGuessSync(me), this.lgView(mine, me)) : { lgRows: [], lgPers: [] }), tabMem: tab === 'mem', tabOpt: tab === 'opt', tabWish: tab === 'wish', wishes: tab === 'wish' ? (mine.members || []).reduce((t, u) => t.concat(this.wishCards(u, me)), []) : [], noWish: tab === 'wish' && !(mine.members || []).some(u => this.wishesOf(u).length), tabFil: tab === 'fil', feed: tab === 'fil' ? this.salonFeed(mine, me) : [], noFeed: tab === 'fil' && !this.salonFeed(mine, me).length,
+      tagBg: sc.bg, tagFg: sc.fg, tabs: tabs, tabAcc: tab === 'acc', tabLig: tab === 'lig', ...(tab === 'lig' ? this.lgView(mine, me) : { lgRows: [], lgPers: [] }), tabMem: tab === 'mem', tabOpt: tab === 'opt', tabWish: tab === 'wish', wishes: tab === 'wish' ? (mine.members || []).reduce((t, u) => t.concat(this.wishCards(u, me)), []) : [], noWish: tab === 'wish' && !(mine.members || []).some(u => this.wishesOf(u).length), tabFil: tab === 'fil', feed: tab === 'fil' ? this.salonFeed(mine, me) : [], noFeed: tab === 'fil' && !this.salonFeed(mine, me).length,
       ...(() => {
         const ps = pets.map(g => ({ g: g, st: this.petStats(g) })).sort((x, y) => y.st.lvl - x.st.lvl || y.st.xp - x.st.xp || x.g.name.localeCompare(y.g.name, 'fr'));
         const topLvl = ps.length ? ps[0].st.lvl : 0; const crown = ps.length > 1 && ps[1].st.lvl < topLvl ? ps[0].g.id : null;
@@ -7694,7 +7704,7 @@ class Component extends DCLogic {
   applyHash() {
     const g = /^#go=([\w-]+)$/.exec(location.hash || '');
     if (g) { const k = g[1]; const adm = /^admin-(\w+)$/.exec(k);
-      if (adm) this.setState({ view: 'admin', addTab: adm[1] }); else if (k === 'wrap') this.setState({ view: 'stats', stTab: 'wrap' }); else if (k === 'log') this.setState({ view: 'log', editLogId: null });
+      if (adm) this.setState({ view: 'admin', addTab: adm[1] }); else if (k === 'wrap') this.setState({ view: 'stats', stTab: 'wrap' }); else if (k === 'tdl') { const sl = this.salonOf(this.me()); this.setState({ view: 'tdl', tdlSrc: sl ? 'salon' : 'ency' }); } else if (k === 'log') this.setState({ view: 'log', editLogId: null });
       else if (['friends', 'salon', 'home', 'settings', 'mine'].indexOf(k) >= 0) this.setState({ view: k });
       try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} return; }
     const sq = /^#sac=([\w-]+)$/.exec(location.hash || '');
@@ -9177,7 +9187,7 @@ class Component extends DCLogic {
       tabNewOn: this.state.addTab === 'new', tabOrphOn: this.state.addTab === 'orph',
       ...(v === 'admin' && this.state.addTab === 'orph' ? this.orphanGear() : { orGroups: [] }),
       ...(v === 'admin' && this.state.addTab === 'new' ? this.adminData() : { adKinds: [], adCols: [], adRows: [] }),
-      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [], agTdl: [] }),
+      tabCatOn: this.state.addTab === 'cat', tabUsrOn: this.state.addTab === 'usr', tabMrgOn: this.state.addTab === 'mrg', tabJeuOn: this.state.addTab === 'jeu', ...(this.state.addTab === 'jeu' ? this.adminGames() : { agList: [], agTdl: [], agSqlMsg: '' }),
       ...this.mergeVals(),
       openAdd: () => this.setState(s => ({ view: 'add', addTab: 'lot', teaFrom: null, editId: null, addMsg: '', rw: s.view === 'add' ? s.rw : {}, lotNew: s.view === 'add' ? s.lotNew : false, lotEditProd: false, apQ: s.view === 'add' ? s.apQ : '', form: s.view === 'add' ? s.form : Object.assign({}, s.form, { prodPhoto: '', recoTemp: '', recoQty: '', recoTimes: '', prodId: '', the: '', variante: '', nomFour: '', marque: '', ville: '', ref: '', boutique: '', tags: [], prodComment: '', code: '', achat: '', prodDate: '', lot: '', prixMode: 'poids', prixPaye: '', quantite: '', freq: '', commentaire: '', sachetPhoto: '' }) })),
       isMine: v === 'mine',
