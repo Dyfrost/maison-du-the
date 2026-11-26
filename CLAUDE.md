@@ -2,6 +2,8 @@
 
 Site de collection de thés partagée (Raph, Maël…). Réponses en français, concises. Toujours donner la version à la fin : « **Version : vX.Y.Z** ».
 
+**Au début de chaque nouvelle conversation**, le tout premier message à Raph donne la version actuelle du site (lire `MDT_VERSION` dans `version.js` sur `main` après un `git pull`) : « **Site en vX.Y.Z** », avant toute autre chose.
+
 ## Hébergement
 - GitHub Pages (branche `main`, dépôt Dyfrost/maison-du-the), domaine **https://lunanimithe.fr** (OVH, fichier `CNAME`).
 - Base : Supabase projet `hnyomaobuftunuhwkzox` (ap-southeast-1 / Singapour — migration vers l’UE prévue au retour en France). Stockage v2 : table `mdt_items(kind,id,owner,data,deleted,updated_at)`.
