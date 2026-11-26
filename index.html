@@ -443,6 +443,7 @@ window.mdtCsvX = (function () {
             <button role="menuitem" onClick="{{ menuSalon }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🏮 Salon{{ salonBadge }}</button>
             <button role="menuitem" onClick="{{ menuGear }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🫖 Mon matériel</button>
             <button role="menuitem" onClick="{{ menuStats }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">📊 Stats pour les nerds</button>
+            <button role="menuitem" onClick="{{ openTdl }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">🧩 Thoordle</button>
             <button role="menuitem" onClick="{{ menuSettings }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">⚙️ Paramètres</button>
             <sc-if value="{{ isModMenu }}" hint-placeholder-val="{{ false }}"><button role="menuitem" onClick="{{ menuAdmin }}" style="cursor: pointer; width: 100%; text-align: left; border: none; background: transparent; font-family: var(--font-body); font-size: 15px; color: var(--color-text); padding: 10px 14px; border-radius: 14px; white-space: nowrap;" style-hover="background: var(--color-accent-100);">{{ admMenuTxt }}</button></sc-if>
             <hr class="hr" style="margin: 4px 8px;">
@@ -537,7 +538,7 @@ window.mdtCsvX = (function () {
             <button class="btn btn-primary" onClick="{{ openLog }}" style="white-space: nowrap; font-size: 16px; padding: 14px 22px;">☕ Nouvelle dégustation</button>
             <button class="btn btn-secondary" onClick="{{ openAdd }}" style="white-space: nowrap;">＋ J’ai un nouveau thé</button>
             <button class="btn btn-ghost" onClick="{{ openColl }}" style="white-space: nowrap;">🍵 Mes thés</button>
-            <sc-if value="{{ canScan }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ scanOpen }}" style="white-space: nowrap;">📷 Scanner</button></sc-if>
+            <sc-if value="{{ canScan }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ scanOpen }}" style="white-space: nowrap;">📷 Scanner</button></sc-if><button class="btn btn-ghost" onClick="{{ openTdl }}" style="white-space: nowrap;">🧩 Thoordle</button>
           </div>
           <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ true }}">
           <div style="position: relative; overflow: hidden; background: var(--color-surface); border-radius: 30px; padding: 20px 22px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap;">
@@ -1219,6 +1220,35 @@ window.mdtCsvX = (function () {
 
 
 
+    <sc-if value="{{ isTdl }}" hint-placeholder-val="{{ false }}">
+      <section style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h1 style="font-size: 44px; margin: 0;">🧩 Thoordle</h1><p style="margin: 0; font-size: 15px; opacity: .75;">Devine le thé mystère. À chaque essai, chaque case te dit si tu es sur la bonne piste.</p></div><span style="font-size: 13.5px; opacity: .7;">{{ td.tdlStats }}</span></div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ td.tdlSrcs }}" as="ts" hint-placeholder-count="3"><button onClick="{{ ts.go }}" aria-pressed="{{ ts.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 8px 16px; font-family: var(--font-body); font-size: 14.5px; font-weight: 600; background: {{ ts.bg }}; color: {{ ts.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ ts.label }}</button></sc-for><span style="font-size: 13.5px; opacity: .65; margin-left: 6px;">{{ td.tdlCount }}</span></div>
+        <sc-if value="{{ td.tdlEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; background: var(--color-surface); border-radius: 18px; padding: 14px 18px;">{{ td.tdlEmptyTxt }}</p></sc-if>
+        <sc-if value="{{ td.tdlPlaying }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-surface); border-radius: 24px; padding: 16px 18px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><input class="input" type="search" value="{{ td.tdlQ }}" onInput="{{ td.setTdlQ }}" placeholder="🔎 Propose un thé…" aria-label="Proposer un thé" autoComplete="off" style="flex: 1; min-width: 220px; box-sizing: border-box; font-size: 16px; padding: 12px 16px; background: var(--color-bg);"><span style="font-size: 14px; font-weight: 600;">{{ td.tdlLeft }}</span><button class="btn btn-ghost" onClick="{{ td.tdlGiveUp }}" style="white-space: nowrap;">Abandonner</button></div>
+            <div role="listbox" aria-label="Suggestions" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px;"><sc-for list="{{ td.tdlSugg }}" as="sg" hint-placeholder-count="0"><button role="option" onClick="{{ sg.pick }}" style="cursor: pointer; text-align: left; border: none; border-radius: 14px; padding: 9px 12px; background: var(--color-bg); box-shadow: inset 0 0 0 1px var(--color-divider); font-family: var(--font-body); color: var(--color-text); display: flex; flex-direction: column; gap: 2px;" style-hover="box-shadow: inset 0 0 0 2px var(--color-accent);"><b style="font-size: 14.5px;">{{ sg.name }}</b><span style="font-size: 12.5px; opacity: .7;">{{ sg.sub }}</span></button></sc-for></div>
+            <sc-if value="{{ td.tdlNoSugg }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13.5px; opacity: .7;">Aucun thé ne correspond (ou déjà proposé).</span></sc-if>
+            <sc-if value="{{ td.tdlHasHints }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 4px;"><sc-for list="{{ td.tdlHints }}" as="hn" hint-placeholder-count="1"><span style="font-size: 14px;">💡 {{ hn }}</span></sc-for></div></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ td.tdlDone }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; background: var(--color-surface); border-radius: 24px; padding: 16px 20px; box-shadow: inset 0 0 0 2px var(--color-accent);">
+            <span style="font-size: 34px;" aria-hidden="true"><sc-if value="{{ td.tdlWon }}" hint-placeholder-val="{{ false }}">🎉</sc-if><sc-if value="{{ td.tdlLost }}" hint-placeholder-val="{{ false }}">🫖</sc-if></span>
+            <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 200px;"><sc-if value="{{ td.tdlWon }}" hint-placeholder-val="{{ false }}"><b style="font-size: 18px;">Trouvé en {{ td.tdlTries }} !</b></sc-if><sc-if value="{{ td.tdlLost }}" hint-placeholder-val="{{ false }}"><b style="font-size: 18px;">Perdu… c’était :</b></sc-if><span style="font-size: 16px;"><b>{{ td.tdlAnswer }}</b> <span style="opacity: .7;">{{ td.tdlAnswerSub }}</span></span></span>
+            <button class="btn btn-primary" onClick="{{ td.tdlAgain }}" style="white-space: nowrap;">🔁 Nouvelle partie</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ td.tdlHasRows }}" hint-placeholder-val="{{ false }}">
+          <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;"><div role="table" aria-label="Essais" style="display: grid; grid-template-columns: {{ td.tdlGrid }}; gap: 6px; min-width: max-content;">
+            <span role="columnheader" style="font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; opacity: .6; padding: 0 6px;">Essai</span><sc-for list="{{ td.tdlCols }}" as="tc" hint-placeholder-count="5"><span role="columnheader" style="font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; opacity: .6; text-align: center;">{{ tc.label }}</span></sc-for>
+            <sc-for list="{{ td.tdlRows }}" as="tr" hint-placeholder-count="2"><span role="cell" style="display: flex; align-items: center; padding: 8px 10px; border-radius: 12px; background: var(--color-surface); font-weight: 600; font-size: 14px;">{{ tr.name }}</span><sc-for list="{{ tr.cells }}" as="tcl" hint-placeholder-count="5"><span role="cell" style="display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px 6px; border-radius: 12px; background: {{ tcl.bg }}; color: #2a2420; font-size: 13.5px; min-height: 40px; animation: fadeIn .35s ease both;">{{ tcl.txt }}</span></sc-for></sc-for>
+          </div></div>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap;"><sc-for list="{{ td.tdlLegend }}" as="lg2" hint-placeholder-count="3"><span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; opacity: .8;"><span style="width: 14px; height: 14px; border-radius: 4px; background: {{ lg2.bg }};"></span>{{ lg2.txt }}</span></sc-for><span style="font-size: 12.5px; opacity: .8;">↑ ↓ : le thé mystère a plus / moins</span></div>
+        </sc-if>
+      </section>
+    </sc-if>
     <sc-if value="{{ isGuess }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 18px; animation: fadeUp .45s ease both;">
         <div style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
@@ -5923,6 +5953,85 @@ class Component extends DCLogic {
             toggle: () => { const all = Object.assign({}, (this.getAdds().options || {}).reacts || {}); const cur = Object.assign({}, all[it.key] || {}); if (cur[me] === em) delete cur[me]; else cur[me] = em; all[it.key] = cur; this.setOpt('reacts', all); } }; }) }); });
   }
 
+  // ---------- 🧩 Thoordle : un Wordle du thé (deviner un thé avec des indices à chaque essai)
+  tdlPool(src, me) {
+    return this.memo('tdlPool', src + '|' + me, () => {
+      const OX = { vert: 5, jaune: 10, blanc: 15, oolong: 45, noir: 90, sombre: 95, tisane: 0 };
+      const famName = k => (this.families[k] || {}).name || '—';
+      if (src === 'ency') {
+        const L = [];
+        Object.keys(this.families).forEach(k => this.listFor(k).forEach(t => { const parts = String(t.origin || '').split(',').map(x => x.trim()).filter(Boolean);
+          const pays = t.pays || parts[parts.length - 1] || '—'; const region = parts.length > 1 ? parts[parts.length - 2] : '—';
+          const nS = this.collection().filter(o => this.norm(o.the) === this.norm(t.name)).length;
+          L.push({ key: 'e:' + k + ':' + t.name, name: t.name, sub: famName(k), fam: k, a: { fam: famName(k), pays: pays, region: region, ox: OX[k] != null ? OX[k] : null, n: nS } }); }));
+        return L;
+      }
+      const a = this.getAdds(); const owners = src === 'salon' ? new Set(this.salonMates(me)) : new Set([me]);
+      const L = [];
+      a.prods.forEach(p => { const sas = a.sachets.filter(x => x.prodId === p.id && owners.has(x.owner)); if (!sas.length) return;
+        const k = this.famOf(p.the); const t = k ? this.listFor(k, true).find(x => this.norm(x.name) === this.norm(p.the)) : null;
+        const parts = String((t && t.origin) || '').split(',').map(x => x.trim()).filter(Boolean);
+        const st = this.statsMany(sas.map(x => x.id)); const avg = st && st.avg != null ? Math.round(st.avg * 10) / 10 : null;
+        const ppg = sas.map(x => { const pr = this.num(x.prixPaye), q = this.num(x.quantite); return pr != null && q ? pr / q * 100 : null; }).filter(x => x != null);
+        L.push({ key: 'p:' + p.id, name: p.nom || p.the, sub: [p.the, p.marque].filter(Boolean).join(' · '), fam: k, a: { fam: famName(k), the: p.the || '—', pays: (t && t.pays) || parts[parts.length - 1] || '—', marque: p.marque || '—',
+          note: avg, prix: ppg.length ? Math.round(ppg.reduce((s0, x) => s0 + x, 0) / ppg.length * 10) / 10 : null, nLog: this.getAdds().logs.filter(l => sas.some(x => x.id === l.lotId)).length,
+          tags: (p.tags || []).map(x => String(x).toLowerCase()), owners: Array.from(new Set(sas.map(x => x.owner))).sort() } }); });
+      return L;
+    });
+  }
+  tdlNew(src) {
+    const me = this.me(); const P = this.tdlPool(src, me); if (!P.length) { this.setState({ tdl: { src: src, empty: true, guesses: [] } }); return; }
+    const t = P[Math.floor(Math.random() * P.length)];
+    this.setState({ tdl: { src: src, target: t.key, guesses: [], done: false, won: false }, tdlQ: '' });
+  }
+  tdlView(me) {
+    const T = this.state.tdl || null; const src = (T && T.src) || this.state.tdlSrc || 'mine';
+    if (!T || T.src !== src) { setTimeout(() => this.tdlNew(src), 0); }
+    const P = this.tdlPool(src, me); const byKey = new Map(P.map(x => [x.key, x]));
+    const target = T && byKey.get(T.target); const MAX = 8;
+    const COLS = src === 'ency' ? [['fam', 'Famille'], ['pays', 'Pays'], ['region', 'Région'], ['ox', 'Oxydation'], ['n', 'Sachets à la maison']]
+      : [['fam', 'Famille'], ['the', 'Thé'], ['pays', 'Pays'], ['marque', 'Boutique'], ['note', 'Note moy.'], ['prix', 'Prix /100 g'], ['nLog', 'Dégust.'], ['tags', 'Goûts communs']].concat(src === 'salon' ? [['owners', 'À qui']] : []);
+    const OK = '#cfe3c6', MID = '#f5ddb0', NO = '#efcfc6';
+    const cell = (k, g) => { const gv = g.a[k], tv = target.a[k];
+      if (k === 'tags') { const c = (gv || []).filter(x => (tv || []).indexOf(x) >= 0); const same = c.length && c.length === (gv || []).length && c.length === (tv || []).length; return { txt: c.length ? c.slice(0, 3).join(', ') : 'aucun', bg: same ? OK : c.length ? MID : NO }; }
+      if (k === 'owners') { const c = (gv || []).filter(x => (tv || []).indexOf(x) >= 0); return { txt: (gv || []).join(', ') || '—', bg: c.length === (gv || []).length && c.length === (tv || []).length ? OK : c.length ? MID : NO }; }
+      if (['ox', 'n', 'note', 'prix', 'nLog'].indexOf(k) >= 0) { const f = v => v == null ? '?' : (k === 'ox' ? v + ' %' : k === 'prix' ? String(v).replace('.', ',') + ' €' : String(v).replace('.', ','));
+        if (gv == null || tv == null) return { txt: f(gv), bg: gv == null && tv == null ? OK : NO };
+        if (gv === tv) return { txt: f(gv), bg: OK };
+        const near = Math.abs(gv - tv) <= Math.max(1, Math.abs(tv) * 0.15);
+        return { txt: f(gv) + (tv > gv ? ' ↑' : ' ↓'), bg: near ? MID : NO }; }
+      if (this.norm(gv) === this.norm(tv)) return { txt: gv, bg: OK };
+      if (k === 'the' && g.fam && g.fam === target.fam) return { txt: gv, bg: MID };
+      if (k === 'region' && this.norm(g.a.pays) === this.norm(target.a.pays)) return { txt: gv, bg: MID };
+      return { txt: gv, bg: NO }; };
+    const guesses = (T && T.guesses || []).map(k => byKey.get(k)).filter(Boolean);
+    const rows = target ? guesses.map(g => ({ name: g.name, ok: g.key === target.key, cells: COLS.map(c => cell(c[0], g)) })).reverse() : [];
+    const done = !!(T && T.done); const left = MAX - guesses.length;
+    const q = this.norm(this.state.tdlQ || '').split(/\s+/).filter(Boolean);
+    const hay = x => this.norm([x.name, x.sub, this.teaAliases(x.name + ' ' + x.sub)].join(' '));
+    const sugg = !done && q.length ? P.filter(x => (T.guesses || []).indexOf(x.key) < 0 && q.every(w => hay(x).indexOf(w) >= 0)).slice(0, 8) : [];
+    const stats = (() => { try { return JSON.parse(localStorage.getItem('mdt-tdl-' + src) || '{}'); } catch (e) { return {}; } })();
+    const guess = x => { const t0 = this.state.tdl; if (!t0 || t0.done) return; const gs = t0.guesses.concat([x.key]); const won = x.key === t0.target; const fin = won || gs.length >= MAX;
+      if (fin) { try { const st = JSON.parse(localStorage.getItem('mdt-tdl-' + src) || '{}'); st.played = (st.played || 0) + 1; if (won) { st.won = (st.won || 0) + 1; st.streak = (st.streak || 0) + 1; st.best = Math.max(st.best || 0, st.streak); st['g' + gs.length] = (st['g' + gs.length] || 0) + 1; } else st.streak = 0; localStorage.setItem('mdt-tdl-' + src, JSON.stringify(st)); } catch (e) {} }
+      this.setState({ tdlQ: '', tdl: Object.assign({}, t0, { guesses: gs, done: fin, won: won }) }); };
+    // indices offerts au fil des essais
+    const hints = [];
+    if (target && guesses.length >= 3) hints.push('Il commence par « ' + target.name.charAt(0).toUpperCase() + ' » et compte ' + target.name.replace(/\s/g, '').length + ' lettres.');
+    if (target && guesses.length >= 5) hints.push(src === 'ency' ? 'Origine : ' + target.a.region + ', ' + target.a.pays + '.' : 'Thé de l’encyclopédie : ' + target.a.the + '.');
+    if (target && guesses.length >= 7 && src !== 'ency') hints.push('Boutique : ' + target.a.marque + '.');
+    return { tdlSrcs: [['mine', '🍵 Mes thés'], ['salon', '🏮 Mon salon'], ['ency', '📖 Encyclopédie']].map(x => ({ label: x[1], on: src === x[0], bg: src === x[0] ? 'var(--color-text)' : 'var(--color-surface)', fg: src === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => { this.setState({ tdlSrc: x[0] }); this.tdlNew(x[0]); } })),
+      tdlEmpty: !P.length, tdlEmptyTxt: src === 'mine' ? 'Il te faut au moins un sachet pour jouer avec tes thés.' : src === 'salon' ? 'Aucun thé dans ton salon pour l’instant.' : 'L’encyclopédie est vide.',
+      tdlCount: P.length + ' thé' + (P.length > 1 ? 's' : '') + ' possibles', tdlLeft: done ? '' : left + ' essai' + (left > 1 ? 's' : '') + ' restant' + (left > 1 ? 's' : ''),
+      tdlCols: COLS.map(c => ({ label: c[1] })), tdlRows: rows, tdlHasRows: rows.length > 0, tdlGrid: 'minmax(150px, 1.4fr) repeat(' + COLS.length + ', minmax(92px, 1fr))',
+      tdlQ: this.state.tdlQ || '', setTdlQ: e => this.setState({ tdlQ: e.target.value }), tdlPlaying: !done && !!target,
+      tdlSugg: sugg.map(x => ({ name: x.name, sub: x.sub, pick: () => guess(x) })), tdlNoSugg: !done && q.length > 0 && !sugg.length,
+      tdlHints: hints, tdlHasHints: hints.length > 0 && !done,
+      tdlDone: done, tdlWon: done && !!(T && T.won), tdlLost: done && !(T && T.won),
+      tdlAnswer: target ? target.name : '', tdlAnswerSub: target ? target.sub : '', tdlTries: guesses.length + ' essai' + (guesses.length > 1 ? 's' : ''),
+      tdlAgain: () => this.tdlNew(src), tdlGiveUp: () => { const t0 = this.state.tdl; if (t0 && !t0.done && window.confirm('Abandonner et voir la réponse ?')) { try { const st = JSON.parse(localStorage.getItem('mdt-tdl-' + src) || '{}'); st.played = (st.played || 0) + 1; st.streak = 0; localStorage.setItem('mdt-tdl-' + src, JSON.stringify(st)); } catch (e) {} this.setState({ tdl: Object.assign({}, t0, { done: true, won: false }) }); } },
+      tdlStats: (stats.played || 0) + ' partie' + ((stats.played || 0) > 1 ? 's' : '') + ' · ' + (stats.played ? Math.round((stats.won || 0) / stats.played * 100) : 0) + ' % gagnées · série ' + (stats.streak || 0) + ' (record ' + (stats.best || 0) + ')',
+      tdlLegend: [['#cfe3c6', 'Exact'], ['#f5ddb0', 'Proche (même famille, même pays, ±15 %, goûts en commun)'], ['#efcfc6', 'Faux']].map(x => ({ bg: x[0], txt: x[1] })) };
+  }
   // ---------- 🎯 Devine le thé (multi-écrans : un maître du jeu, des joueurs)
   guessGames() { const o = this.getAdds().options || {}; const del = o.guessDeleted || []; const all = o.guessGames || {}; const out = {}; Object.keys(all).forEach(k => { if (del.indexOf(k) < 0) out[k] = all[k]; }); return out; }
   adminGames() {
@@ -9109,6 +9218,7 @@ class Component extends DCLogic {
       meSalon: (this.salonOf(me) || {}).name || '', meSalonC: this.salonColor(this.salonOf(me)),
       meBadge: me ? this.badgeOf(me) : '', meBadgeEmoji: me ? (this.badgeOf(me).split(' ')[0] || '') : '',
       friendBadge: (() => { const n = ((this.getAdds().options || {}).friends || []).filter(f => f.status === 'pending' && f.to === me).length; const m = n; return m ? ' (' + m + ')' : ''; })(),
+      isTdl: v === 'tdl', td: v === 'tdl' ? this.tdlView(me) : {}, openTdl: () => this.setState({ view: 'tdl', menuOpen: false }),
       isFriends: v === 'friends', isSalon: v === 'salon', isGuess: v === 'guess', gs: v === 'guess' ? this.guessView(me) : {},
       lfSpecial: [['guess', '🎯', 'Devine le thé', true], ['blind', '🙈', 'À l’aveugle', false], ['salon', '🏮', 'En salon', false]].map(x => ({ label: x[1] + ' ' + x[2], soon: !x[3], ready: x[3], cls: x[3] ? 'lf-sp hot' : 'lf-sp soon', go: () => { if (x[3]) this.setState({ view: 'guess', gsId: null, gsSetup: null }); } })),
       fr: v === 'friends' ? this.friendsView(me) : {},
