@@ -25,9 +25,26 @@
 <script src="./crop.js"></script>
 <script src="./supabase-config.js"></script>
 <script src="./version.js"></script>
+<script>
+// Lecteur CSV minimal (remplace la librairie Excel pour thes.csv, possedes.csv, declinaisons.csv)
+window.mdtCsvX = (function () {
+  function parse(txt, FS) {
+    txt = String(txt || '').replace(/^\uFEFF/, ''); const rows = []; let row = [], f = '', q = false;
+    for (let i = 0; i < txt.length; i++) { const c = txt[i];
+      if (q) { if (c === '"') { if (txt[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+      else if (c === '"' && f === '') q = true;
+      else if (c === FS) { row.push(f); f = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && txt[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+      else f += c; }
+    if (f !== '' || row.length) { row.push(f); rows.push(row); }
+    const head = (rows.shift() || []).map(h => String(h).trim());
+    return rows.filter(r => r.some(v => String(v).trim() !== '')).map(r => { const o = {}; head.forEach((h, k) => { if (h) o[h] = r[k] == null ? '' : r[k]; }); return o; });
+  }
+  return { read: (txt, o) => ({ SheetNames: ['Sheet1'], Sheets: { Sheet1: parse(txt, (o && o.FS) || ',') } }), utils: { sheet_to_json: (rows) => rows.map(r => Object.assign({}, r)) } };
+})();
+</script>
 <script src="./vendor/supabase-2.119.1.js"></script>
 <script src="./vendor/qrcode-generator-1.4.4.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   body { margin: 0; }
   a { color: var(--color-accent-700); text-underline-offset: 3px; }
@@ -2592,6 +2609,8 @@
           <section style="background: var(--color-surface); border-radius: 30px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;"><h2 style="font-size: 24px; margin: 0; margin-right: auto;">🩺 Santé de la base</h2><span style="font-size: 14px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: {{ hsBadgeBg }};">{{ hsBadge }}</span><button class="btn btn-secondary" onClick="{{ hsReload }}" style="white-space: nowrap; background: var(--color-bg);">↻ Actualiser</button></div>
             <sc-if value="{{ hsSetup }}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border-radius: 16px; padding: 12px 14px;"><span style="font-size: 14.5px;">Pour activer ce suivi (et le graphe des connectés), il faut lancer une fois le script <b>supabase-suivi.sql</b> : copie-le avec le bouton, puis dans Supabase → SQL Editor → New query, colle et clique sur Run.</span><div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><button class="btn btn-primary" onClick="{{ hsCopySql }}" style="white-space: nowrap;">📋 Copier le script SQL</button><a class="btn btn-secondary" href="https://supabase.com/dashboard/project/hnyomaobuftunuhwkzox/sql/new" target="_blank" rel="noopener" style="white-space: nowrap; text-decoration: none;">Ouvrir le SQL Editor ↗</a><a href="./supabase-suivi.sql" target="_blank" rel="noopener" style="font-size: 13.5px; color: var(--color-accent-700);">Voir le script</a><span style="font-size: 13.5px;">{{ hsCopyMsg }}</span></div></div></sc-if>
+            <sc-if value="{{ hsRtOff }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; flex: 1; min-width: 220px;">📡 <b>Temps réel inactif.</b> Pour que la base prévienne le site (moins de requêtes), lance une fois <b>supabase-realtime.sql</b>.</span><button class="btn btn-secondary" onClick="{{ hsCopyRt }}" style="white-space: nowrap; background: var(--color-surface);">📋 Copier le script temps réel</button></div></sc-if>
+            <sc-if value="{{ hsB64On }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: var(--color-bg); border-radius: 16px; padding: 10px 14px;"><span style="font-size: 14.5px; flex: 1; min-width: 220px;">🖼️ {{ hsB64Txt }}</span><button class="btn btn-secondary" onClick="{{ hsB64Go }}" style="white-space: nowrap; background: var(--color-surface);">🧹 Déplacer vers le stockage</button><span style="font-size: 13.5px;">{{ hsB64Msg }}</span></div></sc-if>
             <sc-if value="{{ hsErr }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 14px;">{{ hsErr }}</p></sc-if>
             <sc-if value="{{ hsOn }}" hint-placeholder-val="{{ false }}">
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px;">
@@ -4187,25 +4206,20 @@ class Component extends DCLogic {
   // ou à défaut thes.csv + possedes.csv. Tout champ vide retombe sur les textes du site.
   async loadSheet() {
     const readCsv = (X, txt) => X.read(txt, { type: 'string', FS: (txt.split('\n')[0].split(';').length > txt.split('\n')[0].split(',').length) ? ';' : ',', raw: true });
-    const X = await new Promise(res => {
-      let n = 0;
-      const t = setInterval(() => {
-        if (window.XLSX) { clearInterval(t); res(window.XLSX); }
-        else if (++n > 40) { clearInterval(t); res(null); }
-      }, 100);
-    });
-    if (!X) return;
+    const X = window.XLSX || mdtCsvX;   // CSV lus sans la grosse librairie Excel (chargée seulement si contenu.xlsx existe)
     const sheetRows = (wb, re) => {
       const name = wb.SheetNames.find(n => re.test(n)) || wb.SheetNames[0];
       return X.utils.sheet_to_json(wb.Sheets[name], { defval: '' });
     };
     let teaRows = [], ownRows = [];
     try {
-      const r = await fetch('contenu.xlsx');
-      if (r.ok) {
-        const wb = X.read(await r.arrayBuffer());
-        teaRows = sheetRows(wb, /th/i);
-        if (wb.SheetNames.some(n => /poss/i.test(n))) ownRows = sheetRows(wb, /poss/i);
+      const r = await fetch('contenu.xlsx', { method: 'HEAD' });
+      const XL = r.ok ? await this.loadXlsx() : null;
+      if (XL) {
+        const wb = XL.read(await (await fetch('contenu.xlsx')).arrayBuffer());
+        const sr = (re) => { const name = wb.SheetNames.find(n => re.test(n)) || wb.SheetNames[0]; return XL.utils.sheet_to_json(wb.Sheets[name], { defval: '' }); };
+        teaRows = sr(/th/i);
+        if (wb.SheetNames.some(n => /poss/i.test(n))) ownRows = sr(/poss/i);
       }
     } catch (e) {}
     if (!teaRows.length) {
@@ -4358,6 +4372,8 @@ class Component extends DCLogic {
     try { if (localStorage.getItem('mdt-asmember')) this.setState({ asMember: true }); } catch (e) {}
     setTimeout(() => this.drawWheel(), 50); setTimeout(() => this.syncSelects(), 0);
     this.watchVersion();
+    // service worker enregistré pour tout le monde : met en cache les fichiers fixes (et sert aux notifications)
+    try { if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
     window.__mdtApp = this;
     // images du site (<image-slot>) : enregistrées en base (options.siteImages), modifiables par les admins
     window.__mdtSlotAdmin = () => { try { return this.isAdmin(this.me()) && !this.state.asMember; } catch (e) { return false; } };
@@ -4547,19 +4563,22 @@ class Component extends DCLogic {
     return { pot: t.pot || d[0], cup: t.cup || d[1], trad: t.trad || d[2], cer: t.cer || d[3], temp: t.temp || d[4] };
   }
 
+  // librairie Excel chargée à la demande (≈ 1 Mo)
+  loadXlsx() {
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    if (!this._xlsxP) this._xlsxP = new Promise(res => { const sc = document.createElement('script'); sc.src = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js'; sc.onload = () => res(window.XLSX || null); sc.onerror = () => { this._xlsxP = null; res(null); }; document.head.appendChild(sc); });
+    return this._xlsxP;
+  }
   async loadDecl() {
-    const X = await new Promise(res => {
-      let n = 0;
-      const t = setInterval(() => { if (window.XLSX) { clearInterval(t); res(window.XLSX); } else if (++n > 40) { clearInterval(t); res(null); } }, 100);
-    });
-    if (!X) return;
+    const X = window.XLSX || mdtCsvX;
     let rows = [];
     try {
-      const r = await fetch('contenu.xlsx');
-      if (r.ok) {
-        const wb = X.read(await r.arrayBuffer());
+      const r = await fetch('contenu.xlsx', { method: 'HEAD' });
+      const XL = r.ok ? await this.loadXlsx() : null;
+      if (XL) {
+        const wb = XL.read(await (await fetch('contenu.xlsx')).arrayBuffer());
         const n = wb.SheetNames.find(s => /decl|décl/i.test(s));
-        if (n) rows = X.utils.sheet_to_json(wb.Sheets[n], { defval: '' });
+        if (n) rows = XL.utils.sheet_to_json(wb.Sheets[n], { defval: '' });
       }
     } catch (e) {}
     if (!rows.length) {
@@ -5431,6 +5450,31 @@ class Component extends DCLogic {
       bwKey: e => { if (e.key === 'Enter') { e.preventDefault(); const ws = String(this.state.bwDraft || '').split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(x => x.length >= 2 && bw.indexOf(x) < 0); if (ws.length) { this.setOpt('bannedWords', bw.concat(ws)); this.setState({ bwDraft: '' }); } } },
       bwNote: this.v2 ? 'Appliqué par la base : tout texte (avis, description, nom de salon, prénom à l’inscription…) contenant un de ces mots est refusé.' : 'Sera appliqué par la base une fois le script supabase-v2.sql relancé.' };
   }
+  // photos enregistrées en texte (base64) dans la base → stockage Supabase (lignes plus légères à chaque synchronisation)
+  dataUrlBlob(du) { const m = String(du).match(/^data:([^;,]+)(;base64)?,(.*)$/s); if (!m) throw new Error('image illisible'); const raw = m[2] ? atob(m[3].replace(/\s/g, '')) : decodeURIComponent(m[3]); const u8 = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) u8[i] = raw.charCodeAt(i); return new Blob([u8], { type: m[1] }); }
+  b64Scan() {
+    const a = this.getAdds(); const out = [];
+    const walk = (v, path, kind, id) => { if (typeof v === 'string') { if (/^data:image\//.test(v) && v.length > 200) out.push({ kind: kind, id: id, path: path.slice(), size: v.length }); return; }
+      if (v && typeof v === 'object' && path.length < 5) Object.keys(v).forEach(k => { path.push(k); walk(v[k], path, kind, id); path.pop(); }); };
+    ['prods', 'sachets', 'logs', 'gear', 'teas', 'decl'].forEach(c => (a[c] || []).forEach((x, i) => walk(x, [c, i], c, x.id || x.nom || i)));
+    const pr = (a.options || {}).profiles || {}; Object.keys(pr).forEach(u => walk(pr[u], ['options', 'profiles', u], 'profil', u));
+    return out;
+  }
+  async b64Migrate() {
+    const L = this.b64Scan(); if (!L.length || !this.sb || !this.state.session) return;
+    if (!window.confirm(L.length + ' photo(s) stockée(s) en texte dans la base vont être envoyées vers le stockage. Continuer ?')) return;
+    const a = JSON.parse(JSON.stringify(this.getAdds())); let ok = 0, ko = 0;
+    for (const it of L) {
+      try { let o = a; for (let k = 0; k < it.path.length - 1; k++) o = o[it.path[k]]; const key = it.path[it.path.length - 1]; const du = o[key];
+        const blob = this.dataUrlBlob(du); const ext = (blob.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg');
+        const path = 'migration/' + String(it.kind) + '-' + String(it.id).replace(/[^\w-]/g, '_').slice(0, 40) + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.' + ext;
+        const { error } = await this.sb.storage.from('photos').upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: false }); if (error) throw error;
+        o[key] = this.sb.storage.from('photos').getPublicUrl(path).data.publicUrl; ok++;
+        this.setState({ b64Msg: 'Envoi… ' + ok + '/' + L.length }); } catch (e) { ko++; console.warn('b64', e); }
+    }
+    this.setAdds(a); this.modLog('a déplacé des photos de la base vers le stockage', ok + ' photo(s)');
+    this.setState({ b64Msg: '✓ ' + ok + ' photo(s) déplacée(s)' + (ko ? ', ' + ko + ' en échec' : '') + '.' });
+  }
   async loadHealth() {
     if (this._hsLoading || !this.sb) return; this._hsLoading = true;
     try { const { data, error } = await this.sb.rpc('mdt_db_stats'); this.setState({ dbHealth: error ? null : data, dbHealthErr: error ? (/mdt_db_stats|function|schema/i.test(error.message) ? 'setup' : error.message) : '', dbHealthAt: Date.now() }); }
@@ -5443,7 +5487,10 @@ class Component extends DCLogic {
     const H = this.state.dbHealth; const err = this.state.dbHealthErr || '';
     const mb = b => { b = Number(b) || 0; return b >= 1048576 ? String(Math.round(b / 104857.6) / 10).replace('.', ',') + ' Mo' : Math.max(1, Math.round(b / 1024)) + ' ko'; };
     const copy = async () => { try { const t = await (await fetch('./supabase-suivi.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ hsCopyMsg: '✓ Copié : colle-le dans le SQL Editor puis Run.' }); } catch (e) { this.setState({ hsCopyMsg: 'Copie impossible : ouvre « Voir le script », sélectionne tout et copie.' }); } };
-    const base = { hsSetup: err === 'setup' || this.state.visitsErr === 'setup', hsCopySql: copy, hsCopyMsg: this.state.hsCopyMsg || '', hsReload: () => { this.loadHealth(); this.loadVisits(); }, hsErr: err && err !== 'setup' ? 'Impossible de lire l’état de la base : ' + err : '' };
+    const b64 = this._b64At && Date.now() - this._b64At < 30000 ? this._b64L : (this._b64At = Date.now(), this._b64L = this.b64Scan());
+    const copyRt = async () => { try { const t = await (await fetch('./supabase-realtime.sql', { cache: 'no-store' })).text(); await navigator.clipboard.writeText(t); this.setState({ hsCopyMsg: '✓ Script temps réel copié : colle-le dans le SQL Editor puis Run.' }); } catch (e) { this.setState({ hsCopyMsg: 'Copie impossible : ouvre supabase-realtime.sql sur GitHub.' }); } };
+    const ext = { hsRtOn: !!this._rtOn, hsRtOff: !this._rtOn, hsCopyRt: copyRt, hsB64On: b64.length > 0, hsB64Txt: b64.length + ' photo(s) encore stockée(s) en texte dans la base (' + Math.round(b64.reduce((t, x) => t + x.size, 0) / 1024) + ' ko à chaque synchronisation)', hsB64Go: () => this.b64Migrate(), hsB64Msg: this.state.b64Msg || '' };
+    const base = { ...ext, hsSetup: err === 'setup' || this.state.visitsErr === 'setup', hsCopySql: copy, hsCopyMsg: this.state.hsCopyMsg || '', hsReload: () => { this.loadHealth(); this.loadVisits(); }, hsErr: err && err !== 'setup' ? 'Impossible de lire l’état de la base : ' + err : '' };
     if (!H) return Object.assign(base, { hsOn: false, hsCards: [], hsTables: [], hsBadge: err ? (err === 'setup' ? 'À activer' : '⚠️ Injoignable') : '…', hsBadgeBg: err && err !== 'setup' ? '#fbebeb' : 'var(--color-bg)', hsAt: '' });
     const warn = [], LIM = 500 * 1048576;
     const pct = Math.round((H.dbBytes || 0) / LIM * 100); if (pct >= 80) warn.push('taille');
@@ -5460,7 +5507,8 @@ class Component extends DCLogic {
         card('⚡ Cache', H.cacheHit == null ? '—' : String(H.cacheHit).replace('.', ',') + ' %', 'lectures servies depuis la mémoire (idéal ≥ 99 %)', H.cacheHit != null && H.cacheHit < 95),
         card('⏰ Tâches planifiées (24 h)', H.cron ? String(cron.runs || 0) : '—', H.cron ? (cron.failed ? cron.failed + ' en échec' + (cron.lastFail ? ' : ' + String(cron.lastFail).slice(0, 80) : '') : 'aucun échec') + (cron.last ? ' · dernière ' + ago(cron.last) : '') : 'pg_cron non disponible', (cron.failed || 0) > 0),
         card('🔔 File des notifications', H.net ? String(net.responses || 0) : '—', H.net ? 'réponses stockées · ' + (net.queue || 0) + ' en attente · ' + (net.errors1h || 0) + ' erreur(s) en 1 h' : 'pg_net non disponible', (net.responses || 0) > 5000),
-        card('🗂️ Éléments du site', String(H.items || 0), (H.errors || 0) + ' erreur(s) au journal', false)],
+        card('🗂️ Éléments du site', String(H.items || 0), (H.errors || 0) + ' erreur(s) au journal', false),
+        card('📡 Temps réel', this._rtOn ? 'Actif' : 'Inactif', this._rtOn ? 'la base prévient le site à chaque changement' : 'le site interroge la base toutes les minutes', !this._rtOn)],
       hsTables: (H.tables || []).map(t => ({ name: t.name, size: mb(t.bytes), rows: '≈ ' + (t.rows || 0) + ' lignes', c: t.bytes > 50 * 1048576 ? '#c0392b' : 'inherit' })),
       hsAt: 'Dernière actualisation : ' + new Date(H.at || Date.now()).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) });
   }
@@ -6706,10 +6754,12 @@ class Component extends DCLogic {
       if (ev === 'PASSWORD_RECOVERY') this.setState({ view: 'login', authMode: 'newpass', authMsg: '', af: {} });
       if (session && ev === 'SIGNED_IN') { if (this.v2) this.sb.rpc('mdt_register').then(({ data: reg }) => { if (reg && reg.error) this.setState({ syncErr: reg.error }); else if (reg && reg.nom) this._regName = reg.nom; this.pullCloud(true); }); else this.pullCloud(true); }
     });
-    this._onFocus = () => { if (Date.now() - (this._focusPull || 0) < 15000) return; this._focusPull = Date.now(); this.pullCloud(false); if (this.v2 && this.state.session) this.markVisit(); };
+    this._onFocus = () => { if (Date.now() - (this._focusPull || 0) < 15000) return; this._focusPull = Date.now(); if (!this._rtOn || this._rtMissed || Date.now() - (this._lastPull || 0) > 300000) { this._rtMissed = false; this.pullCloud(false); } if (this.v2 && this.state.session) this.markVisit(); };
     window.addEventListener('focus', this._onFocus);
-    this._poll = setInterval(() => { if (!document.hidden) this.pullCloud(false); }, 60000);
-    this._gPoll = setInterval(() => { if (!document.hidden && this.state.view === 'guess' && this.state.gsId) this.pullCloud(false); }, 3000);
+    // temps réel : la base prévient quand une ligne change (si supabase-realtime.sql a été lancé) ; l’interrogation régulière reste en secours
+    this._poll = setInterval(() => { if (!document.hidden && (!this._rtOn || Date.now() - (this._lastPull || 0) > 300000)) this.pullCloud(false); }, 60000);
+    this.startRealtime();
+    this._gPoll = setInterval(() => { if (!document.hidden && !this._rtOn && this.state.view === 'guess' && this.state.gsId) this.pullCloud(false); }, 3000);
   }
 
   // ================= Stockage v2 : une ligne par élément (table mdt_items), droits appliqués par la base =================
@@ -6787,18 +6837,30 @@ class Component extends DCLogic {
     return out;
   }
   async v2Members() { const { data, error } = await this.sb.rpc('mdt_members'); if (error) throw error; this._members = data || []; return this._members; }
-  async pullV2(first) {
-    if (this._dirty || this._v2Pulling) return; this._v2Pulling = true;
+  startRealtime() {
+    if (!this.v2 || !this.sb || !this.sb.channel || this._rt) return;
     try {
-      const full = first || !this._v2Rows || !this._v2Since || (Date.now() - (this._v2Full || 0) > 900000);
-      if (full || !this._members) await this.v2Members();
+      this._rt = this.sb.channel('mdt-items').on('postgres_changes', { event: '*', schema: 'public', table: 'mdt_items' }, () => {
+        clearTimeout(this._rtT); this._rtT = setTimeout(() => { if (!document.hidden) this.pullCloud(false); else this._rtMissed = true; }, 1500);
+      }).subscribe(st => { this._rtOn = st === 'SUBSCRIBED'; if (this.state.rtOn !== this._rtOn) this.setState({ rtOn: this._rtOn }); });
+    } catch (e) { this._rt = null; }
+  }
+  async pullV2(first) {
+    if (this._dirty || this._v2Pulling) return; this._v2Pulling = true; this._lastPull = Date.now();
+    try {
+      // rechargement complet : à l’ouverture, si les droits changent (ami, salon, profil), et au plus toutes les 6 h ;
+      // sinon seulement ce qui a changé (avec 2 min de recouvrement pour ne rien rater). Une mise à jour du site recharge la page → rechargement complet.
+      const full = first || !this._v2Rows || !this._v2Since || (Date.now() - (this._v2Full || 0) > 6 * 3600000);
+      if (full || !this._members || Date.now() - (this._memAt || 0) > 900000) { await this.v2Members(); this._memAt = Date.now(); }
       const chg = this._chg || 0;
-      const rows = await this.v2FetchAll(full ? null : this._v2Since);
+      const since = full ? null : new Date(Date.parse(this._v2Since) - 120000).toISOString();
+      const rows = await this.v2FetchAll(since);
       if (this._dirty || (this._chg || 0) !== chg) return;
       if (full) { this._v2Rows = new Map(); this._v2Full = Date.now(); }
       let perms = false;
-      rows.forEach(r => { this._v2Rows.set(r.kind + '/' + r.id, r); if (!this._v2Since || r.updated_at > this._v2Since) this._v2Since = r.updated_at; if (['friend', 'salon', 'profile'].indexOf(r.kind) >= 0) perms = true; });
-      if (!full && !rows.length && this._adds) return;
+      let changed = 0;
+      rows.forEach(r => { const k = r.kind + '/' + r.id; const old = this._v2Rows.get(k); if (!full && old && old.updated_at === r.updated_at && old.deleted === r.deleted) return; changed++; this._v2Rows.set(k, r); if (!this._v2Since || r.updated_at > this._v2Since) this._v2Since = r.updated_at; if (['friend', 'salon', 'profile'].indexOf(r.kind) >= 0) perms = true; });
+      if (!full && !changed && this._adds) return;
       if (!full && perms) { this._v2Pulling = false; return this.pullV2(true); }
       const a = this.v2Assemble(this._v2Rows, this._members);
       this._adds = a; this._v2Synced = this.v2Snapshot(a);
@@ -6922,7 +6984,8 @@ class Component extends DCLogic {
   watchVersion() {
     if (!/^https?:/.test(location.protocol) || /localhost|127\.0\.0\.1/.test(location.hostname)) return;
     try { if (sessionStorage.getItem('mdt-updated')) { sessionStorage.removeItem('mdt-updated'); setTimeout(() => this.flash('✨ Site mis à jour'), 800); } } catch (e) {}
-    const files = [location.pathname, 'version.js', 'savoir.js', 'teapets.js', 'i18n.js', 'supabase-config.js', 'support.js'];
+    // une seule requête légère par minute : version.js change à chaque mise en ligne (+ la config, modifiable à la main sur GitHub)
+    const files = ['version.js', 'supabase-config.js'];
     const sig = async () => { const out = []; for (const f of files) { const r = await fetch(f, { method: 'HEAD', cache: 'no-store' }); out.push(r.headers.get('etag') || r.headers.get('last-modified') || ''); } return out.join('|'); };
     const check = async () => { if (this._newVer) return; try { const v = await sig(); if (!v.replace(/\|/g, '')) return; if (!this._ver) this._ver = v; else if (v !== this._ver) { this._newVer = true; this.applyUpdate(); } } catch (e) {} };
     setTimeout(check, 3000); setInterval(() => { if (!document.hidden) check(); }, 60000);
