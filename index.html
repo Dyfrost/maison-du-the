@@ -6844,9 +6844,15 @@ class Component extends DCLogic {
   startRealtime() {
     if (!this.v2 || !this.sb || !this.sb.channel || this._rt) return;
     try {
+      const setOn = v => { this._rtOn = v; if (this.state.rtOn !== v) this.setState({ rtOn: v }); };
       this._rt = this.sb.channel('mdt-items').on('postgres_changes', { event: '*', schema: 'public', table: 'mdt_items' }, () => {
+        if (!this._rtOn) setOn(true);
         clearTimeout(this._rtT); this._rtT = setTimeout(() => { if (!document.hidden) this.pullCloud(false); else this._rtMissed = true; }, 1500);
-      }).subscribe(st => { this._rtOn = st === 'SUBSCRIBED'; if (this.state.rtOn !== this._rtOn) this.setState({ rtOn: this._rtOn }); });
+      }).subscribe(st => {
+        // « connecté » ne suffit pas : la table doit aussi être diffusée (supabase-realtime.sql). Sinon on garde l’interrogation chaque minute.
+        if (st !== 'SUBSCRIBED') { setOn(false); return; }
+        this.sb.rpc('mdt_realtime_on').then(({ data, error }) => setOn(!error && data === true), () => setOn(false));
+      });
     } catch (e) { this._rt = null; }
   }
   async pullV2(first) {

@@ -7,6 +7,14 @@ do $$ begin
   end if;
 end $$;
 
+-- Le site vérifie avec cette fonction que la diffusion est bien active (sinon il continue d’interroger la base chaque minute)
+create or replace function public.mdt_realtime_on() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'mdt_items')
+$$;
+grant execute on function public.mdt_realtime_on() to authenticated, anon;
+notify pgrst, 'reload schema';
+
 -- Contrôle : photos encore stockées en texte (base64) dans la base — à déplacer avec Admin → Accueil → Santé de la base
 select kind, count(*) as lignes, pg_size_pretty(sum(length(data::text))::bigint) as taille
 from public.mdt_items where not deleted and data::text like '%data:image%' group by kind order by 2 desc;
