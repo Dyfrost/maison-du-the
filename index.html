@@ -1247,6 +1247,8 @@ window.mdtCsvX = (function () {
       <section style="display: flex; flex-direction: column; gap: 16px;">
         <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;"><div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;"><h1 style="font-size: 44px; margin: 0;">🧩 Theordle</h1><p style="margin: 0; font-size: 15px; opacity: .75;">Un thé mystère par jour et par catégorie. À chaque essai, chaque case te dit si tu es sur la bonne piste.</p></div><span style="font-size: 13.5px; opacity: .7;">{{ td.tdlStats }}</span></div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><sc-for list="{{ td.tdlSrcs }}" as="ts" hint-placeholder-count="3"><button onClick="{{ ts.go }}" aria-pressed="{{ ts.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 8px 16px; font-family: var(--font-body); font-size: 14.5px; font-weight: 600; background: {{ ts.bg }}; color: {{ ts.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ ts.label }}{{ ts.st }}</button></sc-for><span style="font-size: 13.5px; opacity: .65; margin-left: 6px;">{{ td.tdlCount }}</span></div>
+        <sc-if value="{{ td.tdlSalonPick }}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"><span style="font-size: 13.5px; opacity: .7;">Salon :</span><sc-for list="{{ td.tdlSalonList }}" as="tsl" hint-placeholder-count="2"><button onClick="{{ tsl.go }}" aria-pressed="{{ tsl.on }}" style="cursor: pointer; border: none; border-radius: 999px; padding: 6px 14px; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; background: {{ tsl.bg }}; color: {{ tsl.fg }}; box-shadow: inset 0 0 0 1px var(--color-divider);">{{ tsl.label }}</button></sc-for></div></sc-if>
+        <sc-if value="{{ td.tdlSalonTxt }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; opacity: .65; margin-top: -8px;">{{ td.tdlSalonTxt }}</span></sc-if>
         <sc-if value="{{ td.tdlEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin: 0; background: var(--color-surface); border-radius: 18px; padding: 14px 18px;">{{ td.tdlEmptyTxt }}</p></sc-if>
         <sc-if value="{{ td.tdlPlaying }}" hint-placeholder-val="{{ true }}">
           <div style="display: flex; flex-direction: column; gap: 8px; background: var(--color-surface); border-radius: 24px; padding: 16px 18px;">
@@ -5979,19 +5981,23 @@ class Component extends DCLogic {
   }
 
   // ---------- 🧩 Theordle : un Wordle du thé (deviner un thé avec des indices à chaque essai)
+  // Theordle « Mon salon » : un salon précis (le premier par défaut) → même thé mystère pour tous ses membres
+  tdlSalons(me) { return this.salonsOf(me).slice().sort((x, y) => String(x.id).localeCompare(String(y.id))); }
+  tdlSalon(me) { const L = this.tdlSalons(me); return L.find(x => x.id === this.state.tdlSalonId) || L[0] || null; }
   tdlPool(src, me) {
-    return this.memo('tdlPool', src + '|' + me, () => {
+    const sl = src === 'salon' ? this.tdlSalon(me) : null;
+    return this.memo('tdlPool', src + '|' + me + '|' + (sl ? sl.id + ':' + (sl.members || []).join(',') : ''), () => {
       const OX = { vert: 5, jaune: 10, blanc: 15, oolong: 45, noir: 90, sombre: 95, tisane: 0 };
       const famName = k => (this.families[k] || {}).name || '—';
       if (src === 'ency') {
         const L = [];
-        Object.keys(this.families).forEach(k => this.listFor(k).forEach(t => { const parts = String(t.origin || '').split(',').map(x => x.trim()).filter(Boolean);
+        Object.keys(this.families).forEach(k => this.listFor(k, true).filter(t => String(t.fr || '').indexOf('⏳') !== 0).forEach(t => { const parts = String(t.origin || '').split(',').map(x => x.trim()).filter(Boolean);
           const pays = t.pays || parts[parts.length - 1] || '—'; const region = parts.length > 1 ? parts[parts.length - 2] : '—';
           const nS = this.collection().filter(o => this.norm(o.the) === this.norm(t.name)).length;
           L.push({ key: 'e:' + k + ':' + t.name, name: t.name, sub: famName(k), fam: k, a: { fam: famName(k), pays: pays, region: region, ox: OX[k] != null ? OX[k] : null, n: nS } }); }));
         return L;
       }
-      const a = this.getAdds(); const owners = src === 'salon' ? new Set(this.salonMates(me)) : new Set([me]);
+      const a = this.getAdds(); const owners = src === 'salon' ? new Set(sl ? sl.members || [] : [me]) : new Set([me]);
       const L = [];
       a.prods.forEach(p => { const sas = a.sachets.filter(x => x.prodId === p.id && owners.has(x.owner)); if (!sas.length) return;
         const k = this.famOf(p.the); const t = k ? this.listFor(k, true).find(x => this.norm(x.name) === this.norm(p.the)) : null;
@@ -6005,15 +6011,15 @@ class Component extends DCLogic {
     });
   }
   // une partie par jour et par catégorie : même thé mystère toute la journée (encyclopédie : le même pour tout le monde)
-  tdlKey(src, me) { return 'mdt-tdl-day-' + src + (src === 'ency' ? '' : '-' + me); }
+  tdlKey(src, me) { if (src === 'mine') return 'mdt-tdl-day-mine-' + me; if (src === 'ency') return 'mdt-tdl2-day-ency-' + me; const sl = this.tdlSalon(me); return 'mdt-tdl2-day-salon-' + (sl ? sl.id : '-') + '-' + me; }
   tdlLoad(src) {
     const me = this.me(); const P = this.tdlPool(src, me); const day = mdtToday();
     let T = null; try { T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); } catch (e) {}
     if (!T || T.day !== day || !P.some(x => x.key === T.target)) {
       if (!P.length) { this.setState({ tdl: { src: src, empty: true, guesses: [] } }); return; }
-      const keys = P.map(x => x.key).sort(); let h = 2166136261; const seed = day + '|' + src + '|' + (src === 'ency' ? '' : me);
+      const keys = P.map(x => x.key).sort(); let h = 2166136261; const sl = src === 'salon' ? this.tdlSalon(me) : null; const seed = 'v2|' + day + '|' + src + '|' + (src === 'mine' ? me : sl ? sl.id : '');
       for (let i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
-      T = { day: day, src: src, target: keys[h % keys.length], guesses: [], done: false, won: false };
+      T = { day: day, src: src, sid: sl ? sl.id : null, target: keys[h % keys.length], guesses: [], done: false, won: false };
       try { localStorage.setItem(this.tdlKey(src, me), JSON.stringify(T)); } catch (e) {}
     }
     this.setState({ tdl: Object.assign({}, T, { src: src }), tdlQ: '' });
@@ -6022,7 +6028,8 @@ class Component extends DCLogic {
   tdlStatus(src) { const me = this.me(); try { const T = JSON.parse(localStorage.getItem(this.tdlKey(src, me)) || 'null'); if (!T || T.day !== mdtToday()) return { txt: 'À jouer aujourd’hui', done: false }; return T.done ? { txt: T.won ? '✅ Trouvé en ' + T.guesses.length + ' essai' + (T.guesses.length > 1 ? 's' : '') : '❌ Pas trouvé', done: true } : { txt: '⏳ En cours · ' + T.guesses.length + '/8', done: false }; } catch (e) { return { txt: 'À jouer aujourd’hui', done: false }; } }
   tdlView(me) {
     const T = this.state.tdl || null; const src = this.state.tdlSrc || (T && T.src) || 'mine';
-    if (!T || T.src !== src || (T.day && T.day !== mdtToday())) { setTimeout(() => this.tdlLoad(src), 0); }
+    const sl0 = src === 'salon' ? this.tdlSalon(me) : null;
+    if (!T || T.src !== src || (T.day && T.day !== mdtToday()) || (sl0 && T.sid !== sl0.id)) { setTimeout(() => this.tdlLoad(src), 0); }
     const P = this.tdlPool(src, me); const byKey = new Map(P.map(x => [x.key, x]));
     const target = T && byKey.get(T.target); const MAX = 8;
     const COLS = src === 'ency' ? [['fam', 'Famille'], ['pays', 'Pays'], ['region', 'Région'], ['ox', 'Oxydation'], ['n', 'Sachets à la maison']]
@@ -6055,7 +6062,10 @@ class Component extends DCLogic {
     if (target && guesses.length >= 3) hints.push('Il commence par « ' + target.name.charAt(0).toUpperCase() + ' » et compte ' + target.name.replace(/\s/g, '').length + ' lettres.');
     if (target && guesses.length >= 5) hints.push(src === 'ency' ? 'Origine : ' + target.a.region + ', ' + target.a.pays + '.' : 'Thé de l’encyclopédie : ' + target.a.the + '.');
     if (target && guesses.length >= 7 && src !== 'ency') hints.push('Boutique : ' + target.a.marque + '.');
-    return { tdlSrcs: [['mine', '🍵 Mes thés'], ['salon', '🏮 Mon salon'], ['ency', '📖 Encyclopédie']].map(x => ({ label: x[1], on: src === x[0], bg: src === x[0] ? 'var(--color-text)' : 'var(--color-surface)', fg: src === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => { this.setState({ tdlSrc: x[0] }); this.tdlLoad(x[0]); }, st: this.tdlStatus(x[0]).done ? ' ✓' : '' })),
+    const sls = src === 'salon' ? this.tdlSalons(me) : []; const slOn = src === 'salon' ? this.tdlSalon(me) : null;
+    return { tdlSalonPick: sls.length > 1, tdlSalonList: sls.map(x => { const on = slOn && x.id === slOn.id; return { label: '🏮 ' + (x.name || 'Salon'), on: on, bg: on ? 'var(--color-accent)' : 'var(--color-surface)', fg: on ? '#fff' : 'var(--color-text)', go: () => { this.setState({ tdlSalonId: x.id }); setTimeout(() => this.tdlLoad('salon'), 0); } }; }),
+      tdlSalonTxt: slOn ? 'Même thé mystère pour tous les membres de « ' + (slOn.name || 'ton salon') + ' »' : '',
+      tdlSrcs: [['mine', '🍵 Mes thés'], ['salon', '🏮 Mon salon'], ['ency', '📖 Encyclopédie']].map(x => ({ label: x[1], on: src === x[0], bg: src === x[0] ? 'var(--color-text)' : 'var(--color-surface)', fg: src === x[0] ? 'var(--color-bg)' : 'var(--color-text)', go: () => { this.setState({ tdlSrc: x[0] }); this.tdlLoad(x[0]); }, st: this.tdlStatus(x[0]).done ? ' ✓' : '' })),
       tdlEmpty: !P.length, tdlEmptyTxt: src === 'mine' ? 'Il te faut au moins un sachet pour jouer avec tes thés.' : src === 'salon' ? 'Aucun thé dans ton salon pour l’instant.' : 'L’encyclopédie est vide.',
       tdlCount: P.length + ' thé' + (P.length > 1 ? 's' : '') + ' possibles', tdlLeft: done ? '' : left + ' essai' + (left > 1 ? 's' : '') + ' restant' + (left > 1 ? 's' : ''),
       tdlCols: COLS.map(c => ({ label: c[1] })), tdlRows: rows, tdlHasRows: rows.length > 0, tdlGrid: 'minmax(0, 1.5fr) repeat(' + COLS.length + ', minmax(0, 1fr))',
